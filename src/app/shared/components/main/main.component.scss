@@ -1,0 +1,213 @@
+@import '/src/assets/styles/light-variables.scss';
+@import '/src/assets/styles/dark-variables.scss';
+
+// Menu Item Styles
+
+.ant-menu-item {
+  a {
+    color: var(--textColor);
+  }
+  .menu-item-icon {
+    margin-right: 6px;
+  }
+  &:hover {
+    background-color: var(--menu-item-bgcolor-hover);
+  }
+
+  &.ant-menu-item-selected {
+    background-color: var(--menu-item-bgcolor-hover);
+    color: var(--textColor);
+  }
+}
+
+:host ::ng-deep .ant-menu-inline .ant-menu-item {
+  margin: 0;
+}
+
+.ant-menu-submenu-selected {
+  color: var(--textColor) !important;
+  &:hover {
+    color: var(--textColor);
+  }
+}
+
+:host ::ng-deep .ant-menu-vertical .ant-menu-sub {
+  background-color: var(--bgColor);
+}
+// Host Component Styles
+:host {
+  display: flex;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:host ::ng-deep .ant-menu-vertical .ant-menu-item,
+:host ::ng-deep .ant-menu-submenu-inline .ant-menu-submenu-title,
+:host ::ng-deep .ant-menu-vertical .ant-menu-submenu-title {
+  padding-left: 24px !important;
+}
+
+:host ::ng-deep .ant-menu-light .ant-menu-submenu-title:hover {
+  color: var(--textColor) !important;
+}
+
+:host ::ng-deep .ant-menu-submenu-title:active {
+  background-color: var(--bgColor);
+}
+
+:host ::ng-deep .ant-menu-submenu-title>.ant-menu-submenu-arrow,
+:host ::ng-deep .ant-menu-submenu:hover>.ant-menu-submenu-title>.ant-menu-submenu-arrow {
+  color: var(--textColor) !important;
+}
+:host ::ng-deep .ant-menu-submenu {
+  color: var(--textColor);
+  li {
+    &:hover {
+      background-color: var(--menu-item-bgcolor-hover);
+    }
+  }
+}
+
+
+.ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left {
+  border-right: var(--bgColor);
+}
+:host ::ng-deep .ant-menu-item::after {
+  border-right: 3px solid $secondary-color;
+}
+
+.ant-menu ul,
+.ant-menu ol {
+  background-color: var(--bgColor);
+}
+
+// Layout Styles
+.app-layout {
+  height: 100vh;
+}
+
+// Sidebar Styles
+.ant-menu {
+  background-color: var(--bgColor);
+}
+.menu-sidebar {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  box-shadow: var(--sidebar-box-shadow); 
+  background-color: var(--bgColor);
+}
+.header-trigger {
+  height: 45px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all .3s, padding 0s;
+  display: inline-block;
+  color: var(--textColor);
+}
+
+// Sidebar Logo Styles
+.sidebar-logo {
+  position: relative;
+  height: 45px;
+  padding-left: 24px;
+  overflow: hidden;
+  line-height: 45px;
+  transition: all .3s;
+}
+.sidebar-logo img {
+  display: inline-block;
+  height: 32px;
+  width: 32px;
+  vertical-align: middle;
+}
+.sidebar-logo h1 {
+  display: inline-block;
+  margin: 0 0 0 20px;
+  font-weight: 600;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+// Header Styles
+nz-header {
+  padding: 0;
+  width: 100%;
+  z-index: 2;
+}
+.app-header {
+  position: relative;
+  height: 55px;
+  padding: 0 20px;
+  background: var(--bgColor);
+  line-height: 45px;
+  box-shadow: var(--header-box-shadow);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .header-right {
+    margin-left: auto;
+  }
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px
+}
+.flag-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.avatar {
+  width: 20px;
+}
+
+// Content Styles
+nz-content {
+  margin: 15px;
+}
+
+.inner-content {
+  padding: 15px;
+  background: var(--bgColor);
+  height: 100%;
+}
+
+// Layout Header Styles
+.ant-layout-header {
+  background: var(--bgColor);
+  height: 55px;
+}
+
+.ant-layout {
+  background-color: var(--ant-layout-bgcolor);
+}
+
+// Button Styles
+.secondary-button {
+  background-color: $secondary-color;
+  color: #fff;
+  border-color: $secondary-color;
+}
+
+.danger-button {
+  background-color: $danger-color;
+  color: #fff;
+  border-color: $danger-color;
+}
+
+.success-button {
+  background-color: $success-color;
+  color: #fff;
+  border-color: $success-color;
+}
+
+:root {
+  background-color: var(--bgColor);
+  color: var(--textColor);
+  border-color: var(--borderColor);
+}

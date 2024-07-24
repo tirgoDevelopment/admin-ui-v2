@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="left-panel">
+    <img [@fadeInOut] src="../../../../assets/images/logo/auth-logo.svg" alt="" width="60%">
+  </div>
+  <div class="right-panel">
+    <div class="create-account" [@fadeInOut]>
+      <h2>Авторизоваться</h2>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <nz-input-group class="input-group" [nzPrefix]="prefixTemplateUser">
+          <input formControlName="username" type="text" nz-input placeholder="Логин" autocomplete="username" />
+        </nz-input-group>
+
+        <ng-template #prefixTemplateUser><span nz-icon nzType="user"></span></ng-template>
+        <div *ngIf="form.get('username')?.invalid && form.get('username')?.touched" class="error-message">
+          <span *ngIf="form.get('username')?.errors['required']">Логин не может быть пустым</span>
+          <span *ngIf="form.get('username')?.errors['minlength']">Логин должен содержать минимум 4 символов</span>
+          <span *ngIf="form.get('username')?.errors['maxlength']">Логин не может превышать 20 символов</span>
+        </div>
+
+        <nz-input-group class="input-group" [nzSuffix]="suffixTemplateEye" [nzPrefix]="prefixTemplateLock">
+          <input formControlName="password" [type]="passwordVisible ? 'text' : 'password'" nz-input placeholder="Пароль"
+            autocomplete="current-password" />
+        </nz-input-group>
+        <ng-template #prefixTemplateLock><span nz-icon nzType="lock"></span></ng-template>
+        <ng-template #suffixTemplateEye>
+          <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" style="cursor: pointer;"
+            (click)="togglePasswordVisibility()"></span>
+        </ng-template>
+        <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="error-message">
+          <span *ngIf="form.get('password')?.errors['required']">Пароль не может быть пустым</span>
+          <span *ngIf="form.get('password')?.errors['minlength']">Пароль должен содержать минимум 4 символов</span>
+          <span *ngIf="form.get('password')?.errors['maxlength']">Пароль не может превышать 8 символов</span>
+        </div>
+        <button nz-button  nzType="primary" class="login-button" [disabled]="form.invalid" [nzLoading]="form.disabled">Войти</button>
+      </form>
+
+      <!-- <button nz-button nzType="link" >Забыли пароль?</button> -->
+
+    </div>
+  </div>
+</div>

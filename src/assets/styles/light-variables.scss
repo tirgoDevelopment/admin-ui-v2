@@ -1,0 +1,44 @@
+$back-primary-color: #161324;
+$primary-color: #161324;
+
+$secondary-color: #F97C00;
+$danger-color: #8E1127;
+$success-color: #11833c;
+
+$menu-item-hover-light: #1E293B0D;
+$menu-item-hover-dark: #8ea3c40d;
+
+$ant-layout-bg-light: #f0f2f5;
+$ant-layout-bg-dark: #1C2039;
+
+$bg-color-light: #ffffff;
+$bg-color-dark: #262B49;
+
+$textColor_light: #161324;
+$textColor_dark: white;
+
+$borderColor_light: black;
+$borderColor_dark: white;
+
+// mixin that enables css variables in light mode
+@mixin lighten() {
+  --bgColor: #{$bg-color-light};
+  --textColor: #{$textColor_light};
+  --borderColor: #{$borderColor_light};
+  --menu-item-bgcolor-hover: #{$menu-item-hover-light};
+  --ant-layout-bgcolor: #{$ant-layout-bg-light};
+  --sidebar-box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
+  --header-box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
+    
+}
+
+// mixin that enables css variables in dark mode
+@mixin darken() {
+  --bgColor: #{$bg-color-dark};
+  --textColor: #{$textColor_dark};
+  --borderColor: #{$borderColor_dark};
+  --menu-item-bgcolor-hover: #{$menu-item-hover-dark};
+  --ant-layout-bgcolor: #{$ant-layout-bg-dark};
+  --sidebar-box-shadow: 2px 0 6px rgba(0, 0, 0, 0.3);
+  --header-box-shadow: 0 1px 4px rgba(29, 172, 255, 0.08);
+}

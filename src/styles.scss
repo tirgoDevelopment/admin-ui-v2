@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import "../node_modules/ng-zorro-antd/ng-zorro-antd.min.css";
+@import '/src/assets/styles/light-variables.scss';
+@import '/src/assets/styles/dark-variables.scss';
+
+* {
+  font-family: 'Nunito';
+}
+
+body.light-mode {
+  @include lighten();
+}
+
+body.dark-mode {
+  @include darken();
+}
