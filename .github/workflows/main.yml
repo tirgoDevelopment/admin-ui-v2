@@ -36,7 +36,7 @@ jobs:
 
       - name: SSH into the instance and deploy
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@15.207.248.164 << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@65.1.148.56 << 'EOF'
            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/test-admin-ui:latest
            sudo docker stop test-admin-ui-container || true
