@@ -1,0 +1,96 @@
+<div style="margin: 5px 0px 20px 0;">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+    <h2>{{'administrators' | translate}}</h2>
+
+    <div style="display: flex; gap: 10px">
+      <button nz-button class="success-button" (click)="add()">
+        <span nz-icon nzType="plus" nzTheme="outline"></span>
+        {{'add' | translate}}
+      </button>
+
+      <!-- <button nz-button class="secondary-button" (click)="toggleFilter()">
+        <span nz-icon nzType="filter" nzTheme="fill"></span>
+        {{'filter' | translate}}
+      </button> -->
+    </div>
+  </div>
+</div>
+
+<!-- <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
+  <div class="floating-label">
+    <input type="text" nz-input [(ngModel)]="filter.id" id="filterId" placeholder=" " />
+    <label for="filterId">{{'admin_id' | translate}}</label>
+    <i class="reset-icon" *ngIf="filter.id" (click)="resetInput('id')">✕</i>
+  </div>
+
+  <div class="floating-label">
+    <input type="text" nz-input [(ngModel)]="filter.loadingLocation" id="loadingLocation" placeholder=" " />
+    <label for="loadingLocation">{{'place_shipment' | translate}}</label>
+    <i class="reset-icon" (click)="resetInput('loadingLocation')">✕</i>
+  </div>
+
+  <div class="floating-label">
+    <input type="text" nz-input [(ngModel)]="filter.deliveryLocation" id="deliveryLocation" placeholder=" " />
+    <label for="deliveryLocation">{{'delivery_shipment' | translate}}</label>
+    <i class="reset-icon" (click)="resetInput('deliveryLocation')">✕</i>
+  </div>
+
+  <nz-select ngModel="lucy" nzAllowClear nzPlaceHolder="Status ID">
+    <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+  </nz-select>
+
+  <button nz-button nzType="primary" class="search-button">
+    <span nz-icon nzType="search" nzTheme="outline"></span>
+  </button>
+  <button nz-button  class="reset-button">
+    <span nz-icon nzType="undo" nzTheme="outline"></span>  
+  </button>
+</div> -->
+
+<nz-table [nzSize]="'middle'" [nzPaginationPosition]="'bottom'" [nzData]="data" [nzPageSizeOptions]="[10, 20, 30]"
+  [nzShowPagination]="true" [nzShowSizeChanger]="true" [nzLoading]="loader" [nzNoResult]="('no_data' | translate)">
+  <thead>
+    <tr>
+      <th> No </th>
+      <th [nzSortOrder]="'asc'" nzSortBy="id">ID</th>
+      <th> {{'full_name' | translate}} </th>
+      <th> {{'login' | translate}} </th>
+      <th> {{"register_date" | translate}} </th>
+      <th> {{"last_enter" | translate}} </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let data of data; let i = index">
+      <td>{{i+1}}</td>
+      <td>{{data.id}}</td>
+      <td>{{data.fullName}}</td>
+      <td>{{data.username}}</td>
+      <td>{{data.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+      <td>{{data.user.lastLogin | date: 'dd/MM/yyyy HH:mm' }}</td>
+      <td class="action-col">
+        <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
+          <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
+        </a>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu nzSelectable>
+            <li nz-menu-item>
+              <div style="display: flex; align-items: center; gap:5px">
+                <span nz-icon nzType="edit" nzTheme="outline" style="color: green;"></span>
+                <span>{{'edit' | translate}}</span>
+              </div>
+            </li>
+            <li nz-menu-item>
+              <div style="display: flex; align-items: center; gap:5px">
+                <span nz-icon nzType="delete" nzTheme="outline" style="color: red;"></span>
+                <span>{{'remove' | translate}}</span>
+              </div>
+            </li>
+          </ul>
+        </nz-dropdown-menu>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<app-admin-form *ngIf="showForm" (close)="closeForm()"></app-admin-form>

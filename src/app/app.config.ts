@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule, provideHttpClient } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule, provideHttpClient, withInterceptors } from "@angular/common/http";
 import { ApplicationConfig, importProvidersFrom } from "@angular/core";
 import { BrowserAnimationsModule, provideAnimations } from "@angular/platform-browser/animations";
 import { provideRouter } from "@angular/router";
@@ -11,6 +11,10 @@ import { IconsProviderModule } from "./shared/modules/icons-provider.module";
 import { NzNotificationService } from "ng-zorro-antd/notification";
 import { NgxPermissionsModule, NgxPermissionsService } from "ngx-permissions";
 import { AngularYandexMapsModule, YaConfig } from "angular8-yandex-maps";
+import { NZ_I18N } from 'ng-zorro-antd/i18n';
+import { en_US } from 'ng-zorro-antd/i18n';
+import { errorInterceptor } from "./shared/interceptors/error.interceptor";
+import { authInterceptor } from "./shared/interceptors/api.interceptor";
 
 export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -28,11 +32,14 @@ export const appConfig: ApplicationConfig = {
         importProvidersFrom(NgxPermissionsModule.forRoot()),
         importProvidersFrom(AngularYandexMapsModule.forRoot(mapConfig)),
         provideAnimations(),
-        provideHttpClient(),
+        provideHttpClient(
+            withInterceptors([errorInterceptor, authInterceptor]) 
+        ),
         importProvidersFrom(BrowserModule, BrowserAnimationsModule, IconsProviderModule),
         provideRouter(appRoutes),
         importProvidersFrom(
             HttpClientModule,
+            
             TranslateModule.forRoot({
                 loader: {
                     provide: TranslateLoader,
@@ -40,6 +47,7 @@ export const appConfig: ApplicationConfig = {
                     deps: [HttpClient]
                 }
             })
-        )
+        ),
+        { provide: NZ_I18N, useValue: en_US },
     ],
 };

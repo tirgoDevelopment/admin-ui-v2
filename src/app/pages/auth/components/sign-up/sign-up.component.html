@@ -32,11 +32,9 @@
           <span *ngIf="form.get('password')?.errors['minlength']">Пароль должен содержать минимум 4 символов</span>
           <span *ngIf="form.get('password')?.errors['maxlength']">Пароль не может превышать 8 символов</span>
         </div>
-        <button nz-button  nzType="primary" class="login-button" [disabled]="form.invalid" [nzLoading]="form.disabled">Войти</button>
+        <button type="submit" nz-button nzType="primary" class="login-button" [disabled]="form.invalid" [nzLoading]="form.disabled">Войти</button>
       </form>
-
       <!-- <button nz-button nzType="link" >Забыли пароль?</button> -->
-
     </div>
   </div>
 </div>

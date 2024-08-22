@@ -7,6 +7,9 @@
   a {
     color: var(--textColor);
   }
+  span  {
+    color: var(--textColor);
+  }
   .menu-item-icon {
     margin-right: 6px;
   }
@@ -21,6 +24,7 @@
 }
 
 :host ::ng-deep .ant-menu-inline .ant-menu-item {
+  padding: 24px;
   margin: 0;
 }
 
@@ -166,7 +170,25 @@ nz-header {
   width: 20px;
 }
 
+.nz-menu {
+  background-color: var(--bgColor);
+    span {
+      margin: 5px 0;
+      color: var(--textColor);
+    } 
+  :hover {
+    background-color: var(--menu-item-bgcolor-hover);
+  }
+}
+
+.nz-resizable-preview {
+  border-width: 0;
+  border-right-width: 1px;
+}
+
+
 // Content Styles
+
 nz-content {
   margin: 15px;
 }
@@ -174,40 +196,17 @@ nz-content {
 .inner-content {
   padding: 15px;
   background: var(--bgColor);
-  height: 100%;
 }
 
 // Layout Header Styles
 .ant-layout-header {
+  position: sticky;
+  top: 0;
   background: var(--bgColor);
   height: 55px;
 }
 
 .ant-layout {
   background-color: var(--ant-layout-bgcolor);
-}
-
-// Button Styles
-.secondary-button {
-  background-color: $secondary-color;
-  color: #fff;
-  border-color: $secondary-color;
-}
-
-.danger-button {
-  background-color: $danger-color;
-  color: #fff;
-  border-color: $danger-color;
-}
-
-.success-button {
-  background-color: $success-color;
-  color: #fff;
-  border-color: $success-color;
-}
-
-:root {
-  background-color: var(--bgColor);
-  color: var(--textColor);
-  border-color: var(--borderColor);
+  overflow: auto;
 }

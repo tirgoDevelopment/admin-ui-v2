@@ -1,0 +1,18 @@
+.input-with-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-button input {
+  padding-right: 40px; /* Add some padding to the right to make space for the button */
+}
+
+.input-with-button .generate-btn {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+}

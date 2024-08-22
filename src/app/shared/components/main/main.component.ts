@@ -15,7 +15,6 @@ import { ThemeService } from '../../services/theme.service';
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent {
-  isAuthRoute: boolean = false; 
   isLoading: boolean = false;
   theme: 'light' | 'dark';
   isCollapsed = true;
@@ -26,7 +25,7 @@ export class MainComponent {
   constructor(
     public themeService: ThemeService,
     private translate: TranslateService,
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router) {
   }
   ngOnInit(): void {
@@ -50,5 +49,3 @@ export class MainComponent {
   } 
 
 }
-
-// ant-menu-submenu ant-menu-submenu-selected ant-menu-submenu-vertical

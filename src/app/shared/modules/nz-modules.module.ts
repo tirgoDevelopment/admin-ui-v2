@@ -13,6 +13,9 @@ import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzNotificationModule } from 'ng-zorro-antd/notification';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzDividerModule } from 'ng-zorro-antd/divider';
+import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 
 @NgModule({
     imports: [
@@ -29,7 +32,10 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
         NzAlertModule,
         NzNotificationModule,
         NzFormModule,
-        NzToolTipModule
+        NzToolTipModule,
+        NzTableModule,
+        NzDividerModule,
+        NzDrawerModule
     ],
 
     exports: [
@@ -46,8 +52,11 @@ import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
         NzAlertModule,
         NzNotificationModule,
         NzFormModule,
-        NzToolTipModule
-    ],
+        NzToolTipModule,
+        NzTableModule,
+        NzDividerModule,
+        NzDrawerModule
+    ]
 })
 export class NzModules {
 }

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { Observable, of, switchMap, throwError } from 'rxjs';
@@ -13,6 +14,7 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
+    private router: Router,
     private permissionService: NgxPermissionsService) { }
 
   set accessToken(token: string) {
@@ -34,6 +36,7 @@ export class AuthService {
         // Parse the access token and get the user's data
         let user: any;
         user = this.accessToken ? jwtDecode(this.accessToken) : null;
+        this.isAuthenticated = true;
         // Load the user's permissions
         let allPermission = user?.role?.permission ? this.checkPermissions(user?.role?.permission) : [];
         this.permissionService.loadPermissions(allPermission);
@@ -47,6 +50,8 @@ export class AuthService {
 
   logout(): void {
     this.isAuthenticated = false;
+    localStorage.clear();
+    this.router.navigate(['/auth/sign-up']);
   }
 
   checkPermissions(permissions: any) {
@@ -100,13 +105,11 @@ export class AuthService {
     if (this.accessToken) {
       return of(true);
     }
-
-    if (this.isAuthenticated) {
+    if  (this.isAuthenticated) {
       return of(true);
     }
-
-    return of(false);
+    else {
+      return of(false);
+    }
   }
-
-
 }

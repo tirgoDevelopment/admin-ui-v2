@@ -262,7 +262,7 @@
     "closed": "Bajarildi",
     "canceled": "Bekor qilingan",
     "NotFound": "Ma'lumotlar topilmadi",
-    "UserNotFound": "Foydalanuvchi topilmadi",
+    "userNotFound": "Foydalanuvchi topilmadi",
     "OrderNotFound": "Buyurtma topilmadi",
     "MerchantNotFound": "Mijoz sotuvchisi topilmadi",
     "AgentNotFound": "Agent topilmadi",
@@ -395,5 +395,7 @@
     "cargo_dimensions": "Yuk o'lchamlari",
     "continue": "Davom eting",
     "create": "Yaratmoq",
-    "logout": "Chiqish"
+    "logout": "Chiqish",
+    "admin_id": "Administrator ID",
+    "login_admin": "Login"
 }

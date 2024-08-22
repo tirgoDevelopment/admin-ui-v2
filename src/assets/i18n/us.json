@@ -262,7 +262,7 @@
     "closed": "Closed",
     "canceled": "Canceled",
     "NotFound": "Data not found",
-    "UserNotFound": "User not found",
+    "userNotFound": "User not found",
     "OrderNotFound": "Order not found",
     "MerchantNotFound": "Client merchant not found",
     "AgentNotFound": "Agent not found",
@@ -395,5 +395,8 @@
     "cargo_dimensions": "Cargo dimensions",
     "continue": "Continue",
     "create": "Create",
-    "logout": "Logout"
+    "logout": "Logout",
+    "admin_id": "Administrator ID",
+    "login_admin": "Login"
+
 }

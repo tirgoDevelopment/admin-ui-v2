@@ -6,7 +6,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { NgxPermissionsService } from 'ngx-permissions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-in',
@@ -33,8 +33,8 @@ export class SignUpComponent implements OnInit {
   form: FormGroup;
 
   constructor(
-    private notificationService: NotificationService,
     private formBuilder: FormBuilder,
+    private router: Router,
     private authService: AuthService,) { }
 
   ngOnInit(): void {
@@ -43,8 +43,8 @@ export class SignUpComponent implements OnInit {
 
   buildForm(): void {
     this.form = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(4)]],
-      password: ['', [Validators.required, Validators.maxLength(8), Validators.minLength(4)]],
+      username: ['superadmin', [Validators.required, Validators.maxLength(20), Validators.minLength(4)]],
+      password: ['admin', [Validators.required, Validators.maxLength(8), Validators.minLength(4)]],
       userType: ['staff'],
     });
   }
@@ -55,15 +55,14 @@ export class SignUpComponent implements OnInit {
 
   onSubmit() {
     this.form.disable();
-    this.authService.signIn(this.form.value).subscribe({
-      next: () => {
+    this.authService.signIn(this.form.value).subscribe((res) => {
+      if (res && res.success) {
         this.form.reset();
+        this.router.navigate(['/dashboard']);
         this.form.enable();
-      },
-      error: () => {
-        this.form.enable();
-        this.notificationService.error('Войти', 'Не удалось войти в систему');
       }
+    },err => {
+      this.form.enable();
     });
   }
 }
