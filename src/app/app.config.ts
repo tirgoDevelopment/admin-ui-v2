@@ -15,39 +15,40 @@ import { NZ_I18N } from 'ng-zorro-antd/i18n';
 import { en_US } from 'ng-zorro-antd/i18n';
 import { errorInterceptor } from "./shared/interceptors/error.interceptor";
 import { authInterceptor } from "./shared/interceptors/api.interceptor";
+import { provideEnvironmentNgxMask } from "ngx-mask";
 
 export function HttpLoaderFactory(http: HttpClient) {
-    return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
+  return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 };
 
 const mapConfig: YaConfig = {
-    apikey: 'df0cb391-97e5-47ce-a954-f54cb0644e56',
-    lang: 'ru_RU'
+  apikey: 'df0cb391-97e5-47ce-a954-f54cb0644e56',
+  lang: 'ru_RU'
 };
 
 
 export const appConfig: ApplicationConfig = {
-    providers: [
-        NzNotificationService,
-        importProvidersFrom(NgxPermissionsModule.forRoot()),
-        importProvidersFrom(AngularYandexMapsModule.forRoot(mapConfig)),
-        provideAnimations(),
-        provideHttpClient(
-            withInterceptors([errorInterceptor, authInterceptor]) 
-        ),
-        importProvidersFrom(BrowserModule, BrowserAnimationsModule, IconsProviderModule),
-        provideRouter(appRoutes),
-        importProvidersFrom(
-            HttpClientModule,
-            
-            TranslateModule.forRoot({
-                loader: {
-                    provide: TranslateLoader,
-                    useFactory: HttpLoaderFactory,
-                    deps: [HttpClient]
-                }
-            })
-        ),
-        { provide: NZ_I18N, useValue: en_US },
-    ],
+  providers: [
+    NzNotificationService,
+    importProvidersFrom(NgxPermissionsModule.forRoot()),
+    importProvidersFrom(AngularYandexMapsModule.forRoot(mapConfig)),
+    provideAnimations(),
+    provideHttpClient(
+      withInterceptors([errorInterceptor, authInterceptor])
+    ),
+    provideEnvironmentNgxMask(),
+    importProvidersFrom(BrowserModule, BrowserAnimationsModule, IconsProviderModule),
+    provideRouter(appRoutes),
+    importProvidersFrom(
+      HttpClientModule,
+      TranslateModule.forRoot({
+        loader: {
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient]
+        }
+      })
+    ),
+    { provide: NZ_I18N, useValue: en_US },
+  ],
 };

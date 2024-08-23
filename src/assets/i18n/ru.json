@@ -395,5 +395,7 @@
     "create": "Создат",
     "logout": "Выход",
     "admin_id": "Администратор ID",
-    "login_admin": "Логин"
+    "login_admin": "Логин",
+    "are_you_sure": "Вы уверены?",
+    "delete_sure": "Вы уверены, что хотите удалить?"
 }

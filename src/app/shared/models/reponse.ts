@@ -1,10 +1,5 @@
 export interface Response<T> {
-	data?: {
-        content: T;
-		pageSize: number;
-		pageIndex: number;
-		totalPagesCount: number;
-    };
+	data: T;
 	content?: T;
 	success?: boolean;
 	status?: boolean;

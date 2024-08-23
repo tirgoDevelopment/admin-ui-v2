@@ -397,5 +397,7 @@
     "create": "Yaratmoq",
     "logout": "Chiqish",
     "admin_id": "Administrator ID",
-    "login_admin": "Login"
+    "login_admin": "Login",
+    "are_you_sure": "Ishonchingiz komilmi ?",
+    "delete_sure": "Ma'lumotni o'chirmoqchimisiz ?"
 }

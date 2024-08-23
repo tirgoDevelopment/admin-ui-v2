@@ -24,7 +24,6 @@ body.dark-mode {
 }
 
 body {
-
   p,
   h1,
   h2,
@@ -145,14 +144,10 @@ body {
 }
 
 nz-select {
-  nz-select-placeholder {
-    color: var(--textColor) !important;
-  }
-
   .ant-select-selector {
-    background: var(--tbl-header-bg) !important;
+    background: var(--input-bg) !important;
     color: var(--textColor) !important;
-    border-color: var(--tbl-border-clr) !important;
+    border-color: var(--input-border) !important;
   }
 
   .ant-select-arrow {
@@ -289,6 +284,11 @@ nz-select {
 .ant-drawer-body {
   background-color: var(--bgColor);
 }
+.ant-drawer-footer {
+  border-top: 1px solid  var(--input-border) !important;
+  background-color: var(--bgColor);
+}
+
 
 
 input:-webkit-autofill,
@@ -301,9 +301,35 @@ input:-webkit-autofill:focus {
 
 
 .ant-input-group {
-  margin: 10px 0 !important; 
+  margin: 15px 0 !important;
+  background-color: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
    input {
     border-radius: 5px !important;
-
+    background-color: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--textColor) !important;
    }
+   
+}
+
+.ant-input-affix-wrapper {
+  background-color: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+   input {
+    border-radius: 5px !important;
+    background-color: var(--input-bg) !important;
+    border-color: var(--input-border) !important;
+    color: var(--textColor) !important;
+   }
+   i {
+    color: var(--textColor);
+   }
+}
+
+.ant-modal-content {
+  background-color: var(--bgColor) !important;
+  .ant-modal-confirm-title, .ant-modal-confirm-content, .ant-modal-close-icon {
+    color: var(--textColor) !important;
+  }
 }

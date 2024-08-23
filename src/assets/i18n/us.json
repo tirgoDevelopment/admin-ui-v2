@@ -397,6 +397,7 @@
     "create": "Create",
     "logout": "Logout",
     "admin_id": "Administrator ID",
-    "login_admin": "Login"
-
+    "login_admin": "Login",
+    "are_you_sure": "Are you sure?",
+    "delete_sure": "Are you sure you want to delete?"
 }

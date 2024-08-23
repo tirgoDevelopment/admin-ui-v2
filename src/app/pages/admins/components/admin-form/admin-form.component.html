@@ -1,50 +1,3 @@
-<!-- <form [formGroup]="form">
-  
-  <div class="floating-label">
-    <input type="text" nz-input id="fullName" placeholder=" " formControlName="fullName" />
-    <label for="fullName">{{ 'full_name' | translate }}</label>
-    <div *ngIf="form.get('fullName')?.touched && form.get('fullName')?.invalid" class="error-message">
-      <span *ngIf="form.get('fullName')?.errors?.['required']">
-        {{ 'This field is required' | translate }}
-      </span>
-    </div>
-  </div>
-
-  <div class="floating-label">
-    <input type="text" nz-input id="login" placeholder=" " formControlName="username" />
-    <label for="login">{{ 'login_admin' | translate }}</label>
-    <div *ngIf="form.get('username')?.touched && form.get('username')?.invalid" class="error-message">
-      <span *ngIf="form.get('username')?.errors?.['required']">
-        {{ 'This field is required' | translate }}
-      </span>
-    </div>
-  </div>
-
-  <div class="floating-label input-with-button">
-    <input type="password" nz-input id="password" placeholder=" " required formControlName="password" />
-    <label for="password">{{ 'password' | translate }}</label>
-    <button nz-button nzType="link" nzShape="circle" class="generate-btn" (click)="generatePassword()">
-      <i nz-icon nzType="sync"></i>
-    </button>
-
-    <div *ngIf="form.get('password')?.touched && form.get('password')?.invalid" class="error-message">
-      <span *ngIf="form.get('password')?.errors?.['required']">
-        {{ 'This field is required' | translate }}
-      </span>
-      <span *ngIf="form.get('password')?.errors?.['minlength']">
-        {{ 'Password must be at least 8 characters long' | translate }}
-      </span>
-      <span *ngIf="form.get('password')?.errors?.['maxlength']">
-        {{ 'Password cannot be more than 16 characters long' | translate }}
-      </span>
-      <span *ngIf="form.get('password')?.errors?.['pattern']">
-        {{ 'Password can only contain letters and numbers' | translate }}
-      </span>
-    </div>
-  </div>
-
-</form> -->
-
 <form [formGroup]="form">
 
   <nz-input-group class="input-group">
@@ -55,13 +8,30 @@
     <input formControlName="username" type="text" nz-input placeholder="{{'login_admin' | translate}}" />
   </nz-input-group>
 
+  <nz-input-group class="input-group">
+    <nz-select nzPlaceHolder="{{'role' | translate}}" formControlName="roleId" style="width: 100% !important;">
+      <nz-option [nzValue]="role.id" [nzLabel]="role.name" *ngFor="let role of roles"></nz-option>
+    </nz-select>
+  </nz-input-group>
+
   <nz-input-group class="input-group" [nzSuffix]="suffixTemplateEye">
     <input formControlName="password" type="text" nz-input placeholder="{{'password' | translate}}" />
   </nz-input-group>
   <ng-template #suffixTemplateEye>
-    <span nz-icon [nzType]="'sync'" style="cursor: pointer;"
-      (click)="generatePassword()"></span>
+    <i nz-icon [nzType]="'sync'" style="cursor: pointer;" (click)="generatePassword()"></i>
   </ng-template>
 
-  <!-- <button type="submit" nz-button nzType="primary" class="login-button" [disabled]="form.invalid" [nzLoading]="form.disabled">Войти</button> -->
+  <nz-input-group class="input-group">
+    <input formControlName="phone" type="text" nz-input placeholder="{{ 'phone' | translate }}" mask="+000 00 000 00 00"/>
+  </nz-input-group>
+
+  <div style="position: absolute; bottom: 10px; right: 10px; display: flex; gap: 10px;">
+    <button nz-button class="danger-button" (click)="onCancel()">
+      {{ 'cancel' | translate }}
+    </button>
+    <button nz-button class="success-button" [disabled]="form.invalid" (click)="onSubmit()">
+      {{ 'save' | translate }}
+    </button>
+  </div>
+
 </form>

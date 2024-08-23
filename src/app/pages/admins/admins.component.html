@@ -46,7 +46,6 @@
     <span nz-icon nzType="undo" nzTheme="outline"></span>  
   </button>
 </div> -->
-
 <nz-table [nzSize]="'middle'" [nzPaginationPosition]="'bottom'" [nzData]="data" [nzPageSizeOptions]="[10, 20, 30]"
   [nzShowPagination]="true" [nzShowSizeChanger]="true" [nzLoading]="loader" [nzNoResult]="('no_data' | translate)">
   <thead>
@@ -80,10 +79,10 @@
                 <span>{{'edit' | translate}}</span>
               </div>
             </li>
-            <li nz-menu-item>
-              <div style="display: flex; align-items: center; gap:5px">
+            <li nz-menu-item (click)="remove(data.id)">
+              <div style="display: flex; align-items: center; gap: 5px;">
                 <span nz-icon nzType="delete" nzTheme="outline" style="color: red;"></span>
-                <span>{{'remove' | translate}}</span>
+                <span>{{ 'remove' | translate }}</span>
               </div>
             </li>
           </ul>
@@ -93,4 +92,4 @@
   </tbody>
 </nz-table>
 
-<app-admin-form *ngIf="showForm" (close)="closeForm()"></app-admin-form>
+<app-admin-form *ngIf="showForm"></app-admin-form>
