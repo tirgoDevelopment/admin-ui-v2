@@ -16,10 +16,11 @@ import {
   EllipsisOutline,
   FilterFill,
   UndoOutline,
-  SyncOutline
+  SyncOutline,
+  FileSearchOutline,
 } from '@ant-design/icons-angular/icons';
 
-const icons = [SyncOutline,UndoOutline,FilterFill,EllipsisOutline,MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, FormOutline, LogoutOutline,UserOutline,LockOutline,EyeOutline,EyeInvisibleOutline,MailOutline,PlusOutline];
+const icons = [FileSearchOutline,SyncOutline,UndoOutline,FilterFill,EllipsisOutline,MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, FormOutline, LogoutOutline,UserOutline,LockOutline,EyeOutline,EyeInvisibleOutline,MailOutline,PlusOutline];
 
 @NgModule({
   imports: [NzIconModule],

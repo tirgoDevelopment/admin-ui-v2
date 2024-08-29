@@ -17,6 +17,7 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
 
 @NgModule({
     imports: [
@@ -37,7 +38,8 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
         NzTableModule,
         NzDividerModule,
         NzDrawerModule,
-        NzPopconfirmModule
+        NzPopconfirmModule,
+        NzSwitchModule
     ],
 
     exports: [
@@ -58,8 +60,8 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
         NzTableModule,
         NzDividerModule,
         NzDrawerModule,
-        NzPopconfirmModule
+        NzPopconfirmModule,
+        NzSwitchModule
     ],
 })
-export class NzModules {
-}
+export class NzModules {}

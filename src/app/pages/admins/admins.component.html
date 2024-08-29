@@ -46,40 +46,49 @@
     <span nz-icon nzType="undo" nzTheme="outline"></span>  
   </button>
 </div> -->
-<nz-table [nzSize]="'middle'" [nzPaginationPosition]="'bottom'" [nzData]="data" [nzPageSizeOptions]="[10, 20, 30]"
-  [nzShowPagination]="true" [nzShowSizeChanger]="true" [nzLoading]="loader" [nzNoResult]="('no_data' | translate)">
+<nz-table
+  [nzSize]="'middle'"
+  [nzPaginationPosition]="'bottom'"
+  [nzData]="data"
+  [nzPageSizeOptions]="[10, 20, 30]"
+  [nzShowPagination]="true"
+  [nzShowSizeChanger]="true"
+  [nzLoading]="loader"
+  [nzNoResult]="('no_data' | translate)"z
+  (nzPageIndexChange)="onPageIndexChange($event)"
+  (nzPageSizeChange)="onPageSizeChange($event)">
   <thead>
     <tr>
       <th> No </th>
-      <th [nzSortOrder]="'asc'" nzSortBy="id">ID</th>
-      <th> {{'full_name' | translate}} </th>
-      <th> {{'login' | translate}} </th>
+      <th>ID</th>
+      <th>{{'full_name' | translate}}</th>
+      <th> {{'login_admin' | translate}} </th>
       <th> {{"register_date" | translate}} </th>
       <th> {{"last_enter" | translate}} </th>
       <th> </th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let data of data; let i = index">
+    <tr *ngFor="let item of data; let i = index">
       <td>{{i+1}}</td>
-      <td>{{data.id}}</td>
-      <td>{{data.fullName}}</td>
-      <td>{{data.username}}</td>
-      <td>{{data.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
-      <td>{{data.user.lastLogin | date: 'dd/MM/yyyy HH:mm' }}</td>
+      <td>{{item.id}}</td>
+      <td>{{item.fullName}}</td>
+      <td>{{item.username}}</td>
+      <td>{{item.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+      <td>{{item.user.lastLogin | date: 'dd/MM/yyyy HH:mm' }}</td>
       <td class="action-col">
         <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
           <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
         </a>
         <nz-dropdown-menu #menu="nzDropdownMenu">
           <ul nz-menu nzSelectable>
-            <li nz-menu-item>
+            <li nz-menu-item (click)="update(item)">
               <div style="display: flex; align-items: center; gap:5px">
                 <span nz-icon nzType="edit" nzTheme="outline" style="color: green;"></span>
                 <span>{{'edit' | translate}}</span>
               </div>
             </li>
-            <li nz-menu-item (click)="remove(data.id)">
+            <li nz-menu-item (click)="remove(item.id)">
               <div style="display: flex; align-items: center; gap: 5px;">
                 <span nz-icon nzType="delete" nzTheme="outline" style="color: red;"></span>
                 <span>{{ 'remove' | translate }}</span>

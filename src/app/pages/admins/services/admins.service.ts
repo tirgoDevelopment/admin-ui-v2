@@ -20,11 +20,11 @@ export class AdminsService {
     return this.http.get(env.apiUrl + '/users/staffs/staff-by');
   }
 
-  create(data: any) {
+  create(data: AdminModel) {
     return this.http.post(env.apiUrl + '/users/staffs/create-staff', data);
   }
 
-  update(data: any) {
+  update(data: AdminModel) {
     return this.http.put(env.apiUrl + '/users/staffs/update-staff', data);
   }
 

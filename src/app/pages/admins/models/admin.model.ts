@@ -5,7 +5,7 @@ export interface AdminModel extends BaseModel {
     username?: string;
     fullName?: string;
     login?: string;
-    role?: string;
+    roleId?: string;
     dataAt?: string;
     lastDateAt?: string;
     phone?: string;

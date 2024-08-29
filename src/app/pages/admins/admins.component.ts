@@ -10,11 +10,13 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { AdminFormComponent } from './components/admin-form/admin-form.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { ResponseContent } from 'src/app/shared/models/res-content.model';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 
 @Component({
   selector: 'app-admins',
   standalone: true,
-  imports: [CommonModule, NzModules, TranslateModule, FormsModule],
+  imports: [CommonModule, NzModules, TranslateModule, FormsModule, IconsProviderModule],
   providers: [NzModalService],
   templateUrl: './admins.component.html',
   styleUrls: ['./admins.component.scss'],
@@ -36,15 +38,13 @@ import { ResponseContent } from 'src/app/shared/models/res-content.model';
   ]
 })
 export class AdminsComponent implements OnInit {
-  @ViewChild('drawerFooter', { static: true }) drawerFooter: TemplateRef<{}>;
 
   confirmModal?: NzModalRef;
   data: AdminModel[];
   loader: boolean = false;
-  showForm: boolean = false;
   isFilterVisible: boolean = false
   filter = {id: '',loadingLocation: '',deliveryLocation: '',statusId: ''};
-
+  showForm: boolean = false;
   pageParams = {
     pageIndex: 1,
     pageSize: 10,
@@ -54,6 +54,7 @@ export class AdminsComponent implements OnInit {
   };
 
   constructor(
+    private toastr: NotificationService,
     private modal: NzModalService,
     private adminsService: AdminsService,
     private drawer: NzDrawerService,
@@ -74,20 +75,27 @@ export class AdminsComponent implements OnInit {
     })
   }
   add(): void {
-    const translatedTitle = this.translate.instant('add_admins');
-    this.drawer.create({
-      nzTitle: translatedTitle,
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('add_admins'),
       nzContent: AdminFormComponent,
       nzPlacement: 'right',
-      nzFooter: this.drawerFooter,
+    });
+    drawerRef.afterClose.subscribe(() => {
+      this.getAll();
+      drawerRef.componentInstance?.form.reset();
     });
   }
-  toggleFilter(): void {
-    this.isFilterVisible = !this.isFilterVisible;
-    // Implement filter toggle functionality here if needed
-  }
-  resetInput(field: string): void {
-    // Implement input reset logic based on field here
+  update(item:AdminModel) {
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('edit_admins'),
+      nzContent: AdminFormComponent,
+      nzPlacement: 'right',
+      nzContentParams: { admin: item }
+    });
+    drawerRef.afterClose.subscribe(() => {
+      this.getAll();
+      drawerRef.componentInstance?.form.reset();
+    });
   }
   remove(id: number | string) {
     this.confirmModal = this.modal.confirm({
@@ -99,10 +107,23 @@ export class AdminsComponent implements OnInit {
       nzOnOk: () =>
         this.adminsService.delete(id).subscribe((res: ResponseContent<AdminModel[]>) => {
           if (res && res.success) {
+            this.toastr.success(this.translate.instant('successfullDeleted'),'');
             this.getAll();
           }
         }),
     });
+  }
+  toggleFilter(): void {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
+  onPageIndexChange(pageIndex: number): void {
+    this.pageParams.pageIndex = pageIndex;
+    this.getAll();
+  }
+  onPageSizeChange(pageSize: number): void {
+    this.pageParams.pageSize = pageSize;
+    this.pageParams.pageIndex = 1;
+    this.getAll();
   }
 
 }

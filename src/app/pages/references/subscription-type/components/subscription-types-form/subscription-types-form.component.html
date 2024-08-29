@@ -1,0 +1,46 @@
+<form [formGroup]="form">
+
+  <nz-input-group class="input-group">
+    <nz-form-label nzRequired>{{ 'named' | translate }}</nz-form-label>
+    <input formControlName="name" type="text" nz-input placeholder="{{ 'named' | translate }}" required />
+    <div *ngIf="form.get('name').touched && form.get('name').hasError('required')" class="error-message">
+      {{ 'name_required' | translate }}
+    </div>
+  </nz-input-group>
+
+  <nz-input-group class="input-group">
+    <nz-form-label nzRequired>{{'duration' | translate}}</nz-form-label>
+    <input formControlName="duration" type="number" nz-input placeholder="{{'duration' | translate}}" />
+    <div *ngIf="form.get('duration').touched && form.get('duration').hasError('required')" class="error-message">
+      {{ 'duration_required' | translate }}
+    </div>
+  </nz-input-group>
+
+  <nz-input-group class="input-group">
+    <nz-form-label nzRequired>{{'price' | translate}}</nz-form-label>
+    <input formControlName="price" type="number" nz-input placeholder="{{'price' | translate}}" />
+    <div *ngIf="form.get('price').touched && form.get('price').hasError('required')" class="error-message">
+      {{ 'price_required' | translate }}
+    </div>
+  </nz-input-group>
+
+  <nz-input-group class="input-group">
+    <nz-form-label nzRequired>{{'currency' | translate}}</nz-form-label>
+    <nz-select nzPlaceHolder="{{'currency' | translate}}" formControlName="currencyId" style="width: 100% !important;">
+      <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of currencies"></nz-option>
+    </nz-select>
+    <div *ngIf="form.get('currencyId').touched && form.get('currencyId').hasError('required')" class="error-message">
+      {{ 'currency_required' | translate }}
+    </div>
+  </nz-input-group>
+
+  <div class="button-wrapper">
+    <button nz-button class="danger-button" (click)="onCancel()">
+      {{ 'cancel' | translate }}
+    </button>
+    <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()" [disabled]="form.invalid || loading">
+      {{ 'save' | translate }}
+    </button>
+  </div>
+
+</form>

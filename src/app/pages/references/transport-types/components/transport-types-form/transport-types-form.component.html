@@ -1,0 +1,21 @@
+<form [formGroup]="form">
+
+    <nz-input-group class="input-group">
+      <nz-form-label nzRequired>{{ 'named' | translate }}</nz-form-label>
+      <input formControlName="name" type="text" nz-input placeholder="{{ 'named' | translate }}" required />
+      <div *ngIf="form.get('name').touched && form.get('name').hasError('required')" class="error-message">
+        {{ 'name_required' | translate }}
+      </div>
+    </nz-input-group>
+  
+  
+    <div class="button-wrapper">
+      <button nz-button class="danger-button" (click)="onCancel()">
+        {{ 'cancel' | translate }}
+      </button>
+      <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()" [disabled]="form.invalid || loading">
+        {{ 'save' | translate }}
+      </button>
+    </div>
+  
+  </form>

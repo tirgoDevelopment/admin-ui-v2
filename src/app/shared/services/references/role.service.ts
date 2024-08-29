@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { env } from 'src/environmens/environment';
-import { RoleModel } from '../models/role.model';
-import { Response } from '../../shared/models/reponse';
+import { RoleModel } from '../../models/role.model';
+import { Response } from '../../models/reponse';
 
 @Injectable({
     providedIn: 'root'

@@ -9,28 +9,59 @@
     </div>
 
     <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <!-- <li nz-submenu nzOpen nzTitle="{{'control_panel' | translate}}" nzIcon="dashboard">
-        <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a [routerLink]="'welcome'">Welcome</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Monitor</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a>Workplace</a>
-          </li>
-        </ul>
-      </li> -->
-      
-      <li nz-menu-item nz-tooltip nzTooltipPlacement="right" [nzTooltipTitle]="isCollapsed ? ('control_panel' | translate) : ''" routerLink="/dashboard">
+
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right" 
+        [nzTooltipTitle]="isCollapsed ? ('control_panel' | translate) : ''" routerLink="/dashboard">
         <span nz-icon nzType="dashboard"></span>
         <span>{{'control_panel' | translate}}</span>
       </li>
 
-      <li nz-menu-item nz-tooltip nzTooltipPlacement="right" [nzTooltipTitle]="isCollapsed ? ('administrators' | translate) : ''" routerLink="/admins">
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right" 
+        [nzTooltipTitle]="isCollapsed ? ('administrators' | translate) : ''" routerLink="/admins">
         <span nz-icon nzType="user"></span>
         <span>{{'administrators' | translate}}</span>
+      </li>
+
+      <li nz-submenu nzOpen nzTitle="{{'directories' | translate}}" nzIcon="file-search">
+        <ul>
+
+          <li nz-menu-item nzMatchRouter routerLink="/references/cargo-type-groups">
+            <a>{{'cargo_group_type' | translate}}</a>
+          </li>
+
+          <li nz-menu-item nzMatchRouter routerLink="/references/cargo-types">
+            <a>{{'cargo_type' | translate}}</a>
+          </li>
+
+          <li nz-menu-item nzMatchRouter routerLink="/references/loading-method">
+            <a>{{'loading_method' | translate}}</a>
+          </li>
+
+          <li nz-menu-item nzMatchRouter routerLink="/references/subscription-types">
+            <a>{{'subscription_types' | translate}}</a>
+          </li>
+
+          <li nz-menu-item nzMatchRouter routerLink="/references/currencies">
+            <a>{{'currency' | translate}}</a>
+          </li>
+
+          <li nz-menu-item nzMatchRouter routerLink="/references/transport-types">
+            <a>{{'truck_type' | translate}}</a>
+          </li>
+
+          <li nz-menu-item nzMatchRouter routerLink="/references/transport-kinds">
+            <a>{{'transport_kind' | translate}}</a>
+          </li>
+
+          <li nz-menu-item nzMatchRouter routerLink="/references/cargo-status">
+            <a>{{'status' | translate}}</a>
+          </li>
+
+          <li nz-menu-item nzMatchRouter routerLink="/references/cargo-packages">
+            <a>{{'package' | translate}}</a>
+          </li>
+
+        </ul>
       </li>
 
     </ul>
@@ -102,11 +133,10 @@
     <nz-content>
       <ng-template #indicatorTemplate> <img src="../assets/images/" alt=""> </ng-template>
       <div class="inner-content">
-        
+
         <router-outlet></router-outlet>
       </div>
     </nz-content>
 
   </nz-layout>
 </nz-layout>
-
