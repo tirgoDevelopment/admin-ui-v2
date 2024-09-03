@@ -17,6 +17,12 @@
       </li>
 
       <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right" 
+        [nzTooltipTitle]="isCollapsed ? ('clients' | translate) : ''" routerLink="/clients">
+        <span nz-icon nzType="team"></span>
+        <span>{{'clients' | translate}}</span>
+      </li>
+
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right" 
         [nzTooltipTitle]="isCollapsed ? ('administrators' | translate) : ''" routerLink="/admins">
         <span nz-icon nzType="user"></span>
         <span>{{'administrators' | translate}}</span>
@@ -24,7 +30,9 @@
 
       <li nz-submenu nzOpen nzTitle="{{'directories' | translate}}" nzIcon="file-search">
         <ul>
-
+          <li nz-menu-item nzMatchRouter routerLink="/references/roles">
+            <a>{{'user_roles' | translate}}</a>
+          </li>
           <li nz-menu-item nzMatchRouter routerLink="/references/cargo-type-groups">
             <a>{{'cargo_group_type' | translate}}</a>
           </li>

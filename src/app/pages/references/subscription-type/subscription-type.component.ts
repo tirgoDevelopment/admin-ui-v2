@@ -25,8 +25,6 @@ export class SubscriptionTypeComponent implements OnInit {
   data: any[];
   loader: boolean = false;
   showForm: boolean = false;
-  isFilterVisible: boolean = false
-  filter = {id: '',loadingLocation: '',deliveryLocation: '',statusId: ''};
 
   pageParams = {
     pageIndex: 1,
@@ -51,6 +49,8 @@ export class SubscriptionTypeComponent implements OnInit {
     this.subscriptionTypesService.getAll().subscribe((res:any) => {
       if (res && res.success) {
         this.data = res.data;
+        this.loader = false;
+      }else {
         this.loader = false;
       }
     }, err => {
@@ -99,9 +99,6 @@ export class SubscriptionTypeComponent implements OnInit {
           }
         }),
     });
-  }
-  toggleFilter(): void {
-    this.isFilterVisible = !this.isFilterVisible;
   }
   onPageIndexChange(pageIndex: number): void {
     this.pageParams.pageIndex = pageIndex;

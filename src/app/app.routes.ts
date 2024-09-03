@@ -12,6 +12,7 @@ export const appRoutes: Route[] = [
     children: [
       { path: 'dashboard', loadChildren: () => import('./pages/dashboard/dashboard.routes').then(m => m.default), canActivate: [AuthGuard] },
       { path: 'admins', loadChildren: () => import('./pages/admins/admins.routes').then(m => m.default), canActivate: [AuthGuard] },
+      { path: 'clients', loadChildren: () => import('./pages/clients/clients.routes').then(m => m.default), canActivate: [AuthGuard] },
       // References
       { path: 'references/cargo-type-groups', loadChildren: () => import('./pages/references/cargo-type-groups/cargo-type-groups.routes').then(m => m.default), canActivate: [AuthGuard] },
       { path: 'references/cargo-types', loadChildren: () => import('./pages/references/cargo-types/cargo-types.routes').then(m => m.default), canActivate: [AuthGuard] },
@@ -22,6 +23,7 @@ export const appRoutes: Route[] = [
       { path: 'references/cargo-status', loadChildren: () => import('./pages/references/cargo-status/cargo-status.routes').then(m => m.default), canActivate: [AuthGuard] },
       { path: 'references/loading-method', loadChildren: () => import('./pages/references/loading-method/loading-method.routes').then(m => m.default), canActivate: [AuthGuard] },
       { path: 'references/cargo-packages', loadChildren: () => import('./pages/references/cargo-packages/cargo-packages.routes').then(m => m.default), canActivate: [AuthGuard] },
+      { path: 'references/roles', loadChildren: () => import('./pages/references/roles/roles.routes').then(m => m.default), canActivate: [AuthGuard] },
     ]
   },
   {

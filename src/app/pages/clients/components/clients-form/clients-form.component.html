@@ -1,0 +1,74 @@
+<form [formGroup]="form">
+
+    <nz-input-group class="input-group">
+        <nz-form-label nzRequired>{{ 'first_name' | translate }}</nz-form-label>
+        <input formControlName="firstName" type="text" nz-input placeholder="{{ 'first_name' | translate }}" required />
+        <div *ngIf="form.get('firstName').touched && form.get('firstName').hasError('required')" class="error-message">
+            {{ 'firstName_required' | translate }}
+        </div>
+    </nz-input-group>
+
+    <nz-input-group class="input-group">
+        <nz-form-label nzRequired>{{ 'last_name' | translate }}</nz-form-label>
+        <input formControlName="lastName" type="text" nz-input placeholder="{{ 'last_name' | translate }}" required />
+        <div *ngIf="form.get('lastName').touched && form.get('lastName').hasError('required')" class="error-message">
+            {{ 'lastName_required' | translate }}
+        </div>
+    </nz-input-group>
+
+    <nz-input-group class="input-group">
+        <nz-form-label nzRequired>{{ 'email' | translate }}</nz-form-label>
+        <input formControlName="email" type="text" nz-input placeholder="{{ 'email' | translate }}" required />
+        <div *ngIf="form.get('email').touched && form.get('email').hasError('email')" class="error-message">
+            {{ 'is_email' | translate }}
+        </div>
+        <div *ngIf="form.get('email').touched && form.get('email').hasError('required')" class="error-message">
+            {{ 'is_empty' | translate }}
+        </div>
+    </nz-input-group>
+
+    <nz-input-group class="input-group">
+        <nz-form-label nzRequired>{{ 'password' | translate }}</nz-form-label>
+        <input formControlName="password" type="text" nz-input placeholder="{{ 'password' | translate }}" required />
+
+        <div *ngIf="form.get('password').touched && form.get('password').hasError('required')" class="error-message">
+            {{ 'is_empty' | translate }}
+        </div>
+        <div *ngIf="form.get('password').touched && form.get('password').hasError('minlength')" class="error-message">
+            {{ 'min_length' | translate }}
+        </div>
+        <div *ngIf="form.get('password').touched && form.get('password').hasError('maxlength')" class="error-message">
+            {{ 'max_length' | translate }}
+        </div>
+        <div *ngIf="form.get('password').touched && form.get('password').hasError('pattern')" class="error-message">
+            {{ 'pattern' | translate }}
+        </div>
+    </nz-input-group>
+
+    <ul class="gallery">
+        <li *ngIf="previewUrl">
+            <div class="photo">
+                <i class="delete_photo" nz-icon nzType="delete" (click)="removeFile()"></i>
+                <img src="{{previewUrl}}" alt="{{previewUrl}}">
+            </div>
+        </li>
+        <li>
+            <div class="upload_photo" *ngIf="!previewUrl">
+                <input type="file" id="uploadPhotos" accept="image/*" name="photo" (change)="onFileSelected($event)">
+                <span class="upload-icon" nz-icon nzType="upload"></span>
+                <span>{{'passport' | translate}}</span>
+            </div>
+        </li>
+    </ul>
+
+    <div class="button-wrapper">
+        <button nz-button class="danger-button" (click)="onCancel()">
+            {{ 'cancel' | translate }}
+        </button>
+        <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
+            [disabled]="form.invalid || loading">
+            {{ 'save' | translate }}
+        </button>
+    </div>
+
+</form>

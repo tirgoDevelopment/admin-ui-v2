@@ -6,26 +6,26 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
-import { CargoPackagesFormComponent } from './components/cargo-packages-form/cargo-packages-form.component';
-import { CargoPackagesService } from 'src/app/shared/services/references/cargo-packages.service';
-import { CargoPackagesModel } from './models/cargo-packages.model';
-import { catchError, of, tap } from 'rxjs';
-
+import { RoleFormComponent } from './components/role-form/role-form.component';
+import { RolesService } from 'src/app/shared/services/references/role.service';
+import { RoleModel } from './models/role.model';
 
 @Component({
-  selector: 'app-cargo-packages',
-  templateUrl: './cargo-packages.component.html',
-  styleUrls: ['./cargo-packages.component.scss'],
+  selector: 'app-roles',
+  templateUrl: './roles.component.html',
+  styleUrls: ['./roles.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, CargoPackagesFormComponent],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, RoleFormComponent],
   providers: [NzModalService]
 })
-export class CargoPackagesComponent implements OnInit {
+export class RolesComponent implements OnInit {
 
   confirmModal?: NzModalRef;
   data: any[];
   loader: boolean = false;
   showForm: boolean = false;
+  isFilterVisible: boolean = false
+  filter = {id: '',loadingLocation: '',deliveryLocation: '',statusId: ''};
 
   pageParams = {
     pageIndex: 1,
@@ -38,7 +38,7 @@ export class CargoPackagesComponent implements OnInit {
   constructor(
     private toastr: NotificationService,
     private modal: NzModalService,
-    private cargoPackagesService: CargoPackagesService,
+    private rolesService: RolesService,
     private drawer: NzDrawerService,
     private translate: TranslateService) { }
 
@@ -47,25 +47,21 @@ export class CargoPackagesComponent implements OnInit {
   }
   getAll() {
     this.loader = true;
-    this.cargoPackagesService.getAll(this.pageParams).pipe(
-      tap((res: any) => {
-        if (res && res.success) {
-          this.data = res.data;
-        }
-      }),
-      catchError(err => {
-        return of(null);
-      }),
-      tap(() => {
+    this.rolesService.getAll().subscribe((res:any) => {
+      if (res && res.success) {
+        this.data = res.data;
         this.loader = false;
-      })
-    ).subscribe();
+      }else {
+        this.loader = false;
+      }
+    }, err => {
+      this.loader = false;
+    })
   }
-
   add(): void {
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant('add'),
-      nzContent: CargoPackagesFormComponent,
+      nzContent: RoleFormComponent,
       nzPlacement: 'right',
     });
     drawerRef.afterClose.subscribe((res:any) => {
@@ -75,10 +71,10 @@ export class CargoPackagesComponent implements OnInit {
       }
     });
   }
-  update(item:CargoPackagesModel) {
+  update(item:RoleModel) {
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant('edit_admins'),
-      nzContent: CargoPackagesFormComponent,
+      nzContent: RoleFormComponent,
       nzPlacement: 'right',
       nzContentParams: { data: item }
     });
@@ -97,13 +93,16 @@ export class CargoPackagesComponent implements OnInit {
       nzCancelText: this.translate.instant('cancel'),
       nzOkDanger: true,
       nzOnOk: () =>
-        this.cargoPackagesService.delete(id).subscribe((res: any) => {
+        this.rolesService.delete(id).subscribe((res: any) => {
           if (res && res.success) {
             this.toastr.success(this.translate.instant('successfullDeleted'),'');
             this.getAll();
           }
         }),
     });
+  }
+  toggleFilter(): void {
+    this.isFilterVisible = !this.isFilterVisible;
   }
   onPageIndexChange(pageIndex: number): void {
     this.pageParams.pageIndex = pageIndex;

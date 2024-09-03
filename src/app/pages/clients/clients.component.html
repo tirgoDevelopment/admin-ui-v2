@@ -1,0 +1,134 @@
+<div class="container-page">
+  <div class="header-page">
+    <h2>{{ 'clients' | translate }}</h2>
+    <div class="button-group">
+      <button nz-button class="secondary-button" (click)="toggleFilter()">
+        <span nz-icon nzType="filter" nzTheme="fill"></span>
+        {{ 'filter' | translate }}
+      </button>
+
+      <button nz-button class="success-button" (click)="add()">
+        <span nz-icon nzType="plus" nzTheme="outline"></span>
+        {{ 'add' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
+  <div>
+    <nz-input-group class="input-group">
+      <input [(ngModel)]="filter.id" type="text" nz-input placeholder="ID" />
+    </nz-input-group>
+  </div>
+
+  <div>
+    <nz-input-group class="input-group">
+      <input [(ngModel)]="filter.name" type="text" nz-input placeholder="{{ 'full_name' | translate }}" />
+    </nz-input-group>
+  </div>
+
+  <div>
+    <nz-input-group class="input-group">
+      <input [(ngModel)]="filter.phoneNumber" type="text" nz-input placeholder="{{ 'phone' | translate }}"
+        mask="+000 00 000 00 00" />
+    </nz-input-group>
+  </div>
+
+
+  <div>
+    <nz-input-group class="input-group">
+      <nz-date-picker [(ngModel)]="filter.createdAtFrom" type="date" nz-input [nzAllowClear]="false"
+        nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
+      </nz-date-picker>
+    </nz-input-group>
+  </div>
+
+  <div>
+    <nz-input-group class="input-group">
+      <nz-date-picker  [(ngModel)]="filter.createdAtTo" type="date" nz-input [nzAllowClear]="false"
+        nzPlaceHolder="{{ 'end_date_reg' | translate }}" class="custom-date-picker">
+      </nz-date-picker>
+    </nz-input-group>
+  </div>
+
+
+  <div>
+    <nz-input-group class="input-group">
+      <nz-date-picker [(ngModel)]="filter.lastLoginFrom" type="date" nz-input [nzAllowClear]="false"
+        nzPlaceHolder="{{ 'start_date_log' | translate }}" class="custom-date-picker">
+      </nz-date-picker>
+    </nz-input-group>
+  </div>
+
+  <div>
+    <nz-input-group class="input-group">
+      <nz-date-picker [(ngModel)]="filter.lastLoginTo" type="date" nz-input [nzAllowClear]="false"
+        nzPlaceHolder="{{ 'end_date_log' | translate }}" class="custom-date-picker">
+      </nz-date-picker>
+    </nz-input-group>
+  </div>
+
+
+  <button nz-button nzType="primary" class="search-button">
+    <span nz-icon nzType="search" nzTheme="outline"></span>
+  </button>
+  <button nz-button class="reset-button" (click)="resetFilter()">
+    <span nz-icon nzType="reload" nzTheme="outline"></span>
+  </button>
+</div>
+
+
+<nz-table [nzSize]="'middle'" [nzPaginationPosition]="'bottom'" [nzData]="data" [nzPageSizeOptions]="[10, 20, 30]"
+  [nzShowPagination]="true" [nzShowSizeChanger]="true" [nzLoading]="loader" [nzNoResult]="empty"
+  (nzPageIndexChange)="onPageIndexChange($event)" (nzPageSizeChange)="onPageSizeChange($event)">
+  <thead>
+    <tr>
+      <th>№</th>
+      <th>ID</th>
+      <th>{{ 'full_name' | translate }}</th>
+      <th>{{ 'phone' | translate }}</th>
+      <th>{{ 'register_date' | translate }}</th>
+      <th>{{ 'last_enter' | translate }}</th>
+      <th>{{ 'status' | translate }}</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of data; let i = index">
+      <td> {{ item.name }} </td>
+      <td class="action-col">
+        <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
+          <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
+        </a>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu nzSelectable>
+            <li nz-menu-item (click)="update(item)">
+              <div class="dropdown-menu">
+                <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
+                <span>{{ 'edit' | translate }}</span>
+              </div>
+            </li>
+            <li nz-menu-item (click)="remove(item.id)">
+              <div class="dropdown-menu">
+                <span nz-icon nzType="delete" nzTheme="outline" class="delete-icon"></span>
+                <span>{{ 'remove' | translate }}</span>
+              </div>
+            </li>
+          </ul>
+        </nz-dropdown-menu>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<ng-template #empty>
+  <nz-empty #empty nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+    [nzNotFoundContent]="contentTpl">
+    <ng-template #contentTpl>
+      <span>
+        {{ 'no_data' | translate }}
+      </span>
+    </ng-template>
+  </nz-empty>
+</ng-template>

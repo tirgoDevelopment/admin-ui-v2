@@ -412,5 +412,7 @@
     "currency_required": "Valyutani to'ldiring",
     "count_required": "Hisoblash to'ldiring",
     "description_required": "Tavsifni to'ldiring",
-    "cargo_type_required": "Yuk turini to'ldiring"
+    "cargo_type_required": "Yuk turini to'ldiring",
+    "firstName_required": "Ismni to'ldiring",
+    "lastName_required": "Familiyani to'ldiring"
 }

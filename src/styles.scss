@@ -266,8 +266,10 @@ nz-select {
 
 .filter {
   display: flex;
+  align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  margin: 15px 0;
 }
 
 
@@ -321,11 +323,12 @@ input:-webkit-autofill:focus {
   background-color: var(--input-bg) !important;
   border-color: var(--input-border) !important;
 
-  input, textarea {
+  input, textarea,nz-date-picker {
     border-radius: 5px !important;
     background-color: var(--input-bg) !important;
     border-color: var(--input-border) !important;
     color: var(--textColor) !important;
+    padding: 5px;
   }
 
 }

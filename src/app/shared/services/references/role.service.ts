@@ -2,22 +2,26 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { env } from 'src/environmens/environment';
-import { RoleModel } from '../../models/role.model';
 import { Response } from '../../models/reponse';
+import { RoleModel } from '../../models/role.model';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
-export class RoleService {
+export class RolesService {
 
-    constructor(
-        private http: HttpClient
-    ) { }
+  constructor(private http: HttpClient) { }
 
-
-    getAll(): Observable<Response<RoleModel[]>> {
-        return this.http.get<Response<RoleModel[]>>(env.apiUrl + '/references/roles/all-roles');
-    }
-
-
+  getAll() {
+    return this.http.get<Response<RoleModel[]>>(env.references + '/references/roles/all-roles')
+  }
+  create(data: RoleModel) {
+    return this.http.post<Response<RoleModel[]>>(env.references + '/references/roles', data)
+  }
+  update(data: RoleModel) {
+    return this.http.put<Response<RoleModel[]>>(env.references + '/references/roles', data)
+  }
+  delete(id: number | string) { 
+    return this.http.delete(env.references + `/references/roles?id=${id}`)
+  }
 }

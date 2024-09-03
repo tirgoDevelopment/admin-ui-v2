@@ -2,7 +2,7 @@
     "control_panel": "Панель управления",
     "adminstration": "Администраторы",
     "secure_transaction": "Безопасные сделки",
-    "clients": "Клиент",
+    "clients": "Клиенты",
     "drivers": "Водители",
     "archived_users": "Архивные пользователи",
     "orders": "Заказы",
@@ -409,5 +409,7 @@
     "currency_required": "Валюта это обязательное поле",
     "count_required": "Количество это обязательное поле",
     "description_required": "Описание это обязательное поле",
-    "cargo_type_required": "Тип груза это обязательное поле"
+    "cargo_type_required": "Тип груза это обязательное поле",
+    "firstName_required": "Имя это обязательное поле",
+    "lastName_required": "Фамилия это обязательное поле"
 }

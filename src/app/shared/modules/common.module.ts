@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, NgIf, NgFor, NgStyle, NgClass } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
+    FormsModule,
     CommonModule,
     ReactiveFormsModule,
     NgIf,
@@ -12,6 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     NgClass
   ],
   exports: [
+    FormsModule,
     CommonModule,
     ReactiveFormsModule,
     NgIf,

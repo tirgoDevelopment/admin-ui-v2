@@ -16,6 +16,8 @@ import { en_US } from 'ng-zorro-antd/i18n';
 import { errorInterceptor } from "./shared/interceptors/error.interceptor";
 import { authInterceptor } from "./shared/interceptors/api.interceptor";
 import { provideEnvironmentNgxMask } from "ngx-mask";
+import { NZ_ICONS } from "ng-zorro-antd/icon";
+import { PictureTwoTone } from '@ant-design/icons-angular/icons'; // Import the icon you want to use
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
