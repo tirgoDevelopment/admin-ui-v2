@@ -18,6 +18,9 @@ import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzUploadModule } from 'ng-zorro-antd/upload';
 
 @NgModule({
     imports: [
@@ -39,7 +42,10 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
         NzDividerModule,
         NzDrawerModule,
         NzPopconfirmModule,
-        NzSwitchModule
+        NzSwitchModule,
+        NzEmptyModule,
+        NzDatePickerModule,
+        NzUploadModule
     ],
 
     exports: [
@@ -61,7 +67,10 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
         NzDividerModule,
         NzDrawerModule,
         NzPopconfirmModule,
-        NzSwitchModule
+        NzSwitchModule,
+        NzEmptyModule,
+        NzDatePickerModule,
+        NzUploadModule
     ],
 })
 export class NzModules {}

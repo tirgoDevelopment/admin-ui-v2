@@ -70,6 +70,9 @@
   color: var(--textColor) !important;
 }
 
+ul {
+  background-color: var(--bgColor);
+}
 :host ::ng-deep .ant-menu-submenu {
   color: var(--textColor);
 
@@ -80,7 +83,12 @@
   }
 }
 
-
+:host ::ng-deep .ant-menu-vertical {
+  background-color: var(--bgColor) !important;
+}
+::ng-deep .ant-menu-submenu {
+  background-color: var(--bgColor) !important;
+}
 .ant-menu-inline,
 .ant-menu-vertical,
 .ant-menu-vertical-left {

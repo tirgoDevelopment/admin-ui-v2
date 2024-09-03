@@ -50,6 +50,8 @@ export class CargoTypeGroupsComponent implements OnInit {
       if (res && res.success) {
         this.data = res.data;
         this.loader = false;
+      }else {
+        this.loader = false;
       }
     }, err => {
       this.loader = false;

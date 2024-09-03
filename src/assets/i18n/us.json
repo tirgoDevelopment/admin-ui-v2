@@ -411,5 +411,7 @@
     "currency_required": "Currency is required",
     "count_required": "Count is required",
     "description_required": "Description is required",
-    "cargo_type_required": "Cargo type is required"
+    "cargo_type_required": "Cargo type is required",
+    "firstName_required": "Name is required",
+    "lastName_required": "Last name is required"
 }

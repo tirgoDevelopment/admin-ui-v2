@@ -5,12 +5,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { RoleModel } from 'src/app/shared/models/role.model';
 import { Response } from 'src/app/shared/models/reponse';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
-import { RoleService } from 'src/app/shared/services/references/role.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NgxMaskDirective } from 'ngx-mask';
 import { AdminsService } from '../../services/admins.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { AdminModel } from '../../models/admin.model';
+import { RolesService } from 'src/app/shared/services/references/role.service';
 
 @Component({
   selector: 'app-admin-form',
@@ -38,7 +38,7 @@ export class AdminFormComponent implements OnInit {
 
   constructor(
     private toastr: NotificationService,
-    private roleService: RoleService,
+    private roleService: RolesService,
     private drawerRef: NzDrawerRef,
     private adminService: AdminsService,
     private translate: TranslateService) { }

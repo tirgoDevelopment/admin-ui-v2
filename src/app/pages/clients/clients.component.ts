@@ -6,27 +6,46 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
-import { CargoPackagesFormComponent } from './components/cargo-packages-form/cargo-packages-form.component';
-import { CargoPackagesService } from 'src/app/shared/services/references/cargo-packages.service';
-import { CargoPackagesModel } from './models/cargo-packages.model';
-import { catchError, of, tap } from 'rxjs';
+import { ClientModel } from './models/client.model';
+import { ClientsService } from './services/clients.service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
+import { catchError, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { NgxMaskDirective } from 'ngx-mask';
+import { ClientsFormComponent } from './components/clients-form/clients-form.component';
 
 @Component({
-  selector: 'app-cargo-packages',
-  templateUrl: './cargo-packages.component.html',
-  styleUrls: ['./cargo-packages.component.scss'],
+  selector: 'app-clients',
+  templateUrl: './clients.component.html',
+  styleUrls: ['./clients.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, CargoPackagesFormComponent],
-  providers: [NzModalService]
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule,NgxMaskDirective],
+  providers: [NzModalService],
+  animations: [
+    trigger('showHideFilter', [
+      state('show', style({
+        height: '*',
+        opacity: 1,
+        visibility: 'visible'
+      })),
+      state('hide', style({
+        height: '0',
+        opacity: 0,
+        visibility: 'hidden'
+      })),
+      transition('show <=> hide', animate('300ms ease-in-out'))
+    ])
+  ]
 })
-export class CargoPackagesComponent implements OnInit {
+
+export class ClientsComponent implements OnInit {
 
   confirmModal?: NzModalRef;
   data: any[];
   loader: boolean = false;
-  showForm: boolean = false;
-
+  isFilterVisible: boolean = false
+  filter = {name:"", id:"", phoneNumber: "",createdAtTo:"",createdAtFrom:"",lastLoginFrom:"",lastLoginTo:""};
   pageParams = {
     pageIndex: 1,
     pageSize: 10,
@@ -38,7 +57,7 @@ export class CargoPackagesComponent implements OnInit {
   constructor(
     private toastr: NotificationService,
     private modal: NzModalService,
-    private cargoPackagesService: CargoPackagesService,
+    private clientsService: ClientsService,
     private drawer: NzDrawerService,
     private translate: TranslateService) { }
 
@@ -47,7 +66,7 @@ export class CargoPackagesComponent implements OnInit {
   }
   getAll() {
     this.loader = true;
-    this.cargoPackagesService.getAll(this.pageParams).pipe(
+    this.clientsService.getAll(this.pageParams).pipe(
       tap((res: any) => {
         if (res && res.success) {
           this.data = res.data;
@@ -65,7 +84,7 @@ export class CargoPackagesComponent implements OnInit {
   add(): void {
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant('add'),
-      nzContent: CargoPackagesFormComponent,
+      nzContent: ClientsFormComponent,
       nzPlacement: 'right',
     });
     drawerRef.afterClose.subscribe((res:any) => {
@@ -75,19 +94,19 @@ export class CargoPackagesComponent implements OnInit {
       }
     });
   }
-  update(item:CargoPackagesModel) {
-    const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant('edit_admins'),
-      nzContent: CargoPackagesFormComponent,
-      nzPlacement: 'right',
-      nzContentParams: { data: item }
-    });
-    drawerRef.afterClose.subscribe((res:any) => {
-      if(res && res.success){
-        this.getAll();
-        drawerRef.componentInstance?.form.reset();
-      }
-    });
+  update(item: ClientModel) {
+    // const drawerRef: any = this.drawer.create({
+    //   nzTitle: this.translate.instant('edit_admins'),
+    //   nzContent: ClientsFormComponent,
+    //   nzPlacement: 'right',
+    //   nzContentParams: { data: item }
+    // });
+    // drawerRef.afterClose.subscribe((res:any) => {
+    //   if(res && res.success){
+    //     this.getAll();
+    //     drawerRef.componentInstance?.form.reset();
+    //   }
+    // });
   }
   remove(id: number | string) {
     this.confirmModal = this.modal.confirm({
@@ -97,9 +116,9 @@ export class CargoPackagesComponent implements OnInit {
       nzCancelText: this.translate.instant('cancel'),
       nzOkDanger: true,
       nzOnOk: () =>
-        this.cargoPackagesService.delete(id).subscribe((res: any) => {
+        this.clientsService.delete(id).subscribe((res: any) => {
           if (res && res.success) {
-            this.toastr.success(this.translate.instant('successfullDeleted'),'');
+            this.toastr.success(this.translate.instant('successfullDeleted'), '');
             this.getAll();
           }
         }),
@@ -113,5 +132,11 @@ export class CargoPackagesComponent implements OnInit {
     this.pageParams.pageSize = pageSize;
     this.pageParams.pageIndex = 1;
     this.getAll();
+  }
+  toggleFilter(): void {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
+  resetFilter() {
+    this.filter = {name:"", id:"", phoneNumber: "",createdAtTo:"",createdAtFrom:"",lastLoginFrom:"",lastLoginTo:""};
   }
 }

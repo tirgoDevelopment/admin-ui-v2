@@ -15,12 +15,15 @@ import {
   PlusOutline,
   EllipsisOutline,
   FilterFill,
-  UndoOutline,
   SyncOutline,
   FileSearchOutline,
+  TeamOutline,
+  FrownFill,
+  ReloadOutline,
+  PictureTwoTone 
 } from '@ant-design/icons-angular/icons';
 
-const icons = [FileSearchOutline,SyncOutline,UndoOutline,FilterFill,EllipsisOutline,MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, FormOutline, LogoutOutline,UserOutline,LockOutline,EyeOutline,EyeInvisibleOutline,MailOutline,PlusOutline];
+const icons = [PictureTwoTone,ReloadOutline,FrownFill,TeamOutline,FileSearchOutline,SyncOutline,FilterFill,EllipsisOutline,MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, FormOutline, LogoutOutline,UserOutline,LockOutline,EyeOutline,EyeInvisibleOutline,MailOutline,PlusOutline];
 
 @NgModule({
   imports: [NzIconModule],
@@ -30,6 +33,3 @@ const icons = [FileSearchOutline,SyncOutline,UndoOutline,FilterFill,EllipsisOutl
   ]
 })
 export class IconsProviderModule {}
-
-
-// 97 127 77 74

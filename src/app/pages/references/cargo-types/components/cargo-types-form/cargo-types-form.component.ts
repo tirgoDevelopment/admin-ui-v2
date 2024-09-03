@@ -66,8 +66,6 @@ export class CargoTypesFormComponent implements OnInit {
     this.form.reset();
   }
   onSubmit() {
-    console.log(this.form.value);
-    
     this.loading = true;
     const submitObservable = this.data
       ? this.cargoTypesService.update(this.form.value)
