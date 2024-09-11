@@ -1,30 +1,29 @@
 import { Component, OnInit } from '@angular/core';
-import { NotificationService } from 'src/app/shared/services/notification.service';
-import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
-import { NzDrawerService } from 'ng-zorro-antd/drawer';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ClientModel } from './models/client.model';
-import { ClientsService } from './services/clients.service';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { catchError, tap, of } from 'rxjs';
-import { ClientsFormComponent } from './components/clients-form/clients-form.component';
+import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { DriverFormComponent } from './components/driver-form/driver-form.component';
+import { DriverModel } from './models/driver.model';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
+import { catchError, of, tap } from 'rxjs';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import { DriversService } from './services/drivers.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { NgxMaskDirective } from 'ngx-mask';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { SendPushComponent } from '../drivers/components/send-push/send-push.component';
+import { AddTransportComponent } from './components/add-transport/add-transport.component';
+import { SendPushComponent } from './components/send-push/send-push.component';
 
 @Component({
-  selector: 'app-clients',
-  templateUrl: './clients.component.html',
-  styleUrls: ['./clients.component.scss'],
+  selector: 'app-drivers',
+  templateUrl: './drivers.component.html',
+  styleUrls: ['./drivers.component.scss'],
   standalone: true,
-  imports: [
-    CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule
-  ],
+  imports: [ CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule ],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -34,9 +33,9 @@ import { SendPushComponent } from '../drivers/components/send-push/send-push.com
     ])
   ]
 })
-export class ClientsComponent implements OnInit {
+export class DriversComponent implements OnInit {
   confirmModal?: NzModalRef;
-  data: ClientModel[] = [];
+  data: DriverModel[] = [];
   loader: boolean = false;
   isFilterVisible: boolean = false;
   filter: Record<string, string> = this.initializeFilter();
@@ -51,19 +50,19 @@ export class ClientsComponent implements OnInit {
   constructor(
     private toastr: NotificationService,
     private modal: NzModalService,
-    private clientsService: ClientsService,
+    private driversService: DriversService,
     private drawer: NzDrawerService,
     private translate: TranslateService
   ) { }
 
   ngOnInit(): void { 
-    this.getAll();
-  }
+    
+   }
 
   getAll(): void {
     this.loader = true;
     const queryString = generateQueryFilter(this.filter);
-    this.clientsService.getAll(this.pageParams, queryString).pipe(
+    this.driversService.getAll(this.pageParams, queryString).pipe(
       tap((res: any) => {
         this.data = res?.success ? res.data.content : [];
         this.pageParams.totalPagesCount = res.data.pageSize * res?.data?.totalPagesCount;
@@ -75,22 +74,20 @@ export class ClientsComponent implements OnInit {
       tap(() => (this.loader = false))
     ).subscribe();
   }
-
-  handleDrawer(action: 'add' | 'edit' | 'view', item?: ClientModel): void {
+  handleDrawer(action: 'add' | 'edit' | 'view', item?: DriverModel): void {
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant(
         action === 'add' ? 'add' : 
-        action === 'edit' ? 'edit_admins' : 
-        'see_clients_info'
+        action === 'edit' ? 'edit' : 
+        'information'
       ),
-      nzContent: ClientsFormComponent,
+      nzContent: DriverFormComponent,
       nzPlacement: 'right',
       nzContentParams: { 
         data: item,
         mode: action
       }
     });
-  
     drawerRef.afterClose.subscribe((res: any) => {
       if (res?.success) {
         this.getAll();
@@ -107,7 +104,7 @@ export class ClientsComponent implements OnInit {
       nzCancelText: this.translate.instant('cancel'),
       nzOkDanger: true,
       nzOnOk: () => {
-        this.clientsService.delete(id).subscribe((res: any) => {
+        this.driversService.delete(id).subscribe((res: any) => {
           if (res?.success) {
             this.toastr.success(this.translate.instant('successfullDeleted'), '');
             this.getAll();
@@ -151,11 +148,12 @@ export class ClientsComponent implements OnInit {
     this.pageParams.sortType = sortOrder;
     this.getAll();
   }
+
   sendNotification() {
-    this.drawer.create({
-      nzTitle: this.translate.instant('send_push'),
-      nzContent: SendPushComponent,
-      nzPlacement: 'right'
-    }) 
+     this.drawer.create({
+       nzTitle: this.translate.instant('send_push'),
+       nzContent: SendPushComponent,
+       nzPlacement: 'right'
+     }) 
   }
 }

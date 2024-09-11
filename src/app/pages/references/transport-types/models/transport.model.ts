@@ -8,4 +8,26 @@ export interface TransportModel extends BaseModel {
     loading_side?: string;
     type?: number;
     trailer?: number;
+    transportKinds?: any[];
+    transportTypes?: any[];
+    cubicCapacity?: number;
+    stateNumber: string;
+    stateNumberTrailer?: string;
+    refrigeratorFrom?: string;
+    refrigeratorTo?: string;
+    refrigeratorCount?: string;
+    isHook?: boolean;
+    isAdr?: boolean;
+    isHighCube?: boolean;
+    containerVolume?: number;
+    transportKindIds?: any[];
+    transportTypeIds?: any[];
+    loadingMethodIds?: any[];
+    techPassportFrontFilePath?: string;
+    techPassportBackFilePath?: string;
+    goodsTransportationLicenseCardFilePath?: string;
+    cargoTypeIds?: any[];
+    loadFrom?: string;
+    loadTo?: string;
+    cisternVolume: number;
 }

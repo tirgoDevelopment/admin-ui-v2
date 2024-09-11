@@ -10,6 +10,8 @@ export interface ClientModel extends BaseModel {
     active?: boolean;
     blocked?: boolean;
     passport?: string;
-    phoneNumbers:[];
+    phoneNumbers:[{phoneNumber:string  }];
     passportFilePath?:string;
+    user:{lastLogin:string}
+    createdAt?:Date
 }

@@ -1,14 +1,16 @@
 <div class="container-page">
   <div class="header-page">
-    <h2>{{ 'clients' | translate }}</h2>
+    <h2>{{ 'drivers' | translate }}</h2>
     <div class="button-group">
       <button nz-button class="secondary-button" (click)="toggleFilter()">
         <span nz-icon nzType="filter" nzTheme="fill"></span>
         {{ 'filter' | translate }}
       </button>
+      
       <button nz-button class="success-button" (click)="sendNotification()">
         {{ 'send' | translate }}
       </button>
+
       <button nz-button class="success-button" (click)="handleDrawer('add')">
         <span nz-icon nzType="plus" nzTheme="outline"></span>
         {{ 'add' | translate }}
@@ -20,7 +22,7 @@
 <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
   <div>
     <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['clientId'] " type="text" nz-input placeholder="ID" />
+      <input [(ngModel)]="filter['driverId'] " type="text" nz-input placeholder="ID" />
     </nz-input-group>
   </div>
 
@@ -81,24 +83,19 @@
 </div>
 
 
-
-<nz-table #sortTable 
-  [nzShowSizeChanger]="true"
-  [nzShowPagination]="false"
-  [nzSize]="'middle'"
-  [nzData]="data"
-  [nzLoading]="loader"
-  [nzNoResult]="empty"
-  (nzQueryParams)="onQueryParamsChange($event)" 
-  >
+<nz-table #sortTable [nzShowSizeChanger]="true" [nzShowPagination]="false" [nzSize]="'middle'" [nzData]="data"
+  [nzLoading]="loader" [nzNoResult]="empty" (nzQueryParams)="onQueryParamsChange($event)">
   <thead>
     <tr>
       <th>No</th>
       <th nzColumnKey="id" [nzSortFn]="true">ID</th>
       <th nzColumnKey="firstName" [nzSortFn]="true">{{ 'full_name' | translate }}</th>
       <th>{{ 'phone' | translate }}</th>
+      <th>{{ 'type_transport' | translate }}</th>
       <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
-      <th nzColumnKey="lastLogin" [nzSortFn]="true">{{ 'last_enter' | translate }}</th>
+      <th nzColumnKey="last_enter" [nzSortFn]="true">{{ 'last_enter' | translate }}</th>
+      <th nzColumnKey="isBusy" [nzSortFn]="true">{{ 'status' | translate }}</th>
+      <!-- <th nzColumnKey="subscription" [nzSortFn]="true">{{ 'subscription' | translate }}</th> -->
       <th></th>
     </tr>
   </thead>
@@ -109,8 +106,28 @@
       <td> {{ item.id }} </td>
       <td> {{ item.firstName }} {{ item.lastName }} </td>
       <td> {{ item.phoneNumbers[0].phoneNumber | phoneFormat}} </td>
+      <td>
+        <span *ngIf="!item.driverTransports.length">{{"no_data" | translate}}</span>
+        <span *ngIf="item.driverTransports.length">
+         <span *ngFor="let item of item.driverTransports">
+          <span *ngFor="let type of item.transportTypes">{{type.name}}</span>  
+        </span> 
+        </span>
+      </td>
       <td> {{ item.createdAt | date : 'dd.MM.yyyy' }} </td>
-      <td> {{ item.user.lastLogin }} </td>
+      <td>
+        <span *ngIf="!item.last_enter">{{"no_data" | translate}}</span>
+        <span *ngIf="item.last_enter"> {{ item.last_enter | date : 'dd.MM.yyyy' }} </span>
+
+      </td>
+      <td>
+        <span *ngIf="item?.isBusy" class="delete-icon">{{'busy' | translate}}</span>
+        <span *ngIf="!item?.isBusy" class="edit-icon">{{'not_busy' | translate}}</span>
+      </td>
+      <!-- <td>
+        <span *ngIf="!item.subscription">{{"no_data" | translate}}</span>
+        {{ item.subscription }}
+      </td> -->
       <td class="action-col">
         <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
           <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
@@ -144,8 +161,9 @@
     </tr>
   </tbody>
 </nz-table>
-<nz-pagination [nzPageIndex]="pageParams.pageIndex" [nzTotal]="pageParams.totalPagesCount"  nzShowSizeChanger 
-  [nzPageSize]="pageParams.pageSize" (nzPageSizeChange)="onPageSizeChange($event)" (nzPageIndexChange)="onPageIndexChange($event)">
+<nz-pagination [nzPageIndex]="pageParams.pageIndex" [nzTotal]="pageParams.totalPagesCount" nzShowSizeChanger
+  [nzPageSize]="pageParams.pageSize" (nzPageSizeChange)="onPageSizeChange($event)"
+  (nzPageIndexChange)="onPageIndexChange($event)">
 </nz-pagination>
 <ng-template #empty>
   <nz-empty #empty nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"

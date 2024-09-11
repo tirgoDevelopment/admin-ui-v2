@@ -16,7 +16,7 @@ export class FileUrlService {
       map((blob: Blob) => {
         return URL.createObjectURL(blob);
       })
-    );;
+    );
   }
 
   downloadImage(keyName: string,fileName: string) {

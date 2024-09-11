@@ -1,16 +1,24 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { FileUrlService } from '../services/file.service';
+import { HttpClient } from '@angular/common/http';
+import { env } from 'src/environmens/environment';
 
 @Pipe({
   name: 'fileFetch'
 })
 export class FileFetchPipe implements PipeTransform {
 
-  constructor(private fileService: FileUrlService) { }
+  constructor(private http: HttpClient) { }
 
-  transform(fileName: string, keyName:string): Observable<string> {
-    return this.fileService.getFileUrl(keyName, fileName)
+  transform(fileName: string | ArrayBuffer | null, keyName: string): Observable<string> | null {
+    if (!fileName || typeof fileName === 'object') {
+      return null;
+    }
+    return this.http.get(env.references + `/references/files/${keyName}/${fileName}`, { responseType: 'blob' })
+      .pipe(
+        map((blob: Blob) => URL.createObjectURL(blob))
+      );
   }
 
 }
