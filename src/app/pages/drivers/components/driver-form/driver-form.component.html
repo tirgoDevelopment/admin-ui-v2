@@ -1,0 +1,465 @@
+<div *ngIf="mode == 'add'">
+  <form [formGroup]="form">
+
+    <nz-input-group class="input-group">
+      <nz-form-label nzRequired>{{ 'first_name' | translate }}</nz-form-label>
+      <input formControlName="firstName" type="text" nz-input placeholder="{{ 'first_name' | translate }}" required />
+      <div *ngIf="form.get('firstName').touched && form.get('firstName').hasError('required')" class="error-message">
+        {{ 'firstName_required' | translate }}
+      </div>
+    </nz-input-group>
+
+    <nz-input-group class="input-group">
+      <nz-form-label nzRequired>{{ 'last_name' | translate }}</nz-form-label>
+      <input formControlName="lastName" type="text" nz-input placeholder="{{ 'last_name' | translate }}" required />
+      <div *ngIf="form.get('lastName').touched && form.get('lastName').hasError('required')" class="error-message">
+        {{ 'lastName_required' | translate }}
+      </div>
+    </nz-input-group>
+
+    <nz-input-group class="input-group">
+      <nz-form-label nzRequired>{{ 'email' | translate }}</nz-form-label>
+      <input formControlName="email" type="text" nz-input placeholder="{{ 'email' | translate }}" required />
+      <div *ngIf="form.get('email').touched && form.get('email').hasError('email')" class="error-message">
+        {{ 'is_email' | translate }}
+      </div>
+      <div *ngIf="form.get('email').touched && form.get('email').hasError('required')" class="error-message">
+        {{ 'is_empty' | translate }}
+      </div>
+    </nz-input-group>
+
+    <nz-input-group class="input-group" *ngIf="!edit">
+      <nz-form-label nzRequired>{{ 'password' | translate }}</nz-form-label>
+      <input formControlName="password" type="text" nz-input placeholder="{{ 'password' | translate }}" required />
+
+      <div *ngIf="form.get('password').touched && form.get('password').hasError('required')" class="error-message">
+        {{ 'is_empty' | translate }}
+      </div>
+      <div *ngIf="form.get('password').touched && form.get('password').hasError('minlength')" class="error-message">
+        {{ 'min_length' | translate }}
+      </div>
+      <div *ngIf="form.get('password').touched && form.get('password').hasError('maxlength')" class="error-message">
+        {{ 'max_length' | translate }}
+      </div>
+      <div *ngIf="form.get('password').touched && form.get('password').hasError('pattern')" class="error-message">
+        {{ 'pattern' | translate }}
+      </div>
+    </nz-input-group>
+
+
+    <nz-input-group class="input-group" [nzAddOnBefore]="countryDropdown" style="width: 100%;">
+      <input nz-input formControlName="phoneNumbers" placeholder="{{ 'phone' | translate }}" [mask]="currentMask"
+        required />
+      <div *ngIf="form.get('phoneNumbers').touched && form.get('phoneNumbers').hasError('required')"
+        class="error-message">
+        {{ 'is_empty' | translate }}
+      </div>
+    </nz-input-group>
+
+    <ng-template #countryDropdown>
+      <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" style="display: flex; align-items: center;">
+        <img src="{{ selectedCountry.flag }}" alt="Selected Country Flag" class="flag-icon" width="20">
+      </a>
+    </ng-template>
+
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+      <ul nz-menu>
+        <li nz-menu-item *ngFor="let country of countries" (click)="selectCountry(country)">
+          <img style="margin-right: 5px;" src="{{ country.flag }}" alt="Country Flag" width="20">
+          {{ country.name }}
+        </li>
+      </ul>
+    </nz-dropdown-menu>
+
+    <ul class="gallery">
+      <li *ngIf="previewUrlPassport">
+        <div class="photo">
+          <i class="delete_photo" nz-icon nzType="delete" (click)="removeFile('passport')"></i>
+          <img *ngIf="edit && !fileRemovedPassport" [src]="previewUrlPassport | fileFetch:'driver'| async"
+            alt="{{previewUrlPassport}}">
+          <img *ngIf="!edit || fileRemovedPassport" [src]="previewUrlPassport" alt="{{previewUrlPassport}}">
+        </div>
+      </li>
+
+      <li>
+        <div class="upload_photo" *ngIf="!previewUrlPassport">
+          <input type="file" id="uploadPhotos" accept="image/*" name="photo"
+            (change)="onFileSelected($event, 'passport')">
+          <span class="upload-icon" nz-icon nzType="upload"></span>
+          <span>{{'passport' | translate}}</span>
+          <span style="color: red;">{{ 'is_empty' | translate }}</span>
+        </div>
+      </li>
+    </ul>
+
+    <ul class="gallery">
+      <li *ngIf="previewUrlLicense">
+        <div class="photo">
+          <i class="delete_photo" nz-icon nzType="delete" (click)="removeFile('license')"></i>
+          <img *ngIf="edit && !fileRemovedLicense" [src]="previewUrlLicense | fileFetch:'driver'| async"
+            alt="{{previewUrlLicense}}">
+          <img *ngIf="!edit || fileRemovedLicense" [src]="previewUrlLicense" alt="{{previewUrlLicense}}">
+        </div>
+      </li>
+
+      <li>
+        <div class="upload_photo" *ngIf="!previewUrlLicense">
+          <input type="file" id="uploadPhotos" accept="image/*" name="photo"
+            (change)="onFileSelected($event, 'license')">
+          <span class="upload-icon" nz-icon nzType="upload"></span>
+          <span>{{'driver_lisense' | translate}}</span>
+          <span style="color: red;">{{ 'is_empty' | translate }}</span>
+        </div>
+      </li>
+    </ul>
+
+    <div class="button-wrapper">
+      <button nz-button class="danger-button" (click)="onCancel()">
+        {{ 'cancel' | translate }}
+      </button>
+      <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
+        [disabled]="form.invalid || loading">
+        {{ 'save' | translate }}
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<nz-tabset *ngIf="mode == 'edit'">
+  <nz-tab nzTitle="{{ 'drivers' | translate }}">
+    <form [formGroup]="form">
+
+      <nz-input-group class="input-group">
+        <nz-form-label nzRequired>{{ 'first_name' | translate }}</nz-form-label>
+        <input formControlName="firstName" type="text" nz-input placeholder="{{ 'first_name' | translate }}" required />
+        <div *ngIf="form.get('firstName').touched && form.get('firstName').hasError('required')" class="error-message">
+          {{ 'firstName_required' | translate }}
+        </div>
+      </nz-input-group>
+
+      <nz-input-group class="input-group">
+        <nz-form-label nzRequired>{{ 'last_name' | translate }}</nz-form-label>
+        <input formControlName="lastName" type="text" nz-input placeholder="{{ 'last_name' | translate }}" required />
+        <div *ngIf="form.get('lastName').touched && form.get('lastName').hasError('required')" class="error-message">
+          {{ 'lastName_required' | translate }}
+        </div>
+      </nz-input-group>
+
+      <nz-input-group class="input-group">
+        <nz-form-label nzRequired>{{ 'email' | translate }}</nz-form-label>
+        <input formControlName="email" type="text" nz-input placeholder="{{ 'email' | translate }}" required />
+        <div *ngIf="form.get('email').touched && form.get('email').hasError('email')" class="error-message">
+          {{ 'is_email' | translate }}
+        </div>
+        <div *ngIf="form.get('email').touched && form.get('email').hasError('required')" class="error-message">
+          {{ 'is_empty' | translate }}
+        </div>
+      </nz-input-group>
+
+      <nz-input-group class="input-group" *ngIf="!edit">
+        <nz-form-label nzRequired>{{ 'password' | translate }}</nz-form-label>
+        <input formControlName="password" type="text" nz-input placeholder="{{ 'password' | translate }}" required />
+
+        <div *ngIf="form.get('password').touched && form.get('password').hasError('required')" class="error-message">
+          {{ 'is_empty' | translate }}
+        </div>
+        <div *ngIf="form.get('password').touched && form.get('password').hasError('minlength')" class="error-message">
+          {{ 'min_length' | translate }}
+        </div>
+        <div *ngIf="form.get('password').touched && form.get('password').hasError('maxlength')" class="error-message">
+          {{ 'max_length' | translate }}
+        </div>
+        <div *ngIf="form.get('password').touched && form.get('password').hasError('pattern')" class="error-message">
+          {{ 'pattern' | translate }}
+        </div>
+      </nz-input-group>
+
+
+      <nz-input-group class="input-group" [nzAddOnBefore]="countryDropdown" style="width: 100%;">
+        <input nz-input formControlName="phoneNumbers" placeholder="{{ 'phone' | translate }}" [mask]="currentMask"
+          required />
+        <div *ngIf="form.get('phoneNumbers').touched && form.get('phoneNumbers').hasError('required')"
+          class="error-message">
+          {{ 'is_empty' | translate }}
+        </div>
+      </nz-input-group>
+
+      <ng-template #countryDropdown>
+        <a nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu" style="display: flex; align-items: center;">
+          <img src="{{ selectedCountry.flag }}" alt="Selected Country Flag" class="flag-icon" width="20">
+        </a>
+      </ng-template>
+
+      <nz-dropdown-menu #menu="nzDropdownMenu">
+        <ul nz-menu>
+          <li nz-menu-item *ngFor="let country of countries" (click)="selectCountry(country)">
+            <img style="margin-right: 5px;" src="{{ country.flag }}" alt="Country Flag" width="20">
+            {{ country.name }}
+          </li>
+        </ul>
+      </nz-dropdown-menu>
+
+      <ul class="gallery">
+        <li *ngIf="previewUrlPassport">
+          <div class="photo">
+            <i class="delete_photo" nz-icon nzType="delete" (click)="removeFile('passport')"></i>
+            <img *ngIf="edit && !fileRemovedPassport" [src]="previewUrlPassport | fileFetch:'driver'| async"
+              alt="{{previewUrlPassport}}">
+            <img *ngIf="!edit || fileRemovedPassport" [src]="previewUrlPassport" alt="{{previewUrlPassport}}">
+          </div>
+        </li>
+
+        <li>
+          <div class="upload_photo" *ngIf="!previewUrlPassport">
+            <input type="file" id="uploadPhotos" accept="image/*" name="photo" formControlName="passport"
+              (change)="onFileSelected($event, 'passport')">
+            <span class="upload-icon" nz-icon nzType="upload"></span>
+            <span>{{'passport' | translate}}</span>
+            <span style="color: red;">{{ 'is_empty' | translate }}</span>
+          </div>
+        </li>
+
+      </ul>
+
+      <ul class="gallery">
+        <li *ngIf="previewUrlLicense">
+          <div class="photo">
+            <i class="delete_photo" nz-icon nzType="delete" (click)="removeFile('license')"></i>
+            <img *ngIf="edit && !fileRemovedLicense" [src]="previewUrlLicense | fileFetch:'driver'| async"
+              alt="{{previewUrlLicense}}">
+            <img *ngIf="!edit || fileRemovedLicense" [src]="previewUrlLicense" alt="{{previewUrlLicense}}">
+          </div>
+        </li>
+
+        <li>
+          <div class="upload_photo" *ngIf="!previewUrlLicense">
+            <input type="file" id="uploadPhotos" accept="image/*" name="photo" formControlName="driverLicense"
+              (change)="onFileSelected($event, 'license')">
+            <span class="upload-icon" nz-icon nzType="upload"></span>
+            <span>{{'driver_lisense' | translate}}</span>
+            <span style="color: red;">{{ 'is_empty' | translate }}</span>
+          </div>
+        </li>
+      </ul>
+
+      <div class="button-wrapper">
+        <button nz-button class="danger-button" (click)="onCancel()">
+          {{ 'cancel' | translate }}
+        </button>
+        <button nz-button class="secondary-button" (click)="onBlock()" *ngIf="mode == 'edit'">
+          {{ data.blocked ? ('unblock' | translate) : ('block' | translate) }}
+        </button>
+        <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
+          [disabled]="form.invalid || loading">
+          {{ 'save' | translate }}
+        </button>
+      </div>
+
+    </form>
+  </nz-tab>
+  <nz-tab nzTitle="{{ 'transport' | translate }}">
+    <button nz-button nzBlock="true" style="margin: 5px 0;" *ngFor="let item of data.driverTransports"
+      (click)="editTransport(item)">{{item.name}}</button>
+
+    <div style="margin: 10px 0;">
+      <button (click)="addTransport()" nz-button class="ant-btn success-button" nzBlock> <i nz-icon nzType="plus"
+          nzTheme="outline"></i> {{ 'add'
+        | translate }} </button>
+    </div>
+
+  </nz-tab>
+</nz-tabset>
+
+<div *ngIf="mode == 'view'">
+  <div class="detail-header">
+    <div class="avatar-wrapper">
+      <img class="avatar-img" src="../../../../../assets/images/avatars/male-03.jpg" alt="">
+    </div>
+    <div>
+      <div class="user-name">{{ data?.firstName }} {{ data?.lastName }}</div>
+      <div class="user-id">#{{ data?.id }}</div>
+    </div>
+    <div class="rating">
+      <i nz-icon nzType="star" nzTheme="fill"></i>
+      <span class="rating-value">5</span>
+    </div>
+  </div>
+
+  <div class="order-info">
+    <div class="order-title">{{ 'orders' | translate }}</div>
+    <div class="order-summary">
+      <div class="order-item">
+        <div class="order-count">0</div>
+        <div class="order-label">{{ 'total_order' | translate }}</div>
+      </div>
+      <div class="order-item">
+        <div class="order-count">0</div>
+        <div class="order-label">{{ 'active' | translate }}</div>
+      </div>
+      <div class="order-item">
+        <div class="order-count">{{data.canceledOrdersCount}}</div>
+        <div class="order-label">{{ 'cancelled' | translate }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="order-title">{{'information' | translate }}</div>
+  <nz-tabset>
+    <nz-tab nzTitle="{{ 'drivers' | translate }}">
+      <div class="order-info">
+
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{ 'status' | translate }}</div>
+            <div class="info-value">
+              <span *ngIf="!data?.blocked" class="edit-icon">{{ 'active' | translate }}</span>
+              <span *ngIf="data?.blocked" class="delete-icon">{{ 'inactive' | translate }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{ 'phone' | translate }}</div>
+            <p class="info-value">{{ data?.phoneNumbers[0].phoneNumber | phoneFormat }}</p>
+          </div>
+          <div class="info-column">
+            <div class="info-label">{{ 'email' | translate }}</div>
+            <p class="info-value">{{ data?.email }}</p>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{ 'register_date' | translate }}</div>
+            <p class="info-value">{{ data?.createdAt | date : 'dd.MM.yyyy' }}</p>
+          </div>
+          <div class="info-column">
+            <div class="info-label">{{ 'last_enter' | translate }}</div>
+            <div class="info-value">{{ data?.user.lastLogin | date : 'dd.MM.yyyy' }}</div>
+          </div>
+        </div>
+
+        <p style="font-weight: 700; font-size: 15px; ">{{ 'passport' | translate }}</p>
+        <nz-space [nzSize]="12" class="photo">
+          <img *nzSpaceItem nz-image [nzSrc]="previewUrlPassport | fileFetch:'driver'| async" />
+        </nz-space>
+
+        <p style="font-weight: 700; font-size: 15px; ">{{ 'driver_license' | translate }}</p>
+        <nz-space [nzSize]="12" class="photo">
+          <img *nzSpaceItem nz-image [nzSrc]="previewUrlLicense | fileFetch:'driver'| async" />
+        </nz-space>
+
+      </div>
+
+    </nz-tab>
+    <nz-tab nzTitle="{{ 'transport' | translate }}">
+      <div *ngIf="data.driverTransports">
+        <nz-collapse>
+
+          <nz-collapse-panel *ngFor="let transport of data?.driverTransports" [nzHeader]="transport.name">
+            <div class="order-info" style="margin: 0; padding: 0;border: none;">
+              <div class="info-row">
+                <div class="info-column" style="width: 100%;">
+                  <div class="info-label">{{ 'verified' | translate }}</div>
+                  <div class="info-value" [ngClass]="transport.verified ? 'edit-icon' : 'delete-icon'">
+                    {{(transport.verified ? 'yes' : 'no') | translate}} </div>
+                </div>
+
+              </div>
+
+              <div class="info-row">
+                <div class="info-column">
+                  <div class="info-label">{{ 'type_transport' | translate }}</div>
+                  <div class="info-value">
+                    <p *ngFor="let type of transport.transportTypes">{{ type.name }}</p>
+                  </div>
+                </div>
+
+                <div class="info-column">
+                  <div class="info-label">{{ 'transport_kind' | translate }}</div>
+                  <div class="info-value">
+                    <p *ngFor="let type of transport.transportKinds">{{ type.name }}</p>
+                  </div>
+                </div>
+              </div>
+              <div class="info-row">
+                <div class="info-column">
+                  <div class="info-label">{{ 'state_number_truck' | translate }}</div>
+                  <div class="info-value">{{transport.stateNumber}}</div>
+                </div>
+
+                <div class="info-column">
+                  <div class="info-label">{{ 'state_number_trailer' | translate }}</div>
+                  <div class="info-value">{{transport.stateNumberTrailer}}</div>
+                </div>
+              </div>
+              <div class="info-row" *ngIf="transport.cisternVolume">
+                <div class="info-column">
+                  <div class="info-label">{{ 'volume_l' | translate }}</div>
+                  <div class="info-value">{{transport.cisternVolume}}</div>
+                </div>
+
+                <div class="info-column" *ngIf="transport.cubicCapacity">
+                  <div class="info-label">{{ 'volume_m' | translate }}</div>
+                  <div class="info-value">{{transport.cubicCapacity}}</div>
+                </div>
+              </div>
+              <div class="info-row" *ngIf="transport.containerVolume">
+                <div class="info-column">
+                  <div class="info-label">{{ 'volume_f' | translate }}</div>
+                  <div class="info-value">{{transport.containerVolume}}</div>
+                </div>
+
+                <div class="info-column" *ngIf="transport.refrigeratorCount">
+                  <div class="info-label">{{ 'refrigerator_info' | translate }}</div>
+                  <div class="info-value">{{transport.refrigeratorCount}} {{transport.refrigeratorFrom}} -
+                    {{transport.refrigeratorTo}}</div>
+                </div>
+              </div>
+              <div class="info-row">
+                <div class="info-column">
+                  <div class="info-label">{{ 'isAdr' | translate }}</div>
+                  <div class="info-value"> {{(transport.containerVolume ? 'yes' : 'no') | translate}}</div>
+                </div>
+
+                <div class="info-column">
+                  <div class="info-label">{{ 'hook' | translate }}</div>
+                  <div class="info-value">{{(transport.isHook ? 'yes' : 'no') | translate}}</div>
+                </div>
+
+              </div>
+              <div class="info-row">
+                <div class="info-column">
+                  <div class="info-label">{{ 'high_cube' | translate }}</div>
+                  <div class="info-value">{{(transport.isHighCube ? 'yes' : 'no') | translate}}</div>
+
+                </div>
+              </div>
+              <p *ngIf="transport.techPassportFrontFilePath"
+                style="font-weight: 700; font-size: 15px;margin-top: 10px; ">{{ 'tech_passport_front' | translate }}</p>
+              <nz-space [nzSize]="12" class="photo" *ngIf="transport.techPassportFrontFilePath">
+                <img *nzSpaceItem nz-image [nzSrc]="transport.techPassportFrontFilePath | fileFetch:'driver'| async" />
+              </nz-space>
+
+              <p *ngIf="transport.techPassportBackFilePath" style="font-weight: 700; font-size: 15px; ">{{
+                'tech_passport_back' | translate }}</p>
+              <nz-space [nzSize]="12" class="photo" *ngIf="transport.techPassportBackFilePath">
+                <img *nzSpaceItem nz-image [nzSrc]="transport.techPassportBackFilePath | fileFetch:'driver'| async" />
+              </nz-space>
+
+              <p *ngIf="transport.goodsTransportationLicenseCardFilePath" style="font-weight: 700; font-size: 15px; ">{{
+                'good_transportation_lisense' | translate }}</p>
+              <nz-space [nzSize]="12" class="photo" *ngIf="transport.goodsTransportationLicenseCardFilePath">
+                <img *nzSpaceItem nz-image
+                  [nzSrc]="transport.goodsTransportationLicenseCardFilePath | fileFetch:'driver'| async" />
+              </nz-space>
+            </div>
+
+          </nz-collapse-panel>
+        </nz-collapse>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+
+</div>

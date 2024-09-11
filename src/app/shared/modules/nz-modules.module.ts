@@ -21,6 +21,13 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzUploadModule } from 'ng-zorro-antd/upload';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzTabsModule  } from 'ng-zorro-antd/tabs';
+import { NzImageModule } from 'ng-zorro-antd/image';
+import { NzSpaceModule } from 'ng-zorro-antd/space';
+import { NzCheckboxModule} from 'ng-zorro-antd/checkbox';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+
 
 @NgModule({
     imports: [
@@ -45,7 +52,13 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
         NzSwitchModule,
         NzEmptyModule,
         NzDatePickerModule,
-        NzUploadModule
+        NzUploadModule,
+        NzPaginationModule,
+        NzTabsModule,
+        NzImageModule,
+        NzSpaceModule,
+        NzCheckboxModule,
+        NzCollapseModule
     ],
 
     exports: [
@@ -70,7 +83,13 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
         NzSwitchModule,
         NzEmptyModule,
         NzDatePickerModule,
-        NzUploadModule
+        NzUploadModule,
+        NzPaginationModule,
+        NzTabsModule,
+        NzImageModule,
+        NzSpaceModule,
+        NzCheckboxModule,
+        NzCollapseModule
     ],
 })
 export class NzModules {}
