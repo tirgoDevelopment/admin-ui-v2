@@ -9,34 +9,31 @@
     </div>
 
     <ul nz-menu nzTheme="light" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-
       <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
         [nzTooltipTitle]="isCollapsed ? ('control_panel' | translate) : ''" routerLink="/dashboard">
         <span nz-icon nzType="dashboard"></span>
         <span>{{'control_panel' | translate}}</span>
       </li>
-
-      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
-        [nzTooltipTitle]="isCollapsed ? ('drivers' | translate) : ''" routerLink="/drivers">
-        <span class="sidebar-icon" nz-icon>
-          <img *ngIf="themeService.colorTheme == 'light-mode'" src="../../../../assets/images/sidebar/drivers.svg" alt="" width="15">
-          <img *ngIf="themeService.colorTheme == 'dark-mode'" src="../../../../assets/images/sidebar/driver-w.svg" alt="" width="15">
-        </span>
-        <span>{{'drivers' | translate}}</span>
-      </li>
-
-      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
-        [nzTooltipTitle]="isCollapsed ? ('clients' | translate) : ''" routerLink="/clients">
-        <span nz-icon nzType="team"></span>
-        <span>{{'clients' | translate}}</span>
-      </li>
-
       <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
         [nzTooltipTitle]="isCollapsed ? ('administrators' | translate) : ''" routerLink="/admins">
         <span nz-icon nzType="user"></span>
         <span>{{'administrators' | translate}}</span>
       </li>
-
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
+        [nzTooltipTitle]="isCollapsed ? ('drivers' | translate) : ''" routerLink="/drivers">
+        <span class="sidebar-icon" nz-icon>
+          <img *ngIf="themeService.colorTheme == 'light-mode'" src="../../../../assets/images/sidebar/drivers.svg"
+            alt="" width="15">
+          <img *ngIf="themeService.colorTheme == 'dark-mode'" src="../../../../assets/images/sidebar/driver-w.svg"
+            alt="" width="15">
+        </span>
+        <span>{{'drivers' | translate}}</span>
+      </li>
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
+        [nzTooltipTitle]="isCollapsed ? ('clients' | translate) : ''" routerLink="/clients">
+        <span nz-icon nzType="team"></span>
+        <span>{{'clients' | translate}}</span>
+      </li>
       <li nz-submenu nzOpen nzTitle="{{'directories' | translate}}" nzIcon="file-search">
         <ul>
           <li nz-menu-item nzMatchRouter routerLink="/references/roles">
@@ -80,7 +77,6 @@
 
         </ul>
       </li>
-
     </ul>
   </nz-sider>
 

@@ -56,9 +56,7 @@ export class ClientsComponent implements OnInit {
     private translate: TranslateService
   ) { }
 
-  ngOnInit(): void { 
-    this.getAll();
-  }
+  ngOnInit(): void {   }
 
   getAll(): void {
     this.loader = true;

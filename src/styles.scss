@@ -72,9 +72,12 @@ body {
   border-top-left-radius: 0px !important;
   border-top-right-radius: 0px !important;
 }
-.ant-table-column-sorter-up.active, .ant-table-column-sorter-down.active {
+
+.ant-table-column-sorter-up.active,
+.ant-table-column-sorter-down.active {
   color: $secondary-color !important;
 }
+
 // Button Styles
 .secondary-button {
   background-color: $secondary-color !important;
@@ -138,7 +141,7 @@ body {
         opacity: .6 !important;
       }
     }
-    
+
   }
 
   .ant-pagination-prev,
@@ -154,6 +157,7 @@ body {
     }
   }
 }
+
 .ant-pagination-item-link {
   background-color: var(--bgColor) !important;
   color: var(--textColor) !important;
@@ -330,7 +334,10 @@ input:-webkit-autofill:focus {
   background-color: var(--input-bg) !important;
   border-color: var(--input-border) !important;
   padding: 3px !important;
-  input, textarea,nz-date-picker {
+
+  input,
+  textarea,
+  nz-date-picker {
     border-radius: 5px !important;
     background-color: var(--input-bg) !important;
     border-color: var(--input-border) !important;
@@ -408,6 +415,7 @@ input:-webkit-autofill:focus {
 .delete-icon {
   color: red !important;
 }
+
 .error-message {
   background-color: var(--bgColor);
 }
@@ -415,7 +423,8 @@ input:-webkit-autofill:focus {
 label {
   color: var(--textColor) !important;
 }
-.ant-form-item-label > label::after {
+
+.ant-form-item-label>label::after {
   content: '' !important;
 }
 
@@ -425,212 +434,236 @@ label {
 }
 
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    margin: 0; 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }
 
 // forms 
 
 .gallery {
-    list-style-type: none;
+  list-style-type: none;
 
-    .upload_photo {
-        width: 100%;
-        height: 200px;
-        border-radius: 8px;
-        border: 1px dashed #0E96FF;
-        display: flex;
-        align-content: center;
-        flex-wrap: wrap;
-        position: relative;
+  .upload_photo {
+    width: 100%;
+    height: 200px;
+    border-radius: 8px;
+    border: 1px dashed #0E96FF;
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+    position: relative;
 
-        input {
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            opacity: 0;
-            cursor: pointer;
-            z-index: 5;
-        }
-
-        span {
-            display: block;
-            width: 100%;
-            text-align: center;
-            font-weight: 700;
-            color: #0E96FF;
-            font-size: 15px;
-
-            &.upload-icon {
-                font-size: 25px;
-                margin: 10px 0;
-            }
-        }
+    input {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 5;
     }
+
+    span {
+      display: block;
+      width: 100%;
+      text-align: center;
+      font-weight: 700;
+      color: #0E96FF;
+      font-size: 15px;
+
+      &.upload-icon {
+        font-size: 25px;
+        margin: 10px 0;
+      }
+    }
+  }
 
 
 }
 
 .view_photo,
 .delete_photo {
-    cursor: pointer;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    position: absolute;
-    top: 6px;
-    left: 6px;
-    background-color: #fff;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    outline: none;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background-color: #fff;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  outline: none;
 
-    i {
-        font-size: 18px;
-    }
+  i {
+    font-size: 18px;
+  }
 }
 
 .country-option {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .detail-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border: 2px solid #f3f3f3;
-    border-radius: 8px;
-    padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 2px solid #f3f3f3;
+  border-radius: 8px;
+  padding: 10px;
 }
 
 .avatar-img {
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
-    object-fit: cover;
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
 }
 
 .user-name {
-    font-weight: 600;
-    font-size: 20px;
-    color: var(--textColor);
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--textColor);
 }
 
 .user-id {
-    font-size: 18px;
-    color: #797979;
+  font-size: 18px;
+  color: #797979;
 }
 
 .rating {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: $secondary-color;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: $secondary-color;
 }
 
 .rating-value {
-    font-weight: 600;
-    font-size: 20px;
-    color: var(--textColor);
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--textColor);
 }
 
 .order-info {
-    margin: 10px 0;
-    padding: 8px;
-    border: 2px solid #f3f3f3;
-    border-radius: 8px;
+  margin: 10px 0;
+  padding: 8px;
+  border: 2px solid #f3f3f3;
+  border-radius: 8px;
 }
 
 .order-title {
-    color: var(--textColor);
-    font-size: 19px;
-    font-weight: 700;
-    margin-bottom: 10px;
+  color: var(--textColor);
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
 .order-summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .order-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .order-count {
-    color: var(--textColor);
-    font-size: 17px;
-    font-weight: 700;
+  color: var(--textColor);
+  font-size: 17px;
+  font-weight: 700;
 }
 
 .order-label {
-    color: #797979;
-    font-size: 16px;
-    font-weight: 500;
+  color: #797979;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 
 .order-info {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .order-title {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
 
 .info-row {
-    display: flex;
+  display: flex;
 }
 
 .info-column {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
 }
 
 .info-label {
-    color: #797979;
-    font-size: 15px;
+  color: #797979;
+  font-size: 15px;
 }
 
 .info-value {
-    font-size: 14px;
-    font-weight: 700;
+  color: var(--textColor);
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .photo {
-    width: 100%;
-    height: 200px;
-    border-radius: 8px;
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ebf5ff;
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ebf5ff;
 
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.ant-tabs-tab-btn {
+  color: var(--textColor) !important;
+}
+
+.ant-tabs-top>.ant-tabs-nav::before,
+.ant-tabs-top>div>.ant-tabs-nav::before {
+  border-color: var(--tbl-border-clr) !important;
+}
+
+.ant-collapse-content-box {
+  background-color: var(--bgColor) !important;
+  color: var(--textColor) !important;
+}
+
+.ant-select-selection-item {
+  background: var(--bgColor) !important;
+  color: var(--textColor) !important;
+}
+
+.anticon-close {
+  color: var(--textColor) !important;
 }

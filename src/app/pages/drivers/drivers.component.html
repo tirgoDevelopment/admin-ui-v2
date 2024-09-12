@@ -155,6 +155,13 @@
               </div>
             </li>
 
+            <li nz-menu-item (click)="assignTmc(item)">
+              <div class="dropdown-menu">
+                <span nz-icon nzType="paper-clip" nzTheme="outline"></span>
+                <span>{{ 'assign_driver' | translate }}</span>
+              </div>
+            </li>
+
           </ul>
         </nz-dropdown-menu>
       </td>

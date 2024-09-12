@@ -17,13 +17,14 @@ import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { AddTransportComponent } from './components/add-transport/add-transport.component';
 import { SendPushComponent } from './components/send-push/send-push.component';
+import { AssignTmcComponent } from './components/assign-tmc/assign-tmc.component';
 
 @Component({
   selector: 'app-drivers',
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.scss'],
   standalone: true,
-  imports: [ CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule ],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -55,9 +56,7 @@ export class DriversComponent implements OnInit {
     private translate: TranslateService
   ) { }
 
-  ngOnInit(): void { 
-    
-   }
+  ngOnInit(): void { }
 
   getAll(): void {
     this.loader = true;
@@ -77,29 +76,51 @@ export class DriversComponent implements OnInit {
   handleDrawer(action: 'add' | 'edit' | 'view', item?: DriverModel): void {
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant(
-        action === 'add' ? 'add' : 
-        action === 'edit' ? 'edit' : 
-        'information'
+        action === 'add' ? 'add' :
+          action === 'edit' ? 'edit' :
+            'information'
       ),
       nzContent: DriverFormComponent,
       nzPlacement: 'right',
-      nzContentParams: { 
+      nzContentParams: {
         data: item,
         mode: action
       }
     });
     drawerRef.afterClose.subscribe((res: any) => {
-      if (res?.success) {
+      if (res?.success && res?.mode !== 'add') {
         this.getAll();
         drawerRef.componentInstance?.form.reset();
       }
+      if (res.success && res?.mode === 'add') {
+        this.confirmModal = this.modal.confirm({
+          nzTitle: this.translate.instant('Вы хотите добавить транспорт ?'),
+          nzOkText: this.translate.instant('yes'),
+          nzCancelText: this.translate.instant('cancel'),
+          nzOnOk: () => {
+            const addTransportDrawerRef: any = this.drawer.create({
+              nzTitle: this.translate.instant('add_transport'),
+              nzContent: AddTransportComponent,
+              nzPlacement: 'right',
+              nzContentParams: {
+                mode: 'add',
+                driverId: res.driverId
+              }
+            });
+            this.confirmModal.close();
+            addTransportDrawerRef.afterClose.subscribe(() => {
+              console.log('ok drivers');
+                  this.getAll(); 
+            });
+          }
+        })
+      }
     });
   }
-  
+
   remove(id: number | string): void {
     this.confirmModal = this.modal.confirm({
       nzTitle: this.translate.instant('are_you_sure'),
-      nzContent: this.translate.instant('delete_sure'),
       nzOkText: this.translate.instant('remove'),
       nzCancelText: this.translate.instant('cancel'),
       nzOkDanger: true,
@@ -118,7 +139,7 @@ export class DriversComponent implements OnInit {
     this.pageParams.pageIndex = pageIndex;
     this.getAll();
   }
-  
+
   onPageSizeChange(pageSize: number): void {
     this.pageParams.pageSize = pageSize;
     this.pageParams.pageIndex = 0;
@@ -150,10 +171,20 @@ export class DriversComponent implements OnInit {
   }
 
   sendNotification() {
-     this.drawer.create({
-       nzTitle: this.translate.instant('send_push'),
-       nzContent: SendPushComponent,
-       nzPlacement: 'right'
-     }) 
+    this.drawer.create({
+      nzTitle: this.translate.instant('send_push'),
+      nzContent: SendPushComponent,
+      nzPlacement: 'right'
+    })
+  }
+  assignTmc(item: DriverModel) {
+    this.drawer.create({
+      nzTitle: this.translate.instant('assign_driver'),
+      nzContent: AssignTmcComponent,
+      nzPlacement: 'right',
+      nzContentParams: {
+        data: item
+      }
+    })
   }
 }
