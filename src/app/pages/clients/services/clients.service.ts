@@ -13,7 +13,7 @@ export class ClientsService {
   constructor(private http: HttpClient) { }
 
   getAll(params?: any, filter?:any): Observable<Response<ClientModel[]>> {
-    return this.http.get<Response<ClientModel[]>>(env.references + `/users/clients/all-clients?pageIndex=${params?.pageIndex ? params.pageIndex - 1 : params.pageIndex}&pageSize=${params?.pageSize}&sortBy=${params?.sortBy}&sortType=${params?.sortType}&${filter}`)
+    return this.http.get<Response<ClientModel[]>>(env.references + `/users/clients/all-clients?pageIndex=${params?.pageIndex ? params.pageIndex - 1 : params.pageIndex}&pageSize=${params?.pageSize}&state=notDeleted&sortBy=${params?.sortBy}&sortType=${params?.sortType}&${filter}`)
   }
   getById(id: any): Observable<Response<ClientModel>> {
     return this.http.get<Response<ClientModel>>(env.references + `/users/clients/client-by-id?id=` + id)
