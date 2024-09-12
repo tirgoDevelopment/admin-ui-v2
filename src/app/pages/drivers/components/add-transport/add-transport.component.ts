@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NzModalModule } from 'ng-zorro-antd/modal';
@@ -36,6 +36,7 @@ export class AddTransportComponent implements OnInit {
   @Input() data?: TransportModel;
   @Input() driverId?: number | string;
   @Input() mode: "add" | "edit";
+  @Output() transportAdded = new EventEmitter<void>();
 
   form: FormGroup;
   edit: boolean = false;
@@ -67,7 +68,6 @@ export class AddTransportComponent implements OnInit {
   previewUrlTransportationLicense: string | ArrayBuffer | null = null;
   selectedFileTransportationLicense: File | null = null;
 
-  formData = new FormData();
 
   constructor(
     private driversService: DriversService,
@@ -112,7 +112,6 @@ export class AddTransportComponent implements OnInit {
   ngOnInit(): void {
     this.getTypes();
     this.transportKindIdsChange();
-    
     if (this.mode == 'edit') {
       this.previewUrltechPassportFront = this.data?.techPassportFrontFilePath;
       this.previewUrltechPassportBack = this.data?.techPassportBackFilePath;
@@ -177,7 +176,7 @@ export class AddTransportComponent implements OnInit {
     formData.append('driverId', this.driverId.toString());
     formData.append('name', this.form.get('name')?.value);
     formData.append('cubicCapacity', this.form.get('cubicCapacity')?.value);
-    formData.append('transportKindIds',  JSON.stringify(this.form.get('transportKindIds').value));
+    formData.append('transportKindIds', JSON.stringify(this.form.get('transportKindIds').value));
     formData.append('transportTypeIds', JSON.stringify(this.form.get('transportTypeIds').value));
     formData.append('loadingMethodIds', JSON.stringify(this.form.get('loadingMethodIds').value));
     formData.append('cargoTypeIds', JSON.stringify(this.form.get('cargoTypeIds').value));
@@ -197,14 +196,14 @@ export class AddTransportComponent implements OnInit {
       formData.append('techPassportFrontFilePath', file);
     }
     if (this.selectedFiletechPassportBack) {
-      const file = new File([this.selectedFiletechPassportBack],  Date.now() +this.selectedFiletechPassportBack.name, { type: this.selectedFiletechPassportBack.type });
+      const file = new File([this.selectedFiletechPassportBack], Date.now() + this.selectedFiletechPassportBack.name, { type: this.selectedFiletechPassportBack.type });
       formData.append('techPassportBackFilePath', file);
     }
     if (this.selectedFileTransportationLicense) {
-      const file = new File([this.selectedFileTransportationLicense],  Date.now() +this.selectedFileTransportationLicense.name, { type: this.selectedFileTransportationLicense.type });
+      const file = new File([this.selectedFileTransportationLicense], Date.now() + this.selectedFileTransportationLicense.name, { type: this.selectedFileTransportationLicense.type });
       formData.append('goodsTransportationLicenseCardFilePath', file);
     }
-    
+
     this.loading = true;
     const uniqueFormData = removeDuplicateKeys(formData);
     const submitObservable = this.data
@@ -219,6 +218,10 @@ export class AddTransportComponent implements OnInit {
           this.toastr.success(this.translate.instant(messageKey), '');
           this.drawerRef.close({ success: true });
           this.form.reset();
+          if (!this.data){
+            console.log('ok transportAdded');
+            
+            this.transportAdded.emit();}
         }
       },
       (error) => {

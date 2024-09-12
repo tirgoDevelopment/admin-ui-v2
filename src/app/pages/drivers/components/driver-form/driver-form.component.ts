@@ -8,7 +8,6 @@ import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { Response } from 'src/app/shared/models/reponse';
 import { NzModalModule, NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
-import { env } from 'src/environmens/environment';
 import { NgxMaskDirective } from 'ngx-mask';
 import { removeDuplicateKeys } from 'src/app/shared/pipes/remove-dublicates-formData';
 import { DriverModel } from '../../models/driver.model';
@@ -144,12 +143,12 @@ export class DriverFormComponent implements OnInit {
       : this.driversService.create(uniqueFormData);
 
     submitObservable.subscribe(
-      (res: Response<DriverModel[]>) => {
+      (res: any) => {
         if (res && res.success) {
           this.loading = false;
           const messageKey = this.data ? 'successfullUpdated' : 'successfullCreated';
           this.toastr.success(this.translate.instant(messageKey), '');
-          this.drawerRef.close({ success: true });
+          this.drawerRef.close({ success: true, mode: this.data ? 'edit' : 'add',driverId: res.data?.id });
           this.form.reset();
         }
       },
