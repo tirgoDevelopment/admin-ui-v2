@@ -99,6 +99,7 @@
     "detail": "Detail",
     "no_data": "No data",
     "is_empty": "It should be empty",
+    "is_requireds": "Fill in the required field",
     "is_email": "it should  email",
     "about_user": "More about the user",
     "about_driver": "More about the driver",
@@ -407,7 +408,9 @@
     "are_you_sure": "Are you sure?",
     "delete_sure": "Are you sure you want to delete?",
     "block_sure": "Are you sure you want to block?",
+    "cancel_sure": "Are you sure you want to cancel?",
     "named": "Name",
+    "confirm": "Confirm",
 
     "name_required": "Name is required",
     "codeTNVED_required": "Code TNVED is required",
@@ -431,6 +434,7 @@
     "transport_info": "Transport information",
     "refrigerator_info": "Refrigerator information",
     "single": "Single",
-    "message": "Message"
-
+    "message": "Message",
+    "ready": "Ready",
+    "back": "Back"
 }

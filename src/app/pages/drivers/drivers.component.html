@@ -95,7 +95,6 @@
       <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
       <th nzColumnKey="last_enter" [nzSortFn]="true">{{ 'last_enter' | translate }}</th>
       <th nzColumnKey="isBusy" [nzSortFn]="true">{{ 'status' | translate }}</th>
-      <!-- <th nzColumnKey="subscription" [nzSortFn]="true">{{ 'subscription' | translate }}</th> -->
       <th></th>
     </tr>
   </thead>
@@ -124,10 +123,7 @@
         <span *ngIf="item?.isBusy" class="delete-icon">{{'busy' | translate}}</span>
         <span *ngIf="!item?.isBusy" class="edit-icon">{{'not_busy' | translate}}</span>
       </td>
-      <!-- <td>
-        <span *ngIf="!item.subscription">{{"no_data" | translate}}</span>
-        {{ item.subscription }}
-      </td> -->
+    
       <td class="action-col">
         <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
           <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>

@@ -81,6 +81,7 @@ export class DriversComponent implements OnInit {
             'information'
       ),
       nzContent: DriverFormComponent,
+      nzMaskClosable: false,
       nzPlacement: 'right',
       nzContentParams: {
         data: item,

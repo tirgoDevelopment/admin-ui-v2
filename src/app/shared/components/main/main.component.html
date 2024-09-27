@@ -34,6 +34,16 @@
         <span nz-icon nzType="team"></span>
         <span>{{'clients' | translate}}</span>
       </li>
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
+      [nzTooltipTitle]="isCollapsed ? ('orders' | translate) : ''" routerLink="/orders">
+      <span class="sidebar-icon" nz-icon>
+        <img *ngIf="themeService.colorTheme == 'light-mode'" src="../../../../assets/images/sidebar/tracking.svg"
+          alt="" width="15">
+        <img *ngIf="themeService.colorTheme == 'dark-mode'" src="../../../../assets/images/sidebar/tracking-w.svg"
+          alt="" width="15">
+      </span>
+      <span>{{'orders' | translate}}</span>
+    </li>
       <li nz-submenu nzOpen nzTitle="{{'directories' | translate}}" nzIcon="file-search">
         <ul>
           <li nz-menu-item nzMatchRouter routerLink="/references/roles">

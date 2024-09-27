@@ -13,7 +13,7 @@ export class CargoTypesService {
   constructor(private http: HttpClient) { }
 
   getAll(params?:any) {
-    return this.http.get(env.references + `/references/cargo-types/all?pageIndex=${params?.pageIndex}&pageSize=${params?.pageSize}&totalPagesCount=${params?.totalPagesCount}&sortBy=${params?.sortBy}&sortType=${params?.sortType}`)
+    return this.http.get<Response<CargoTypesModel[]>>(env.references + `/references/cargo-types/all?pageIndex=${params?.pageIndex}&pageSize=${params?.pageSize}&totalPagesCount=${params?.totalPagesCount}&sortBy=${params?.sortBy}&sortType=${params?.sortType}`)
   }
   create(data: CargoTypesModel) {
     return this.http.post<Response<CargoTypesModel[]>>(env.references + '/references/cargo-types', data)

@@ -1,0 +1,25 @@
+<form [formGroup]="form">
+  <nz-input-group class="input-group w-full">
+    <nz-form-label nzRequired>{{ 'drivers' | translate }}</nz-form-label>
+    <nz-select style="width: 100%;" nzShowSearch nzServerSearch nzPlaceHolder="{{ 'drivers' | translate }}"
+      [nzShowArrow]="false" formControlName="driverId" (nzOnSearch)="findDriver($event)">
+      <nz-option *ngFor="let o of (drivers$ | async)?.data?.content" [nzLabel]="o.firstName + ' ' + o.lastName"
+        [nzValue]="o.id">
+      </nz-option>
+    </nz-select>
+  </nz-input-group>
+
+  <nz-form-label>{{ 'offered_price' | translate }}</nz-form-label>
+  <div class="flex">
+    <nz-select formControlName="currencyId">
+      <nz-option *ngFor="let item of currencies" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
+    </nz-select>
+    <input nz-input type="text" formControlName="amount" mask="separator.2">
+  </div>
+  
+  <div class="flex gap my-4" style="justify-content: end;">
+    <button nz-button nzType="default" >{{ 'cancel' | translate }}</button>
+    <button nz-button class="success-button" [nzLoading]="loading" [disabled]="form.invalid || loading" (click)="assignDriver()">{{ 'confirm' | translate }}</button>
+  </div>
+
+</form>

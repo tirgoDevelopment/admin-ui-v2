@@ -100,6 +100,7 @@
     "detail": "Tafsilot",
     "no_data": "Maʼlumot yoʻq",
     "is_empty": "Bu elektron pochta bo'lishi kerak",
+    "is_requireds": "Majburiy maydonni to'ldiring",
     "is_email": "Noto'g'ri pochta formati",
     "about_user": "Foydalanuvchi haqida batafsil ma'lumot",
     "about_driver": "Haydovchi haqida batafsil ma'lumot",
@@ -404,8 +405,9 @@
     "are_you_sure": "Ishonchingiz komilmi ?",
     "delete_sure": "Ma'lumotni o'chirmoqchimisiz ?",
     "block_sure": "Foydalanuvchini bloklamoqchimisiz ?",
+    "cancel_sure": "Ma'lumotni bekor qilmoqchimisiz?",
     "named": "Nomi",
-
+    "confirm": "Tasdiqlash",
 
     "name_required": "Nomni to'ldiring",
     "codeTNVED_required": "TNVED kodini to'ldiring",
@@ -428,5 +430,7 @@
     "transport_info": "Transport haqida ma'lumot",
     "refrigerator_info": "Sovutgich haqida",
     "single": "Bitta",
-    "message": "Xabar"
+    "message": "Xabar",
+    "ready": "Tayyor",
+    "back": "Ortga"
 }
