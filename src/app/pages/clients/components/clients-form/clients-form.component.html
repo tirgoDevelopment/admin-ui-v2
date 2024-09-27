@@ -98,7 +98,7 @@
       {{ data.blocked ? ('unblock' | translate) : ('block' | translate) }}
     </button>
     <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
-      [disabled]="form.invalid || loading">
+      [disabled]="loading">
       {{ 'save' | translate }}
     </button>
   </div>

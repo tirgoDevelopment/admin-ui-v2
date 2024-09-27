@@ -13,7 +13,13 @@ export class DriversService {
   constructor(private http: HttpClient) { }
 
   getAll(params?: any, filter?:any): Observable<Response<DriverModel[]>> {
-    return this.http.get<Response<DriverModel[]>>(env.apiUrl + `/users/drivers/all-drivers?pageIndex=${params?.pageIndex ? params.pageIndex - 1 : params.pageIndex}&pageSize=${params?.pageSize}&sortBy=${params?.sortBy}&sortType=${params?.sortType}&state=notDeleted&${filter}`)
+    return this.http.get<Response<DriverModel[]>>(`${env.references}/users/drivers/all-drivers` +
+    `?pageIndex=${(params?.pageIndex ?? 1) - 1}` +
+    `&pageSize=${params?.pageSize ?? ''}` +
+    `&state=notDeleted` +
+    `&sortBy=${params?.sortBy ?? ''}` +
+    `&sortType=${params?.sortType ?? ''}` +
+    `&${filter ?? ''}`)
   }
   getById(id: any, userId:number): Observable<Response<DriverModel>> {
     return this.http.get<Response<DriverModel>>(env.apiUrl + `/users/drivers/driver-by-id?id=` + id + '&userId=' + userId)
@@ -33,7 +39,6 @@ export class DriversService {
   unblock(id: number | string) {
     return this.http.patch<Response<DriverModel>>(env.apiUrl + `/users/drivers/unblock-driver?id=${id}`, {})
   }
-
   updateTransport(data:any) {
     return this.http.put<Response<DriverModel[]>>(env.apiUrl + '/users/driver/update-transport', data)
   }

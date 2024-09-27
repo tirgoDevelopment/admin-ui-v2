@@ -14,6 +14,7 @@ export const appRoutes: Route[] = [
       { path: 'admins', loadChildren: () => import('./pages/admins/admins.routes').then(m => m.default), canActivate: [AuthGuard] },
       { path: 'drivers', loadChildren: () => import('./pages/drivers/drivers.routes').then(m => m.default), canActivate: [AuthGuard] },
       { path: 'clients', loadChildren: () => import('./pages/clients/clients.routes').then(m => m.default), canActivate: [AuthGuard] },
+      { path: 'orders', loadChildren: () => import('./pages/orders/orders.routes').then(m => m.default), canActivate: [AuthGuard] },
       // References
       { path: 'references/cargo-type-groups', loadChildren: () => import('./pages/references/cargo-type-groups/cargo-type-groups.routes').then(m => m.default), canActivate: [AuthGuard] },
       { path: 'references/cargo-types', loadChildren: () => import('./pages/references/cargo-types/cargo-types.routes').then(m => m.default), canActivate: [AuthGuard] },

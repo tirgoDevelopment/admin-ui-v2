@@ -27,6 +27,7 @@ import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { NzStepsModule } from 'ng-zorro-antd/steps';
 
 
 @NgModule({
@@ -58,7 +59,8 @@ import { NzCollapseModule } from 'ng-zorro-antd/collapse';
         NzImageModule,
         NzSpaceModule,
         NzCheckboxModule,
-        NzCollapseModule
+        NzCollapseModule,
+        NzStepsModule
     ],
 
     exports: [
@@ -89,7 +91,8 @@ import { NzCollapseModule } from 'ng-zorro-antd/collapse';
         NzImageModule,
         NzSpaceModule,
         NzCheckboxModule,
-        NzCollapseModule
+        NzCollapseModule,
+        NzStepsModule
     ],
 })
 export class NzModules {}

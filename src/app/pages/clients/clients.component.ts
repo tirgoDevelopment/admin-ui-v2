@@ -73,7 +73,6 @@ export class ClientsComponent implements OnInit {
       tap(() => (this.loader = false))
     ).subscribe();
   }
-
   handleDrawer(action: 'add' | 'edit' | 'view', item?: ClientModel): void {
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant(
@@ -96,7 +95,6 @@ export class ClientsComponent implements OnInit {
       }
     });
   }
-  
   remove(id: number | string): void {
     this.confirmModal = this.modal.confirm({
       nzTitle: this.translate.instant('are_you_sure'),
@@ -114,31 +112,25 @@ export class ClientsComponent implements OnInit {
       }
     });
   }
-
   onPageIndexChange(pageIndex: number): void {
     this.pageParams.pageIndex = pageIndex;
     this.getAll();
   }
-  
   onPageSizeChange(pageSize: number): void {
     this.pageParams.pageSize = pageSize;
     this.pageParams.pageIndex = 0;
     this.getAll();
   }
-
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
-
   resetFilter(): void {
     this.filter = this.initializeFilter();
     this.getAll();
   }
-
   private initializeFilter(): Record<string, string> {
     return { firstName: '', clientId: '', phoneNumber: '', createdAtTo: '', createdAtFrom: '', lastLoginFrom: '', lastLoginTo: '' };
   }
-
   onQueryParamsChange(params: NzTableQueryParams): void {
     let { sort } = params;
     let currentSort = sort.find(item => item.value !== null);
