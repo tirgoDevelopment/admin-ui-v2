@@ -18,7 +18,7 @@
   </div>
   
   <div class="flex gap my-4" style="justify-content: end;">
-    <button nz-button nzType="default" >{{ 'cancel' | translate }}</button>
+    <button nz-button nzType="default" (click)="onCancel()">{{ 'cancel' | translate }}</button>
     <button nz-button class="success-button" [nzLoading]="loading" [disabled]="form.invalid || loading" (click)="assignDriver()">{{ 'confirm' | translate }}</button>
   </div>
 
