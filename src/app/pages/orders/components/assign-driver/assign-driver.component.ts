@@ -11,6 +11,7 @@ import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { CurrenciesService } from 'src/app/shared/services/references/currencies.service';
 import { OrdersService } from '../../services/orders.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-assign-driver',
@@ -18,6 +19,7 @@ import { NzDrawerRef } from 'ng-zorro-antd/drawer';
   styleUrls: ['./assign-driver.component.scss'],
   standalone: true,
   imports: [NzModules, CommonModules, TranslateModule, NgxMaskDirective],
+  providers: [NzModalService]
 })
 export class AssignDriverComponent implements OnInit {
   @Input() orderId: any;
@@ -32,7 +34,8 @@ export class AssignDriverComponent implements OnInit {
     private orderApi: OrdersService,
     private driverApi: DriversService,
     private currencyApi: CurrenciesService,
-    private drawerRef: NzDrawerRef
+    private drawerRef: NzDrawerRef,
+    private modal: NzModalService
   ) {
     this.form = new FormGroup({
       orderId: new FormControl(''),
@@ -82,6 +85,10 @@ export class AssignDriverComponent implements OnInit {
     }, err => {
       this.loading = false;
     })
+  }
+
+  onCancel() {
+    this.modal.closeAll();
   }
 
 }

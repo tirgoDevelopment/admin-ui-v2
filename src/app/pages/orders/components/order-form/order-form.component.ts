@@ -346,6 +346,7 @@ export class OrderFormComponent implements OnInit {
       nzOnOk: () => {
         this.orderApi.cancelOrder(this.data).subscribe((res:any) => {
           if(res && res.success) {
+            this.toastr.success(this.translate.instant('successfullyCanceled'), '');
             this.drawerRef.close({ success: true });
           }
         })
