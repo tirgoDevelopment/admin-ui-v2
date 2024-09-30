@@ -28,11 +28,12 @@
       </nz-input-group>
 
       <!-- Место отправки груза -->
-      <nz-input-group class="input-group" class="w-full">
+      <nz-input-group class="input-group w-full">
         <nz-form-label nzRequired>{{ 'place_shipment' | translate }}</nz-form-label>
         <nz-select style="width: 100%;" nzShowSearch nzServerSearch nzPlaceHolder="{{'place_shipment' | translate}}"
           formControlName="loadingLocation" [nzShowArrow]="false" (nzOnSearch)="findCity($event)">
-          <nz-option *ngFor="let o of findList" [nzLabel]="o.displayName" [nzValue]="o"></nz-option>
+          <nz-option *ngFor="let o of findList" [nzLabel]="o.displayName" [nzValue]="o">
+          </nz-option>
         </nz-select>
       </nz-input-group>
 
@@ -219,7 +220,7 @@
           nzType="left" nzTheme="outline"></i> {{'back' | translate}}</button>
       <button nz-button nzBlock class="success-button" [nzLoading]="loading" (click)="accept()" [disabled]="loading"> {{
         step != 3 ? ('continue' | translate) :
-        ('create' | translate)}}</button>
+        ('save' | translate)}}</button>
     </div>
 
   </form>

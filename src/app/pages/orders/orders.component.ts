@@ -5,7 +5,7 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
-import { trigger, state, style, transition, animate, query } from '@angular/animations';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { OrdersService } from './services/orders.service';

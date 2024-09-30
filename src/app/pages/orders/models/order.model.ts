@@ -7,8 +7,8 @@ import { CargoTypesModel } from "../../references/cargo-types/models/cargo-type.
 export interface OrderModel extends BaseModel {
     clientId?: string,
     sendDate?: Date,
-    loadingLocation?: {name:string, latitude: any, longitude: string},
-    deliveryLocation?: {name:string, latitude: string, longitude: string},
+    loadingLocation?:any,
+    deliveryLocation?:any,
     cargoStatus: CargoStatusModel,
     selectedLocations?: [[]],
     customsPlaceLocation?: any,
@@ -49,4 +49,6 @@ export interface OrderModel extends BaseModel {
     client?: ClientModel,
     cisternVolume: number,
     containerVolume: number,
+    loadingMethod: any,
+    cargoPackage: any
 }
