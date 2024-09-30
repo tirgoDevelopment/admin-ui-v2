@@ -143,6 +143,26 @@ export class OrderFormComponent implements OnInit {
     );
     this.getTypes();
     this.changeValue();
+    if(this.mode == 'edit') {
+      this.patchValue();
+    }
+    
+  }
+  
+  patchValue() {
+    console.log(this.data);
+    this.form.patchValue(this.data);
+    this.form.patchValue({
+      clientId: this.data.client.id,
+      loadingLocation: this.data.loadingLocation,
+      deliveryLocation: this.data.deliveryLocation,
+      transportKindIds: this.setIds(this.data.transportKinds),
+      transportTypeIds: this.setIds(this.data.transportTypes),
+      cargoTypeId: this.data.cargoType.id,
+      loadingMethodId: this.data.loadingMethod.id,
+      cargoPackageId: this.data.cargoPackage.id
+    })
+    console.log(this.form.value);
   }
   disableFutureDates = (current: Date): boolean => {
     const today = new Date();
@@ -265,13 +285,13 @@ export class OrderFormComponent implements OnInit {
   }
   changeValue() {
     this.form.get('transportKindIds').valueChanges.subscribe((values) => {
-      if (values.length == 1) {
+      if (values?.length == 1) {
         let tranportKind = this.transportKinds.find(x => x.id == values);
         this.isAutotransport = tranportKind?.name?.includes('Автовоз');
         this.isRefrigerator = tranportKind?.name?.includes('Рефрижератор');
         this.isCistern = tranportKind?.name?.includes('Цистерна');
         this.isContainer = tranportKind?.name?.includes('Контейнеровоз');
-      } else if (values.length > 1) {
+      } else if (values?.length > 1) {
         values.forEach((x: any) => {
           let tranportKind = this.transportKinds.find(y => y.id == x);
           this.isAutotransport = this.isAutotransport || tranportKind?.name?.includes('Автовоз');
