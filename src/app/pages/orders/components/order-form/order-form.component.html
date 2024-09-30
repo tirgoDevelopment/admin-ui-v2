@@ -21,7 +21,7 @@
       <!-- Дата погрузки -->
       <nz-input-group class="input-group">
         <nz-form-label nzRequired>{{ 'date_shipment' | translate }}</nz-form-label>
-        <nz-date-picker style="width: 100%;" type="date" nz-input [nzAllowClear]="false" formControlName="sendDate"
+        <nz-date-picker style="width: 100%;" nz-input [nzAllowClear]="false" formControlName="sendDate"
           nzPlaceHolder="{{ 'date_shipment' | translate }}" class="custom-date-picker"
           [nzDisabledDate]="disableFutureDates">
         </nz-date-picker>
@@ -34,6 +34,7 @@
           formControlName="loadingLocation" [nzShowArrow]="false" (nzOnSearch)="findCity($event)">
           <nz-option *ngFor="let o of findList" [nzLabel]="o.displayName" [nzValue]="o">
           </nz-option>
+          <nz-option [nzLabel]="form.value.loadingLocation.name" [nzValue]="form.value.loadingLocation" nzHide></nz-option>
         </nz-select>
       </nz-input-group>
 
@@ -43,6 +44,7 @@
         <nz-select class="w-full" nzShowSearch nzServerSearch nzPlaceHolder="{{'delivery_shipment' | translate}}"
           formControlName="deliveryLocation" [nzShowArrow]="false" (nzOnSearch)="findCity($event)">
           <nz-option *ngFor="let o of findList" [nzLabel]="o.displayName" [nzValue]="o"></nz-option>
+          <nz-option [nzLabel]="form.value.deliveryLocation.name" [nzValue]="form.value.deliveryLocation" nzHide></nz-option>
         </nz-select>
       </nz-input-group>
 
@@ -64,6 +66,7 @@
         <nz-select class="w-full" nzShowSearch nzServerSearch nzPlaceHolder="{{getDynamicLabel(location)}}"
           [formControlName]="location" [nzShowArrow]="false" (nzOnSearch)="findCity($event)">
           <nz-option *ngFor="let o of findList" [nzLabel]="o.displayName" [nzValue]="o"></nz-option>
+          <nz-option [nzLabel]="form.value[location].name" [nzValue]="form.value[location]" nzHide></nz-option>
         </nz-select>
       </nz-input-group>
 
@@ -244,10 +247,12 @@
 
       <div class="info-column">
         <div class="info-label">{{'status' | translate}}</div>
-        <div class="info-value" class="status" [ngStyle]="{color: data.cargoStatus.color, borderColor: data.cargoStatus.color, width: 'fit-content'}">{{data.cargoStatus.name | translate}} </div>
+        <div class="info-value" class="status"
+          [ngStyle]="{color: data.cargoStatus.color, borderColor: data.cargoStatus.color, width: 'fit-content'}">
+          {{data.cargoStatus.name | translate}} </div>
       </div>
     </div>
-    <div class="info-row"> 
+    <div class="info-row">
       <div class="info-column">
         <div class="info-label">{{'order_dispatch_point' | translate}}</div>
         <div class="info-value">{{data.loadingLocation.name}} </div>
@@ -370,7 +375,7 @@
         <div class="info-value">{{data.refrigeratorTo}}</div>
       </div>
     </div>
-    <div class="info-row" *ngIf="data?.cisternVolume || data?.isHook" >
+    <div class="info-row" *ngIf="data?.cisternVolume || data?.isHook">
       <div class="info-column">
         <div class="info-label">{{'hook' | translate}}</div>
         <div class="info-value"> {{data.isHook ? ('yes' | translate): ('no' | translate)}} </div>
@@ -380,7 +385,7 @@
         <div class="info-value">{{data?.cisternVolume}}</div>
       </div>
     </div>
-    <div class="info-row" *ngIf="data?.containerVolume" >
+    <div class="info-row" *ngIf="data?.containerVolume">
       <div class="info-column">
         <div class="info-label">{{'volume_f' | translate}}</div>
         <div class="info-value"> {{data.containerVolume}} </div>
