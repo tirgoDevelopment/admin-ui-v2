@@ -10,7 +10,7 @@ export interface OrderModel extends BaseModel {
     loadingLocation?:any,
     deliveryLocation?:any,
     cargoStatus: CargoStatusModel,
-    selectedLocations?: [[]],
+    selectedLocations?: Array<'customsPlaceLocation' | 'customsClearancePlaceLocation' | 'additionalLoadingLocation' | 'additionalDeliveryLocation'>;
     customsPlaceLocation?: any,
     customsClearancePlaceLocation?: any,
     additionalLoadingLocation?: any,

@@ -34,7 +34,7 @@ import { AssignDriverComponent } from '../assign-driver/assign-driver.component'
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss'],
   standalone: true,
-  imports: [NzModules, CommonModules, TranslateModule, NgxMaskDirective, PipeModule,AngularYandexMapsModule],
+  imports: [NzModules, CommonModules, TranslateModule, NgxMaskDirective, PipeModule, AngularYandexMapsModule],
   providers: [NzModalService]
 })
 export class OrderFormComponent implements OnInit {
@@ -80,8 +80,8 @@ export class OrderFormComponent implements OnInit {
       clientId: new FormControl(null, [Validators.required]),
       sendDate: new FormControl(null, [Validators.required]),
 
-      loadingLocation: new FormControl({name:'', latitude:'', longitude:''}, [Validators.required]),
-      deliveryLocation: new FormControl({name:'', latitude:'', longitude:''}, [Validators.required]),
+      loadingLocation: new FormControl({}, [Validators.required]),
+      deliveryLocation: new FormControl({}, [Validators.required]),
       isAdr: new FormControl(false),
       isCarnetTir: new FormControl(false),
       isGlonas: new FormControl(false),
@@ -143,26 +143,35 @@ export class OrderFormComponent implements OnInit {
     );
     this.getTypes();
     this.changeValue();
-    if(this.mode == 'edit') {
+    if (this.mode == 'edit') {
       this.patchValue();
     }
-    
   }
-  
   patchValue() {
-    console.log(this.data);
+    type LocationFields = 'customsPlaceLocation' | 'customsClearancePlaceLocation' | 'additionalLoadingLocation' | 'additionalDeliveryLocation';
+    let fieldsToCheck: LocationFields[] = [
+      'customsPlaceLocation',
+      'customsClearancePlaceLocation',
+      'additionalLoadingLocation',
+      'additionalDeliveryLocation'
+    ];
+    if (!this.data.selectedLocations) {
+        this.data.selectedLocations = [];
+    }
+    fieldsToCheck.forEach((field) => {
+      if (this.data[field]) {
+        this.data.selectedLocations.push(field);  
+      }
+    });
     this.form.patchValue(this.data);
     this.form.patchValue({
       clientId: this.data.client.id,
-      loadingLocation: this.data.loadingLocation,
-      deliveryLocation: this.data.deliveryLocation,
       transportKindIds: this.setIds(this.data.transportKinds),
       transportTypeIds: this.setIds(this.data.transportTypes),
       cargoTypeId: this.data.cargoType.id,
       loadingMethodId: this.data.loadingMethod.id,
-      cargoPackageId: this.data.cargoPackage.id
+      cargoPackageId: this.data.cargoPackage.id,
     })
-    console.log(this.form.value);
   }
   disableFutureDates = (current: Date): boolean => {
     const today = new Date();
@@ -209,32 +218,32 @@ export class OrderFormComponent implements OnInit {
       if (this.form.value[field]) {
         this.form.patchValue({
           [field]: {
-            name: this.form.value[field].displayName,
+            name: this.form.value[field].displayName ? this.form.value[field].displayName : this.form.value[field].name,
             latitude: this.form.value[field].latitude,
             longitude: this.form.value[field].longitude,
           },
         });
       }
     }
-    
-    if (this.form.get('id').value) {
-      this.form.patchValue({
-        transportKindIds: this.setIds(this.form.get('transportKindIds').value),
-        transportTypeIds: this.setIds(this.form.get('transportTypeIds').value),
-        cargoTypeId: this.setId(this.form.get('cargoTypeId').value),
-        cargoPackageId: this.setId(this.form.get('cargoPackageId').value),
-        loadingMethodId: this.setId(this.form.get('loadingMethodId').value),
-      })
-    }
+
+    // if (this.form.get('id').value) {
+    //   this.form.patchValue({
+    //     transportKindIds: this.setIds(this.form.get('transportKindIds').value),
+    //     transportTypeIds: this.setIds(this.form.get('transportTypeIds').value),
+    //     cargoTypeId: this.setId(this.form.get('cargoTypeId').value),
+    //     cargoPackageId: this.setId(this.form.get('cargoPackageId').value),
+    //     loadingMethodId: this.setId(this.form.get('loadingMethodId').value),
+    //   })
+    // }
     if (this.form.valid) {
       this.form.patchValue({
         loadingLocation: {
-          name: this.form.value.loadingLocation.displayName,
+          name: this.form.value.loadingLocation.displayName ? this.form.value.loadingLocation.displayName  : this.form.value.loadingLocation.name,
           latitude: this.form.value.loadingLocation.latitude,
           longitude: this.form.value.loadingLocation.longitude,
         },
         deliveryLocation: {
-          name: this.form.value.deliveryLocation.displayName,
+          name: this.form.value.deliveryLocation.displayName ? this.form.value.deliveryLocation.displayName : this.form.value.deliveryLocation.name,
           latitude: this.form.value.deliveryLocation.latitude,
           longitude: this.form.value.deliveryLocation.longitude,
         }
@@ -352,8 +361,8 @@ export class OrderFormComponent implements OnInit {
     }
   }
   backStep() {
-    if(this.step !== 1) { 
-      this.step --;
+    if (this.step !== 1) {
+      this.step--;
     }
   }
   onCancel() {
@@ -364,13 +373,13 @@ export class OrderFormComponent implements OnInit {
       nzCancelText: this.translate.instant('cancel'),
       nzOkDanger: true,
       nzOnOk: () => {
-        this.orderApi.cancelOrder(this.data).subscribe((res:any) => {
-          if(res && res.success) {
+        this.orderApi.cancelOrder(this.data).subscribe((res: any) => {
+          if (res && res.success) {
             this.toastr.success(this.translate.instant('successfullyCanceled'), '');
             this.drawerRef.close({ success: true });
           }
         })
-      }  
+      }
     })
   }
   onAssignDriver() {
