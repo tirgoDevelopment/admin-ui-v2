@@ -13,7 +13,7 @@ export class DriversService {
   constructor(private http: HttpClient) { }
 
   getAll(params?: any, filter?:any): Observable<Response<DriverModel[]>> {
-    return this.http.get<Response<DriverModel[]>>(`${env.references}/users/drivers/all-drivers` +
+    return this.http.get<Response<DriverModel[]>>(`${env.apiUrl}/users/drivers/all-drivers` +
     `?pageIndex=${(params?.pageIndex ?? 1) - 1}` +
     `&pageSize=${params?.pageSize ?? ''}` +
     `&state=notDeleted` +

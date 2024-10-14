@@ -1,41 +1,31 @@
 <div class="header-page">
-  <h2>{{ 'clients' | translate }}</h2>
+  <h2>{{ 'merchant_client' | translate }}</h2>
   <div class="button-group">
     <button nz-button class="secondary-button" (click)="toggleFilter()">
       <span nz-icon nzType="filter" nzTheme="fill"></span>
       {{ 'filter' | translate }}
     </button>
-    <button nz-button class="success-button" (click)="sendNotification()">
-      {{ 'send' | translate }}
-    </button>
-    <button nz-button class="success-button" (click)="handleDrawer('add')">
-      <span nz-icon nzType="plus" nzTheme="outline"></span>
-      {{ 'add' | translate }}
-    </button>
+
+    <nz-badge [nzCount]="requestsCount">
+      <button nz-button class="success-button" [disabled]="requestsCount === 0" (click)="requests()">
+        <span nz-icon nzTheme="outline"></span>
+        {{ 'requests' | translate }}
+      </button>
+    </nz-badge>
   </div>
 </div>
 
 <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
   <div>
     <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['clientId'] " type="text" nz-input placeholder="ID" />
+      <input [(ngModel)]="filter['merchantId'] " type="text" nz-input placeholder="ID" />
     </nz-input-group>
   </div>
-
   <div>
     <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['firstName']" type="text" nz-input placeholder="{{ 'name' | translate }}" />
+      <input [(ngModel)]="filter['companyName'] " type="text" nz-input placeholder="{{'company_name' | translate}}" />
     </nz-input-group>
   </div>
-
-  <div>
-    <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['phoneNumber']" type="text" nz-input placeholder="{{ 'phone' | translate }}"
-        mask="+000 00 000 00 00" />
-    </nz-input-group>
-  </div>
-
-
   <div>
     <nz-input-group class="input-group">
       <nz-date-picker [(ngModel)]="filter['createdAtFrom']" type="date" nz-input [nzAllowClear]="false"
@@ -43,7 +33,6 @@
       </nz-date-picker>
     </nz-input-group>
   </div>
-
   <div>
     <nz-input-group class="input-group">
       <nz-date-picker [(ngModel)]="filter['createdAtTo']" type="date" nz-input [nzAllowClear]="false"
@@ -52,30 +41,13 @@
     </nz-input-group>
   </div>
 
-
-  <div>
-    <nz-input-group class="input-group">
-      <nz-date-picker [(ngModel)]="filter['lastLoginFrom']" type="date" nz-input [nzAllowClear]="false"
-        nzPlaceHolder="{{ 'start_date_log' | translate }}" class="custom-date-picker">
-      </nz-date-picker>
-    </nz-input-group>
-  </div>
-
-  <div>
-    <nz-input-group class="input-group">
-      <nz-date-picker [(ngModel)]="filter['lastLoginTo']" type="date" nz-input [nzAllowClear]="false"
-        nzPlaceHolder="{{ 'end_date_log' | translate }}" class="custom-date-picker">
-      </nz-date-picker>
-    </nz-input-group>
-  </div>
-
-
   <button nz-button nzType="primary" class="search-button" (click)="getAll()">
     <span nz-icon nzType="search" nzTheme="outline"></span>
   </button>
   <button nz-button class="reset-button" (click)="resetFilter()">
     <span nz-icon nzType="reload" nzTheme="outline"></span>
   </button>
+
 </div>
 
 <nz-table #sortTable [nzShowSizeChanger]="true" [nzShowPagination]="false" [nzSize]="'middle'" [nzData]="data"
@@ -84,10 +56,13 @@
     <tr>
       <th>No</th>
       <th nzColumnKey="id" [nzSortFn]="true">ID</th>
-      <th nzColumnKey="firstName" [nzSortFn]="true">{{ 'full_name' | translate }}</th>
-      <th>{{ 'phone' | translate }}</th>
+      <th>{{ 'full_name' | translate }}</th>
+      <th> {{ 'company_name' | translate }}</th>
+      <th>{{ 'tax_payer_code' | translate }}</th>
+      <th>{{ 'loads' | translate }}</th>
+      <th>{{ 'balance' | translate }}</th>
       <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
-      <th nzColumnKey="lastLogin" [nzSortFn]="true">{{ 'last_enter' | translate }}</th>
+      <th>{{ 'status' | translate }}</th>
       <th></th>
     </tr>
   </thead>
@@ -96,10 +71,16 @@
     <tr *ngFor="let item of data; let i = index">
       <td> {{ i+1 }} </td>
       <td> {{ item.id }} </td>
-      <td> {{ item.firstName }} {{ item.lastName }} </td>
-      <td> {{ item.phoneNumbers[0].phoneNumber | phoneFormat}} </td>
-      <td> {{ item.createdAt | date : 'dd.MM.yyyy' }} </td>
-      <td> {{ item.user.lastLogin }} </td>
+      <td> {{ item.supervisorFirstName }} {{ item.supervisorLastName }} </td>
+      <td> {{ item.companyType }} {{ item.companyName }} </td>
+      <td> {{ item.taxPayerCode }} </td>
+      <td> {{ 0 }} </td>
+      <td> {{ item.balances ? item.balances[0]?.activebalance : 0}} </td>
+      <td> {{ item.createdAt | date:'dd/MM/yyyy HH:mm'}} </td>
+      <td>
+        <span *ngIf="item.blocked" class="delete-icon">{{'inactive' | translate }}</span>
+        <span *ngIf="!item.blocked" class="edit-icon">{{'active' | translate }}</span>
+      </td>
       <td class="action-col">
         <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
           <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
@@ -119,14 +100,12 @@
                 <span>{{ 'edit' | translate }}</span>
               </div>
             </li>
-
-            <li nz-menu-item (click)="remove(item.id)">
+            <li nz-menu-item>
               <div class="dropdown-menu">
-                <span nz-icon nzType="delete" nzTheme="outline" class="delete-icon"></span>
-                <span>{{ 'remove' | translate }}</span>
+                <span nz-icon nzType="history" nzTheme="outline"></span>
+                <span>{{ 'history_transaction' | translate }}</span>
               </div>
             </li>
-
           </ul>
         </nz-dropdown-menu>
       </td>

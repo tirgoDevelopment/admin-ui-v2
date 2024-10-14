@@ -28,6 +28,7 @@ import { OrderModel } from '../../models/order.model';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { AngularYandexMapsModule } from 'angular8-yandex-maps';
 import { AssignDriverComponent } from '../assign-driver/assign-driver.component';
+import { jwtDecode } from 'jwt-decode';
 
 @Component({
   selector: 'app-order-form',
@@ -104,7 +105,7 @@ export class OrderFormComponent implements OnInit {
       containerVolume: new FormControl(null),
       isHighCube: new FormControl(false),
       cargoTypeId: new FormControl(null),
-      cubature: new FormControl(null),
+      capacity: new FormControl(null),
       cargoWeight: new FormControl(null),
       cargoLength: new FormControl(null),
       cargoWidth: new FormControl(null),
@@ -165,12 +166,13 @@ export class OrderFormComponent implements OnInit {
     });
     this.form.patchValue(this.data);
     this.form.patchValue({
-      clientId: this.data.client.id,
+      clientId: this.data.client ? this.data.client.id : null,
+      clientMerchant: this.data.clientMerchant ? this.data.clientMerchant : null,
       transportKindIds: this.setIds(this.data.transportKinds),
       transportTypeIds: this.setIds(this.data.transportTypes),
-      cargoTypeId: this.data.cargoType.id,
-      loadingMethodId: this.data.loadingMethod.id,
-      cargoPackageId: this.data.cargoPackage.id,
+      cargoTypeId: this.data.cargoType ? this.data.cargoType.id : null,
+      loadingMethodId: this.data.loadingMethod ? this.data.loadingMethod.id : null,
+      cargoPackageId: this.data.cargoPackage ? this.data.cargoPackage.id : null,
     })
   }
   disableFutureDates = (current: Date): boolean => {

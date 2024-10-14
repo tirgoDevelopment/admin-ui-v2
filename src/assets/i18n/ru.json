@@ -258,7 +258,7 @@
     "waiting": "Ожидающий",
     "accepted": "Принято",
     "closed": "Завершенный",
-    "cancelled": "Отменено",
+    "canceled": "Отменено",
     "NotFound": "Данные не найдены",
     "userNotFound": "Пользователь не найден",
     "orderNotFound": "Заказ не найден",
@@ -433,5 +433,6 @@
     "single": "Одному",
     "message": "Сообщение",
     "ready": "Готов",
-    "back": "Назад"
+    "back": "Назад",
+    "history_transaction": "История платежей"
 }

@@ -189,7 +189,7 @@
 
         <nz-input-group class="input-group">
           <nz-form-label>{{ 'cube' | translate }}</nz-form-label>
-          <input nz-input type="text" formControlName="cubature" mask="separator.2">
+          <input nz-input type="text" formControlName="capacity" mask="separator.2">
         </nz-input-group>
       </div>
 
@@ -385,10 +385,14 @@
         <div class="info-value">{{data?.cisternVolume}}</div>
       </div>
     </div>
-    <div class="info-row" *ngIf="data?.containerVolume">
+    <div class="info-row" *ngIf="data?.containerVolume || data.capacity">
       <div class="info-column">
         <div class="info-label">{{'volume_f' | translate}}</div>
         <div class="info-value"> {{data.containerVolume}} </div>
+      </div>
+      <div class="info-column">
+        <div class="info-label">{{'cube' | translate}}</div>
+        <div class="info-value"> {{data.capacity}} </div>
       </div>
     </div>
   </div>

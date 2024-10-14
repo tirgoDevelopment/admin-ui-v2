@@ -13,8 +13,8 @@ export class ClientsService {
   constructor(private http: HttpClient) { }
 
   getAll(params?: any, filter?: any): Observable<Response<ClientModel[]>> {
-    return this.http.get<Response<ClientModel[]>>(`${env.references}/users/clients/all-clients` +
-      `?pageIndex=${(params?.pageIndex ?? 1) - 1}` +
+    return this.http.get<Response<ClientModel[]>>(`${env.apiUrl}/users/clients/all-clients` +
+      `?pageIndex=${(params?.pageIndex ?? 1)-1}` +
       `&pageSize=${params?.pageSize ?? ''}` +
       `&state=notDeleted` +
       `&sortBy=${params?.sortBy ?? ''}` +
@@ -22,21 +22,21 @@ export class ClientsService {
       `&${filter ?? ''}`)
   }
   getById(id: any): Observable<Response<ClientModel>> {
-    return this.http.get<Response<ClientModel>>(env.references + `/users/clients/client-by-id?id=` + id)
+    return this.http.get<Response<ClientModel>>(env.apiUrl + `/users/clients/client-by-id?id=` + id)
   }
   create(data: FormData) {
-    return this.http.post<Response<ClientModel[]>>(env.references + '/users/clients/create-client', data)
+    return this.http.post<Response<ClientModel[]>>(env.apiUrl + '/users/clients/create-client', data)
   }
   update(data: FormData) {
-    return this.http.put<Response<ClientModel[]>>(env.references + '/users/clients/update-client', data)
+    return this.http.put<Response<ClientModel[]>>(env.apiUrl + '/users/clients/update-client', data)
   }
   delete(id: number | string) {
-    return this.http.delete(env.references + `/users/clients?id=${id}`)
+    return this.http.delete(env.apiUrl + `/users/clients?id=${id}`)
   }
   block(id: number | string) {
-    return this.http.patch<Response<ClientModel>>(env.references + `/users/clients/block-client?id=${id}`, {})
+    return this.http.patch<Response<ClientModel>>(env.apiUrl + `/users/clients/block-client?id=${id}`, {})
   }
   unblock(id: number | string) {
-    return this.http.patch<Response<ClientModel>>(env.references + `/users/clients/unblock-client?id=${id}`, {})
+    return this.http.patch<Response<ClientModel>>(env.apiUrl + `/users/clients/unblock-client?id=${id}`, {})
   }
 }
