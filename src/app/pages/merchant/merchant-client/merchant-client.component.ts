@@ -10,20 +10,21 @@ import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { MerchantModel } from './models/merchant.model';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { MerchantClientService } from './services/merchant-client.service';
-import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { catchError, of, tap } from 'rxjs';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { FormComponent } from './components/form/form.component';
-import { DetailComponent } from './components/detail/detail.component';
+import { DetailComponent } from '../merchant-driver/components/detail/detail.component';
 import { RequestsComponent } from './components/requests/requests.component';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-merchant-client',
   templateUrl: './merchant-client.component.html',
   styleUrls: ['./merchant-client.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule,RouterModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -50,6 +51,7 @@ export class MerchantClientComponent implements OnInit {
 
   constructor(
     private toastr: NotificationService,
+    private router: Router,
     private modal: NzModalService,
     private merchantApi: MerchantClientService,
     private drawer: NzDrawerService,
@@ -79,7 +81,7 @@ export class MerchantClientComponent implements OnInit {
       tap(() => (this.loader = false))
     ).subscribe();
   }
-  getUnverified(): void {
+  getUnverified() {
     this.merchantApi.getUnverified().subscribe((res: any) => {
       if (res && res.success) {
         this.requestsCount = res.data.content.length;
@@ -121,6 +123,9 @@ export class MerchantClientComponent implements OnInit {
         this.getUnverified();
       }
     });
+  }
+  showHistoryTransaction(item:MerchantModel) {
+    this.router.navigate([`/merchant-client/transactions/${item.id}/${item.companyType + ' ' + item.companyName}`]);
   }
   onPageIndexChange(pageIndex: number): void {
     this.pageParams.pageIndex = pageIndex;

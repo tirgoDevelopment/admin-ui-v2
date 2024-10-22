@@ -33,8 +33,13 @@
   </div>
   <div>
     <div class="info-label">{{ 'phone' | translate }}</div>
-    <div class="info-value">{{data.phoneNumber ? data.phoneNumber : ('no_data' | translate)}}</div>
+    <div class="info-value">{{data.phoneNumber ? '+'+data.phoneNumber : ('no_data' | translate)}}</div>
   </div>
+  <div>
+    <div class="info-label">{{ 'responce_phone' | translate }}</div>
+    <div class="info-value">{{data.responsbilePersonPhoneNumber ? data.responsbilePersonPhoneNumber : ('no_data' | translate)}}</div>
+  </div>
+  
   <div>
     <div class="info-label">{{ 'email' | translate }}</div>
     <div class="info-value">{{data.email ? data.email : ('no_data' | translate)}}</div>
@@ -48,12 +53,17 @@
     <div class="info-value">{{data.legalAddress ? data.legalAddress : ('no_data' | translate)}}</div>
   </div>
   <div>
+    <div class="info-label">{{ 'legal_address' | translate }}</div>
+    <div class="info-value">{{data.garageAddress ? data.garageAddress : ('no_data' | translate)}}</div>
+  </div>
+  
+  <div>
     <div class="info-label">{{ 'bank_name' | translate }}</div>
     <div class="info-value">{{data.bankName ? data.bankName : ('no_data' | translate) }}</div>
   </div>
   <div *ngIf="data?.bankAccounts">
     <div class="info-label">{{ 'bank_account' | translate }}</div>
-    <!-- <div class="info-value" *ngFor="let item of data.bankAccounts">{{item.account}} ({{item.currency.name}})</div> -->
+    <div class="info-value" *ngFor="let item of data.bankAccounts">{{item.account}} ({{item.currency.name}})</div>
   </div>
   <div>
     <div class="info-label">{{ 'inn' | translate }}</div>
@@ -86,14 +96,14 @@
     <p *ngIf="data.logoFilePath" style="font-weight: 700; font-size: 15px;margin-top: 10px; ">{{ 'logo' |
       translate }}</p>
     <nz-space [nzSize]="12" class="photo" *ngIf="data.logoFilePath">
-      <img *nzSpaceItem nz-image [nzSrc]="data.logoFilePath | fileFetch:'client_merchant'| async" />
+      <img *nzSpaceItem nz-image [nzSrc]="data.logoFilePath | fileFetch:'driver_merchant'| async" />
     </nz-space>
   </div>
   <div>
     <p *ngIf="data.passportFilePath" style="font-weight: 700; font-size: 15px;margin-top: 10px; ">{{ 'passport' |
       translate }}</p>
     <nz-space [nzSize]="12" class="photo" *ngIf="data.passportFilePath">
-      <img *nzSpaceItem nz-image [nzSrc]="data.passportFilePath | fileFetch:'client_merchant'| async" />
+      <img *nzSpaceItem nz-image [nzSrc]="data.passportFilePath | fileFetch:'driver_merchant'| async" />
     </nz-space>
   </div>
   <div>
@@ -101,7 +111,7 @@
       'registration_certificate' |
       translate }}</p>
     <nz-space [nzSize]="12" class="photo" *ngIf="data.registrationCertificateFilePath">
-      <img *nzSpaceItem nz-image [nzSrc]="data.registrationCertificateFilePath | fileFetch:'client_merchant'| async" />
+      <img *nzSpaceItem nz-image [nzSrc]="data.registrationCertificateFilePath | fileFetch:'driver_merchant'| async" />
     </nz-space>
   </div>
 </div>
@@ -116,6 +126,6 @@
     {{ 'reject' | translate }}
   </button>
   <button  *ngIf="!data.rejected && data.verified" nz-button class="secondary-button" (click)="onBlock()">
-    <!-- {{ data.blocked ? ('unblock' | translate) : ('block' | translate) }} -->
+    {{ data.blocked ? ('unblock' | translate) : ('block' | translate) }}
   </button>
 </div>

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, forwardRef,Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { NgxPermissionsService } from 'ngx-permissions';
@@ -95,12 +95,14 @@ export class AuthService {
     return result
   }
 
-  signOut(): Observable<any> {
+  signOut(): void {
     localStorage.removeItem('accessToken');
     this.isAuthenticated = false;
-    return of(true);
+    this.navigateAway();
   }
-
+  private navigateAway(): void {
+    this.router.navigate(['/auth/sign-up']);
+  }
   check(): Observable<boolean> {
     if (this.accessToken) {
       return of(true);

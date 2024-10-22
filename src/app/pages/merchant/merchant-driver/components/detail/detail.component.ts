@@ -7,9 +7,9 @@ import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { FormGroup } from '@angular/forms';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
-import { MerchantModel } from '../../models/merchant.model';
-import { MerchantClientService } from '../../services/merchant-client.service';
-
+import { MerchantDriverService } from '../../services/merchant-driver.service';
+import { DriverMerchantModel } from '../../models/driver-merchant.model';
+import { Response } from 'src/app/shared/models/reponse';
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
@@ -19,14 +19,14 @@ import { MerchantClientService } from '../../services/merchant-client.service';
 })
 export class DetailComponent implements OnInit {
   confirmModal?: NzModalRef;
-  @Input() data?: MerchantModel;
+  @Input() data?: DriverMerchantModel;
   @Input() mode?: 'add' | 'edit' | 'view'; 
   loading: boolean = false;
   form: FormGroup;
 
   constructor(
     private toastr: NotificationService,
-    private merchantApi: MerchantClientService,
+    private merchantApi: MerchantDriverService,
     private translate: TranslateService,
     private drawerRef: NzDrawerRef,
     private modal: NzModalService
@@ -39,7 +39,7 @@ export class DetailComponent implements OnInit {
       if(res && res.success) {
         this.loading = false;
         this.drawerRef.close();
-        this.merchantApi.emitCloseEvent({success: true});
+        // this.merchantApi.emitCloseEvent({success: true});
         this.toastr.success(this.translate.instant('successfullUpdated'),'');
       }
     })
@@ -48,7 +48,7 @@ export class DetailComponent implements OnInit {
     this.loading = true;
     this.merchantApi.reject(this.data.id).subscribe((res: any) => {
       if(res && res.success) {
-        this.merchantApi.emitCloseEvent({success: true});
+        // this.merchantApi.emitCloseEvent({success: true});
         this.loading = false;
         this.drawerRef.close();
         this.toastr.success(this.translate.instant('successfullUpdated'),'');
@@ -57,7 +57,7 @@ export class DetailComponent implements OnInit {
   }
   onBlock() {
     if (this.data.blocked) {
-      this.merchantApi.activate(this.data.id).subscribe((res:any) => {
+      this.merchantApi.activate(this.data.id).subscribe((res: Response<DriverMerchantModel>) => {
         this.toastr.success(this.translate.instant('successfullyActivated'), '');
         this.drawerRef.close({ success: true });
       });

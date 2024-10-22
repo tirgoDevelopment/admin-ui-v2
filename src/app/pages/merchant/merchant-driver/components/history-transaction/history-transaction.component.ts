@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { MerchantClientService } from '../../services/merchant-client.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { catchError, of, tap } from 'rxjs';
@@ -13,6 +12,7 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { MerchantDriverService } from '../../services/merchant-driver.service';
 
 @Component({
   selector: 'app-history-transaction',
@@ -47,7 +47,7 @@ export class HistoryTransactionComponent {
 
   constructor(
     private toastr: NotificationService,
-    private merchantApi: MerchantClientService,
+    private merchantApi: MerchantDriverService,
     private translate: TranslateService,
     private route: ActivatedRoute) {
     this.merchantId = this.route.snapshot.params['id'];

@@ -9,9 +9,9 @@ import { Response } from 'src/app/shared/models/reponse';
 })
 export class MerchantClientService {
   private closeEvent = new Subject<any>();
+  closeEvent$ = this.closeEvent.asObservable();
 
   constructor(private http: HttpClient) { }
-  closeEvent$ = this.closeEvent.asObservable();
 
   emitCloseEvent(data: any) {
     this.closeEvent.next(data);
@@ -33,8 +33,7 @@ export class MerchantClientService {
       `&sortType=${params?.sortType ?? ''}` +
       `&${filter ?? ''}`)
   }
-
-  getUnverified() {
+  getUnverified(): Observable<Response<MerchantModel[]>> {
     return this.http.get<Response<MerchantModel[]>>(`${env.adminUrl}/users/client-merchants/unverified-client-merchants`)
   }
   update(data: MerchantModel) {
@@ -51,5 +50,8 @@ export class MerchantClientService {
   }
   activate(id: number | string) {
     return this.http.patch<Response<MerchantModel>>(`${env.adminUrl}/users/client-merchants/activate-client-merchant?id=${id}`, {})
+  }
+  transactions(id:any,params?: any, filter?: any) {
+    return this.http.get<Response<MerchantModel>>(`${env.adminUrl}/finance/transaction/admin-merchant-transactions?userId=`+id )
   }
 }
