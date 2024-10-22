@@ -1,0 +1,9 @@
+<div>
+  <nz-spin *ngIf="loading" nzSimple style="display: flex; justify-content: center;"></nz-spin>
+  <ng-container *ngIf="!loading">
+    <div class="merchant-card" *ngFor="let item of data">
+      <span>{{item.companyType + ' ' + item.companyName}} </span>
+      <button nz-button class="success-button" (click)="open(item)">{{'open' | translate}}</button>
+    </div>
+  </ng-container>
+</div>

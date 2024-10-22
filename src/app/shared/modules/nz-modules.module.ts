@@ -28,6 +28,8 @@ import { NzSpaceModule } from 'ng-zorro-antd/space';
 import { NzCheckboxModule} from 'ng-zorro-antd/checkbox';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 
 
 @NgModule({
@@ -60,7 +62,9 @@ import { NzStepsModule } from 'ng-zorro-antd/steps';
         NzSpaceModule,
         NzCheckboxModule,
         NzCollapseModule,
-        NzStepsModule
+        NzStepsModule,
+        NzBadgeModule,
+        NzBreadCrumbModule
     ],
 
     exports: [
@@ -92,7 +96,9 @@ import { NzStepsModule } from 'ng-zorro-antd/steps';
         NzSpaceModule,
         NzCheckboxModule,
         NzCollapseModule,
-        NzStepsModule
+        NzStepsModule,
+        NzBadgeModule,
+        NzBreadCrumbModule 
     ],
 })
 export class NzModules {}

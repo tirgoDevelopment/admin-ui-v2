@@ -46,7 +46,6 @@ export class AssignDriverComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getCurrencies();
-    console.log(this.orderId);
     this.drivers$ = this.searchDriver$.pipe(
       debounceTime(300),
       distinctUntilChanged(),

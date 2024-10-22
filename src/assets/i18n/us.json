@@ -436,5 +436,6 @@
     "single": "Single",
     "message": "Message",
     "ready": "Ready",
-    "back": "Back"
+    "back": "Back",
+    "history_transaction": "Transaction history"
 }

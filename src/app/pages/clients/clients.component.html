@@ -1,19 +1,17 @@
-<div class="container-page">
-  <div class="header-page">
-    <h2>{{ 'clients' | translate }}</h2>
-    <div class="button-group">
-      <button nz-button class="secondary-button" (click)="toggleFilter()">
-        <span nz-icon nzType="filter" nzTheme="fill"></span>
-        {{ 'filter' | translate }}
-      </button>
-      <button nz-button class="success-button" (click)="sendNotification()">
-        {{ 'send' | translate }}
-      </button>
-      <button nz-button class="success-button" (click)="handleDrawer('add')">
-        <span nz-icon nzType="plus" nzTheme="outline"></span>
-        {{ 'add' | translate }}
-      </button>
-    </div>
+<div class="header-page">
+  <h2>{{ 'clients' | translate }}</h2>
+  <div class="button-group">
+    <button nz-button class="secondary-button" (click)="toggleFilter()">
+      <span nz-icon nzType="filter" nzTheme="fill"></span>
+      {{ 'filter' | translate }}
+    </button>
+    <button nz-button class="success-button" (click)="sendNotification()">
+      {{ 'send' | translate }}
+    </button>
+    <button nz-button class="success-button" (click)="handleDrawer('add')">
+      <span nz-icon nzType="plus" nzTheme="outline"></span>
+      {{ 'add' | translate }}
+    </button>
   </div>
 </div>
 
@@ -80,15 +78,8 @@
   </button>
 </div>
 
-<nz-table #sortTable 
-  [nzShowSizeChanger]="true"
-  [nzShowPagination]="false"
-  [nzSize]="'middle'"
-  [nzData]="data"
-  [nzLoading]="loader"
-  [nzNoResult]="empty"
-  (nzQueryParams)="onQueryParamsChange($event)" 
-  >
+<nz-table #sortTable [nzShowSizeChanger]="true" [nzShowPagination]="false" [nzSize]="'middle'" [nzData]="data"
+  [nzLoading]="loader" [nzNoResult]="empty" (nzQueryParams)="onQueryParamsChange($event)">
   <thead>
     <tr>
       <th>No</th>
@@ -142,8 +133,9 @@
     </tr>
   </tbody>
 </nz-table>
-<nz-pagination [nzPageIndex]="pageParams.pageIndex" [nzTotal]="pageParams.totalPagesCount"  nzShowSizeChanger 
-  [nzPageSize]="pageParams.pageSize" (nzPageSizeChange)="onPageSizeChange($event)" (nzPageIndexChange)="onPageIndexChange($event)">
+<nz-pagination [nzPageIndex]="pageParams.pageIndex" [nzTotal]="pageParams.totalPagesCount" nzShowSizeChanger
+  [nzPageSize]="pageParams.pageSize" (nzPageSizeChange)="onPageSizeChange($event)"
+  (nzPageIndexChange)="onPageIndexChange($event)">
 </nz-pagination>
 <ng-template #empty>
   <nz-empty #empty nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"

@@ -1,0 +1,131 @@
+<div class="detail-header">
+  <div class="avatar-wrapper">
+    <img class="avatar-img" src="/assets/images/user/user.png" alt="">
+  </div>
+  <div>
+    <div class="user-name"> {{ data?.companyType + ' ' + data?.companyName }}</div>
+    <div class="user-id">#{{ data?.id }}</div>
+  </div>
+  <div class="rating">
+    <i nz-icon nzType="star" nzTheme="fill"></i>
+    <span class="rating-value">5</span>
+  </div>
+</div>
+
+<div class="detail-info">
+  <div>
+    <div class="info-label">{{ 'director_first_name' | translate }}</div>
+    <div class="info-value">{{data.supervisorFirstName ? data.supervisorFirstName : ('no_data' | translate) }}</div>
+  </div>
+  <div>
+    <div class="info-label">{{ 'director_last_name' | translate }}</div>
+    <div class="info-value">{{data.supervisorLastName ? data.supervisorLastName : ('no_data' | translate) }}</div>
+  </div>
+  <div>
+    <div class="info-label">{{ 'responce_person_first_name' | translate }}</div>
+    <div class="info-value">{{data.responsiblePersonFistName ? data.responsiblePersonFistName : ('no_data' |
+      translate)}}</div>
+  </div>
+  <div>
+    <div class="info-label">{{ 'responce_person_last_name' | translate }}</div>
+    <div class="info-value">{{data.responsiblePersonLastName ? data.responsiblePersonLastName : ('no_data' |
+      translate)}}</div>
+  </div>
+  <div>
+    <div class="info-label">{{ 'phone' | translate }}</div>
+    <div class="info-value">{{data.phoneNumber ? '+'+data.phoneNumber : ('no_data' | translate)}}</div>
+  </div>
+  <div>
+    <div class="info-label">{{ 'responce_phone' | translate }}</div>
+    <div class="info-value">{{data.responsbilePersonPhoneNumber ? data.responsbilePersonPhoneNumber : ('no_data' | translate)}}</div>
+  </div>
+  
+  <div>
+    <div class="info-label">{{ 'email' | translate }}</div>
+    <div class="info-value">{{data.email ? data.email : ('no_data' | translate)}}</div>
+  </div>
+  <div>
+    <div class="info-label">{{ 'fact_address' | translate }}</div>
+    <div class="info-value">{{data.factAddress ? data.factAddress : ('no_data' | translate)}}</div>
+  </div>
+  <div>
+    <div class="info-label">{{ 'legal_address' | translate }}</div>
+    <div class="info-value">{{data.legalAddress ? data.legalAddress : ('no_data' | translate)}}</div>
+  </div>
+  <div>
+    <div class="info-label">{{ 'legal_address' | translate }}</div>
+    <div class="info-value">{{data.garageAddress ? data.garageAddress : ('no_data' | translate)}}</div>
+  </div>
+  
+  <div>
+    <div class="info-label">{{ 'bank_name' | translate }}</div>
+    <div class="info-value">{{data.bankName ? data.bankName : ('no_data' | translate) }}</div>
+  </div>
+  <div *ngIf="data?.bankAccounts">
+    <div class="info-label">{{ 'bank_account' | translate }}</div>
+    <div class="info-value" *ngFor="let item of data.bankAccounts">{{item.account}} ({{item.currency.name}})</div>
+  </div>
+  <div>
+    <div class="info-label">{{ 'inn' | translate }}</div>
+    <div class="info-value">{{data.inn ? data.inn : ('no_data' | translate) }}</div>
+  </div>
+  <div>
+    <div class="info-label">{{ 'oked' | translate }}</div>
+    <div class="info-value">{{data.oked ? data.oked : ('no_data' | translate) }}</div>
+  </div>
+  <div>
+    <div class="info-label">{{ 'mfo' | translate }}</div>
+    <div class="info-value">{{data.mfo ? data.mfo : ('no_data' | translate) }}</div>
+  </div>
+  <div>
+    <div class="info-label">{{ 'duns_number' | translate }}</div>
+    <div class="info-value">{{data.dunsNumber ? data.dunsNumber : ('no_data' | translate) }}</div>
+  </div>
+  <div>
+    <div class="info-label">{{ 'iban_number' | translate }}</div>
+    <div class="info-value">{{data.ibanNumber ? data.ibanNumber : ('no_data' | translate) }}</div>
+  </div>
+  <div *ngIf="data?.notes">
+    <div class="info-label">{{ 'notes' | translate }}</div>
+    <div class="info-value">{{data.notes }}</div>
+  </div>
+</div>
+
+<div class="files">
+  <div>
+    <p *ngIf="data.logoFilePath" style="font-weight: 700; font-size: 15px;margin-top: 10px; ">{{ 'logo' |
+      translate }}</p>
+    <nz-space [nzSize]="12" class="photo" *ngIf="data.logoFilePath">
+      <img *nzSpaceItem nz-image [nzSrc]="data.logoFilePath | fileFetch:'driver_merchant'| async" />
+    </nz-space>
+  </div>
+  <div>
+    <p *ngIf="data.passportFilePath" style="font-weight: 700; font-size: 15px;margin-top: 10px; ">{{ 'passport' |
+      translate }}</p>
+    <nz-space [nzSize]="12" class="photo" *ngIf="data.passportFilePath">
+      <img *nzSpaceItem nz-image [nzSrc]="data.passportFilePath | fileFetch:'driver_merchant'| async" />
+    </nz-space>
+  </div>
+  <div>
+    <p *ngIf="data.registrationCertificateFilePath" style="font-weight: 700; font-size: 15px;margin-top: 10px; ">{{
+      'registration_certificate' |
+      translate }}</p>
+    <nz-space [nzSize]="12" class="photo" *ngIf="data.registrationCertificateFilePath">
+      <img *nzSpaceItem nz-image [nzSrc]="data.registrationCertificateFilePath | fileFetch:'driver_merchant'| async" />
+    </nz-space>
+  </div>
+</div>
+
+<div class="button-wrapper">
+  <button  *ngIf="!data.rejected && !data.verified" [nzLoading]="loading" nz-popconfirm nzPopconfirmTitle="{{'are_you_sure' | translate}}"
+    (nzOnConfirm)="onApprove()" class="success-button" nz-button>
+    {{ 'approve' | translate }}
+  </button>
+  <button  *ngIf="!data.rejected && !data.verified" [nzLoading]="loading" nz-popconfirm nzPopconfirmTitle="{{'are_you_sure' | translate}}"
+    (nzOnConfirm)="onReject()" class="danger-button" nz-button>
+    {{ 'reject' | translate }}
+  </button>
+  <button  *ngIf="!data.rejected && data.verified" nz-button class="secondary-button" (click)="onBlock()">
+    {{ data.blocked ? ('unblock' | translate) : ('block' | translate) }}
+  </button>
+</div>
