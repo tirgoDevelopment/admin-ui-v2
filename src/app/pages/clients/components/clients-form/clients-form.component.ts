@@ -58,37 +58,31 @@ export class ClientsFormComponent implements OnInit {
       id: new FormControl(''),
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
-      password: new FormControl('', this.edit ? [Validators.nullValidator] : [Validators.required, Validators.maxLength(16), Validators.minLength(8), Validators.pattern('^[a-zA-Z0-9]+$')]),
-      phoneNumbers: new FormControl(['+998'], Validators.required),
-      email: new FormControl('', [Validators.email, Validators.required]),
-      passport: new FormControl('',this.edit ? [Validators.nullValidator] : [Validators.required]),
+      phoneNumbers: new FormControl([], Validators.required),
     });
-    if (this.mode == 'edit') {
-      this.patchForm();
-    }
-    if (this.mode == 'view') {
-      this.getById();
-    }
+    this.getById();
   }
   getById() {
-    if (this.data && this.mode == 'view') {
+    if (this.data) {
       this.clientsService.getById(this.data.id).subscribe((res: Response<ClientModel>) => {
         this.data = res.data;
+        this.patchForm();
       });
     }
   }
   patchForm() {
     this.updateMask();
     if (this.data) {
-      this.previewUrl = this.data?.passportFilePath;
       this.edit = true;
+      const mainPhoneNumber = this.data?.phoneNumbers?.find(phone => phone.id);
+      const formattedPhoneNumber = mainPhoneNumber ? `+${mainPhoneNumber.code}${mainPhoneNumber.number}` : '';
+
       this.form.patchValue({
         id: this.data.id,
         firstName: this.data.firstName,
         lastName: this.data.lastName,
         email: this.data.email,
-        phoneNumbers: String('+' + this.data?.phoneNumbers[0].phoneNumber),
-        passport: this.data?.passportFilePath
+        phoneNumbers: formattedPhoneNumber,
       });
     }
   }
@@ -102,21 +96,21 @@ export class ClientsFormComponent implements OnInit {
     formData.append('firstName', this.form.get('firstName')?.value);
     formData.append('lastName', this.form.get('lastName')?.value);
     formData.append('email', this.form.get('email')?.value);
-    formData.append('phoneNumbers', JSON.stringify([this.form.get('phoneNumbers').value]));
-    if (!this.edit) {
-      formData.append('password', this.form.get('password')?.value);
-    }
-    if (this.selectedFile) {
-      const file = new File([this.selectedFile], this.selectedFile.name, { type: this.selectedFile.type });
-      formData.append('passport', file);
-    }
+    const phoneNumbers = [
+      {
+        code: this.form.value.phoneNumbers.substring(0, 3),
+        number: this.form.value.phoneNumbers.substring(3),
+        isMain: true,
+      }
+    ];
+    formData.append('phoneNumbers', JSON.stringify(phoneNumbers));
+    
     this.loading = true;
     const uniqueFormData = removeDuplicateKeys(formData);
-
+    
     const submitObservable = this.data
       ? this.clientsService.update(uniqueFormData)
       : this.clientsService.create(uniqueFormData);
-
     submitObservable.subscribe(
       (res: Response<ClientModel[]>) => {
         if (res && res.success) {
@@ -170,7 +164,7 @@ export class ClientsFormComponent implements OnInit {
     this.updateMask();
   }
   onBlock() {
-    if (this.data.blocked) {
+    if (this.data.isBlocked) {
       this.clientsService.unblock(this.data.id).subscribe((res: Response<ClientModel>) => {
         this.toastr.success(this.translate.instant('successfullyActivated'), '');
         this.drawerRef.close({ success: true });

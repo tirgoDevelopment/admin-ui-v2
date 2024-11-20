@@ -433,5 +433,7 @@
     "message": "Xabar",
     "ready": "Tayyor",
     "back": "Ortga",
-    "history_transaction": "To'lovlar tarixi"
+    "history_transaction": "To'lovlar tarixi",
+    "cancelled": "Bekor qilingan",
+    "isBorderCrossing": "Chegaradan O'tish"
 }

@@ -2,27 +2,28 @@ import { BaseModel } from "src/app/shared/models/base-model";
 
 
 export interface TransportModel extends BaseModel {
-    name: string;
+    brand: string;
     weight?: number;
     volume?: number;
     loading_side?: string;
     type?: number;
     trailer?: number;
-    transportKinds?: any[];
-    transportTypes?: any[];
-    cubicCapacity?: number;
-    stateNumber: string;
+    transportKindId?: string;
+    transportKind?: {name:string, id: number};
+    transportTypeId?: string;
+    transportType?: {name:string, id: number};
+    capacity?: string;
+    transportNumber: string;
     stateNumberTrailer?: string;
     refrigeratorFrom?: string;
     refrigeratorTo?: string;
     refrigeratorCount?: string;
     isHook?: boolean;
     isAdr?: boolean;
-    isHighCube?: boolean;
-    containerVolume?: number;
+    heightCubature?: string;
     transportKindIds?: any[];
     transportTypeIds?: any[];
-    loadingMethodIds?: any[];
+    cargoLoadMethodIds?: any[];
     techPassportFrontFilePath?: string;
     techPassportBackFilePath?: string;
     goodsTransportationLicenseCardFilePath?: string;
@@ -30,4 +31,8 @@ export interface TransportModel extends BaseModel {
     loadFrom?: string;
     loadTo?: string;
     cisternVolume: number;
+    isVerified:boolean;
+    isRefrigerator:any;
+    isMain:boolean;
+    cargoLoadMethods:any;
 }

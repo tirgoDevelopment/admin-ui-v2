@@ -16,18 +16,15 @@
     </div>
   </nz-input-group>
 
-  <nz-input-group class="input-group">
-    <nz-form-label nzRequired>{{ 'email' | translate }}</nz-form-label>
+  <!-- <nz-input-group class="input-group">
+    <nz-form-label>{{ 'email' | translate }}</nz-form-label>
     <input formControlName="email" type="text" nz-input placeholder="{{ 'email' | translate }}" required />
     <div *ngIf="form.get('email').touched && form.get('email').hasError('email')" class="error-message">
       {{ 'is_email' | translate }}
     </div>
-    <div *ngIf="form.get('email').touched && form.get('email').hasError('required')" class="error-message">
-      {{ 'is_empty' | translate }}
-    </div>
-  </nz-input-group>
+  </nz-input-group> -->
 
-  <nz-input-group class="input-group" *ngIf="!edit">
+  <!-- <nz-input-group class="input-group" *ngIf="!edit">
     <nz-form-label nzRequired>{{ 'password' | translate }}</nz-form-label>
     <input formControlName="password" type="text" nz-input placeholder="{{ 'password' | translate }}" required />
 
@@ -43,7 +40,7 @@
     <div *ngIf="form.get('password').touched && form.get('password').hasError('pattern')" class="error-message">
       {{ 'pattern' | translate }}
     </div>
-  </nz-input-group>
+  </nz-input-group> -->
 
 
   <nz-input-group class="input-group" [nzAddOnBefore]="countryDropdown" style="width: 100%;">
@@ -70,7 +67,7 @@
     </ul>
   </nz-dropdown-menu>
 
-  <ul class="gallery">
+  <!-- <ul class="gallery">
     <li *ngIf="previewUrl">
       <div class="photo">
         <i class="delete_photo" nz-icon nzType="delete" (click)="removeFile()"></i>
@@ -88,14 +85,14 @@
       </div>
     </li>
 
-  </ul>
+  </ul> -->
 
   <div class="button-wrapper">
-    <button nz-button class="danger-button" (click)="onCancel()">
+    <!-- <button nz-button class="danger-button" (click)="onCancel()">
       {{ 'cancel' | translate }}
-    </button>
+    </button> -->
     <button nz-button class="secondary-button" (click)="onBlock()" *ngIf="mode == 'edit'">
-      {{ data.blocked ? ('unblock' | translate) : ('block' | translate) }}
+      {{ data.isBlocked ? ('unblock' | translate) : ('block' | translate) }}
     </button>
     <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
       [disabled]="loading">
@@ -145,8 +142,8 @@
       <div class="info-column">
         <div class="info-label">{{ 'status' | translate }}</div>
         <div class="info-value">
-          <span *ngIf="!data?.blocked">{{ 'active' | translate }}</span>
-          <span *ngIf="data?.blocked">{{ 'inactive' | translate }}</span>
+          <span *ngIf="!data?.isBlocked">{{ 'active' | translate }}</span>
+          <span *ngIf="data?.isBlocked">{{ 'inactive' | translate }}</span>
         </div>
       </div>
     </div>
@@ -154,7 +151,7 @@
     <div class="info-row">
       <div class="info-column">
         <div class="info-label">{{ 'phone' | translate }}</div>
-        <div class="info-value">{{ data?.phoneNumbers[0].phoneNumber | phoneFormat }}</div>
+        <div class="info-value">{{ data?.phoneNumbers[0].code + data?.phoneNumbers[0].number | phoneFormat }}</div>
       </div>
       <div class="info-column">
         <div class="info-label">{{ 'email' | translate }}</div>
@@ -169,7 +166,10 @@
       </div>
       <div class="info-column">
         <div class="info-label">{{ 'last_enter' | translate }}</div>
-        <div class="info-value">{{ data?.user.lastLogin | date : 'dd.MM.yyyy' }}</div>
+        <div class="info-value">
+          <span *ngIf="data?.user.lastLogin">{{ data?.user.lastLogin | date : 'dd.MM.yyyy' }}</span>
+          <span *ngIf="!data?.user.lastLogin">{{ 'no_data' | translate }}></span>
+         </div>
       </div>
     </div>
     <div class="photo" *ngIf="previewUrl">

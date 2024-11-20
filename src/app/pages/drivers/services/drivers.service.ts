@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { env } from 'src/environmens/environment';
 import { Response } from 'src/app/shared/models/reponse';
 import { DriverModel } from '../models/driver.model';
+import { TransportModel } from '../../references/transport-types/models/transport.model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,22 +14,16 @@ export class DriversService {
   constructor(private http: HttpClient) { }
 
   getAll(params?: any, filter?:any): Observable<Response<DriverModel[]>> {
-    return this.http.get<Response<DriverModel[]>>(`${env.apiUrl}/users/drivers/all-drivers` +
-    `?pageIndex=${(params?.pageIndex ?? 1) - 1}` +
-    `&pageSize=${params?.pageSize ?? ''}` +
-    `&state=notDeleted` +
-    `&sortBy=${params?.sortBy ?? ''}` +
-    `&sortType=${params?.sortType ?? ''}` +
-    `&${filter ?? ''}`)
+    return this.http.get<Response<DriverModel[]>>(`${env.apiUrl}/users/drivers?${filter}`,{params})
   }
-  getById(id: any, userId:number): Observable<Response<DriverModel>> {
-    return this.http.get<Response<DriverModel>>(env.apiUrl + `/users/drivers/driver-by-id?id=` + id + '&userId=' + userId)
+  getById(id: any): Observable<Response<DriverModel>> {
+    return this.http.get<Response<DriverModel>>(`${env.apiUrl}/users/drivers/`+id)
   }
   create(data:FormData) {
-    return this.http.post<Response<DriverModel[]>>(env.apiUrl + '/users/drivers/create-driver', data)
+    return this.http.post<Response<DriverModel[]>>(env.apiUrl + '/users/drivers', data)
   }
   update(data: FormData) {
-    return this.http.put<Response<DriverModel[]>>(env.apiUrl + '/users/drivers/update-driver', data)
+    return this.http.put<Response<DriverModel[]>>(env.apiUrl + '/users/drivers', data)
   }
   delete(id: number | string) { 
     return this.http.delete(env.apiUrl + `/users/drivers?id=${id}`)
@@ -39,10 +34,17 @@ export class DriversService {
   unblock(id: number | string) {
     return this.http.patch<Response<DriverModel>>(env.apiUrl + `/users/drivers/unblock-driver?id=${id}`, {})
   }
+  getTransport(driverId:number|string,transportId:number|string): Observable<Response<TransportModel[]>> {
+    return this.http.get<Response<TransportModel[]>>(env.apiUrl + `/users/drivers/${driverId}/transports/${transportId}`)
+  }
   updateTransport(data:any) {
-    return this.http.put<Response<DriverModel[]>>(env.apiUrl + '/users/driver/update-transport', data)
+    return this.http.put<Response<TransportModel[]>>(env.apiUrl + `/users/drivers/${data.driverId}/transports/${data.id}`, data)
   }
   createTransport(data:any) {
-    return this.http.post<Response<DriverModel[]>>(env.apiUrl + '/users/driver/add-transport', data)
+    return this.http.post<Response<TransportModel[]>>(env.apiUrl + `/users/drivers/${data.driverId}/transports`, data)
   }
+  deleteTransport(driverId:number|string,transportId:number|string) {
+    return this.http.delete<Response<TransportModel>>(env.apiUrl + `/users/drivers/${driverId}/transports/${transportId}`)
+  }
+
 }

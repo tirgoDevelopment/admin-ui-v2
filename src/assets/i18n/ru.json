@@ -434,5 +434,7 @@
     "message": "Сообщение",
     "ready": "Готов",
     "back": "Назад",
-    "history_transaction": "История платежей"
+    "history_transaction": "История платежей",
+    "cancelled": "Отменено",
+    "isBorderCrossing": "С пересечением границы"
 }

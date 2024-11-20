@@ -19,13 +19,14 @@ import { TransportKindModel } from '../references/transport-kinds/models/transpo
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { OrderFormComponent } from './components/order-form/order-form.component';
 import { OrderModel } from './models/order.model';
+import { CargoStatusCodes } from 'src/app/shared/enum/statusCode.enum';
 
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule],
   animations: [
     trigger('showHideFilter', [
       state('show', style({ height: '*', opacity: 1, visibility: 'visible' })),
@@ -35,6 +36,7 @@ import { OrderModel } from './models/order.model';
   ]
 })
 export class OrdersComponent implements OnInit {
+  public CargoStatusCodes = CargoStatusCodes;
   confirmModal?: NzModalRef;
   data: OrderModel[] = [];
   loader: boolean = false;

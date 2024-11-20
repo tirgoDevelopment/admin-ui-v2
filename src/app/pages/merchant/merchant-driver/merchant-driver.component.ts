@@ -149,5 +149,36 @@ export class MerchantDriverComponent implements OnInit {
     this.filter = this.initializeFilter();
     this.getVerified();
   }
-
+  onBlock(item:DriverMerchantModel) {
+    if (item.blocked) {
+      this.merchantApi.activate(item.id).subscribe((res) => {
+        this.toastr.success(this.translate.instant('successfullyActivated'), '');
+        this.getUnverified();
+        this.getVerified();
+      });
+    }
+    else {
+      this.blockModal(item)
+    }
+  }
+  blockModal(item:DriverMerchantModel): void {
+    console.log(item);
+    
+    this.confirmModal = this.modal.confirm({
+      nzTitle: this.translate.instant('are_you_sure'),
+      nzContent: this.translate.instant('block_sure'),
+      nzOkText: this.translate.instant('block'),
+      nzCancelText: this.translate.instant('cancel'),
+      nzOkDanger: true,
+      nzOnOk: () => {
+        this.merchantApi.block(item.id).subscribe((res: any) => {
+          if (res?.success) {
+            this.toastr.success(this.translate.instant('successfullBlocked'), '');
+            this.getUnverified();
+            this.getVerified();
+          }
+        });
+      }
+    });
+  }
 }

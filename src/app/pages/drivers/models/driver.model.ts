@@ -28,6 +28,8 @@ export interface DriverModel extends BaseModel {
     driverLicenseFilePath:string;
     isBusy?:boolean;
     canceledOrdersCount:number;
+    isVerified:boolean;
+    profileFile?:string;
     user: {
         id: number;
         lastLogin: Date;

@@ -98,7 +98,9 @@ body {
   color: #fff !important;
   border-color: $success-color !important;
 }
-
+button:hover {
+  opacity: .9;
+}
 .action-col {
   width: 30px;
 }
@@ -448,13 +450,7 @@ input:-webkit-autofill:focus {
   gap: 5px;
 }
 
-.edit-icon {
-  color: green !important;
-}
 
-.delete-icon {
-  color: red !important;
-}
 
 .error-message {
   background-color: var(--bgColor);
@@ -755,4 +751,12 @@ input[type=number]::-webkit-outer-spin-button {
 
 .ant-scroll-number-only-unit {
   color: #fff !important;
+}
+
+.edit-icon {
+  color: green !important;
+}
+
+.delete-icon {
+  color: red !important;
 }

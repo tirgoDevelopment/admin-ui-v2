@@ -41,7 +41,7 @@ export class DriversComponent implements OnInit {
   isFilterVisible: boolean = false;
   filter: Record<string, string> = this.initializeFilter();
   pageParams = {
-    pageIndex: 1,
+    pageIndex: 0,
     pageSize: 10,
     totalPagesCount: 1,
     sortBy: '',
@@ -83,17 +83,18 @@ export class DriversComponent implements OnInit {
       nzContent: DriverFormComponent,
       nzMaskClosable: false,
       nzPlacement: 'right',
+      nzWidth: '400px',
       nzContentParams: {
         data: item,
         mode: action
       }
     });
     drawerRef.afterClose.subscribe((res: any) => {
-      if (res?.success && res?.mode !== 'add') {
+      if (res && res?.success && res?.mode !== 'add') {
         this.getAll();
         drawerRef.componentInstance?.form.reset();
       }
-      if (res.success && res?.mode === 'add') {
+      if (res && res.success && res?.mode === 'add') {
         this.confirmModal = this.modal.confirm({
           nzTitle: this.translate.instant('Вы хотите добавить транспорт ?'),
           nzOkText: this.translate.instant('yes'),
@@ -110,8 +111,7 @@ export class DriversComponent implements OnInit {
             });
             this.confirmModal.close();
             addTransportDrawerRef.afterClose.subscribe(() => {
-              console.log('ok drivers');
-                  this.getAll(); 
+              this.getAll();
             });
           }
         })

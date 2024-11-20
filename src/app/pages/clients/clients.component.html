@@ -97,9 +97,12 @@
       <td> {{ i+1 }} </td>
       <td> {{ item.id }} </td>
       <td> {{ item.firstName }} {{ item.lastName }} </td>
-      <td> {{ item.phoneNumbers[0].phoneNumber | phoneFormat}} </td>
+      <td> {{ item.phoneNumbers[0].code + item.phoneNumbers[0].number | phoneFormat}} </td>
       <td> {{ item.createdAt | date : 'dd.MM.yyyy' }} </td>
-      <td> {{ item.user.lastLogin }} </td>
+      <td>
+        <span *ngIf="item?.user.lastLogin">{{ item.user.lastLogin }}</span>
+        <span *ngIf="!item?.user.lastLogin">{{ 'no_data' | translate }}</span>
+      </td>
       <td class="action-col">
         <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
           <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>

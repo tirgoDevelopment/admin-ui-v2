@@ -9,6 +9,7 @@ import {
   LogoutOutline,
   UserOutline,
   LockOutline,
+  UnlockOutline,
   EyeOutline,
   EyeInvisibleOutline,
   MailOutline,
@@ -27,7 +28,7 @@ import {
   HistoryOutline
 } from '@ant-design/icons-angular/icons';
 
-const icons = [HistoryOutline,PaperClipOutline,StarFill,InfoCircleOutline,PictureTwoTone,ReloadOutline,FrownFill,TeamOutline,FileSearchOutline,SyncOutline,FilterFill,EllipsisOutline,MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, FormOutline, LogoutOutline,UserOutline,LockOutline,EyeOutline,EyeInvisibleOutline,MailOutline,PlusOutline];
+const icons = [UnlockOutline,HistoryOutline,PaperClipOutline,StarFill,InfoCircleOutline,PictureTwoTone,ReloadOutline,FrownFill,TeamOutline,FileSearchOutline,SyncOutline,FilterFill,EllipsisOutline,MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, FormOutline, LogoutOutline,UserOutline,LockOutline,EyeOutline,EyeInvisibleOutline,MailOutline,PlusOutline];
 
 @NgModule({
   imports: [NzIconModule],
