@@ -39,9 +39,15 @@ export class MerchantDriverService {
     return this.http.patch<Response<DriverMerchantModel>>(`${env.adminUrl}/users/driver-merchants/block-driver-merchant?id=${id}`, {})
   }
   activate(id: number | string) {
-    return this.http.patch<Response<DriverMerchantModel>>(`${env.adminUrl}/users/driver-merchants/activate-driver-merchant?id=${id}`, {})
+    return this.http.patch<Response<DriverMerchantModel>>(`${env.adminUrl}/users/driver-merchants/unblock-driver-merchant?id=${id}`, {})
   }
   transactions(id:any,params?: any, filter?: any) {
     return this.http.get<Response<DriverMerchantModel>>(`${env.adminUrl}/finance/transaction/driver-merchant-transactions?userId=`+id )
+  }
+  getMerchantDrivers() {
+    return this.http.get(env.adminUrl+'/users/driver-merchants/all-driver-merchants')
+  }
+  getMerchantVerifiedDrivers() {
+    return this.http.get(env.adminUrl+'/users/driver-merchants/verified-driver-merchants')
   }
 }

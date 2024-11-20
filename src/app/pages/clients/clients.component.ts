@@ -41,11 +41,12 @@ export class ClientsComponent implements OnInit {
   isFilterVisible: boolean = false;
   filter: Record<string, string> = this.initializeFilter();
   pageParams = {
-    pageIndex: 1,
+    pageIndex: 0,
     pageSize: 10,
     totalPagesCount: 1,
     sortBy: '',
     sortType: '',
+    state: 'notDeleted'
   };
 
   constructor(

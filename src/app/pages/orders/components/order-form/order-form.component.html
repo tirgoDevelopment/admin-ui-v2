@@ -9,12 +9,11 @@
   <form [formGroup]="form" class="my-4">
 
     <ng-container *ngIf="step == 1">
-
       <nz-input-group class="input-group w-full">
         <nz-form-label nzRequired>{{ 'client' | translate }}</nz-form-label>
         <nz-select style="width: 100%;" nzShowSearch nzServerSearch nzPlaceHolder="{{ 'client' | translate }}"
           formControlName="clientId" [nzShowArrow]="false" (nzOnSearch)="findClient($event)">
-          <nz-option *ngFor="let o of (clients$ | async)?.data?.content" [nzLabel]="o.firstName + o.lastName"
+          <nz-option *ngFor="let o of (clients$ | async)?.data?.content" [nzLabel]="o.firstName + ' ' + o.lastName"
             [nzValue]="o.id"></nz-option>
         </nz-select>
       </nz-input-group>
@@ -32,9 +31,10 @@
         <nz-form-label nzRequired>{{ 'place_shipment' | translate }}</nz-form-label>
         <nz-select style="width: 100%;" nzShowSearch nzServerSearch nzPlaceHolder="{{'place_shipment' | translate}}"
           formControlName="loadingLocation" [nzShowArrow]="false" (nzOnSearch)="findCity($event)">
-          <nz-option *ngFor="let o of findList" [nzLabel]="o.displayName" [nzValue]="o">
+          <nz-option *ngFor="let o of findList" 
+                      [nzLabel]="o.name + (o.country ? ', ' + o.country : '')" 
+                      [nzValue]="o">
           </nz-option>
-          <nz-option [nzLabel]="form.value.loadingLocation.name" [nzValue]="form.value.loadingLocation" nzHide></nz-option>
         </nz-select>
       </nz-input-group>
 
@@ -43,8 +43,7 @@
         <nz-form-label nzRequired>{{ 'delivery_shipment' | translate }}</nz-form-label>
         <nz-select class="w-full" nzShowSearch nzServerSearch nzPlaceHolder="{{'delivery_shipment' | translate}}"
           formControlName="deliveryLocation" [nzShowArrow]="false" (nzOnSearch)="findCity($event)">
-          <nz-option *ngFor="let o of findList" [nzLabel]="o.displayName" [nzValue]="o"></nz-option>
-          <nz-option [nzLabel]="form.value.deliveryLocation.name" [nzValue]="form.value.deliveryLocation" nzHide></nz-option>
+          <nz-option *ngFor="let o of findList" [nzLabel]="o.name + (o.country ? ', ' + o.country : '')" [nzValue]="o"></nz-option>
         </nz-select>
       </nz-input-group>
 
@@ -53,9 +52,9 @@
         <nz-form-label>{{'add_stop'|translate}}</nz-form-label>
         <nz-select class="w-full" nzShowSearch nzPlaceHolder="{{'add_stop' | translate}}" nzMode="multiple"
           formControlName="selectedLocations">
-          <nz-option nzLabel="{{'custom_place' |translate}}" nzValue="customsPlaceLocation"></nz-option>
+          <nz-option nzLabel="{{'custom_place' |translate}}" nzValue="customsOutClearanceLocation"></nz-option>
           <nz-option nzLabel="{{'custom_clearance_place' |translate}}"
-            nzValue="customsClearancePlaceLocation"></nz-option>
+            nzValue="customsInClearanceLocation"></nz-option>
           <nz-option nzLabel="{{'add_loading_area' |translate}}" nzValue="additionalLoadingLocation"></nz-option>
           <nz-option nzLabel="{{'add_unloading_area' |translate}}" nzValue="additionalDeliveryLocation"></nz-option>
         </nz-select>
@@ -65,22 +64,21 @@
         <nz-form-label>{{ getDynamicLabel(location) }}</nz-form-label>
         <nz-select class="w-full" nzShowSearch nzServerSearch nzPlaceHolder="{{getDynamicLabel(location)}}"
           [formControlName]="location" [nzShowArrow]="false" (nzOnSearch)="findCity($event)">
-          <nz-option *ngFor="let o of findList" [nzLabel]="o.displayName" [nzValue]="o"></nz-option>
-          <nz-option [nzLabel]="form.value[location].name" [nzValue]="form.value[location]" nzHide></nz-option>
+          <nz-option *ngFor="let o of findList" [nzLabel]="o.name + ', ' + o.country" [nzValue]="o"></nz-option>
         </nz-select>
       </nz-input-group>
 
       <div class="flex my-4" style="gap: 15px; ">
         <div class="flex" style="flex-direction: column;">
           <label nz-checkbox formControlName="isAdr">{{ 'isAdr' | translate }}</label>
-          <label style="margin-left: 0 !important;" nz-checkbox formControlName="isCarnetTir">{{ 'carnet_tir' |
+          <!-- <label style="margin-left: 0 !important;" nz-checkbox formControlName="isCarnetTir">{{ 'carnet_tir' |
             translate
-            }}</label>
+            }}</label> -->
         </div>
         <div class="flex" style="flex-direction: column;">
-          <label nz-checkbox formControlName="isGlonas">{{ 'glonass' | translate }}</label>
-          <label style="margin: 0 !important;" nz-checkbox formControlName="isParanom">{{ 'by_ferry' | translate
-            }}</label>
+          <label nz-checkbox formControlName="isBorderCrossing">{{ 'isBorderCrossing' | translate }}</label>
+          <!-- <label style="margin: 0 !important;" nz-checkbox formControlName="isParanom">{{ 'by_ferry' | translate
+            }}</label> -->
         </div>
       </div>
     </ng-container>
@@ -93,31 +91,20 @@
         </nz-select>
         <input nz-input type="text" formControlName="offeredPrice" mask="separator.2">
       </div>
-
-      <nz-form-label>{{ 'prepaid_expense' | translate }}</nz-form-label>
-      <div class="flex">
-        <nz-select formControlName="inAdvancePriceCurrencyId">
-          <nz-option *ngFor="let item of currencies" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
-        </nz-select>
-        <input nz-input type="text" formControlName="inAdvancePrice" mask="separator.2">
-      </div>
-
       <nz-input-group>
         <nz-form-label>{{ 'payment_method' | translate }}</nz-form-label>
-        <nz-select class="w-full" formControlName="paymentMethod">
-          <nz-option nzLabel="{{'cash'|translate}}" nzValue="cash"></nz-option>
-          <nz-option nzLabel="{{'cashless'|translate}}" nzValue="cashless"></nz-option>
+        <nz-select class="w-full" formControlName="isCashlessPayment">
+          <nz-option nzLabel="{{'cash'|translate}}" [nzValue]="false"></nz-option>
+          <nz-option nzLabel="{{'cashless'|translate}}" [nzValue]="true"></nz-option>
         </nz-select>
       </nz-input-group>
-      <label nz-checkbox formControlName="isSafeTransaction" (ngModelChange)="agreementModal($event)">{{
-        'secure_transaction' | translate }}</label>
-
+      <label nz-checkbox formControlName="isSecureTransaction">{{ 'secure_transaction' | translate }}</label>
     </ng-container>
 
     <ng-container *ngIf="step == 3">
       <nz-input-group class="input-group">
         <nz-form-label nzRequired>{{ 'type_transport' | translate }}</nz-form-label>
-        <nz-select class="w-full" formControlName="transportTypeIds" [nzShowArrow]="false" nzMode="multiple">
+        <nz-select class="w-full" formControlName="transportTypeId" [nzShowArrow]="false">
           <nz-option *ngFor="let item of transportTypes" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
         </nz-select>
       </nz-input-group>
@@ -147,11 +134,11 @@
       <div class="flex" *ngIf="isRefrigeratorMode">
         <nz-input-group class="input-group">
           <nz-form-label>{{ 'mode_from' | translate }}</nz-form-label>
-          <input nz-input type="text" formControlName="refrigeratorFrom" mask="separator.2">
+          <input nz-input type="text" formControlName="refrigeratorFromCount" mask="separator.2">
         </nz-input-group>
         <nz-input-group class="input-group">
           <nz-form-label>{{ 'mode_to' | translate }}</nz-form-label>
-          <input nz-input type="text" formControlName="refrigeratorTo" mask="separator.2">
+          <input nz-input type="text" formControlName="refrigeratorToCount" mask="separator.2">
         </nz-input-group>
       </div>
 
@@ -163,15 +150,15 @@
       <div class="flex align-baseline" *ngIf="isContainer">
         <nz-input-group class="input-group">
           <nz-form-label>{{ 'volume_f' | translate }}</nz-form-label>
-          <nz-select class="w-full" formControlName="containerVolume">
+          <nz-select class="w-full" formControlName="heightCubature">
             <nz-option nzLabel="20(ф.)" nzValue="20"></nz-option>
             <nz-option nzLabel="40(ф.)" nzValue="40"></nz-option>
             <nz-option nzLabel="60(ф.)" nzValue="60"></nz-option>
           </nz-select>
         </nz-input-group>
-        <nz-input-group class="input-group my-4">
+        <!-- <nz-input-group class="input-group my-4">
           <label class="my-4" nz-checkbox formControlName="isHighCube">{{ 'high_cube' | translate }}</label>
-        </nz-input-group>
+        </nz-input-group> -->
       </div>
 
       <nz-input-group class="input-group">
@@ -188,34 +175,24 @@
         </nz-input-group>
 
         <nz-input-group class="input-group">
-          <nz-form-label>{{ 'cube' | translate }}</nz-form-label>
-          <input nz-input type="text" formControlName="capacity" mask="separator.2">
+          <nz-form-label>{{ 'cargo_dimensions' | translate }}</nz-form-label>
+          <input nz-input type="text" formControlName="cargoDimension" mask="separator.2">
         </nz-input-group>
       </div>
-
-      <nz-form-label>{{'cargo_dimensions' | translate }}</nz-form-label>
-      <div class="flex align-center gap">
-        <input nz-input type="text" formControlName="cargoLength" placeholder="Длина" mask="separator.2">
-        <i nz-icon nzTheme="outline" nzType="close"></i>
-        <input nz-input type="text" formControlName="cargoWidth" placeholder="Ширина" mask="separator.2">
-        <i nz-icon nzTheme="outline" nzType="close"></i>
-        <input nz-input type="text" formControlName="cargoHeight" placeholder="Высота" mask="separator.2">
-      </div>
-
       <div class="flex gap">
         <nz-input-group class="input-group">
           <nz-form-label>{{ 'loading_method' | translate }}</nz-form-label>
-          <nz-select class="w-full" formControlName="loadingMethodId" [nzShowArrow]="false">
+          <nz-select class="w-full" formControlName="cargoLoadMethodIds" [nzShowArrow]="false" nzMode="multiple">
             <nz-option *ngFor="let item of loadingMethods" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
           </nz-select>
         </nz-input-group>
 
-        <nz-input-group class="input-group">
+        <!-- <nz-input-group class="input-group">
           <nz-form-label>{{ 'package' | translate }}</nz-form-label>
           <nz-select class="w-full" formControlName="cargoPackageId" [nzShowArrow]="false">
             <nz-option *ngFor="let item of packages" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
           </nz-select>
-        </nz-input-group>
+        </nz-input-group> -->
       </div>
     </ng-container>
     <div class="flex gap align-center my-4">
@@ -249,7 +226,19 @@
         <div class="info-label">{{'status' | translate}}</div>
         <div class="info-value" class="status"
           [ngStyle]="{color: data.cargoStatus.color, borderColor: data.cargoStatus.color, width: 'fit-content'}">
-          {{data.cargoStatus.name | translate}} </div>
+          {{data.cargoStatus.name.toLowerCase() | translate}} </div>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-column">
+        <div class="info-label">{{'client' | translate}}</div>
+        <div class="info-value">{{data.client.firstName + ' ' + data.client.lastName }} </div>
+      </div>
+      <div class="info-column">
+        <!-- <div class="info-label">{{'status' | translate}}</div>
+        <div class="info-value" class="status"
+          [ngStyle]="{color: data.cargoStatus.color, borderColor: data.cargoStatus.color, width: 'fit-content'}">
+          {{data.cargoStatus.name | translate}} </div>-->
       </div>
     </div>
     <div class="info-row">
@@ -262,14 +251,14 @@
         <div class="info-value">{{data.deliveryLocation.name}}</div>
       </div>
     </div>
-    <div class="info-row" *ngIf="data.customsPlaceLocation || data.customsClearancePlaceLocation">
-      <div class="info-column" *ngIf="data?.customsPlaceLocation">
-        <div class="info-label">{{'custom_place' | translate}}</div>
-        <div class="info-value">{{data.customsPlaceLocation.name}} </div>
+    <div class="info-row" *ngIf="data.customsInClearanceLocation || data.customsOutClearanceLocation">
+      <div class="info-column" *ngIf="data?.customsInClearanceLocation">
+        <div class="info-label">{{'custom_clearance_place' | translate}}</div>
+        <div class="info-value">{{data.customsInClearanceLocation.name}} </div>
       </div>
-      <div class="info-column" *ngIf="data?.customsClearancePlaceLocation">
-        <div class="info-label">{{'customs_clearance_place' | translate}}</div>
-        <div class="info-value">{{data?.customsClearancePlaceLocation?.name}}</div>
+      <div class="info-column" *ngIf="data?.customsOutClearanceLocation">
+        <div class="info-label">{{'customs_place' | translate}}</div>
+        <div class="info-value">{{data?.customsOutClearanceLocation?.name}}</div>
       </div>
     </div>
     <div class="info-row" *ngIf="data.additionalLoadingLocation || data.additionalDeliveryLocation">
@@ -282,23 +271,36 @@
         <div class="info-value">{{data?.additionalDeliveryLocation?.name}}</div>
       </div>
     </div>
+    
+    <div class="info-row">
+      <div class="info-column">
+        <div class="info-label">{{'type_transport' | translate}}</div>
+        <div class="info-value">{{data.transportType.name}}</div>
+      </div>
+      <div class="info-column">
+        <div class="info-label">{{'transport_kind' | translate}}</div>
+        <div class="info-value" *ngFor="let i of data.transportKinds">{{i.name}} </div>
+      </div>
+    </div>
+
     <div class="info-row">
       <div class="info-column">
         <div class="info-label">{{'cargo_type' | translate}}</div>
         <div class="info-value">{{data.cargoType.name}} </div>
       </div>
       <div class="info-column">
-        <div class="info-label">{{'type_transport' | translate}}</div>
-        <div class="info-value" *ngFor="let i of data.transportTypes">{{i.name}}</div>
+        <div class="info-label">{{'loading_method' | translate}}</div>
+        <div class="info-value" *ngFor="let i of data.cargoLoadMethods">{{i.name}}</div>
       </div>
     </div>
+
     <div class="info-row">
       <div class="info-column">
         <div class="info-label">{{'cargo_size' | translate}}</div>
         <div class="info-value">
-          Д: {{ data?.cargoLength ? data?.cargoLength + 'см.' : ('no_data' | translate) }}
-          Ш: {{ data?.cargoWidth ? data?.cargoWidth + 'см.' : ('no_data' | translate) }}
-          В: {{ data?.cargoHeight ? data?.cargoHeight + 'см.' : ('no_data' | translate) }}</div>
+          <span *ngIf="data.cargoDimension">{{data.cargoDimension}} м³</span>
+          <span *ngIf="!data.cargoDimension">{{'no_data'| translate}}</span>
+        </div>
       </div>
       <div class="info-column">
         <div class="info-label">{{'cargo_weight' | translate}}</div>
@@ -309,14 +311,7 @@
       <div class="info-column">
         <div class="info-label">{{'price' | translate}}</div>
         <div class="info-value">
-          <span *ngIf="data.offeredPrice">{{data.offeredPrice}} {{data.offeredPriceCurrency.name}}</span>
-          <span *ngIf="!data.offeredPrice">{{'no_data' | translate}}</span>
-        </div>
-      </div>
-      <div class="info-column">
-        <div class="info-label">{{'prepaid_expense' | translate}}</div>
-        <div class="info-value">
-          <span *ngIf="data.offeredPrice">{{data.inAdvancePrice}} {{data.inAdvancePriceCurrency.name}}</span>
+          <span *ngIf="data.offeredPrice">{{data.offeredPrice | priceFormat}} {{data.offeredPriceCurrency?.name}}</span>
           <span *ngIf="!data.offeredPrice">{{'no_data' | translate}}</span>
         </div>
       </div>
@@ -334,33 +329,24 @@
     <div class="info-row">
       <div class="info-column">
         <div class="info-label">{{'payment_method' | translate}}</div>
-        <div class="info-value"> {{data.paymentMethod | translate}} </div>
+        <div class="info-value"> {{data.isCashlessPayment ? ('cashless' | translate) : ('cash' | translate)}} </div>
       </div>
       <div class="info-column">
         <div class="info-label">{{'secure_transaction' | translate}}</div>
-        <div class="info-value">{{data?.isSafeTransaction ? ('yes' | translate): ('no' | translate)}}</div>
+        <div class="info-value">{{data?.isSecureTransaction ? ('yes' | translate): ('no' | translate)}}</div>
       </div>
     </div>
     <div class="info-row">
-      <div class="info-column">
-        <div class="info-label">{{'carnet_tir' | translate}}</div>
-        <div class="info-value"> {{data.isCarnetTir ? ('yes' | translate): ('no' | translate)}} </div>
-      </div>
       <div class="info-column">
         <div class="info-label">{{'isAdr' | translate}}</div>
         <div class="info-value">{{data?.isAdr ? ('yes' | translate): ('no' | translate)}}</div>
       </div>
-    </div>
-    <div class="info-row">
       <div class="info-column">
-        <div class="info-label">{{'glonass' | translate}}</div>
-        <div class="info-value"> {{data.isGlonas ? ('yes' | translate): ('no' | translate)}} </div>
-      </div>
-      <div class="info-column">
-        <div class="info-label">{{'by_ferry' | translate}}</div>
-        <div class="info-value">{{data?.isParanom ? ('yes' | translate): ('no' | translate)}}</div>
+        <div class="info-label">{{'isBorderCrossing' | translate}}</div>
+        <div class="info-value"> {{data.isBorderCrossing ? ('yes' | translate): ('no' | translate)}} </div>
       </div>
     </div>
+
     <div class="info-row" *ngIf="data?.refrigeratorCount || data?.refrigeratorFrom || data?.refrigeratorTo">
       <div class="info-column" *ngIf="data?.refrigeratorCount">
         <div class="info-label">{{'number_of_transporters' | translate}}</div>
@@ -397,8 +383,10 @@
     </div>
   </div>
 
-  <div class="flex gap">
-    <button nz-button class="danger-button" (click)="onCancel()">{{'cancel_order' | translate}}</button>
-    <button nz-button class="secondary-button" (click)="onAssignDriver()">{{'assign_driver' | translate}}</button>
+  <div class="flex gap" *ngIf="data.cargoStatus.code !== CargoStatusCodes.Canceled">
+    <button *ngIf="data.cargoStatus.code !== CargoStatusCodes.Canceled" nz-button class="danger-button"
+      (click)="onCancel()">{{'cancel_order' | translate}}</button>
+    <button *ngIf="data.cargoStatus.code === CargoStatusCodes.Waiting" nz-button class="secondary-button"
+      (click)="onAssignDriver()">{{'assign_driver' | translate}}</button>
   </div>
 </ng-container>

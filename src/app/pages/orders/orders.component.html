@@ -18,43 +18,26 @@
 <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
   <div>
     <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['orderId']" type="text" nz-input placeholder="ID" />
+      <input [(ngModel)]="filter['orderId']" type="text" nz-input placeholder="{{'orders' | translate}} ID" />
     </nz-input-group>
   </div>
-
   <div>
-    <nz-select [(ngModel)]="filter['statusId']" nzAllowClear nzPlaceHolder="{{'StatusID' | translate}}">
-      <nz-option [nzValue]="status.id" [nzLabel]="translate.instant(status.name)" *ngFor="let status of statuses"></nz-option>
-    </nz-select>
+    <nz-input-group class="input-group">
+      <input [(ngModel)]="filter['driverId']" type="text" nz-input placeholder="{{'drivers' | translate}} ID" />
+    </nz-input-group>
   </div>
-
   <div>
-    <nz-select [(ngModel)]="filter['transportKindId']" nzAllowClear nzPlaceHolder="{{'transport_kind'  | translate}}">
-      <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of transportKinds"></nz-option>
-    </nz-select>
-  </div>
-
-  <div>
-    <nz-select [(ngModel)]="filter['transportTypeId']" nzAllowClear nzPlaceHolder="{{'type_transport'  | translate}}">
-      <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of transportTypes"></nz-option>
+    <nz-select [(ngModel)]="filter['statusId']" nzAllowClear nzPlaceHolder="{{'status' | translate}}">
+      <nz-option [nzValue]="status.id" [nzLabel]="translate.instant(status.name)"
+        *ngFor="let status of statuses"></nz-option>
     </nz-select>
   </div>
 
   <div>
     <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['loadingLocation']" type="text" nz-input
-        placeholder="{{ 'place_shipment' | translate }}" />
+      <input [(ngModel)]="filter['clientId']" type="text" nz-input placeholder="{{'clients' | translate}} ID" />
     </nz-input-group>
   </div>
-
-
-  <div>
-    <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['deliveryLocation']" type="text" nz-input
-        placeholder="{{ 'delivery_shipment' | translate }}" />
-    </nz-input-group>
-  </div>
-
 
   <button nz-button nzType="primary" class="search-button" (click)="getAll()">
     <span nz-icon nzType="search" nzTheme="outline"></span>
@@ -65,19 +48,18 @@
 </div>
 
 <nz-table #sortTable [nzShowSizeChanger]="true" [nzShowPagination]="false" [nzSize]="'middle'" [nzData]="data"
-  [nzLoading]="loader" [nzNoResult]="empty" (nzQueryParams)="onQueryParamsChange($event)" [nzScroll]="{ x: 'max-content' }">
+  [nzLoading]="loader" [nzNoResult]="empty" (nzQueryParams)="onQueryParamsChange($event)"
+  [nzScroll]="{ x: 'max-content' }">
   <thead>
     <tr>
       <th>No</th>
       <th nzColumnKey="id" [nzSortFn]="true">ID</th>
+      <th>{{ 'client' | translate }}</th>
       <th>{{ 'place_shipment' | translate }}</th>
       <th>{{ 'delivery_shipment' | translate }}</th>
       <th>{{ 'status' | translate }}</th>
       <th>{{ 'shipment_date' | translate }}</th>
       <th>{{ 'price' | translate }}</th>
-      <th>{{ 'secure_transaction' | translate }}</th>
-      <th>{{ 'transport_kind' | translate }}</th>
-      <th>{{ 'client' | translate }}</th>
       <th nzRight></th>
     </tr>
   </thead>
@@ -86,22 +68,19 @@
     <tr *ngFor="let item of data; let i=index">
       <td>{{i+1}}</td>
       <td>{{item.id}}</td>
-      <td class="ellipsis">{{item.loadingLocation.name}}</td>
-      <td class="ellipsis">{{item.deliveryLocation.name}}</td>
-      <td> <span class="status" [ngStyle]="{color: item.cargoStatus.color, borderColor: item.cargoStatus.color}">{{item.cargoStatus.name | translate}}</span> </td>
-      <td>{{item.createdAt | date : 'dd.MM.yyyy'}}</td>
-      <td> 
-        <span *ngIf="item.offeredPrice"> {{item.offeredPrice}} {{item.offeredPriceCurrencyId}}</span> 
-        <span *ngIf="!item.offeredPrice">{{'no' | translate}}</span> </td>
-      <td>{{item.isSafeTransaction ? ('yes' | translate): ('no' | translate)}}</td>
-      <td>
-        <ng-container *ngIf="item.transportKinds">
-          <div *ngFor="let i of item.transportKinds">{{i.name}}</div>
-        </ng-container>
-      </td>
       <td class="ellipsis">
         <span *ngIf="item.client">{{item.client.firstName}} {{item.client.lastName}}</span>
         <span *ngIf="!item.client">{{'no_data' | translate}}</span>
+      </td>
+      <td class="ellipsis">{{item.loadingLocation.name}}</td>
+      <td class="ellipsis">{{item.deliveryLocation.name}}</td>
+      <td> <span class="status"
+          [ngStyle]="{color: item.cargoStatus.color, borderColor: item.cargoStatus.color}">{{item.cargoStatus.name.toLowerCase()|
+          translate}}</span> </td>
+      <td>{{item.createdAt | date : 'dd.MM.yyyy'}}</td>
+      <td>
+        <span *ngIf="item.offeredPrice"> {{item.offeredPrice | priceFormat}} {{item.offeredPriceCurrency?.name}}</span>
+        <span *ngIf="!item.offeredPrice">{{'no_data' | translate}}</span>
       </td>
       <td class="action-col" nzRight>
         <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
@@ -116,7 +95,7 @@
               </div>
             </li>
 
-            <li nz-menu-item (click)="handleDrawer('edit', item)">
+            <li nz-menu-item (click)="handleDrawer('edit', item)" *ngIf="item.cargoStatus.code !== CargoStatusCodes.Canceled && item.cargoStatus.code !== CargoStatusCodes.Closed">
               <div class="dropdown-menu">
                 <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
                 <span>{{ 'edit' | translate }}</span>

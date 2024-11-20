@@ -18,6 +18,7 @@ import { authInterceptor } from "./shared/interceptors/api.interceptor";
 import { provideEnvironmentNgxMask } from "ngx-mask";
 import ru from '@angular/common/locales/ru'; 
 import { registerLocaleData } from "@angular/common";
+import { GeoDbProModule } from "wft-geodb-angular-client";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -50,6 +51,10 @@ export const appConfig: ApplicationConfig = {
           useFactory: HttpLoaderFactory,
           deps: [HttpClient]
         }
+      }),
+      GeoDbProModule.forRoot({
+        apiKey: 'c1a9294cddmsh20cc4e3c6220b04p1ac0a6jsndfd3e1530977',
+        serviceUri: 'https://wft-geo-db.p.rapidapi.com'
       })
     ),
     { provide: NZ_I18N, useValue: ru_RU },

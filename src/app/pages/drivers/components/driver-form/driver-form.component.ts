@@ -48,7 +48,7 @@ export class DriverFormComponent implements OnInit {
     { code: 'RU', name: 'Russia', flag: 'assets/images/flags/RU.svg' },
   ];
   selectedCountry: { code: string; name: string; flag: string } = this.countries[0];
-  currentMask: string = '+000 (00) 000-00-00';
+  currentMask: string = '+000 00 000-00-00';
   currentUser: any;
 
   constructor(
@@ -70,28 +70,24 @@ export class DriverFormComponent implements OnInit {
       id: new FormControl(''),
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
-      password: new FormControl('', this.edit ? [Validators.nullValidator] : [Validators.required, Validators.maxLength(16), Validators.minLength(8), Validators.pattern('^[a-zA-Z0-9]+$')]),
-      phoneNumbers: new FormControl(['+998'], Validators.required),
-      email: new FormControl('', [Validators.email, Validators.required]),
-      passport: new FormControl('', this.edit ? [] : [Validators.required]),
-      driverLicense: new FormControl('', this.edit ? [] : [Validators.required]),
-    
+      phoneNumbers: new FormControl([], Validators.required),
+      email: new FormControl('', [Validators.email]),
+      passport: new FormControl('', []),
+      driverLicense: new FormControl('', []),
     });
     
     if (this.mode == 'edit') {
+      this.getById();
       this.patchForm();
     }
     if (this.mode == 'view') {
       this.getById();
-      // this.previewUrlTechPassportFront = this.data?.techPassportFrontFilePath;
     }
   }
   getById() {
-    if (this.data && this.mode == 'view') {
-      this.driversService.getById(this.data.id, this.data.user.id).subscribe((res: Response<DriverModel>) => {
+    if (this.data && (this.mode == 'view' || this.mode == 'edit')) {
+      this.driversService.getById(this.data.id).subscribe((res: Response<DriverModel>) => {
         this.data = res.data;
-        console.log(this.data);
-        
       });
     }
   }
@@ -101,12 +97,15 @@ export class DriverFormComponent implements OnInit {
       this.previewUrlPassport = this.data?.passportFilePath;
       this.previewUrlLicense = this.data?.driverLicenseFilePath;
       this.edit = true;
+      const mainPhoneNumber = this.data?.phoneNumbers?.find(phone => phone.isMain);
+      const formattedPhoneNumber = mainPhoneNumber ? `+${mainPhoneNumber.code}${mainPhoneNumber.number}` : '';
+  
       this.form.patchValue({
         id: this.data.id,
         firstName: this.data.firstName,
         lastName: this.data.lastName,
         email: this.data.email,
-        phoneNumbers: String('+' + this.data?.phoneNumbers[0].phoneNumber),
+        phoneNumbers: formattedPhoneNumber,
         passport: this.data?.passportFilePath,
         driverLicense: this.data?.driverLicense,
       });
@@ -122,10 +121,14 @@ export class DriverFormComponent implements OnInit {
     formData.append('firstName', this.form.get('firstName')?.value);
     formData.append('lastName', this.form.get('lastName')?.value);
     formData.append('email', this.form.get('email')?.value);
-    formData.append('phoneNumbers', JSON.stringify([this.form.get('phoneNumbers').value]));
-    if (!this.edit) {
-      formData.append('password', this.form.get('password')?.value);
-    }
+    const phoneNumbers = [
+      {
+        code: this.form.value.phoneNumbers.substring(0, 3),
+        number: this.form.value.phoneNumbers.substring(3),
+        isMain: true,
+      }
+    ];
+    formData.append('phoneNumbers', JSON.stringify(phoneNumbers));
     if (this.selectedFilePassport) {
       const file = new File([this.selectedFilePassport], Date.now() + this.selectedFilePassport.name, { type: this.selectedFilePassport.type });
       formData.append('passport', file);
@@ -137,11 +140,11 @@ export class DriverFormComponent implements OnInit {
     
     this.loading = true;
     const uniqueFormData = removeDuplicateKeys(formData);
-
+    
     const submitObservable = this.data
       ? this.driversService.update(uniqueFormData)
       : this.driversService.create(uniqueFormData);
-
+    
     submitObservable.subscribe(
       (res: any) => {
         if (res && res.success) {
@@ -248,7 +251,8 @@ export class DriverFormComponent implements OnInit {
       }
     });
     drawerRef.afterClose.subscribe((res: any) => {
-      if (res?.success) {
+      if (res && res?.success) {
+        this.getById()
         this.drawerRef.close({ success: true });
       }
     });
@@ -263,6 +267,9 @@ export class DriverFormComponent implements OnInit {
         data: item,
         mode: 'edit'
       }
+    });
+    drawerRef.afterClose.subscribe((res: any) => {
+        this.getById()
     });
   }
 }

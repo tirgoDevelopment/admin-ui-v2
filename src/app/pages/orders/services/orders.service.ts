@@ -13,21 +13,21 @@ export class OrdersService {
   constructor(private http: HttpClient) { }
 
   getAll(params?: any, filter?:any): Observable<Response<OrderModel[]>> {
-    return this.http.get<Response<OrderModel[]>>(env.orderApiUrl + `/orders/staffs/all-orders?pageIndex=${params?.pageIndex ? params.pageIndex - 1 : params.pageIndex}&pageSize=${params?.pageSize}&sortBy=${params?.sortBy}&sortType=${params?.sortType}&${filter}`)
+    return this.http.get<Response<OrderModel[]>>(env.orderApiUrl + `/orders/staffs?${filter}`,{params})
   }
-  getById(id: any, userId:number): Observable<Response<OrderModel>> {
-    return this.http.get<Response<OrderModel>>(env.orderApiUrl + `/orders/staffs/order-by-id?id=` + id + '&userId=' + userId)
+  getById(id: any): Observable<Response<OrderModel>> {
+    return this.http.get<Response<OrderModel>>(env.orderApiUrl + `/orders/${id}/staffs`)
   }
-  create(data:FormData) {
+  create(data:OrderModel) {
     return this.http.post<Response<OrderModel[]>>(env.orderApiUrl + '/orders/staffs', data)
   }
-  update(data: FormData) {
-    return this.http.put<Response<OrderModel[]>>(env.orderApiUrl + '/orders/staffs/update-order', data)
+  update(data: OrderModel) {
+    return this.http.put<Response<OrderModel[]>>(env.orderApiUrl + `/orders/${data.id}/staffs`, data)
   }
   appendOrder(data:any) {
     return this.http.post<Response<OrderModel[]>>(env.orderApiUrl + '/orders/staffs/append-order', data)
   }
   cancelOrder(data:any) {
-    return this.http.post<Response<OrderModel[]>>(env.orderApiUrl + '/orders/staffs/cancel-order', {id:data.id})
+    return this.http.post<Response<OrderModel[]>>(env.orderApiUrl + `/orders/${data.id}/staffs/cancel`,{})
   }
 }

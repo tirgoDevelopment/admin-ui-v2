@@ -11,9 +11,9 @@ export interface OrderModel extends BaseModel {
     loadingLocation?:any,
     deliveryLocation?:any,
     cargoStatus: CargoStatusModel,
-    selectedLocations?: Array<'customsPlaceLocation' | 'customsClearancePlaceLocation' | 'additionalLoadingLocation' | 'additionalDeliveryLocation'>;
-    customsPlaceLocation?: any,
-    customsClearancePlaceLocation?: any,
+    selectedLocations?: Array<'customsInClearanceLocation' | 'customsOutClearanceLocation' | 'additionalLoadingLocation' | 'additionalDeliveryLocation'>;
+    customsOutClearanceLocation?: any,
+    customsInClearanceLocation?: any,
     additionalLoadingLocation?: any,
     additionalDeliveryLocation?: any,
     isUrgent?: boolean,
@@ -29,7 +29,7 @@ export interface OrderModel extends BaseModel {
     inAdvancePriceCurrencyId?: string,
     inAdvancePriceCurrency: any,
     paymentMethod?: string,
-    isSafeTransaction?: boolean,
+    isSecureTransaction?: boolean,
     transportKindIds?: string,
     transportKinds: TransportKindModel[],
     transportTypeIds?: string,
@@ -50,7 +50,11 @@ export interface OrderModel extends BaseModel {
     client?: ClientModel,
     cisternVolume: number,
     containerVolume: number,
-    loadingMethod: any,
+    cargoLoadMethods: any,
     cargoPackage: any,
-    capacity: number
+    capacity: number,
+    cargoDimension: string,
+    transportType: any,
+    isBorderCrossing:boolean,
+    isCashlessPayment: boolean
 }

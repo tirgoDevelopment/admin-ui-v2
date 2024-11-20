@@ -18,7 +18,7 @@ import { TransportKindsService } from 'src/app/shared/services/references/transp
 import { TransportTypesService } from 'src/app/shared/services/references/transport-type.service';
 import { AgreementComponent } from '../agreement/agreement.component';
 import { OrdersService } from '../../services/orders.service';
-import { BehaviorSubject, Observable, Subject, catchError, debounceTime, distinctUntilChanged, forkJoin, of, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, catchError, debounceTime, distinctUntilChanged, forkJoin, of, switchMap } from 'rxjs';
 import { ClientModel } from 'src/app/pages/clients/models/client.model';
 import { ClientsService } from 'src/app/pages/clients/services/clients.service';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
@@ -28,7 +28,8 @@ import { OrderModel } from '../../models/order.model';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { AngularYandexMapsModule } from 'angular8-yandex-maps';
 import { AssignDriverComponent } from '../assign-driver/assign-driver.component';
-import { jwtDecode } from 'jwt-decode';
+import { GeoDbService, GeoResponse, PlaceSummary } from 'wft-geodb-angular-client';
+import { CargoStatusCodes } from 'src/app/shared/enum/statusCode.enum';
 
 @Component({
   selector: 'app-order-form',
@@ -39,6 +40,7 @@ import { jwtDecode } from 'jwt-decode';
   providers: [NzModalService]
 })
 export class OrderFormComponent implements OnInit {
+  public CargoStatusCodes = CargoStatusCodes;
   @Input() data: OrderModel;
   @Input() mode: string = 'add' || 'edit' || 'view';
   step: number = 1;
@@ -61,6 +63,8 @@ export class OrderFormComponent implements OnInit {
   isContainer: any;
   loading: boolean = false;
   clients: ClientModel[];
+  private cityInputSubscription: Subscription | null = null;
+
   constructor(
     private orderApi: OrdersService,
     private clientApi: ClientsService,
@@ -75,63 +79,50 @@ export class OrderFormComponent implements OnInit {
     private loadingMethodApi: LoadingMethodService,
     private modal: NzModalService,
     private drawerRef: NzDrawerRef,
+    private geoDbService: GeoDbService
+
   ) {
     this.form = new FormGroup({
       id: new FormControl(null),
       clientId: new FormControl(null, [Validators.required]),
       sendDate: new FormControl(null, [Validators.required]),
 
-      loadingLocation: new FormControl({}, [Validators.required]),
-      deliveryLocation: new FormControl({}, [Validators.required]),
+      loadingLocation: new FormControl('', [Validators.required]),
+      deliveryLocation: new FormControl('', [Validators.required]),
       isAdr: new FormControl(false),
       isCarnetTir: new FormControl(false),
-      isGlonas: new FormControl(false),
+      isBorderCrossing: new FormControl(false),
       isParanom: new FormControl(false),
 
       offeredPrice: new FormControl(null),
       offeredPriceCurrencyId: new FormControl(null),
       inAdvancePrice: new FormControl(null),
       inAdvancePriceCurrencyId: new FormControl(null),
-      paymentMethod: new FormControl('cash'),
-      isSafeTransaction: new FormControl(false),
+      isCashlessPayment: new FormControl(false),
+      isSecureTransaction: new FormControl(false),
 
-      transportTypeIds: new FormControl([], [Validators.required]),
+      transportTypeId: new FormControl(null, [Validators.required]),
       transportKindIds: new FormControl([], [Validators.required]),
-      refrigeratorCount: new FormControl(null),
       isHook: new FormControl(false),
-      refrigeratorFrom: new FormControl(null),
-      refrigeratorTo: new FormControl(null),
+      isRefrigerator: new FormControl(null),
+      refrigeratorFromCount: new FormControl(null),
+      refrigeratorToCount: new FormControl(null),
       cisternVolume: new FormControl(null),
       containerVolume: new FormControl(null),
-      isHighCube: new FormControl(false),
+      heightCubature: new FormControl(null),
       cargoTypeId: new FormControl(null),
-      capacity: new FormControl(null),
       cargoWeight: new FormControl(null),
-      cargoLength: new FormControl(null),
-      cargoWidth: new FormControl(null),
-      cargoHeight: new FormControl(null),
-      loadingMethodId: new FormControl(null),
+      cargoLoadMethodIds: new FormControl([]),
       cargoPackageId: new FormControl(null),
       selectedLocations: new FormControl([]),
-      customsPlaceLocation: new FormControl(null),
-      customsClearancePlaceLocation: new FormControl(null),
+      customsOutClearanceLocation: new FormControl(null),
+      customsInClearanceLocation: new FormControl(null),
       additionalLoadingLocation: new FormControl(null),
-      additionalDeliveryLocation: new FormControl(null)
+      additionalDeliveryLocation: new FormControl(null),
+      cargoDimension: new FormControl(null),
     });
-    this.searchSubject
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        switchMap((findText: string) => {
-          return this.findCities(findText.trim().toLowerCase()).pipe(
-            catchError(() => of([])),
-          );
-        })
-      )
-      .subscribe((res: any) => {
-        this.findList = res.data;
-      });
   }
+
   ngOnInit(): void {
     this.clients$ = this.searchClient$.pipe(
       debounceTime(300),
@@ -147,21 +138,76 @@ export class OrderFormComponent implements OnInit {
     if (this.mode == 'edit') {
       this.patchValue();
     }
+    // this.getById()
   }
+
+  getById() {
+    this.orderApi.getById(1).subscribe((res: any) => {
+
+    })
+  }
+  cityFormatter() {
+    const optionalFields = [
+      'customsOutClearanceLocation',
+      'customsInClearanceLocation',
+      'additionalLoadingLocation',
+      'additionalDeliveryLocation'
+    ];
+
+    for (const field of optionalFields) {
+      const location = this.form.value[field];
+      if (location && location.name && location.country) {
+        this.form.patchValue({
+          [field]: {
+            name: `${location.name}${location.country ? ', ' + location.country : ''}`,
+            latitude: location.latitude ? location.latitude.toString() : '',
+            longitude: location.longitude ? location.longitude.toString() : '',
+          },
+        });
+      }
+    }
+
+    const loadingLocation = this.form.value.loadingLocation;
+    const deliveryLocation = this.form.value.deliveryLocation;
+
+    if (loadingLocation) {
+      this.form.patchValue({
+        loadingLocation: {
+          name: `${loadingLocation.name}${loadingLocation.country ? ', ' + loadingLocation.country : ''}`,
+          latitude: loadingLocation.latitude ? loadingLocation.latitude.toString() : '',
+          longitude: loadingLocation.longitude ? loadingLocation.longitude.toString() : '',
+        },
+      });
+    }
+
+    if (deliveryLocation) {
+      this.form.patchValue({
+        deliveryLocation: {
+          name: `${deliveryLocation.name}${deliveryLocation.country ? ', ' + deliveryLocation.country : ''}`,
+          latitude: deliveryLocation.latitude ? deliveryLocation.latitude.toString() : '',
+          longitude: deliveryLocation.longitude ? deliveryLocation.longitude.toString() : '',
+        },
+      });
+    }
+  }
+
   patchValue() {
-    type LocationFields = 'customsPlaceLocation' | 'customsClearancePlaceLocation' | 'additionalLoadingLocation' | 'additionalDeliveryLocation';
+    this.findList.push(this.data.loadingLocation);
+    this.findList.push(this.data.deliveryLocation);
+
+    type LocationFields = 'customsOutClearanceLocation' | 'customsInClearanceLocation' | 'additionalLoadingLocation' | 'additionalDeliveryLocation';
     let fieldsToCheck: LocationFields[] = [
-      'customsPlaceLocation',
-      'customsClearancePlaceLocation',
+      'customsOutClearanceLocation',
+      'customsInClearanceLocation',
       'additionalLoadingLocation',
       'additionalDeliveryLocation'
     ];
     if (!this.data.selectedLocations) {
-        this.data.selectedLocations = [];
+      this.data.selectedLocations = [];
     }
     fieldsToCheck.forEach((field) => {
       if (this.data[field]) {
-        this.data.selectedLocations.push(field);  
+        this.data.selectedLocations.push(field);
       }
     });
     this.form.patchValue(this.data);
@@ -169,10 +215,10 @@ export class OrderFormComponent implements OnInit {
       clientId: this.data.client ? this.data.client.id : null,
       clientMerchant: this.data.clientMerchant ? this.data.clientMerchant : null,
       transportKindIds: this.setIds(this.data.transportKinds),
-      transportTypeIds: this.setIds(this.data.transportTypes),
       cargoTypeId: this.data.cargoType ? this.data.cargoType.id : null,
-      loadingMethodId: this.data.loadingMethod ? this.data.loadingMethod.id : null,
+      cargoLoadMethodIds: this.setIds(this.data.cargoLoadMethods),
       cargoPackageId: this.data.cargoPackage ? this.data.cargoPackage.id : null,
+      transportTypeId: this.data.transportType ? this.data.transportType.id : null,
     })
   }
   disableFutureDates = (current: Date): boolean => {
@@ -197,7 +243,6 @@ export class OrderFormComponent implements OnInit {
       this.loadingMethods = loadingMethods.data;
       this.form.patchValue({
         offeredPriceCurrencyId: currencies.data[0].id,
-        inAdvancePriceCurrencyId: currencies.data[0].id
       })
     });
   }
@@ -215,41 +260,8 @@ export class OrderFormComponent implements OnInit {
     }
   }
   submitOrder() {
-    const optionalFields = ['customsPlaceLocation', 'customsClearancePlaceLocation', 'additionalLoadingLocation', 'additionalDeliveryLocation'];
-    for (const field of optionalFields) {
-      if (this.form.value[field]) {
-        this.form.patchValue({
-          [field]: {
-            name: this.form.value[field].displayName ? this.form.value[field].displayName : this.form.value[field].name,
-            latitude: this.form.value[field].latitude,
-            longitude: this.form.value[field].longitude,
-          },
-        });
-      }
-    }
-
-    // if (this.form.get('id').value) {
-    //   this.form.patchValue({
-    //     transportKindIds: this.setIds(this.form.get('transportKindIds').value),
-    //     transportTypeIds: this.setIds(this.form.get('transportTypeIds').value),
-    //     cargoTypeId: this.setId(this.form.get('cargoTypeId').value),
-    //     cargoPackageId: this.setId(this.form.get('cargoPackageId').value),
-    //     loadingMethodId: this.setId(this.form.get('loadingMethodId').value),
-    //   })
-    // }
     if (this.form.valid) {
-      this.form.patchValue({
-        loadingLocation: {
-          name: this.form.value.loadingLocation.displayName ? this.form.value.loadingLocation.displayName  : this.form.value.loadingLocation.name,
-          latitude: this.form.value.loadingLocation.latitude,
-          longitude: this.form.value.loadingLocation.longitude,
-        },
-        deliveryLocation: {
-          name: this.form.value.deliveryLocation.displayName ? this.form.value.deliveryLocation.displayName : this.form.value.deliveryLocation.name,
-          latitude: this.form.value.deliveryLocation.latitude,
-          longitude: this.form.value.deliveryLocation.longitude,
-        }
-      });
+      this.cityFormatter();
       this.loading = true;
       if (this.form.value.id) {
         this.orderApi.update(this.form.value).subscribe((res: any) => {
@@ -337,22 +349,46 @@ export class OrderFormComponent implements OnInit {
     let filter = generateQueryFilter({ firstName: ev });
     this.searchClient$.next(filter);
   }
-  findCities(findText: string): Observable<any> {
-    if (!findText) {
-      return of({ data: [] });
-    } else {
-      return this.refApi.getCities(findText, 'en');
-    }
+
+  detectLanguage(input: string): string {
+    const isCyrillic = /[А-Яа-яЁё]/.test(input);
+    return isCyrillic ? 'ru' : 'en';
   }
-  findCity(ev: any): void {
-    const findText = ev.toString().trim().toLowerCase();
-    this.searchSubject.next(findText);
+  findCity(event: any) {
+    const input = event;
+    let lang = this.detectLanguage(input);
+    if (input) {
+      if (this.cityInputSubscription) {
+        this.cityInputSubscription.unsubscribe();
+      }
+      this.cityInputSubscription = new Observable<string>(observer => {
+        observer.next(input);
+      }).pipe(
+        debounceTime(1000),
+        distinctUntilChanged(),
+        switchMap(input => this.geoDbService.findPlaces({
+          namePrefix: input,
+          types: ['CITY'],
+          limit: 10,
+          offset: 0,
+          languageCode: lang
+        })
+        )
+      ).subscribe((response: GeoResponse<PlaceSummary[]>) => {
+        this.findList = response.data;
+      },
+        error => {
+        }
+      );
+    } else {
+      this.findList = []
+    }
   }
   getDynamicLabel(location: string): string {
     switch (location) {
-      case 'customsPlaceLocation':
+      case 'customsOutClearanceLocation':
         return 'Место затаможки';
-      case 'customsClearancePlaceLocation':
+      case 'customsInClearanceLocation':
         return 'Место растаможки';
       case 'additionalLoadingLocation':
         return 'Дополнительное место погрузки';
@@ -363,6 +399,8 @@ export class OrderFormComponent implements OnInit {
     }
   }
   backStep() {
+    this.form.patchValue(this.form.value)
+
     if (this.step !== 1) {
       this.step--;
     }
