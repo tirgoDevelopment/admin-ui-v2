@@ -299,7 +299,8 @@
     "Successfullverified": "Muvaffaqiyatli tekshirildi",
     "createdatafailed": "Yaratish muvaffaqiyatsiz tugadi",
     "SendCodeFailed": "Kod yuborilmadi",
-    "UpdateDataFailed": "Yangilanish muvaffaqiyatsiz tugadi",
+    "updateFalied": "Yangilanish muvaffaqiyatsiz tugadi",
+    "successfullyRejected": "Muvaffaqiyatli rad etildi",
     "DeleteDataFailed": "O'chirish muvaffaqiyatsiz tugadi",
     "CancelDataFailed": "Bekor qilish muvaffaqiyatsiz tugadi",
     "RejectDataFailed": "Rad qilish muvaffaqiyatsiz tugadi",
@@ -321,6 +322,7 @@
     "DriverBlocked": "Haydovchi bloklangan",
     "AlreadyOffered": "Bu buyurtmaga allaqachon taklif qilingan",
     "AlreadyReplied": "Bu taklifga allaqachon javob bergan",
+    "alreadyOfferedToThisOrder": "Bu buyurtmaga taklif yuborilgan",
     "OfferLimit": "Taklif chegarasidan oshib ketdi",
     "MerchantAlreadyVerified": "Savdogar allaqachon tasdiqlangan",
     "InternalServerError": "Ichki xato",
@@ -435,5 +437,14 @@
     "back": "Ortga",
     "history_transaction": "To'lovlar tarixi",
     "cancelled": "Bekor qilingan",
-    "isBorderCrossing": "Chegaradan O'tish"
+    "isBorderCrossing": "Chegaradan O'tish",
+    "orderOffers": "Takliflar",
+    "counterOffer": "Savdolashish",
+    "sendOffer": "Taklif yuborish",
+    "length": "Uzunligi",
+    "width": "Eni",
+    "height": "Bo'yi",
+    "client_offer":"Klient taklifi",
+    "rejectReason": "Rad etish sababi",
+    "rejectOffer": "Rad etish"
 }

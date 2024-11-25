@@ -35,7 +35,7 @@ export enum ErrorStauses {
     SuccessfullyVerified = 'successfullyVerified',
     CreateDataFailed = 'createFailed',
     SendCodeFailed = 'sendCodeFailed',
-    UpdateDataFailed = 'updateFalied',
+    updateFalied = 'updateFalied',
     DeleteDataFailed = 'deleteFalied',
     CancelDataFailed = 'cancelFalied',
     RejectDataFailed = 'rejectFalied',

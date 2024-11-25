@@ -5,11 +5,10 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { OrdersService } from './services/orders.service';
-import { catchError, forkJoin, of, tap } from 'rxjs';
+import { catchError, forkJoin, Observable, of, tap, throwError } from 'rxjs';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { CargoStatusService } from 'src/app/shared/services/references/cargo-status.service';
 import { TransportTypesService } from 'src/app/shared/services/references/transport-type.service';
@@ -20,88 +19,120 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { OrderFormComponent } from './components/order-form/order-form.component';
 import { OrderModel } from './models/order.model';
 import { CargoStatusCodes } from 'src/app/shared/enum/statusCode.enum';
+import { PageParams } from './models/page-params.interface';
+import { OrderFilterComponent } from './components/order-filter/order-filter.component';
 
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule],
-  animations: [
-    trigger('showHideFilter', [
-      state('show', style({ height: '*', opacity: 1, visibility: 'visible' })),
-      state('hide', style({ height: '0', opacity: 0, visibility: 'hidden' })),
-      transition('show <=> hide', animate('300ms ease-in-out'))
-    ])
-  ]
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule, OrderFilterComponent]
 })
 export class OrdersComponent implements OnInit {
-  public CargoStatusCodes = CargoStatusCodes;
-  confirmModal?: NzModalRef;
-  data: OrderModel[] = [];
-  loader: boolean = false;
-  isFilterVisible: boolean = false;
-  filter: Record<string, string> = this.initializeFilter();
-  transportKinds: TransportKindModel[] = [];
-  transportTypes: any[] = [];
-  statuses: CargoStatusModel[] = [];
-  pageParams = {
+  public readonly CargoStatusCodes = CargoStatusCodes;
+  private confirmModal?: NzModalRef;
+
+  public data: OrderModel[] = [];
+  public loader = false;
+  public isFilterVisible = false;
+  public filter: Record<string, string> = this.initializeFilter();
+  public transportKinds: TransportKindModel[] = [];
+  public transportTypes: any[] = [];
+  public statuses: CargoStatusModel[] = [];
+
+  private pageParams: PageParams = {
     pageIndex: 1,
     pageSize: 10,
     totalPagesCount: 1,
     sortBy: '',
     sortType: '',
   };
+
   constructor(
-    private orderService: OrdersService,
-    private statusService: CargoStatusService,
-    private transportKindsService: TransportKindsService,
-    private transportTypeService: TransportTypesService,
-    public translate: TranslateService,
-    private drawer: NzDrawerService
+    private readonly orderService: OrdersService,
+    private readonly statusService: CargoStatusService,
+    private readonly transportKindsService: TransportKindsService,
+    private readonly transportTypeService: TransportTypesService,
+    public readonly translate: TranslateService,
+    private readonly drawer: NzDrawerService
   ) { }
+
   ngOnInit(): void {
+    this.loadInitialData();
+  }
+
+  private loadInitialData(): void {
     this.getTypes();
   }
-  getAll(): void {
-    this.loader = true;
+
+  public getAll(): void {
+    this.setLoading(true);
     const queryString = generateQueryFilter(this.filter);
-    this.orderService.getAll(this.pageParams, queryString).pipe(
-      tap((res: any) => {
-        this.data = res?.success ? res.data.content : [];
-        this.pageParams.totalPagesCount = res.data.pageSize * res?.data?.totalPagesCount;
-      }),
-      catchError(() => {
-        this.data = [];
-        return of(null);
-      }),
-      tap(() => (this.loader = false))
-    ).subscribe();
+
+    this.orderService.getAll(this.pageParams, queryString)
+      .pipe(
+        tap(this.handleOrdersResponse.bind(this)),
+        catchError(this.handleError.bind(this)),
+        tap(() => this.setLoading(false))
+      )
+      .subscribe();
   }
-  handleDrawer(action: 'add' | 'edit' | 'view', item?: any) {
-    const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant(
-        action === 'add' ? 'cargo_placement' :
-          action === 'edit' ? 'edit' :
-            'information'
-      ),
+
+  private handleOrdersResponse(response: any): void {
+    if (response?.success) {
+      this.data = response.data.content;
+      this.pageParams.totalPagesCount = response.data.pageSize * response.data.totalPagesCount;
+    }
+  }
+
+  private handleError(): Observable<never> {
+    this.data = [];
+    return throwError(new Error('Error fetching orders'));
+  }
+
+  private setLoading(status: boolean): void {
+    this.loader = status;
+  }
+
+  public handleDrawer(action: 'add' | 'edit' | 'view', orderId?: string|number): void {
+    const drawerRef = this.createDrawer(action, orderId);
+    this.handleDrawerClose(drawerRef);
+  }
+
+  private createDrawer(action: 'add' | 'edit' | 'view', orderId?: string|number): any {
+    return this.drawer.create({
+      nzTitle: this.getDrawerTitle(action),
       nzContent: OrderFormComponent,
       nzWidth: '450px',
       nzMaskClosable: false,
       nzPlacement: 'right',
       nzContentParams: {
-        data: item,
+        orderId: orderId,
         mode: action
       }
     });
-    drawerRef.afterClose.subscribe((res: any) => {
-      if (res?.success && res?.mode !== 'add') {
+  }
+
+  private getDrawerTitle(action: 'add' | 'edit' | 'view'): string {
+    const titles = {
+      add: 'cargo_placement',
+      edit: 'edit',
+      view: 'information'
+    };
+    return this.translate.instant(titles[action]);
+  }
+
+  private handleDrawerClose(drawerRef: any): void {
+    drawerRef.afterClose.subscribe((result: any) => {
+      if (result?.success && result?.mode !== 'add') {
         this.getAll();
         drawerRef.componentInstance?.form.reset();
       }
     });
   }
-  getTypes() {
+
+  public getTypes(): void {
     forkJoin({
       transportKinds: this.transportKindsService.getAll(),
       statuses: this.statusService.getAll(),
@@ -112,42 +143,48 @@ export class OrdersComponent implements OnInit {
         this.transportTypes = results.transportTypes.data;
         this.statuses = results.statuses.data;
       },
-      
+
       error: (error: any) => {
         console.error('Error fetching currencies and cargo types:', error);
       }
     });
   }
-  onPageIndexChange(pageIndex: number): void {
+
+  public onPageIndexChange(pageIndex: number): void {
     this.pageParams.pageIndex = pageIndex;
     this.getAll();
   }
-  onPageSizeChange(pageSize: number): void {
+
+  public onPageSizeChange(pageSize: number): void {
     this.pageParams.pageSize = pageSize;
     this.pageParams.pageIndex = 0;
     this.getAll();
   }
-  toggleFilter(): void {
+
+  public toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
-  resetFilter(): void {
+
+  public resetFilter(): void {
     this.filter = this.initializeFilter();
     this.getAll();
   }
+
   private initializeFilter(): Record<string, string> {
     return {
-      orderId : '',
-      statusId : '',
-      deliveryLocation : '',
+      orderId: '',
+      statusId: '',
+      deliveryLocation: '',
       loadingLocation: '',
-      transportKindId : '',
-      transportTypeId : '',
-      createdAt : '',
+      transportKindId: '',
+      transportTypeId: '',
+      createdAt: '',
       sendDate: '',
-      merchantOrder : ''
+      merchantOrder: ''
     };
   }
-  onQueryParamsChange(params: NzTableQueryParams): void {
+
+  public onQueryParamsChange(params: NzTableQueryParams): void {
     let { sort } = params;
     let currentSort = sort.find(item => item.value !== null);
     let sortField = (currentSort && currentSort.key) || null;

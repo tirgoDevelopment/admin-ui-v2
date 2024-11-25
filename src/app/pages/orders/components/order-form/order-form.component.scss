@@ -1,0 +1,17 @@
+.offer-card {
+    border: 2px solid #F3F3F3;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.rejected {
+    border-color: rgba(255, 0, 0, 0.226);
+    opacity: .4;
+}
+
+.link {
+    color: rgb(44, 44, 245);
+    cursor: pointer;
+    text-decoration: underline;
+}

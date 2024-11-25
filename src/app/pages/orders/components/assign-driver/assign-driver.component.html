@@ -9,17 +9,17 @@
     </nz-select>
   </nz-input-group>
 
-  <nz-form-label>{{ 'offered_price' | translate }}</nz-form-label>
+  <nz-form-label nzRequired>{{ 'offered_price' | translate }}</nz-form-label>
   <div class="flex">
-    <nz-select formControlName="currencyId">
+    <nz-select formControlName="curencyId">
       <nz-option *ngFor="let item of currencies" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
     </nz-select>
-    <input nz-input type="text" formControlName="amount" mask="separator.2">
+    <input  nz-input type="text" formControlName="amount" mask="separator.2">
   </div>
   
   <div class="flex gap my-4" style="justify-content: end;">
     <button nz-button nzType="default" (click)="onCancel()">{{ 'cancel' | translate }}</button>
-    <button nz-button class="success-button" [nzLoading]="loading" [disabled]="form.invalid || loading" (click)="assignDriver()">{{ 'confirm' | translate }}</button>
+    <button nz-button class="success-button" [nzLoading]="loading" [disabled]="loading" (click)="assignDriver()">{{ 'confirm' | translate }}</button>
   </div>
 
 </form>

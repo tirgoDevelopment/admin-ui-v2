@@ -11,7 +11,7 @@ export class NotificationService {
     private notification: NzNotificationService,
   ) { }
 
-  success(title: string, content: string): void {
+  success(title: string, content?: string): void {
     this.notification.success(title, content, {
       nzDuration: 3000,
       nzAnimate: true,
@@ -20,7 +20,7 @@ export class NotificationService {
     });
   }
 
-  error(title: string, content: string): void {
+  error(title: string, content?: string): void {
     this.notification.error(title, content, {
       nzDuration: 3000,
       nzAnimate: true,
@@ -29,7 +29,7 @@ export class NotificationService {
     });
   }
 
-  warning(title: string, content: string): void {
+  warning(title: string, content?: string): void {
     this.notification.warning(title, content, {
       nzDuration: 3000,
       nzAnimate: true,

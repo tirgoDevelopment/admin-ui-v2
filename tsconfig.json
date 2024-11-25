@@ -15,6 +15,7 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
     "strictNullChecks": false,
+    "noImplicitAny": false,
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "ES2022",

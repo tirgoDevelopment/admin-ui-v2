@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxMaskDirective } from 'ngx-mask';
-import { BehaviorSubject, Observable, catchError, debounceTime, distinctUntilChanged, filter, of, switchMap } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { DriversService } from 'src/app/pages/drivers/services/drivers.service';
 import { CurrencyModel } from 'src/app/pages/references/currencies/models/currency.model';
 import { CommonModules } from 'src/app/shared/modules/common.module';
@@ -12,6 +12,7 @@ import { CurrenciesService } from 'src/app/shared/services/references/currencies
 import { OrdersService } from '../../services/orders.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { NotificationService } from 'src/app/shared/services/notification.service';
 
 @Component({
   selector: 'app-assign-driver',
@@ -22,7 +23,9 @@ import { NzModalService } from 'ng-zorro-antd/modal';
   providers: [NzModalService]
 })
 export class AssignDriverComponent implements OnInit {
-  @Input() orderId: any;
+
+  @Input() orderId: string|number;
+  @Input() type: string;
   findList: any[] = [];
   form: FormGroup;
   searchDriver$ = new BehaviorSubject<string>('');
@@ -35,13 +38,15 @@ export class AssignDriverComponent implements OnInit {
     private driverApi: DriversService,
     private currencyApi: CurrenciesService,
     private drawerRef: NzDrawerRef,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private toastr: NotificationService,
+    private translate: TranslateService
   ) {
     this.form = new FormGroup({
       orderId: new FormControl(''),
-      driverId: new FormControl(''),
-      amount: new FormControl(''),
-      currencyId: new FormControl('')
+      driverId: new FormControl('', [Validators.required]),
+      amount: new FormControl('',[Validators.required]),
+      curencyId: new FormControl('', [Validators.required])
     })
   }
   ngOnInit(): void {
@@ -55,13 +60,16 @@ export class AssignDriverComponent implements OnInit {
         })
       )),
     );
+    this.form.patchValue({
+      orderId: this.orderId
+    })
   }
   getCurrencies() {
     this.currencyApi.getAll().subscribe((res: any) => {
       if (res && res.success) {
         this.currencies = res.data;
         this.form.patchValue({
-          currencyId: res.data[0].id
+          curencyId: res.data[0].id
         })
       }
     })
@@ -71,21 +79,43 @@ export class AssignDriverComponent implements OnInit {
     this.searchDriver$.next(filter);
   }
   assignDriver() {
+    if (!this.form.value.driverId || this.form.value.driverId === '') {
+      this.toastr.error(this.translate.instant('is_requireds'));
+      return;
+    }
+    if (!this.form.value.amount || this.form.value.amount === '') {
+      this.toastr.error(this.translate.instant('is_requireds'));
+      return;
+    }
+    if (!this.form.value.curencyId || this.form.value.curencyId === '') {
+      this.toastr.error(this.translate.instant('is_requireds'));
+      return;
+    }
+    
     this.loading = true;
-    this.form.patchValue({
-      orderId: this.orderId
-    })
-    this.orderApi.appendOrder(this.form.value).subscribe((res: any) => {
-      if(res && res.success) { 
+    if(this.type == 'offer') {
+      console.log(this.form.value);
+      this.orderApi.sendOffer(this.form.value).subscribe((res: any) => {
+        if(res && res.success) { 
+          this.loading = false;
+          this.form.reset();
+          this.drawerRef.close({ success: true });
+        }
+      }, err => {
         this.loading = false;
-        this.form.reset();
-        this.drawerRef.close({ success: true });
-      }
-    }, err => {
-      this.loading = false;
-    })
+      })
+    }else {
+      this.orderApi.appendOrder(this.form.value).subscribe((res: any) => {
+        if(res && res.success) { 
+          this.loading = false;
+          this.form.reset();
+          this.drawerRef.close({ success: true });
+        }
+      }, err => {
+        this.loading = false;
+      })
+    }
   }
-
   onCancel() {
     this.modal.closeAll();
   }

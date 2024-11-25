@@ -15,16 +15,17 @@ import { DriversService } from '../../services/drivers.service';
 import { jwtDecode } from 'jwt-decode';
 import { AddTransportComponent } from '../add-transport/add-transport.component';
 import { TransportModel } from 'src/app/pages/references/transport-types/models/transport.model';
+
 @Component({
   selector: 'app-driver-form',
   templateUrl: './driver-form.component.html',
   styleUrls: ['./driver-form.component.scss'],
   standalone: true,
-  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PipeModule, NgxMaskDirective, AddTransportComponent]
+  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PipeModule, NgxMaskDirective]
 })
 export class DriverFormComponent implements OnInit {
   confirmModal?: NzModalRef;
-  @Input() data?: DriverModel;
+  @Input() id?: number|string;
   @Input() mode?: 'add' | 'edit' | 'view';
   @Output() close = new EventEmitter<void>();
   showForm: boolean = false;
@@ -32,7 +33,7 @@ export class DriverFormComponent implements OnInit {
   edit: boolean = false;
 
   fileRemovedPassport: boolean = false;
-  previewUrlPassport: any ;
+  previewUrlPassport: any;
 
   fileRemovedLicense: boolean = false;
   previewUrlLicense: string | ArrayBuffer | null = null;
@@ -41,7 +42,7 @@ export class DriverFormComponent implements OnInit {
   selectedFileLicense: File | null = null;
 
   form: FormGroup;
-
+  data: DriverModel;
   countries = [
     { code: 'UZ', name: 'Uzbekistan', flag: 'assets/images/flags/UZ.svg' },
     { code: 'KZ', name: 'Kazakhstan', flag: 'assets/images/flags/KZ.svg' },
@@ -50,6 +51,7 @@ export class DriverFormComponent implements OnInit {
   selectedCountry: { code: string; name: string; flag: string } = this.countries[0];
   currentMask: string = '+000 00 000-00-00';
   currentUser: any;
+  loadingPage:boolean = false;
 
   constructor(
     private modal: NzModalService,
@@ -61,10 +63,9 @@ export class DriverFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.previewUrlPassport = this.data?.passportFilePath;
-    this.previewUrlLicense = this.data?.driverLicenseFilePath;
-    this.currentUser =  jwtDecode(localStorage.getItem('accessToken')) ;
-    
+    // this.previewUrlPassport = this.data?.passportFilePath;
+    // this.previewUrlLicense = this.data?.driverLicenseFilePath;
+    this.currentUser = jwtDecode(localStorage.getItem('accessToken'));
     this.edit = this.mode === 'edit';
     this.form = new FormGroup({
       id: new FormControl(''),
@@ -75,19 +76,21 @@ export class DriverFormComponent implements OnInit {
       passport: new FormControl('', []),
       driverLicense: new FormControl('', []),
     });
+
     
-    if (this.mode == 'edit') {
-      this.getById();
-      this.patchForm();
-    }
-    if (this.mode == 'view') {
+    if (this.mode == 'view' || this.mode == 'edit') {
       this.getById();
     }
   }
   getById() {
-    if (this.data && (this.mode == 'view' || this.mode == 'edit')) {
-      this.driversService.getById(this.data.id).subscribe((res: Response<DriverModel>) => {
+    if (this.id && (this.mode == 'view' || this.mode == 'edit')) {
+      this.loadingPage = true;
+      this.driversService.getById(this.id).subscribe((res: Response<DriverModel>) => {
         this.data = res.data;
+        this.patchForm();
+        this.loadingPage = false;
+      }, err => {
+        this.loadingPage = false;
       });
     }
   }
@@ -99,7 +102,7 @@ export class DriverFormComponent implements OnInit {
       this.edit = true;
       const mainPhoneNumber = this.data?.phoneNumbers?.find(phone => phone.isMain);
       const formattedPhoneNumber = mainPhoneNumber ? `+${mainPhoneNumber.code}${mainPhoneNumber.number}` : '';
-  
+
       this.form.patchValue({
         id: this.data.id,
         firstName: this.data.firstName,
@@ -134,24 +137,24 @@ export class DriverFormComponent implements OnInit {
       formData.append('passport', file);
     }
     if (this.selectedFileLicense) {
-      const file = new File([this.selectedFileLicense],  Date.now() +this.selectedFileLicense.name, { type: this.selectedFileLicense.type });
+      const file = new File([this.selectedFileLicense], Date.now() + this.selectedFileLicense.name, { type: this.selectedFileLicense.type });
       formData.append('driverLicense', file);
     }
-    
+
     this.loading = true;
     const uniqueFormData = removeDuplicateKeys(formData);
-    
+
     const submitObservable = this.data
       ? this.driversService.update(uniqueFormData)
       : this.driversService.create(uniqueFormData);
-    
+
     submitObservable.subscribe(
       (res: any) => {
         if (res && res.success) {
           this.loading = false;
           const messageKey = this.data ? 'successfullUpdated' : 'successfullCreated';
           this.toastr.success(this.translate.instant(messageKey), '');
-          this.drawerRef.close({ success: true, mode: this.data ? 'edit' : 'add',driverId: res.data?.id });
+          this.drawerRef.close({ success: true, mode: this.data ? 'edit' : 'add', driverId: res.data?.id });
           this.form.reset();
         }
       },
@@ -269,7 +272,7 @@ export class DriverFormComponent implements OnInit {
       }
     });
     drawerRef.afterClose.subscribe((res: any) => {
-        this.getById()
+      this.getById()
     });
   }
 }

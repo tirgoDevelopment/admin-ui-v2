@@ -1,0 +1,15 @@
+<form [formGroup]="form">
+    <nz-input-group class="input-group w-full">
+        <nz-form-label>{{ 'rejectReason' | translate }}</nz-form-label>
+        <div class="flex">
+            <input nz-input type="text" formControlName="rejectReason">
+        </div>
+    </nz-input-group>
+
+
+    <div class="my-4 flex gap justify-end">
+        <button nz-button nzTyp="default" (click)="onCancel()" [nzLoading]="loading" [disabled]="loading">{{'cancel' | translate}}</button>
+        <button nz-button class="danger-button" (click)="onSubmit()" [nzLoading]="loading" [disabled]="loading">{{'confirm' | translate}}</button>
+    </div>
+
+</form>

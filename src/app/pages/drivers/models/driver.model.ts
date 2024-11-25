@@ -33,7 +33,6 @@ export interface DriverModel extends BaseModel {
     user: {
         id: number;
         lastLogin: Date;
-
     }
     // driverMerchant?:MerchantModel;
 }

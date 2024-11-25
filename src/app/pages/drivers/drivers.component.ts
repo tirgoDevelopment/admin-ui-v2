@@ -73,7 +73,7 @@ export class DriversComponent implements OnInit {
       tap(() => (this.loader = false))
     ).subscribe();
   }
-  handleDrawer(action: 'add' | 'edit' | 'view', item?: DriverModel): void {
+  handleDrawer(action: 'add' | 'edit' | 'view', id?:number|string): void {
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant(
         action === 'add' ? 'add' :
@@ -85,7 +85,7 @@ export class DriversComponent implements OnInit {
       nzPlacement: 'right',
       nzWidth: '400px',
       nzContentParams: {
-        data: item,
+        id: id,
         mode: action
       }
     });
