@@ -100,7 +100,7 @@
       <td> {{ item.phoneNumbers[0].code + item.phoneNumbers[0].number | phoneFormat}} </td>
       <td> {{ item.createdAt | date : 'dd.MM.yyyy' }} </td>
       <td>
-        <span *ngIf="item?.user.lastLogin">{{ item.user.lastLogin }}</span>
+        <span *ngIf="item?.user.lastLogin">{{ item.user.lastLogin | date : 'dd.MM.yyyy' }}</span>
         <span *ngIf="!item?.user.lastLogin">{{ 'no_data' | translate }}</span>
       </td>
       <td class="action-col">

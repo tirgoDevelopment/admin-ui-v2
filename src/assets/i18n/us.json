@@ -291,6 +291,7 @@
     "InvalidUserType": "Invalid user type",
     "successfullCreated": "Successfully created",
     "successfullyUpdated": "Successfully updated",
+
     "successfullyDeleted": "Successfully deleted",
     "SuccessfullyCanceled": "Successfully canceled",
     "SuccessfullyRejected": "Successfully rejected",
@@ -299,7 +300,8 @@
     "Successfullyverified": "Successfully verified",
     "createdatafailed": "Create failed",
     "SendCodeFailed": "Send code failed",
-    "UpdateDataFailed": "Update falied",
+    "updateFalied": "Update falied",
+    "successfullyRejected": "Successfully rejected",
     "DeleteDataFailed": "Delete falied",
     "CancelDataFailed": "Cancel falied",
     "RejectDataFailed": "Reject falied",
@@ -321,6 +323,7 @@
     "DriverBlocked": "Driver blocked",
     "AlreadyOffered": "Already offered to this order",
     "AlreadyReplied": "Already replied to this offer",
+    "alreadyOfferedToThisOrder": "Already offered to this order",
     "OfferLimit": "Offer limit exceeded",
     "MerchantAlreadyVerified": "Merchant already verified",
     "InternalServerError": "Internal error",
@@ -439,5 +442,14 @@
     "back": "Back",
     "history_transaction": "Transaction history",
     "cancelled": "Cancelled",
-    "isBorderCrossing": "Crossing the border"
+    "isBorderCrossing": "Crossing the border",
+    "orderOffers": "Offers",
+    "counterOffer": "Counteroffer",
+    "sendOffer": "Send offer",
+    "length": "Length",
+    "width": "Width",
+    "height": "Height",
+    "client_offer":"Client offer",
+    "rejectReason": "Reject reason",
+    "rejectOffer": "Reject offer"
 }

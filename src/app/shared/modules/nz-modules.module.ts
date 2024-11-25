@@ -30,6 +30,7 @@ import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { NzCardModule } from 'ng-zorro-antd/card';
 
 
 @NgModule({
@@ -64,7 +65,8 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
         NzCollapseModule,
         NzStepsModule,
         NzBadgeModule,
-        NzBreadCrumbModule
+        NzBreadCrumbModule,
+        NzCardModule
     ],
 
     exports: [
@@ -98,7 +100,8 @@ import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
         NzCollapseModule,
         NzStepsModule,
         NzBadgeModule,
-        NzBreadCrumbModule 
+        NzBreadCrumbModule,
+        NzCardModule
     ],
 })
 export class NzModules {}

@@ -13,113 +13,99 @@
       </button>
     </div>
   </div>
+
+  <app-order-filter
+    [isVisible]="isFilterVisible"
+    [filter]="filter"
+    [statuses]="statuses"
+    (filterChange)="filter = $event"
+    (search)="getAll()"
+    (reset)="resetFilter()">
+  </app-order-filter>
+
+  <nz-table 
+    #sortTable 
+    [nzShowSizeChanger]="true" 
+    [nzShowPagination]="false" 
+    [nzSize]="'middle'" 
+    [nzData]="data"
+    [nzLoading]="loader" 
+    [nzNoResult]="empty" 
+    (nzQueryParams)="onQueryParamsChange($event)"
+    [nzScroll]="{ x: 'max-content' }">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th nzColumnKey="id" [nzSortFn]="true">ID</th>
+        <th>{{ 'client' | translate }}</th>
+        <th>{{ 'place_shipment' | translate }}</th>
+        <th>{{ 'delivery_shipment' | translate }}</th>
+        <th>{{ 'status' | translate }}</th>
+        <th>{{ 'shipment_date' | translate }}</th>
+        <th>{{ 'price' | translate }}</th>
+        <th nzRight></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr style="cursor: pointer;" *ngFor="let data of sortTable.data; let i = index" (click)="handleDrawer('view', data.id)">
+        <td>{{i+1}}</td>
+        <td>{{data.id}}</td>
+        <td class="ellipsis">
+          <ng-container *ngIf="data.client; else noData">
+            {{data.client.firstName}} {{data.client.lastName}}
+          </ng-container>
+        </td>
+        <td class="ellipsis">{{data.loadingLocation.name}}</td>
+        <td class="ellipsis">{{data.deliveryLocation.name}}</td>
+        <td>
+          <span class="status" [ngStyle]="{
+            color: data.cargoStatus.color, 
+            borderColor: data.cargoStatus.color
+          }">
+            {{data.cargoStatus.name | lowercase | translate}}
+          </span>
+        </td>
+        <td>{{data.sendDate | date : 'dd.MM.yyyy'}}</td>
+        <td>
+          <ng-container *ngIf="data.offeredPrice; else noData">
+            {{data.offeredPrice | priceFormat}} {{data.offeredPriceCurrency?.name}}
+          </ng-container>
+        </td>
+        <td class="action-col" nzRight  (click)="$event.stopPropagation()">
+          <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
+            <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
+          </a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu nzSelectable>
+              <li nz-menu-item (click)="handleDrawer('view', data.id)">
+                <div class="dropdown-menu">
+                  <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+                  <span>{{ 'detail' | translate }}</span>
+                </div>
+              </li>
+
+              <li nz-menu-item 
+                  (click)="handleDrawer('edit', data.id)" 
+                  *ngIf="data.cargoStatus.code !== CargoStatusCodes.Canceled && 
+                         data.cargoStatus.code !== CargoStatusCodes.Closed">
+                <div class="dropdown-menu">
+                  <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
+                  <span>{{ 'edit' | translate }}</span>
+                </div>
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
 </div>
 
-<div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
-  <div>
-    <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['orderId']" type="text" nz-input placeholder="{{'orders' | translate}} ID" />
-    </nz-input-group>
-  </div>
-  <div>
-    <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['driverId']" type="text" nz-input placeholder="{{'drivers' | translate}} ID" />
-    </nz-input-group>
-  </div>
-  <div>
-    <nz-select [(ngModel)]="filter['statusId']" nzAllowClear nzPlaceHolder="{{'status' | translate}}">
-      <nz-option [nzValue]="status.id" [nzLabel]="translate.instant(status.name)"
-        *ngFor="let status of statuses"></nz-option>
-    </nz-select>
-  </div>
+<ng-template #noData>
+  <span>{{ 'no_data' | translate }}</span>
+</ng-template>
 
-  <div>
-    <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['clientId']" type="text" nz-input placeholder="{{'clients' | translate}} ID" />
-    </nz-input-group>
-  </div>
-
-  <button nz-button nzType="primary" class="search-button" (click)="getAll()">
-    <span nz-icon nzType="search" nzTheme="outline"></span>
-  </button>
-  <button nz-button class="reset-button" (click)="resetFilter()">
-    <span nz-icon nzType="reload" nzTheme="outline"></span>
-  </button>
-</div>
-
-<nz-table #sortTable [nzShowSizeChanger]="true" [nzShowPagination]="false" [nzSize]="'middle'" [nzData]="data"
-  [nzLoading]="loader" [nzNoResult]="empty" (nzQueryParams)="onQueryParamsChange($event)"
-  [nzScroll]="{ x: 'max-content' }">
-  <thead>
-    <tr>
-      <th>No</th>
-      <th nzColumnKey="id" [nzSortFn]="true">ID</th>
-      <th>{{ 'client' | translate }}</th>
-      <th>{{ 'place_shipment' | translate }}</th>
-      <th>{{ 'delivery_shipment' | translate }}</th>
-      <th>{{ 'status' | translate }}</th>
-      <th>{{ 'shipment_date' | translate }}</th>
-      <th>{{ 'price' | translate }}</th>
-      <th nzRight></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr *ngFor="let item of data; let i=index">
-      <td>{{i+1}}</td>
-      <td>{{item.id}}</td>
-      <td class="ellipsis">
-        <span *ngIf="item.client">{{item.client.firstName}} {{item.client.lastName}}</span>
-        <span *ngIf="!item.client">{{'no_data' | translate}}</span>
-      </td>
-      <td class="ellipsis">{{item.loadingLocation.name}}</td>
-      <td class="ellipsis">{{item.deliveryLocation.name}}</td>
-      <td> <span class="status"
-          [ngStyle]="{color: item.cargoStatus.color, borderColor: item.cargoStatus.color}">{{item.cargoStatus.name.toLowerCase()|
-          translate}}</span> </td>
-      <td>{{item.createdAt | date : 'dd.MM.yyyy'}}</td>
-      <td>
-        <span *ngIf="item.offeredPrice"> {{item.offeredPrice | priceFormat}} {{item.offeredPriceCurrency?.name}}</span>
-        <span *ngIf="!item.offeredPrice">{{'no_data' | translate}}</span>
-      </td>
-      <td class="action-col" nzRight>
-        <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
-          <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
-        </a>
-        <nz-dropdown-menu #menu="nzDropdownMenu">
-          <ul nz-menu nzSelectable>
-            <li nz-menu-item (click)="handleDrawer('view',item)">
-              <div class="dropdown-menu">
-                <span nz-icon nzType="info-circle" nzTheme="outline"></span>
-                <span>{{ 'detail' | translate }}</span>
-              </div>
-            </li>
-
-            <li nz-menu-item (click)="handleDrawer('edit', item)" *ngIf="item.cargoStatus.code !== CargoStatusCodes.Canceled && item.cargoStatus.code !== CargoStatusCodes.Closed">
-              <div class="dropdown-menu">
-                <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
-                <span>{{ 'edit' | translate }}</span>
-              </div>
-            </li>
-
-          </ul>
-        </nz-dropdown-menu>
-      </td>
-    </tr>
-  </tbody>
-</nz-table>
-
-<nz-pagination [nzPageIndex]="pageParams.pageIndex" [nzTotal]="pageParams.totalPagesCount" nzShowSizeChanger
-  [nzPageSize]="pageParams.pageSize" (nzPageSizeChange)="onPageSizeChange($event)"
-  (nzPageIndexChange)="onPageIndexChange($event)">
-</nz-pagination>
 <ng-template #empty>
-  <nz-empty #empty nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-    [nzNotFoundContent]="contentTpl">
-    <ng-template #contentTpl>
-      <span>
-        {{ 'no_data' | translate }}
-      </span>
-    </ng-template>
-  </nz-empty>
+  <nz-empty></nz-empty>
 </ng-template>

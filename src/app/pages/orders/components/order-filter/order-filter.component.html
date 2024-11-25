@@ -1,0 +1,56 @@
+<div class="filter" [@showHideFilter]="animationState">
+  <div>
+    <nz-input-group class="input-group">
+      <input [ngModel]="filter['orderId']" 
+             (ngModelChange)="onFilterChange($event, 'orderId')" 
+             type="text" 
+             nz-input 
+             placeholder="{{'orders' | translate}} ID" />
+    </nz-input-group>
+  </div>
+  
+  <div>
+    <nz-input-group class="input-group">
+      <input [ngModel]="filter['driverId']" 
+             (ngModelChange)="onFilterChange($event, 'driverId')" 
+             type="text" 
+             nz-input 
+             placeholder="{{'drivers' | translate}} ID" />
+    </nz-input-group>
+  </div>
+  
+  <div>
+    <nz-select [ngModel]="filter['statusId']" 
+               (ngModelChange)="onFilterChange($event, 'statusId')" 
+               nzAllowClear 
+               nzPlaceHolder="{{'status' | translate}}">
+      <nz-option [nzValue]="status.id" 
+                 [nzLabel]="status.name.toLowerCase() | translate"
+                 *ngFor="let status of statuses">
+      </nz-option>
+    </nz-select>
+  </div>
+
+  <div>
+    <nz-input-group class="input-group">
+      <input [ngModel]="filter['clientId']" 
+             (ngModelChange)="onFilterChange($event, 'clientId')" 
+             type="text" 
+             nz-input 
+             placeholder="{{'clients' | translate}} ID" />
+    </nz-input-group>
+  </div>
+
+  <button nz-button 
+          nzType="primary" 
+          class="search-button" 
+          (click)="onSearch()">
+    <span nz-icon nzType="search" nzTheme="outline"></span>
+  </button>
+  
+  <button nz-button 
+          class="reset-button" 
+          (click)="onReset()">
+    <span nz-icon nzType="reload" nzTheme="outline"></span>
+  </button>
+</div>

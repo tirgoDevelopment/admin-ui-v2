@@ -1,4 +1,4 @@
-<ng-container *ngIf="mode !== 'view'">
+<ng-container *ngIf="mode !== 'view' && !loadingPage">
   <div class="step-container">
     <div class="step active">1</div>
     <div class="arrow" [class.active]="step === 2 || step === 3"></div>
@@ -31,9 +31,7 @@
         <nz-form-label nzRequired>{{ 'place_shipment' | translate }}</nz-form-label>
         <nz-select style="width: 100%;" nzShowSearch nzServerSearch nzPlaceHolder="{{'place_shipment' | translate}}"
           formControlName="loadingLocation" [nzShowArrow]="false" (nzOnSearch)="findCity($event)">
-          <nz-option *ngFor="let o of findList" 
-                      [nzLabel]="o.name + (o.country ? ', ' + o.country : '')" 
-                      [nzValue]="o">
+          <nz-option *ngFor="let o of findList" [nzLabel]="o.name + (o.country ? ', ' + o.country : '')" [nzValue]="o">
           </nz-option>
         </nz-select>
       </nz-input-group>
@@ -43,7 +41,8 @@
         <nz-form-label nzRequired>{{ 'delivery_shipment' | translate }}</nz-form-label>
         <nz-select class="w-full" nzShowSearch nzServerSearch nzPlaceHolder="{{'delivery_shipment' | translate}}"
           formControlName="deliveryLocation" [nzShowArrow]="false" (nzOnSearch)="findCity($event)">
-          <nz-option *ngFor="let o of findList" [nzLabel]="o.name + (o.country ? ', ' + o.country : '')" [nzValue]="o"></nz-option>
+          <nz-option *ngFor="let o of findList" [nzLabel]="o.name + (o.country ? ', ' + o.country : '')"
+            [nzValue]="o"></nz-option>
         </nz-select>
       </nz-input-group>
 
@@ -53,8 +52,7 @@
         <nz-select class="w-full" nzShowSearch nzPlaceHolder="{{'add_stop' | translate}}" nzMode="multiple"
           formControlName="selectedLocations">
           <nz-option nzLabel="{{'custom_place' |translate}}" nzValue="customsOutClearanceLocation"></nz-option>
-          <nz-option nzLabel="{{'custom_clearance_place' |translate}}"
-            nzValue="customsInClearanceLocation"></nz-option>
+          <nz-option nzLabel="{{'custom_clearance_place' |translate}}" nzValue="customsInClearanceLocation"></nz-option>
           <nz-option nzLabel="{{'add_loading_area' |translate}}" nzValue="additionalLoadingLocation"></nz-option>
           <nz-option nzLabel="{{'add_unloading_area' |translate}}" nzValue="additionalDeliveryLocation"></nz-option>
         </nz-select>
@@ -64,7 +62,8 @@
         <nz-form-label>{{ getDynamicLabel(location) }}</nz-form-label>
         <nz-select class="w-full" nzShowSearch nzServerSearch nzPlaceHolder="{{getDynamicLabel(location)}}"
           [formControlName]="location" [nzShowArrow]="false" (nzOnSearch)="findCity($event)">
-          <nz-option *ngFor="let o of findList" [nzLabel]="o.name + ', ' + o.country" [nzValue]="o"></nz-option>
+          <nz-option *ngFor="let o of findList" [nzLabel]="o.name + (o.country ? ', ' + o.country : '')"
+            [nzValue]="o"></nz-option>
         </nz-select>
       </nz-input-group>
 
@@ -168,18 +167,35 @@
         </nz-select>
       </nz-input-group>
 
+      <div class="">
+
+        <!-- <nz-input-group class="input-group">
+          <nz-form-label>{{ 'cargo_dimensions' | translate }}</nz-form-label>
+          <!-- <input nz-input type="text" formControlName="cargoDimension" mask="separator.2"> 
+          <nz-input-group class="input-group">
+            <nz-form-label>{{ 'cargo_weight_gross' | translate }}</nz-form-label>
+            <input nz-input type="text" formControlName="cargoWeight" mask="separator.2">
+          </nz-input-group>
+          <nz-input-group class="input-group">
+            <nz-form-label>{{ 'cargo_weight_gross' | translate }}</nz-form-label>
+            <input nz-input type="text" formControlName="cargoWeight" mask="separator.2">
+          </nz-input-group>
+        </nz-input-group> -->
+
+        <nz-form-label>{{'cargo_size' | translate }}</nz-form-label>
+        <div class="flex align-center gap">
+          <input nz-input type="text" formControlName="cargoLength" placeholder="Длина" mask="separator.2">
+          <i nz-icon nzTheme="outline" nzType="close"></i>
+          <input nz-input type="text" formControlName="cargoWidth" placeholder="Ширина" mask="separator.2">
+          <i nz-icon nzTheme="outline" nzType="close"></i>
+          <input nz-input type="text" formControlName="cargoHeight" placeholder="Высота" mask="separator.2">
+        </div>
+      </div>
       <div class="flex gap">
         <nz-input-group class="input-group">
           <nz-form-label>{{ 'cargo_weight_gross' | translate }}</nz-form-label>
           <input nz-input type="text" formControlName="cargoWeight" mask="separator.2">
         </nz-input-group>
-
-        <nz-input-group class="input-group">
-          <nz-form-label>{{ 'cargo_dimensions' | translate }}</nz-form-label>
-          <input nz-input type="text" formControlName="cargoDimension" mask="separator.2">
-        </nz-input-group>
-      </div>
-      <div class="flex gap">
         <nz-input-group class="input-group">
           <nz-form-label>{{ 'loading_method' | translate }}</nz-form-label>
           <nz-select class="w-full" formControlName="cargoLoadMethodIds" [nzShowArrow]="false" nzMode="multiple">
@@ -206,187 +222,312 @@
   </form>
 </ng-container>
 
-<ng-container *ngIf="mode == 'view'">
+
+<ng-container *ngIf="mode == 'view' && data && !loadingPage">
   <div class="map" style="width: 400px; height: 200px">
     <ya-map [center]="[data?.loadingLocation?.latitude, data?.loadingLocation?.longitude]" [zoom]="12">
-      <ya-multiroute
-        [referencePoints]="[[data?.loadingLocation?.latitude, data?.loadingLocation?.longitude], [data?.deliveryLocation?.latitude, data?.deliveryLocation?.longitude]]">
+      <ya-multiroute [referencePoints]="data | referencePoints">
       </ya-multiroute>
     </ya-map>
   </div>
 
-  <div class="order-info" style="border: none;">
-    <div class="info-row">
-      <div class="info-column">
-        <div class="info-label">{{'id_order' | translate}}</div>
-        <div class="info-value">#{{data.id}} </div>
-      </div>
+  <nz-tabset>
+    <nz-tab nzTitle="{{'information' | translate}}">
+      <div class="order-info" style="border: none;">
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{'id_order' | translate}}</div>
+            <div class="info-value">#{{data.id}} </div>
+          </div>
 
-      <div class="info-column">
-        <div class="info-label">{{'status' | translate}}</div>
-        <div class="info-value" class="status"
-          [ngStyle]="{color: data.cargoStatus.color, borderColor: data.cargoStatus.color, width: 'fit-content'}">
-          {{data.cargoStatus.name.toLowerCase() | translate}} </div>
-      </div>
-    </div>
-    <div class="info-row">
-      <div class="info-column">
-        <div class="info-label">{{'client' | translate}}</div>
-        <div class="info-value">{{data.client.firstName + ' ' + data.client.lastName }} </div>
-      </div>
-      <div class="info-column">
-        <!-- <div class="info-label">{{'status' | translate}}</div>
-        <div class="info-value" class="status"
-          [ngStyle]="{color: data.cargoStatus.color, borderColor: data.cargoStatus.color, width: 'fit-content'}">
-          {{data.cargoStatus.name | translate}} </div>-->
-      </div>
-    </div>
-    <div class="info-row">
-      <div class="info-column">
-        <div class="info-label">{{'order_dispatch_point' | translate}}</div>
-        <div class="info-value">{{data.loadingLocation.name}} </div>
-      </div>
-      <div class="info-column">
-        <div class="info-label">{{'order_delivery_point' | translate}}</div>
-        <div class="info-value">{{data.deliveryLocation.name}}</div>
-      </div>
-    </div>
-    <div class="info-row" *ngIf="data.customsInClearanceLocation || data.customsOutClearanceLocation">
-      <div class="info-column" *ngIf="data?.customsInClearanceLocation">
-        <div class="info-label">{{'custom_clearance_place' | translate}}</div>
-        <div class="info-value">{{data.customsInClearanceLocation.name}} </div>
-      </div>
-      <div class="info-column" *ngIf="data?.customsOutClearanceLocation">
-        <div class="info-label">{{'customs_place' | translate}}</div>
-        <div class="info-value">{{data?.customsOutClearanceLocation?.name}}</div>
-      </div>
-    </div>
-    <div class="info-row" *ngIf="data.additionalLoadingLocation || data.additionalDeliveryLocation">
-      <div class="info-column" *ngIf="data?.additionalLoadingLocation">
-        <div class="info-label">{{'add_loading_area' | translate}}</div>
-        <div class="info-value">{{data.additionalLoadingLocation.name}} </div>
-      </div>
-      <div class="info-column" *ngIf="data?.additionalDeliveryLocation">
-        <div class="info-label">{{'add_unloading_area' | translate}}</div>
-        <div class="info-value">{{data?.additionalDeliveryLocation?.name}}</div>
-      </div>
-    </div>
-    
-    <div class="info-row">
-      <div class="info-column">
-        <div class="info-label">{{'type_transport' | translate}}</div>
-        <div class="info-value">{{data.transportType.name}}</div>
-      </div>
-      <div class="info-column">
-        <div class="info-label">{{'transport_kind' | translate}}</div>
-        <div class="info-value" *ngFor="let i of data.transportKinds">{{i.name}} </div>
-      </div>
-    </div>
+          <div class="info-column">
+            <div class="info-label">{{'status' | translate}}</div>
+            <div class="info-value" class="status"
+              [ngStyle]="{color: data.cargoStatus.color, borderColor: data.cargoStatus.color, width: 'fit-content'}">
+              {{data.cargoStatus.name.toLowerCase() | translate}} </div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{'client' | translate}}</div>
+            <div class="info-value">{{data.client.firstName + ' ' + data.client.lastName }} </div>
+          </div>
+          <div class="info-column">
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{'order_dispatch_point' | translate}}</div>
+            <div class="info-value">{{data.loadingLocation.name}} </div>
+          </div>
+          <div class="info-column">
+            <div class="info-label">{{'order_delivery_point' | translate}}</div>
+            <div class="info-value">{{data.deliveryLocation.name}}</div>
+          </div>
+        </div>
+        <div class="info-row" *ngIf="data.customsInClearanceLocation || data.customsOutClearanceLocation">
+          <div class="info-column" *ngIf="data?.customsInClearanceLocation">
+            <div class="info-label">{{'custom_clearance_place' | translate}}</div>
+            <div class="info-value">{{data.customsInClearanceLocation.name}} </div>
+          </div>
+          <div class="info-column" *ngIf="data?.customsOutClearanceLocation">
+            <div class="info-label">{{'custom_place' | translate}}</div>
+            <div class="info-value">{{data?.customsOutClearanceLocation?.name}}</div>
+          </div>
+        </div>
+        <div class="info-row" *ngIf="data.additionalLoadingLocation || data.additionalDeliveryLocation">
+          <div class="info-column" *ngIf="data?.additionalLoadingLocation">
+            <div class="info-label">{{'add_loading_area' | translate}}</div>
+            <div class="info-value">{{data.additionalLoadingLocation.name}} </div>
+          </div>
+          <div class="info-column" *ngIf="data?.additionalDeliveryLocation">
+            <div class="info-label">{{'add_unloading_area' | translate}}</div>
+            <div class="info-value">{{data?.additionalDeliveryLocation?.name}}</div>
+          </div>
+        </div>
 
-    <div class="info-row">
-      <div class="info-column">
-        <div class="info-label">{{'cargo_type' | translate}}</div>
-        <div class="info-value">{{data.cargoType.name}} </div>
-      </div>
-      <div class="info-column">
-        <div class="info-label">{{'loading_method' | translate}}</div>
-        <div class="info-value" *ngFor="let i of data.cargoLoadMethods">{{i.name}}</div>
-      </div>
-    </div>
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{'type_transport' | translate}}</div>
+            <div class="info-value">{{data.transportType.name}}</div>
+          </div>
+          <div class="info-column">
+            <div class="info-label">{{'transport_kind' | translate}}</div>
+            <div class="info-value" *ngFor="let i of data.transportKinds">{{i.name}} </div>
+          </div>
+        </div>
 
-    <div class="info-row">
-      <div class="info-column">
-        <div class="info-label">{{'cargo_size' | translate}}</div>
-        <div class="info-value">
-          <span *ngIf="data.cargoDimension">{{data.cargoDimension}} м³</span>
-          <span *ngIf="!data.cargoDimension">{{'no_data'| translate}}</span>
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{'cargo_type' | translate}}</div>
+            <div class="info-value">{{data.cargoType.name}} </div>
+          </div>
+          <div class="info-column">
+            <div class="info-label">{{'loading_method' | translate}}</div>
+            <div class="info-value" *ngFor="let i of data.cargoLoadMethods">{{i.name}}</div>
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{'cargo_size' | translate}}</div>
+            <div class="info-value">
+              <div *ngIf="data.cargoLength">
+                {{ ('length' | translate) | slice:0:1 }}:{{data.cargoLength}} {{'sm' | translate}}
+                {{('width' | translate) | slice:0:1 }}: {{data.cargoWidth}} {{'sm' | translate}}
+                {{('height' | translate) | slice:0:1 }}: {{data.cargoHeight}} {{'sm' | translate}}
+              </div>
+              <div *ngIf="!data.cargoLength"> {{'no_data' | translate}} </div>
+            </div>
+          </div>
+          <div class="info-column">
+            <div class="info-label">{{'cargo_weight' | translate}}</div>
+            <div class="info-value">{{data.cargoWeight ? data.cargoWeight + 'kg' : ('no_data' | translate)}}</div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{'price' | translate}}</div>
+            <div class="info-value">
+              <span *ngIf="data.offeredPrice">{{data.offeredPrice | priceFormat}}
+                {{data.offeredPriceCurrency?.name}}</span>
+              <span *ngIf="!data.offeredPrice">{{'no_data' | translate}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{'order_date' | translate}}</div>
+            <div class="info-value"> {{data?.createdAt | dateFormat}} </div>
+          </div>
+          <div class="info-column">
+            <div class="info-label">{{'order_scheduled' | translate}}</div>
+            <div class="info-value">{{data?.sendDate | dateFormat}}</div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{'payment_method' | translate}}</div>
+            <div class="info-value"> {{data.isCashlessPayment ? ('cashless' | translate) : ('cash' | translate)}} </div>
+          </div>
+          <div class="info-column">
+            <div class="info-label">{{'secure_transaction' | translate}}</div>
+            <div class="info-value">{{data?.isSecureTransaction ? ('yes' | translate): ('no' | translate)}}</div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{'isAdr' | translate}}</div>
+            <div class="info-value">{{data?.isAdr ? ('yes' | translate): ('no' | translate)}}</div>
+          </div>
+          <div class="info-column">
+            <div class="info-label">{{'isBorderCrossing' | translate}}</div>
+            <div class="info-value"> {{data.isBorderCrossing ? ('yes' | translate): ('no' | translate)}} </div>
+          </div>
+        </div>
+
+        <div class="info-row" *ngIf="data?.refrigeratorCount || data?.refrigeratorFrom || data?.refrigeratorTo">
+          <div class="info-column" *ngIf="data?.refrigeratorCount">
+            <div class="info-label">{{'number_of_transporters' | translate}}</div>
+            <div class="info-value"> {{data.refrigeratorCount}} </div>
+          </div>
+          <div class="info-column" *ngIf="data?.refrigeratorFrom">
+            <div class="info-label">{{'mode_from' | translate}}</div>
+            <div class="info-value">{{data.refrigeratorFrom}} </div>
+          </div>
+          <div class="info-column" *ngIf="data?.refrigeratorTo">
+            <div class="info-label">{{'mode_from' | translate}}</div>
+            <div class="info-value">{{data.refrigeratorTo}}</div>
+          </div>
+        </div>
+        <div class="info-row" *ngIf="data?.cisternVolume || data?.isHook">
+          <div class="info-column">
+            <div class="info-label">{{'hook' | translate}}</div>
+            <div class="info-value"> {{data.isHook ? ('yes' | translate): ('no' | translate)}} </div>
+          </div>
+          <div class="info-column">
+            <div class="info-label">{{'vaolume_l' | translate}}</div>
+            <div class="info-value">{{data?.cisternVolume}}</div>
+          </div>
+        </div>
+        <div class="info-row" *ngIf="data?.containerVolume || data.capacity">
+          <div class="info-column">
+            <div class="info-label">{{'volume_f' | translate}}</div>
+            <div class="info-value"> {{data.containerVolume}} </div>
+          </div>
+          <div class="info-column">
+            <div class="info-label">{{'cube' | translate}}</div>
+            <div class="info-value"> {{data.capacity}} </div>
+          </div>
         </div>
       </div>
-      <div class="info-column">
-        <div class="info-label">{{'cargo_weight' | translate}}</div>
-        <div class="info-value">{{data.cargoWeight ? data.cargoWeight + 'kg' : ('no_data' | translate)}}</div>
+      <div class="flex gap" *ngIf="data.cargoStatus.code !== CargoStatusCodes.Canceled && data.cargoStatus.code !== CargoStatusCodes.Closed">
+        <button nz-button class="danger-button"
+          (click)="onCancel()">{{'cancel_order' | translate}}</button>
+        <button class="success-button"
+          *ngIf="data.cargoStatus.code !== CargoStatusCodes.Waiting"
+          nz-button (click)="changeStatusOrder()">{{ getButtonText(data.cargoStatus.code)
+          }}</button>
       </div>
-    </div>
-    <div class="info-row">
-      <div class="info-column">
-        <div class="info-label">{{'price' | translate}}</div>
-        <div class="info-value">
-          <span *ngIf="data.offeredPrice">{{data.offeredPrice | priceFormat}} {{data.offeredPriceCurrency?.name}}</span>
-          <span *ngIf="!data.offeredPrice">{{'no_data' | translate}}</span>
-        </div>
-      </div>
-    </div>
-    <div class="info-row">
-      <div class="info-column">
-        <div class="info-label">{{'order_date' | translate}}</div>
-        <div class="info-value"> {{data?.createdAt | dateFormat}} </div>
-      </div>
-      <div class="info-column">
-        <div class="info-label">{{'order_scheduled' | translate}}</div>
-        <div class="info-value">{{data?.sendDate | dateFormat}}</div>
-      </div>
-    </div>
-    <div class="info-row">
-      <div class="info-column">
-        <div class="info-label">{{'payment_method' | translate}}</div>
-        <div class="info-value"> {{data.isCashlessPayment ? ('cashless' | translate) : ('cash' | translate)}} </div>
-      </div>
-      <div class="info-column">
-        <div class="info-label">{{'secure_transaction' | translate}}</div>
-        <div class="info-value">{{data?.isSecureTransaction ? ('yes' | translate): ('no' | translate)}}</div>
-      </div>
-    </div>
-    <div class="info-row">
-      <div class="info-column">
-        <div class="info-label">{{'isAdr' | translate}}</div>
-        <div class="info-value">{{data?.isAdr ? ('yes' | translate): ('no' | translate)}}</div>
-      </div>
-      <div class="info-column">
-        <div class="info-label">{{'isBorderCrossing' | translate}}</div>
-        <div class="info-value"> {{data.isBorderCrossing ? ('yes' | translate): ('no' | translate)}} </div>
-      </div>
-    </div>
+    </nz-tab>
+    <nz-tab nzTitle="{{'orderOffers' | translate}}">
 
-    <div class="info-row" *ngIf="data?.refrigeratorCount || data?.refrigeratorFrom || data?.refrigeratorTo">
-      <div class="info-column" *ngIf="data?.refrigeratorCount">
-        <div class="info-label">{{'number_of_transporters' | translate}}</div>
-        <div class="info-value"> {{data.refrigeratorCount}} </div>
-      </div>
-      <div class="info-column" *ngIf="data?.refrigeratorFrom">
-        <div class="info-label">{{'mode_from' | translate}}</div>
-        <div class="info-value">{{data.refrigeratorFrom}} </div>
-      </div>
-      <div class="info-column" *ngIf="data?.refrigeratorTo">
-        <div class="info-label">{{'mode_from' | translate}}</div>
-        <div class="info-value">{{data.refrigeratorTo}}</div>
-      </div>
-    </div>
-    <div class="info-row" *ngIf="data?.cisternVolume || data?.isHook">
-      <div class="info-column">
-        <div class="info-label">{{'hook' | translate}}</div>
-        <div class="info-value"> {{data.isHook ? ('yes' | translate): ('no' | translate)}} </div>
-      </div>
-      <div class="info-column">
-        <div class="info-label">{{'vaolume_l' | translate}}</div>
-        <div class="info-value">{{data?.cisternVolume}}</div>
-      </div>
-    </div>
-    <div class="info-row" *ngIf="data?.containerVolume || data.capacity">
-      <div class="info-column">
-        <div class="info-label">{{'volume_f' | translate}}</div>
-        <div class="info-value"> {{data.containerVolume}} </div>
-      </div>
-      <div class="info-column">
-        <div class="info-label">{{'cube' | translate}}</div>
-        <div class="info-value"> {{data.capacity}} </div>
-      </div>
-    </div>
-  </div>
+      <nz-collapse>
+        <nz-collapse-panel nzActive="true" collapsed nzHeader="{{'activeOffers' | translate}}">
+          <div class="offer-card" *ngFor="let offer of activeOffers">
 
-  <div class="flex gap" *ngIf="data.cargoStatus.code !== CargoStatusCodes.Canceled">
-    <button *ngIf="data.cargoStatus.code !== CargoStatusCodes.Canceled" nz-button class="danger-button"
-      (click)="onCancel()">{{'cancel_order' | translate}}</button>
-    <button *ngIf="data.cargoStatus.code === CargoStatusCodes.Waiting" nz-button class="secondary-button"
-      (click)="onAssignDriver()">{{'assign_driver' | translate}}</button>
-  </div>
+            <div class="info-row">
+              <div class="info-column">
+                <div class="info-label">{{'ID' | translate}}</div>
+                <div class="info-value">#{{offer.driver.id}}</div>
+              </div>
+              <div class="info-column">
+                <div class="info-label">{{'full_name' | translate}}</div>
+                <div class="info-value link" (click)="showDriverProfile(offer.driver.id)"> {{offer.driver.firstName + '
+                  ' +
+                  offer.driver.lastName }} </div>
+              </div>
+            </div>
+            <div class="info-row">
+              <div class="info-column">
+                <div class="info-label">{{'offered_price' | translate}} </div>
+                <div class="info-value">{{offer.amount | priceFormat }} {{data.offeredPriceCurrency?.name}}</div>
+              </div>
+              <div class="info-column">
+                <div class="info-label">{{'date_creation' | translate}}</div>
+                <div class="info-value"> {{offer.createdAt | dateFormat}} </div>
+              </div>
+            </div>
+
+            <hr class="my-2" *ngIf="offer?.clientReplyOrderOffer">
+
+            <div *ngIf="offer.isReplied">
+              <b>{{'client_offer' | translate}}</b>
+              <div class="info-row">
+                <div class="info-column">
+                  <div class="info-label">{{'offered_price' | translate}} </div>
+                  <div class="info-value">{{offer.clientReplyOrderOffer.amount | priceFormat }}
+                    {{data.offeredPriceCurrency?.name}}</div>
+                </div>
+                <div class="info-column">
+                  <div class="info-label">{{'date_creation' | translate}}</div>
+                  <div class="info-value"> {{offer.clientReplyOrderOffer.createdAt | dateFormat}} </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="buttons flex justify-between my-4" *ngIf="data.cargoStatus.code === CargoStatusCodes.Waiting">
+              <button
+                *ngIf="(!offer?.isCanceled && !offer?.isRejected && !offer?.isAccepted) && (!offer?.clientReplyOrderOffer?.isCanceled && !offer?.clientReplyOrderOffer?.isRejected && !offer?.clientReplyOrderOffer?.isAccepted)"
+                nz-button class="danger-button" (click)="rejectOffer(offer)">{{'reject' | translate}}</button>
+              <div class="flex gap">
+                <button nz-button class="secondary-button"
+                  *ngIf="(!offer?.isCanceled && !offer?.isRejected && !offer?.isAccepted && !offer?.isReplied) && (!offer?.clientReplyOrderOffer?.isCanceled && !offer?.clientReplyOrderOffer?.isRejected && !offer?.clientReplyOrderOffer?.isAccepted)"
+                  (click)="replyToDriverOffer(offer)">{{'counterOffer' |
+                  translate}}</button>
+                <button nz-popconfirm nzPopconfirmTitle="{{'are_you_sure' | translate}}"
+                  (nzOnConfirm)="acceptOffer(offer)" nzPopconfirmPlacement="topLeft"
+                  *ngIf="(!offer?.isCanceled && !offer?.isRejected && !offer?.isAccepted) && (!offer?.clientReplyOrderOffer?.isCanceled && !offer?.clientReplyOrderOffer?.isRejected && !offer?.clientReplyOrderOffer?.isAccepted)"
+                  nz-button class="success-button">{{'approve' | translate}}</button>
+              </div>
+            </div>
+          </div>
+        </nz-collapse-panel>
+        <nz-collapse-panel nzHeader="{{'nonActiveOffers' | translate}}">
+          <div class="offer-card" *ngFor="let offer of inactiveOffers">
+            <div class="info-row">
+              <div class="info-column">
+                <div class="info-label">{{'ID' | translate}}</div>
+                <div class="info-value">#{{offer.driver.id}}</div>
+              </div>
+              <div class="info-column">
+                <div class="info-label">{{'full_name' | translate}}</div>
+                <div class="info-value link" (click)="showDriverProfile(offer.driver.id)"> {{offer.driver.firstName + '
+                  ' +
+                  offer.driver.lastName }} </div>
+              </div>
+            </div>
+            <div class="info-row">
+              <div class="info-column">
+                <div class="info-label">{{'offered_price' | translate}} </div>
+                <div class="info-value">{{offer.amount | priceFormat }} {{data.offeredPriceCurrency?.name}}</div>
+              </div>
+              <div class="info-column">
+                <div class="info-label">{{'date_creation' | translate}}</div>
+                <div class="info-value"> {{offer.createdAt | dateFormat}} </div>
+              </div>
+            </div>
+
+            <hr class="my-2" *ngIf="offer?.clientReplyOrderOffer">
+
+            <div *ngIf="offer.isReplied">
+              <b>{{'client_offer' | translate}}</b>
+              <div class="info-row">
+                <div class="info-column">
+                  <div class="info-label">{{'offered_price' | translate}} </div>
+                  <div class="info-value">{{offer.clientReplyOrderOffer.amount | priceFormat }}
+                    {{data.offeredPriceCurrency?.name}}</div>
+                </div>
+                <div class="info-column">
+                  <div class="info-label">{{'date_creation' | translate}}</div>
+                  <div class="info-value"> {{offer.clientReplyOrderOffer.createdAt | dateFormat}} </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nz-collapse-panel>
+      </nz-collapse>
+      <div class="my-4 flex gap">
+        <button *ngIf="data.cargoStatus.code === CargoStatusCodes.Waiting" nz-button class="success-button"
+          (click)="onAssignDriver('assign')">{{'assign_driver' | translate}}</button>
+        <button *ngIf="data.cargoStatus.code === CargoStatusCodes.Waiting" nz-button class="success-button"
+          (click)="onAssignDriver('offer')">{{'sendOffer' | translate}}</button>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+
 </ng-container>
+
+<div *ngIf="loadingPage" class="loader-container">
+  <span nz-icon nzType="loading" nzTheme="outline" style="font-size: 25px;"></span>
+</div>

@@ -22,7 +22,7 @@ import { BehaviorSubject, Observable, Subject, Subscription, catchError, debounc
 import { ClientModel } from 'src/app/pages/clients/models/client.model';
 import { ClientsService } from 'src/app/pages/clients/services/clients.service';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
-import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
 import { CargoPackagesModel } from 'src/app/pages/references/cargo-packages/models/cargo-packages.model';
 import { OrderModel } from '../../models/order.model';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
@@ -30,6 +30,11 @@ import { AngularYandexMapsModule } from 'angular8-yandex-maps';
 import { AssignDriverComponent } from '../assign-driver/assign-driver.component';
 import { GeoDbService, GeoResponse, PlaceSummary } from 'wft-geodb-angular-client';
 import { CargoStatusCodes } from 'src/app/shared/enum/statusCode.enum';
+import { DriverFormComponent } from 'src/app/pages/drivers/components/driver-form/driver-form.component';
+import { SendOfferComponent } from '../send-offer/send-offer.component';
+import { RejectOfferComponent } from '../reject-offer/reject-offer.component';
+import { CargoStatusService } from 'src/app/shared/services/references/cargo-status.service';
+import { CargoStatusModel } from 'src/app/pages/references/cargo-status/models/cargo-status.model';
 
 @Component({
   selector: 'app-order-form',
@@ -37,17 +42,18 @@ import { CargoStatusCodes } from 'src/app/shared/enum/statusCode.enum';
   styleUrls: ['./order-form.component.scss'],
   standalone: true,
   imports: [NzModules, CommonModules, TranslateModule, NgxMaskDirective, PipeModule, AngularYandexMapsModule],
-  providers: [NzModalService]
+  providers: [NzModalService],
 })
 export class OrderFormComponent implements OnInit {
   public CargoStatusCodes = CargoStatusCodes;
-  @Input() data: OrderModel;
-  @Input() mode: string = 'add' || 'edit' || 'view';
+  @Input() orderId: string | number;
+  @Input() mode: string;
   step: number = 1;
   form: FormGroup;
   currencies: CurrencyModel[];
   transportTypes: any[] = [];
   transportKinds: TransportKindModel[] = [];
+  statuses: CargoStatusModel[];
   cargoTypes: any;
   packages: CargoPackagesModel[] = [];
   loadingMethods: LoadingMethodModel[] = [];
@@ -63,24 +69,24 @@ export class OrderFormComponent implements OnInit {
   isContainer: any;
   loading: boolean = false;
   clients: ClientModel[];
+  data: OrderModel;
   private cityInputSubscription: Subscription | null = null;
-
+  loadingPage: boolean = false;
   constructor(
     private orderApi: OrdersService,
     private clientApi: ClientsService,
-    private refApi: RefService,
     private toastr: NotificationService,
     private translate: TranslateService,
     private currencyApi: CurrenciesService,
     private trTypeApi: TransportTypesService,
     private transportKindApi: TransportKindsService,
     private cargoTypeApi: CargoTypesService,
-    private packageApi: CargoPackagesService,
     private loadingMethodApi: LoadingMethodService,
+    private statusesApi: CargoStatusService,
     private modal: NzModalService,
     private drawerRef: NzDrawerRef,
-    private geoDbService: GeoDbService
-
+    private geoDbService: GeoDbService,
+    private drawer: NzDrawerService,
   ) {
     this.form = new FormGroup({
       id: new FormControl(null),
@@ -119,10 +125,11 @@ export class OrderFormComponent implements OnInit {
       customsInClearanceLocation: new FormControl(null),
       additionalLoadingLocation: new FormControl(null),
       additionalDeliveryLocation: new FormControl(null),
-      cargoDimension: new FormControl(null),
+      cargoLength: new FormControl(null),
+      cargoWidth: new FormControl(null),
+      cargoHeight: new FormControl(null),
     });
   }
-
   ngOnInit(): void {
     this.clients$ = this.searchClient$.pipe(
       debounceTime(300),
@@ -135,25 +142,43 @@ export class OrderFormComponent implements OnInit {
     );
     this.getTypes();
     this.changeValue();
-    if (this.mode == 'edit') {
-      this.patchValue();
+    if (this.orderId) {
+      this.getById();
+      this.sortAcceptedOffer();
     }
-    // this.getById()
   }
 
+  sortAcceptedOffer() {
+    if (this.data) {
+      this.data.driverOrderOffers.sort((a: any, b: any) => {
+        if (a.isAccepted === b.isAccepted) return 0;
+        return a.isAccepted ? -1 : 1;
+      });
+    }
+  }
   getById() {
-    this.orderApi.getById(1).subscribe((res: any) => {
+    this.loadingPage = true;
+    this.orderApi.getById(this.orderId).subscribe((res: any) => {
+      if (res) {
+        this.loadingPage = false;
+        this.data = res.data;
 
+
+        this.patchValue();
+      }
+    }, err => {
+      this.loadingPage = false;
     })
   }
-  cityFormatter() {
-    const optionalFields = [
-      'customsOutClearanceLocation',
-      'customsInClearanceLocation',
-      'additionalLoadingLocation',
-      'additionalDeliveryLocation'
-    ];
+  get activeOffers() {
+    return this.data?.driverOrderOffers?.filter(o => !o.isRejected && !o.isCancelled && !o.clientReplyOrderOffer?.isRejected && !o.clientReplyOrderOffer?.isCancelled) || [];
+  }
 
+  get inactiveOffers() {
+    return this.data?.driverOrderOffers?.filter(o => o.isRejected || o.isCancelled || o.clientReplyOrderOffer?.isRejected || o.clientReplyOrderOffer?.isCancelled) || [];
+  }
+  cityFormatter() {
+    const optionalFields = ['customsOutClearanceLocation', 'customsInClearanceLocation', 'additionalLoadingLocation', 'additionalDeliveryLocation'];
     for (const field of optionalFields) {
       const location = this.form.value[field];
       if (location && location.name && location.country) {
@@ -166,10 +191,8 @@ export class OrderFormComponent implements OnInit {
         });
       }
     }
-
     const loadingLocation = this.form.value.loadingLocation;
     const deliveryLocation = this.form.value.deliveryLocation;
-
     if (loadingLocation) {
       this.form.patchValue({
         loadingLocation: {
@@ -179,7 +202,6 @@ export class OrderFormComponent implements OnInit {
         },
       });
     }
-
     if (deliveryLocation) {
       this.form.patchValue({
         deliveryLocation: {
@@ -190,24 +212,19 @@ export class OrderFormComponent implements OnInit {
       });
     }
   }
-
   patchValue() {
     this.findList.push(this.data.loadingLocation);
     this.findList.push(this.data.deliveryLocation);
 
     type LocationFields = 'customsOutClearanceLocation' | 'customsInClearanceLocation' | 'additionalLoadingLocation' | 'additionalDeliveryLocation';
-    let fieldsToCheck: LocationFields[] = [
-      'customsOutClearanceLocation',
-      'customsInClearanceLocation',
-      'additionalLoadingLocation',
-      'additionalDeliveryLocation'
-    ];
+    let fieldsToCheck: LocationFields[] = ['customsOutClearanceLocation', 'customsInClearanceLocation', 'additionalLoadingLocation', 'additionalDeliveryLocation'];
     if (!this.data.selectedLocations) {
       this.data.selectedLocations = [];
     }
     fieldsToCheck.forEach((field) => {
       if (this.data[field]) {
         this.data.selectedLocations.push(field);
+        this.findList.push(this.data[field]);
       }
     });
     this.form.patchValue(this.data);
@@ -232,14 +249,14 @@ export class OrderFormComponent implements OnInit {
       this.trTypeApi.getAll(),
       this.transportKindApi.getAll(),
       this.cargoTypeApi.getAll(),
-      this.packageApi.getAll(),
-      this.loadingMethodApi.getAll()
-    ]).subscribe(([currencies, transportTypes, transportKinds, cargoTypes, packages, loadingMethods]) => {
+      this.statusesApi.getAll(),
+      this.loadingMethodApi.getAll(),
+    ]).subscribe(([currencies, transportTypes, transportKinds, cargoTypes, statuses,  loadingMethods]) => {
       this.currencies = currencies.data;
       this.transportTypes = transportTypes.data;
       this.transportKinds = transportKinds.data;
       this.cargoTypes = cargoTypes.data;
-      this.packages = packages.data;
+      this.statuses = statuses.data;
       this.loadingMethods = loadingMethods.data;
       this.form.patchValue({
         offeredPriceCurrencyId: currencies.data[0].id,
@@ -349,7 +366,6 @@ export class OrderFormComponent implements OnInit {
     let filter = generateQueryFilter({ firstName: ev });
     this.searchClient$.next(filter);
   }
-
   detectLanguage(input: string): string {
     const isCyrillic = /[А-Яа-яЁё]/.test(input);
     return isCyrillic ? 'ru' : 'en';
@@ -400,7 +416,16 @@ export class OrderFormComponent implements OnInit {
   }
   backStep() {
     this.form.patchValue(this.form.value)
-
+    this.findList.push(this.form.value.loadingLocation);
+    this.findList.push(this.form.value.deliveryLocation);
+    type LocationFields = 'customsOutClearanceLocation' | 'customsInClearanceLocation' | 'additionalLoadingLocation' | 'additionalDeliveryLocation';
+    let fieldsToCheck: LocationFields[] = ['customsOutClearanceLocation', 'customsInClearanceLocation', 'additionalLoadingLocation', 'additionalDeliveryLocation'];
+    fieldsToCheck.forEach((field) => {
+      if (this.form.value[field]) {
+        this.form.value.selectedLocations.push(field);
+        this.findList.push(this.form.value[field]);
+      }
+    });
     if (this.step !== 1) {
       this.step--;
     }
@@ -422,19 +447,131 @@ export class OrderFormComponent implements OnInit {
       }
     })
   }
-  onAssignDriver() {
+  onAssignDriver(type: string) {
     this.modal.create({
-      nzTitle: this.translate.instant('assign_driver'),
+      nzTitle: this.translate.instant(type === 'assign' ? 'assign_driver' : 'sendOffer'),
       nzContent: AssignDriverComponent,
       nzMaskClosable: false,
       nzOkText: null,
       nzCancelText: null,
       nzFooter: null,
       nzComponentParams: {
+        type: type,
         orderId: this.data.id
       }
     })
   }
+  get referencePoints(): [number, number][] {
+    const locations = [
+      this.data?.loadingLocation,
+      this.data?.deliveryLocation,
+      this.data?.customsInClearanceLocation,
+      this.data?.customsOutClearanceLocation,
+      this.data?.additionalLoadingLocation,
+      this.data?.additionalDeliveryLocation,
+    ];
+
+    return locations
+      .filter(location => location?.latitude && location?.longitude)
+      .map(location => [location.latitude, location.longitude] as [number, number]);
+  }
+  showDriverProfile(id: number | string) {
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('information'),
+      nzContent: DriverFormComponent,
+      nzMaskClosable: false,
+      nzPlacement: 'right',
+      nzWidth: '400px',
+      nzContentParams: {
+        id: id,
+        mode: 'view'
+      }
+    });
+  }
+  replyToDriverOffer(offer?: any) {
+    const modal = this.modal.create({
+      nzComponentParams: {
+        offer: offer,
+        clientId: this.data.client.id
+      },
+      nzTitle: this.translate.instant('sendOffer'),
+      nzContent: SendOfferComponent,
+      nzMaskClosable: false,
+      nzOkText: this.translate.instant('save'),
+      nzOnOk: (componentInstance: SendOfferComponent) =>
+        componentInstance.replyToDriverOffer(),
+    });
+    modal.afterClose.subscribe((result) => {
+      if (result?.success) {
+        this.getById();
+      }
+    });
+  }
+  acceptOffer(offer) {
+    let data = {
+      orderId: offer.order.id,
+      offerId: offer.isReplied ? offer.clientReplyOrderOffer.id : offer.id
+    }
+    this.loading = true;
+    const rejectMethod = offer.isReplied
+      ? this.orderApi.acceptClientOffer(data)
+      : this.orderApi.acceptDriverOffer(data);
+    rejectMethod.subscribe(
+      (res: any) => {
+        if (res && res?.success) {
+          this.toastr.success(this.translate.instant('successfullUpdated'));
+          this.form.reset();
+          this.drawerRef.close({ success: true });
+        }
+        this.loading = false;
+      },
+      (err) => {
+        this.loading = false;
+      }
+    );
+  }
+  rejectOffer(offer) {
+    const modal = this.modal.create({
+      nzComponentParams: {
+        offer: offer,
+      },
+      nzTitle: this.translate.instant('rejectOffer'),
+      nzContent: RejectOfferComponent,
+      nzMaskClosable: false,
+      nzFooter: null
+    });
+  }
+
+  changeStatusOrder() {
+    const statusMap = {
+      [CargoStatusCodes.Accepted]: 'activate',
+      [CargoStatusCodes.Active]: 'complete',
+      [CargoStatusCodes.Completed]: 'finish'
+    };
+    const status = statusMap[this.data.cargoStatus.code];
+
+    if (status) {
+      const data = {
+        orderId: this.orderId,
+        status: status
+      };
+
+      this.orderApi.changeStatusOrder(data).subscribe((res: any) => {
+        if (res && res.success) {
+          this.toastr.success('successfullUpdated');
+          this.getById();
+        }
+      });
+    }
+  }
+
+  getButtonText(status: CargoStatusCodes): string {
+    const statusTextMap = {
+      [CargoStatusCodes.Accepted]: 'active',
+      [CargoStatusCodes.Active]: 'completed',
+      [CargoStatusCodes.Completed]: 'closed'
+    };
+    return this.translate.instant(statusTextMap[status] || 'change');
+  }
 
 }
-

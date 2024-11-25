@@ -56,5 +56,6 @@ export interface OrderModel extends BaseModel {
     cargoDimension: string,
     transportType: any,
     isBorderCrossing:boolean,
-    isCashlessPayment: boolean
+    isCashlessPayment: boolean,
+    driverOrderOffers:any
 }

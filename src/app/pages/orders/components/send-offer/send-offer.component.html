@@ -1,0 +1,8 @@
+<form [formGroup]="form">
+    <nz-input-group class="input-group w-full">
+        <nz-form-label nzRequired>{{ 'offered_price' | translate }}</nz-form-label>
+        <div class="flex">
+          <input  nz-input type="text" formControlName="amount" mask="separator.2">
+        </div>
+    </nz-input-group>
+  </form>

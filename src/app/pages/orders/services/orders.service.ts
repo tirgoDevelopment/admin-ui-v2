@@ -25,9 +25,38 @@ export class OrdersService {
     return this.http.put<Response<OrderModel[]>>(env.orderApiUrl + `/orders/${data.id}/staffs`, data)
   }
   appendOrder(data:any) {
-    return this.http.post<Response<OrderModel[]>>(env.orderApiUrl + '/orders/staffs/append-order', data)
+    return this.http.post<Response<OrderModel[]>>(env.orderApiUrl + `/orders/${data.orderId}/staffs/assign`, data)
   }
   cancelOrder(data:any) {
     return this.http.post<Response<OrderModel[]>>(env.orderApiUrl + `/orders/${data.id}/staffs/cancel`,{})
+  }
+ 
+  acceptOffer(data:any) {
+    return this.http.post(env.orderApiUrl + `/orders/${data.orderId}/staffs/offers/${data.id}/accept`,data)
+  }
+
+  sendOffer(data:any) {
+    return this.http.post(env.orderApiUrl + `/orders/${data.orderId}/staffs/offers`,data)
+  }
+  replyToDriverOffer(data:any) {
+    return this.http.post(env.orderApiUrl + `/orders/${data.orderId}/staffs/offers/${data.offerId}/reply`,data)
+  }
+
+  rejectDriverOffer(data:any) {
+    return this.http.post(env.orderApiUrl + `/orders/${data.orderId}/staffs/offers/${data.offerId}/reject`,data)
+  }
+  rejectClientOffer(data:any) {
+    return this.http.post(env.orderApiUrl + `/orders/${data.orderId}/staffs/offers/replies/${data.offerId}/reject`,data)
+  }
+
+  acceptDriverOffer(data:any) {
+    return this.http.post(env.orderApiUrl + `/orders/${data.orderId}/staffs/offers/${data.offerId}/accept`,data)
+  }
+  acceptClientOffer(data:any) {
+    return this.http.post(env.orderApiUrl + `/orders/${data.orderId}/staffs/offers/replies/${data.offerId}/accept`,data)
+  }
+
+  changeStatusOrder(data) {
+    return this.http.post(env.orderApiUrl + `/orders/${data.orderId}/staffs/${data.status}`,{})
   }
 }

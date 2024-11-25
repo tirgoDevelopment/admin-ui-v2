@@ -98,9 +98,11 @@ body {
   color: #fff !important;
   border-color: $success-color !important;
 }
+
 button:hover {
   opacity: .9;
 }
+
 .action-col {
   width: 30px;
 }
@@ -118,6 +120,7 @@ button:hover {
 .ant-table-content {
   margin: 10px 0;
 }
+
 // Step styles 
 .step-container {
   display: flex;
@@ -149,6 +152,7 @@ button:hover {
     height: 2px;
     background-color: #ccc;
     margin: 0 15px;
+
     &.active {
       background-color: $secondary-color;
     }
@@ -209,9 +213,11 @@ nz-select {
     color: var(--textColor) !important;
     border-color: var(--input-border) !important;
   }
+
   .ant-select-selection-item {
     background: var(--input-bg) !important;
   }
+
   .ant-select-arrow {
     color: var(--textColor) !important;
   }
@@ -267,10 +273,10 @@ nz-select {
   // margin: 20px 0;
 }
 
- input {
+input {
   // padding: 5px 10px !important;
   background-color: var(--input-bg) !important;
-  border-color: var(--input-border) !important;  
+  border-color: var(--input-border) !important;
   width: 100% !important;
   color: var(--textColor) !important;
 }
@@ -404,6 +410,10 @@ input:-webkit-autofill:focus {
   i {
     color: var(--textColor);
   }
+}
+
+.ant-modal-body {
+  padding-top: 0px !important;
 }
 
 .ant-modal-content {
@@ -559,6 +569,7 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 8px;
   margin-top: 20px;
 }
+
 .detail-header {
   display: flex;
   align-items: center;
@@ -714,21 +725,37 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 
+.my-2 {
+  margin: 10px 0;
+}
+
 .my-4 {
   margin-top: 20px;
 }
+
 .gap {
-  gap:10px;
+  gap: 10px;
 }
+
 .flex {
   display: flex;
 }
+
+.justify-between {
+  justify-content: space-between;
+}
+.justify-end {
+  justify-content: end;
+}
+
 .align-center {
   align-items: center;
 }
+
 .align-baseline {
   align-items: baseline;
 }
+
 .w-full {
   width: 100%;
 }
@@ -736,7 +763,7 @@ input[type=number]::-webkit-outer-spin-button {
 .ellipsis {
   overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
   max-width: 150px;
 }
 
@@ -745,7 +772,7 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 5px 10px;
   color: #fff;
   border-radius: 5px;
-  border: 1px solid ;
+  border: 1px solid;
 }
 
 
@@ -759,4 +786,11 @@ input[type=number]::-webkit-outer-spin-button {
 
 .delete-icon {
   color: red !important;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
