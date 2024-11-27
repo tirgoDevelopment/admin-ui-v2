@@ -21,6 +21,7 @@ import { OrderModel } from './models/order.model';
 import { CargoStatusCodes } from 'src/app/shared/enum/statusCode.enum';
 import { PageParams } from './models/page-params.interface';
 import { OrderFilterComponent } from './components/order-filter/order-filter.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-orders',
@@ -55,10 +56,25 @@ export class OrdersComponent implements OnInit {
     private readonly transportKindsService: TransportKindsService,
     private readonly transportTypeService: TransportTypesService,
     public readonly translate: TranslateService,
-    private readonly drawer: NzDrawerService
-  ) { }
+    private readonly drawer: NzDrawerService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+
+  }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      const { clientId, driverId } = params;
+      if (clientId || driverId) {
+        this.filter = {
+          ...this.filter,
+          clientId,
+          driverId
+        };
+        this.getAll();
+      }
+    });
     this.loadInitialData();
   }
 
@@ -77,6 +93,7 @@ export class OrdersComponent implements OnInit {
         tap(() => this.setLoading(false))
       )
       .subscribe();
+    this.removeQuery();
   }
 
   private handleOrdersResponse(response: any): void {
@@ -95,12 +112,12 @@ export class OrdersComponent implements OnInit {
     this.loader = status;
   }
 
-  public handleDrawer(action: 'add' | 'edit' | 'view', orderId?: string|number): void {
+  public handleDrawer(action: 'add' | 'edit' | 'view', orderId?: string | number): void {
     const drawerRef = this.createDrawer(action, orderId);
     this.handleDrawerClose(drawerRef);
   }
 
-  private createDrawer(action: 'add' | 'edit' | 'view', orderId?: string|number): any {
+  private createDrawer(action: 'add' | 'edit' | 'view', orderId?: string | number): any {
     return this.drawer.create({
       nzTitle: this.getDrawerTitle(action),
       nzContent: OrderFormComponent,
@@ -145,7 +162,6 @@ export class OrdersComponent implements OnInit {
       },
 
       error: (error: any) => {
-        console.error('Error fetching currencies and cargo types:', error);
       }
     });
   }
@@ -193,5 +209,8 @@ export class OrdersComponent implements OnInit {
     this.pageParams.sortBy = sortField;
     this.pageParams.sortType = sortOrder;
     this.getAll();
+  }
+  removeQuery() {
+    this.router.navigate(['/orders'], { queryParams: {} });
   }
 }

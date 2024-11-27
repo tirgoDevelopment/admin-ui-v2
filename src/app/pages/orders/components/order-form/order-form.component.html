@@ -250,7 +250,7 @@
         <div class="info-row">
           <div class="info-column">
             <div class="info-label">{{'client' | translate}}</div>
-            <div class="info-value">{{data.client.firstName + ' ' + data.client.lastName }} </div>
+            <div class="info-value link" (click)="showClientProfile(data.client.id)">{{data.client.firstName + ' ' + data.client.lastName }} </div>
           </div>
           <div class="info-column">
           </div>

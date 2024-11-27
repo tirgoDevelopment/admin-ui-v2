@@ -446,5 +446,9 @@
     "height": "Bo'yi",
     "client_offer":"Klient taklifi",
     "rejectReason": "Rad etish sababi",
-    "rejectOffer": "Rad etish"
+    "rejectOffer": "Rad etish",
+    "more": "Batafsil",
+    "services": {
+        "title": "Xizmatlar"
+    }
 }

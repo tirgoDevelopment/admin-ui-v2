@@ -22,9 +22,7 @@ import { SendPushComponent } from '../drivers/components/send-push/send-push.com
   templateUrl: './clients.component.html',
   styleUrls: ['./clients.component.scss'],
   standalone: true,
-  imports: [
-    CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule
-  ],
+  imports: [ CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -57,7 +55,8 @@ export class ClientsComponent implements OnInit {
     private translate: TranslateService
   ) { }
 
-  ngOnInit(): void {   }
+  ngOnInit(): void {  
+  }
 
   getAll(): void {
     this.loader = true;
@@ -74,7 +73,7 @@ export class ClientsComponent implements OnInit {
       tap(() => (this.loader = false))
     ).subscribe();
   }
-  handleDrawer(action: 'add' | 'edit' | 'view', item?: ClientModel): void {
+  handleDrawer(action: 'add' | 'edit' | 'view', id?: string | number): void {
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant(
         action === 'add' ? 'add' : 
@@ -84,7 +83,7 @@ export class ClientsComponent implements OnInit {
       nzContent: ClientsFormComponent,
       nzPlacement: 'right',
       nzContentParams: { 
-        data: item,
+        clientId: id,
         mode: action
       }
     });

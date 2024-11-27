@@ -285,7 +285,10 @@
   </div>
 
   <div class="order-info" *ngIf="data">
-    <div class="order-title">{{ 'orders' | translate }}</div>
+    <div class="flex justify-between">
+      <div class="order-title">{{ 'orders' | translate }}</div>
+      <div class="link" (click)="allOrders()">{{ 'more' | translate }}</div>
+    </div>
     <div class="order-summary">
       <div class="order-item">
         <div class="order-count">0</div>

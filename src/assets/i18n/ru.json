@@ -449,5 +449,24 @@
     "rejectReason": "Причина отказа",
     "rejectOffer": "Отклонить предложение",
     "activeOffers": "Активный предложении",
-    "nonActiveOffers": "Не активный предложении"
+    "nonActiveOffers": "Не активный предложении",
+    "more": "Подробнее",
+
+    "priceKzt": "Цена (KZT)",
+    "priceUzs": "Цена (UZS)",
+    "priceTir": "Цена (Tir)",
+    "rate": "Курс",
+    "services": {
+        "title": "Услуги",
+        "serviceId": "Сервис ID",
+        "serviceName": "Наименование сервиса",
+        "driverId": "Водитель ID",
+        "processingTime": "Время начала обработки",
+        "withoutSubscription": "Без подписки",
+        "isLegalEntity": "Юридическое лицо",
+        "from": "От суммы",
+        "fixed": "Фиксированная",
+        "free": "Бесплатно",
+        "individual": "Индивидуальная"
+    }
 }

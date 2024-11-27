@@ -109,14 +109,14 @@
         </a>
         <nz-dropdown-menu #menu="nzDropdownMenu">
           <ul nz-menu nzSelectable>
-            <li nz-menu-item (click)="handleDrawer('view',item)">
+            <li nz-menu-item (click)="handleDrawer('view',item.id)">
               <div class="dropdown-menu">
                 <span nz-icon nzType="info-circle" nzTheme="outline"></span>
                 <span>{{ 'detail' | translate }}</span>
               </div>
             </li>
 
-            <li nz-menu-item (click)="handleDrawer('edit', item)">
+            <li nz-menu-item (click)="handleDrawer('edit', item.id)">
               <div class="dropdown-menu">
                 <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
                 <span>{{ 'edit' | translate }}</span>

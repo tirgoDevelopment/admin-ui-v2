@@ -43,7 +43,6 @@ export class CurrenciesFormComponent implements OnInit {
         code: this.data.code,
       });
     }
-
   }
   onCancel(): void {
     this.drawerRef.close({ success: false });
