@@ -13,6 +13,7 @@ import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { env } from 'src/environmens/environment';
 import { NgxMaskDirective } from 'ngx-mask';
 import { removeDuplicateKeys } from 'src/app/shared/pipes/remove-dublicates-formData';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-clients-form',
@@ -24,7 +25,7 @@ import { removeDuplicateKeys } from 'src/app/shared/pipes/remove-dublicates-form
 export class ClientsFormComponent implements OnInit {
   confirmModal?: NzModalRef;
   siteUrl: string = env.apiUrl + '/references/files/clients/';
-  @Input() data?: ClientModel;
+  @Input() clientId?: number | string;
   @Input() mode?: 'add' | 'edit' | 'view'; 
   @Output() close = new EventEmitter<void>();
   showForm: boolean = false;
@@ -34,7 +35,8 @@ export class ClientsFormComponent implements OnInit {
   previewUrl: string | ArrayBuffer | null = null;
   selectedFile: File | null = null;
   form: FormGroup;
-
+  data: ClientModel;
+  loadingPage:boolean =false;
   countries = [
     { code: 'UZ', name: 'Uzbekistan', flag: 'assets/images/flags/UZ.svg' },
     { code: 'KZ', name: 'Kazakhstan', flag: 'assets/images/flags/KZ.svg' },
@@ -48,11 +50,11 @@ export class ClientsFormComponent implements OnInit {
     private toastr: NotificationService,
     private drawerRef: NzDrawerRef,
     private clientsService: ClientsService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
-    this.previewUrl = this.data?.passportFilePath;
     this.edit = this.mode === 'edit';
     this.form = new FormGroup({
       id: new FormControl(''),
@@ -63,10 +65,13 @@ export class ClientsFormComponent implements OnInit {
     this.getById();
   }
   getById() {
-    if (this.data) {
-      this.clientsService.getById(this.data.id).subscribe((res: Response<ClientModel>) => {
+    if (this.clientId) {
+      this.loadingPage = true;
+      this.clientsService.getById(this.clientId).subscribe((res: Response<ClientModel>) => {
         this.data = res.data;
         this.patchForm();
+        this.previewUrl = this.data?.passportFilePath;
+        this.loadingPage = false;
       });
     }
   }
@@ -163,7 +168,7 @@ export class ClientsFormComponent implements OnInit {
     this.selectedCountry = country;
     this.updateMask();
   }
-  onBlock() {
+  onBlock() { 
     if (this.data.isBlocked) {
       this.clientsService.unblock(this.data.id).subscribe((res: Response<ClientModel>) => {
         this.toastr.success(this.translate.instant('successfullyActivated'), '');
@@ -191,5 +196,9 @@ export class ClientsFormComponent implements OnInit {
       }
     });
   }
-
+  allOrders() {
+    this.router.navigate(['/orders', { clientId: this.data.id  }]);
+    this.drawerRef.close({success: true});
+    
+  }
 }

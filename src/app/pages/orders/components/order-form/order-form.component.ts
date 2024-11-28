@@ -33,6 +33,7 @@ import { SendOfferComponent } from '../send-offer/send-offer.component';
 import { RejectOfferComponent } from '../reject-offer/reject-offer.component';
 import { CargoStatusService } from 'src/app/shared/services/references/cargo-status.service';
 import { CargoStatusModel } from 'src/app/pages/references/cargo-status/models/cargo-status.model';
+import { ClientsFormComponent } from 'src/app/pages/clients/components/clients-form/clients-form.component';
 
 @Component({
   selector: 'app-order-form',
@@ -439,6 +440,29 @@ export class OrderFormComponent implements OnInit, OnDestroy {
         mode: 'view'
       }
     });
+    drawerRef.afterClose.subscribe((result: any) => {
+      if (result?.success) {
+        this.drawerRef.close();
+      }
+    })
+  }
+  showClientProfile(id: number | string) {
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('information'),
+      nzContent: ClientsFormComponent,
+      nzMaskClosable: false,
+      nzPlacement: 'right',
+      nzWidth: '400px',
+      nzContentParams: {
+        clientId: id,
+        mode: 'view'
+      }
+    });
+    drawerRef.afterClose.subscribe((result: any) => {
+      if (result?.success) {
+        this.drawerRef.close();
+      }
+    })
   }
   replyToDriverOffer(offer?: any) {
     const modal = this.modal.create({

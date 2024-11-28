@@ -85,7 +85,8 @@
   <div style="display: flex;gap:10px" *ngIf="isRefrigeratorMode">
     <nz-input-group class="input-group">
       <nz-form-label>{{ 'mode_from' | translate }}</nz-form-label>
-      <input formControlName="refrigeratorFromCount" type="number" nz-input placeholder="{{ 'mode_from' | translate }}" />
+      <input formControlName="refrigeratorFromCount" type="number" nz-input
+        placeholder="{{ 'mode_from' | translate }}" />
       <div *ngIf="form.get('refrigeratorFromCount').hasError('min')" class="error-message">
         {{'min_lengthRefFrom' | translate}}
       </div>
@@ -122,7 +123,8 @@
   <nz-input-group class="input-group">
     <nz-form-label nzRequired>{{'state_number' | translate}}</nz-form-label>
     <input formControlName="transportNumber" type="text" nz-input placeholder="{{ 'state_number' | translate }}" />
-    <div *ngIf="form.get('transportNumber').touched && form.get('transportNumber').hasError('required')" class="error-message">
+    <div *ngIf="form.get('transportNumber').touched && form.get('transportNumber').hasError('required')"
+      class="error-message">
       {{ 'is_empty' | translate }}
     </div>
   </nz-input-group>

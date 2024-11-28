@@ -415,7 +415,9 @@ input:-webkit-autofill:focus {
 .ant-modal-body {
   padding-top: 0px !important;
 }
-
+.ant-modal-confirm-title {
+  margin-top: 20px;
+}
 .ant-modal-content {
   background-color: var(--bgColor) !important;
 
@@ -744,6 +746,7 @@ input[type=number]::-webkit-outer-spin-button {
 .justify-between {
   justify-content: space-between;
 }
+
 .justify-end {
   justify-content: end;
 }
@@ -793,4 +796,10 @@ input[type=number]::-webkit-outer-spin-button {
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+
+.link {
+  color: rgb(0, 38, 255);
+  text-decoration: underline;
+  cursor: pointer;
 }

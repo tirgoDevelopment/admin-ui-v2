@@ -25,10 +25,11 @@ import {
   InfoCircleOutline,
   StarFill,
   PaperClipOutline,
-  HistoryOutline
+  HistoryOutline,
+  FileTextOutline
 } from '@ant-design/icons-angular/icons';
 
-const icons = [UnlockOutline,HistoryOutline,PaperClipOutline,StarFill,InfoCircleOutline,PictureTwoTone,ReloadOutline,FrownFill,TeamOutline,FileSearchOutline,SyncOutline,FilterFill,EllipsisOutline,MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, FormOutline, LogoutOutline,UserOutline,LockOutline,EyeOutline,EyeInvisibleOutline,MailOutline,PlusOutline];
+const icons = [FileTextOutline,UnlockOutline,HistoryOutline,PaperClipOutline,StarFill,InfoCircleOutline,PictureTwoTone,ReloadOutline,FrownFill,TeamOutline,FileSearchOutline,SyncOutline,FilterFill,EllipsisOutline,MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, FormOutline, LogoutOutline,UserOutline,LockOutline,EyeOutline,EyeInvisibleOutline,MailOutline,PlusOutline];
 
 @NgModule({
   imports: [NzIconModule],

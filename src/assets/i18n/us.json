@@ -451,5 +451,9 @@
     "height": "Height",
     "client_offer":"Client offer",
     "rejectReason": "Reject reason",
-    "rejectOffer": "Reject offer"
+    "rejectOffer": "Reject offer",
+    "more": "More",
+    "services": {
+        "title": "Services"
+    }
 }

@@ -1,0 +1,63 @@
+<form [formGroup]="form">
+  <nz-input-group class="input-group">
+    <nz-form-label nzRequired>{{'named' | translate}}</nz-form-label>
+    <input formControlName="name" type="text" nz-input placeholder="{{'named' | translate}}" />
+  </nz-input-group>
+  <nz-input-group class="input-group">
+    <nz-form-label nzRequired>{{'code' | translate}}</nz-form-label>
+    <input formControlName="code" type="text" nz-input placeholder="{{'code' | translate}}" />
+  </nz-input-group>
+
+  <nz-input-group class="input-group">
+    <nz-form-label nzRequired>{{ 'type' | translate }}</nz-form-label>
+    <nz-select nzPlaceHolder="{{ 'type' | translate }}" formControlName="type" style="width: 100% !important;"
+      (ngModelChange)="onTypeChange($event)">
+      <nz-option nzValue="from" nzLabel="{{ 'services.from' | translate }}"></nz-option>
+      <nz-option nzValue="fixed" nzLabel="{{ 'services.fixed' | translate }}"></nz-option>
+      <nz-option nzValue="free" nzLabel="{{ 'services.free' | translate }}"></nz-option>
+      <nz-option nzValue="individual" nzLabel="{{ 'services.individual' | translate }}"></nz-option>
+    </nz-select>
+  </nz-input-group>
+
+  <div *ngIf="showAmounts" class="amount-fields">
+    <nz-input-group class="input-group">
+      <nz-form-label nzRequired>{{ 'priceUzs' | translate }}</nz-form-label>
+      <input formControlName="uzsAmount" type="text" nz-input placeholder="{{ 'priceUzs' | translate }}"
+        mask="separator.2" />
+    </nz-input-group>
+
+    <nz-input-group class="input-group">
+      <nz-form-label nzRequired>{{ 'priceKzt' | translate }}</nz-form-label>
+      <input formControlName="kztAmount" type="text" nz-input placeholder="{{ 'priceKzt' | translate }}"
+        mask="separator.2" />
+    </nz-input-group>
+
+    <nz-input-group class="input-group">
+      <nz-form-label nzRequired>{{ 'priceTir' | translate }}</nz-form-label>
+      <input formControlName="tirAmount" type="text" nz-input placeholder="{{ 'priceTir' | translate }}"
+        mask="separator.2" />
+    </nz-input-group>
+  </div>
+
+
+  <nz-input-group class="input-group">
+    <nz-form-label nzRequired>{{ 'description' | translate }}</nz-form-label>
+    <input formControlName="description" type="text" nz-input placeholder="{{ 'description' | translate }}" />
+  </nz-input-group>
+
+  <nz-input-group class="input-group">
+    <label nz-checkbox formControlName="withoutSubscription">{{ 'services.withoutSubscription' | translate
+      }}</label>
+    <label nz-checkbox formControlName="isLegalEntity">{{ 'services.isLegalEntity' | translate }}</label>
+  </nz-input-group>
+
+  <div class="button-wrapper">
+    <button nz-button class="danger-button" (click)="onCancel()">
+      {{ 'cancel' | translate }}
+    </button>
+    <button nz-button class="success-button" (click)="onSubmit()" [nzLoading]="loading" [disabled]="form.invalid">
+      {{ 'save' | translate }}
+    </button>
+  </div>
+
+</form>

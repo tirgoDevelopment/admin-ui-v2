@@ -15,6 +15,7 @@ import { DriversService } from '../../services/drivers.service';
 import { jwtDecode } from 'jwt-decode';
 import { AddTransportComponent } from '../add-transport/add-transport.component';
 import { TransportModel } from 'src/app/pages/references/transport-types/models/transport.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-driver-form',
@@ -59,7 +60,8 @@ export class DriverFormComponent implements OnInit {
     private drawerRef: NzDrawerRef,
     private driversService: DriversService,
     private translate: TranslateService,
-    private drawer: NzDrawerService
+    private drawer: NzDrawerService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -274,5 +276,9 @@ export class DriverFormComponent implements OnInit {
     drawerRef.afterClose.subscribe((res: any) => {
       this.getById()
     });
+  }
+  allOrders() {
+    this.router.navigate(['/orders', { driverId: this.data.id  }]);
+    this.drawerRef.close({success: true});
   }
 }

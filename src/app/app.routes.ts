@@ -3,7 +3,6 @@ import { MainComponent } from "./shared/components/main/main.component";
 import { AuthComponent } from "./pages/auth/auth.component";
 import { NoAuthGuard } from "./shared/guards/noAuth.guard";
 import { AuthGuard } from "./shared/guards/auth.guard";
-import { HistoryTransactionComponent } from "./pages/merchant/merchant-client/components/history-transaction/history-transaction.component";
 
 export const appRoutes: Route[] = [
   {
@@ -21,6 +20,7 @@ export const appRoutes: Route[] = [
       { path: 'merchant-client/transactions/:id/:name', loadChildren: () => import('./pages/merchant/merchant-client/components/history-transaction/history-transaction.routes').then(m => m.default), canActivate: [AuthGuard]},
       { path: 'merchant-driver', loadChildren: () => import('./pages/merchant/merchant-driver/merchant-driver.routes').then(m => m.default), canActivate: [AuthGuard]},
       { path: 'merchant-driver/transactions/:id/:name', loadChildren: () => import('./pages/merchant/merchant-driver/components/history-transaction/history-transaction.routes').then(m => m.default), canActivate: [AuthGuard]},
+      { path: 'services', loadChildren: () => import('./pages/services/services.routes').then(m => m.default), canActivate: [AuthGuard] },
 
       // References
       { path: 'references/cargo-type-groups', loadChildren: () => import('./pages/references/cargo-type-groups/cargo-type-groups.routes').then(m => m.default), canActivate: [AuthGuard] },
@@ -33,6 +33,7 @@ export const appRoutes: Route[] = [
       { path: 'references/loading-method', loadChildren: () => import('./pages/references/loading-method/loading-method.routes').then(m => m.default), canActivate: [AuthGuard] },
       { path: 'references/cargo-packages', loadChildren: () => import('./pages/references/cargo-packages/cargo-packages.routes').then(m => m.default), canActivate: [AuthGuard] },
       { path: 'references/roles', loadChildren: () => import('./pages/references/roles/roles.routes').then(m => m.default), canActivate: [AuthGuard] },
+      { path: 'references/services', loadChildren: () => import('./pages/references/services/services.routes').then(m => m.default), canActivate: [AuthGuard] },
     ]
   },
   {
