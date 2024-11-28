@@ -1,0 +1,31 @@
+<div class="chat-container">
+    <div class="chat-card">
+      <div class="chat-header">
+        <img src="https://images.unsplash.com/photo-1527430253228-e93688616381?w=50&h=50" alt="Bot Avatar" class="bot-avatar" />
+        <div class="header-info">
+          <h2>Customer Support</h2>
+          <span class="status">Online</span>
+        </div>
+      </div>
+      <div class="chat-messages" #scrollContainer>
+        <div *ngFor="let message of messages" [ngClass]="{'message': true, 'sent': message.sender === 'user', 'received': message.sender === 'bot'}">
+          <div class="message-content">{{message.text}}</div>
+          <div class="message-time">{{message.timestamp | date:'shortTime'}}</div>
+        </div>
+        <div *ngIf="isTyping" class="typing-indicator">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+      <div class="quick-replies" *ngIf="showQuickReplies">
+        <button *ngFor="let reply of quickReplies" (click)="sendQuickReply(reply)" class="quick-reply-btn">{{reply}}</button>
+      </div>
+      <div class="chat-input">
+        <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type your message..." aria-label="Message input" />
+        <button (click)="sendMessage()" aria-label="Send message" [disabled]="!newMessage.trim()">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>

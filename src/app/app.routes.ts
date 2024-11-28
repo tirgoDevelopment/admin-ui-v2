@@ -3,7 +3,6 @@ import { MainComponent } from "./shared/components/main/main.component";
 import { AuthComponent } from "./pages/auth/auth.component";
 import { NoAuthGuard } from "./shared/guards/noAuth.guard";
 import { AuthGuard } from "./shared/guards/auth.guard";
-import { HistoryTransactionComponent } from "./pages/merchant/merchant-client/components/history-transaction/history-transaction.component";
 
 export const appRoutes: Route[] = [
   {

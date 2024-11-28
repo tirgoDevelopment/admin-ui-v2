@@ -8,6 +8,7 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { Response } from 'src/app/shared/models/reponse';
+
 @Component({
   selector: 'app-service-form',
   templateUrl: './service-form.component.html',
@@ -15,13 +16,13 @@ import { Response } from 'src/app/shared/models/reponse';
   standalone: true,
   imports: [NzModules, TranslateModule, CommonModules],
 })
+
 export class ServiceFormComponent implements OnInit {
   @Input() data?: any;
   @Output() close = new EventEmitter<void>();
   showForm: boolean = false;
   loading: boolean = false;
   showAmounts: boolean = false;
-
   form: FormGroup = new FormGroup({
     name: new FormControl(null, [Validators.required]),
     code: new FormControl(null, [Validators.required]),
@@ -31,6 +32,7 @@ export class ServiceFormComponent implements OnInit {
     type: new FormControl(null, [Validators.required]),
     withoutSubscription: new FormControl(false, [Validators.required]),
     isLegalEntity: new FormControl(false, [Validators.required]),
+    description: new FormControl(null, [Validators.required]),
   });
 
   constructor(
@@ -40,7 +42,7 @@ export class ServiceFormComponent implements OnInit {
     private serviceApi: ServicesService) { }
 
   ngOnInit(): void {
-    if(this.data) {
+    if (this.data) {
       this.patchForm();
       this.updateAmountValidators(this.data.type);
     }
@@ -54,7 +56,7 @@ export class ServiceFormComponent implements OnInit {
         code: this.data.code,
         uzsAmount: this.data.uzsAmount,
         kztAmount: this.data.kztAmount,
-        tirAmount : this.data.tirAmount ,
+        tirAmount: this.data.tirAmount,
         type: this.data.type,
         withoutSubscription: this.data.withoutSubscription,
         isLegalEntity: this.data.isLegalEntity
@@ -69,7 +71,7 @@ export class ServiceFormComponent implements OnInit {
     this.loading = true;
     const formValue = { ...this.form.value };
 
-    if (formValue.type == 'fixed' || formValue.type == 'from') {
+    if (formValue.type !== 'fixed' && formValue.type !== 'from') {
       formValue.uzsAmount = '0';
       formValue.kztAmount = '0';
       formValue.tirAmount = '0';
@@ -86,7 +88,7 @@ export class ServiceFormComponent implements OnInit {
         this.drawerRef.close({ success: true });
         this.form.reset();
       }
-    },(error) => {
+    }, (error) => {
       this.loading = false;
     });
   }
@@ -112,4 +114,5 @@ export class ServiceFormComponent implements OnInit {
   onTypeChange(value: string): void {
     this.updateAmountValidators(value);
   }
+  
 }

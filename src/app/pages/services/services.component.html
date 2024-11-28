@@ -6,6 +6,10 @@
                 <span nz-icon nzType="filter" nzTheme="fill"></span>
                 {{ 'filter' | translate }}
             </button>
+            <button nz-button class="success-button" (click)="addService()">
+                <span nz-icon nzType="plus"></span>
+                {{ 'add' | translate }}
+            </button>
         </div>
     </div>
 
@@ -85,7 +89,7 @@
         <thead>
             <tr>
                 <th>No</th>
-                <th nzColumnKey="serviceId" [nzSortFn]="true">{{ 'services.serviceId' | translate }}</th>
+                <th>{{ 'services.serviceId' | translate }}</th>
                 <th>{{ 'services.serviceName' | translate }}</th>
                 <th>{{ 'services.driverId' | translate }}</th>
                 <th>{{ 'state_number_truck' | translate }}</th>
@@ -97,15 +101,15 @@
         </thead>
 
         <tbody>
-            <tr style="cursor: pointer;" *ngFor="let data of sortTable.data; let i = index">
+            <tr style="cursor: pointer;" *ngFor="let item of data; let i = index">
                 <td>{{i+1}}</td>
-                <td>{{data.id}}</td>
-                <td class="ellipsis">{{data.serviceName}}</td>
-                <td class="ellipsis">{{data.driverId}}</td>
-                <td class="ellipsis">{{data.state_number_truck}}</td>
-                <td> {{data.createdAt | date : 'dd.MM.yyyy'}} </td>
-                <td>{{data.sendDate | date : 'dd.MM.yyyy'}}</td>
-                <td>{{data.amount | priceFormat}} {{data.currency?.name}}</td>
+                <td>{{item.id}}</td>
+                <td class="ellipsis">{{item.serviceName}}</td>
+                <td class="ellipsis">{{item.driverId}}</td>
+                <td class="ellipsis">{{item.state_number_truck}}</td>
+                <td> {{item.createdAt | date : 'dd.MM.yyyy'}} </td>
+                <td>{{item.sendDate | date : 'dd.MM.yyyy'}}</td>
+                <td>{{item.amount | priceFormat}} {{item.currency?.name}}</td>
                 <td class="action-col" nzRight (click)="$event.stopPropagation()">
                     <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
                         <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>

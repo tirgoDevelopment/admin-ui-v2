@@ -36,11 +36,20 @@ export class ServicesComponent implements OnInit {
   }
 
   getAll() {
-    this.serviceApi.getServiceList().subscribe((res: Response<ServiceModel[]>) => {
-      if (res && res.success) {
-        this.data = res.data;
+    this.loader = true;
+    this.serviceApi.getServiceList().subscribe({
+      next: (res: Response<ServiceModel[]>) => {
+        if (res && res.success) {
+          this.data = res.data;
+        }
+      },
+      error: () => {
+        this.toastr.error(this.translate.instant('errorOccurred'), '');
+      },
+      complete: () => {
+        this.loader = false;
       }
-    })
+    });
   }
   add(): void {
     const drawerRef: any = this.drawer.create({
@@ -76,12 +85,17 @@ export class ServicesComponent implements OnInit {
       nzCancelText: this.translate.instant('cancel'),
       nzOkDanger: true,
       nzOnOk: () =>
-        this.serviceApi.deleteService(id).subscribe((res: any) => {
+      this.serviceApi.deleteService(id).subscribe({
+        next: (res: any) => {
           if (res && res.success) {
             this.toastr.success(this.translate.instant('successfullDeleted'), '');
             this.getAll();
           }
-        }),
+        },
+        error: () => {
+          this.toastr.error(this.translate.instant('errorOccurred'), '');
+        }
+      })
     });
   }
 }

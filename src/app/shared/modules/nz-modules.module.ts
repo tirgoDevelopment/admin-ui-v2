@@ -31,6 +31,7 @@ import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzCardModule } from 'ng-zorro-antd/card';
+import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
 
 
 @NgModule({
@@ -66,7 +67,8 @@ import { NzCardModule } from 'ng-zorro-antd/card';
         NzStepsModule,
         NzBadgeModule,
         NzBreadCrumbModule,
-        NzCardModule
+        NzCardModule,
+        NzAutocompleteModule
     ],
 
     exports: [
@@ -101,7 +103,8 @@ import { NzCardModule } from 'ng-zorro-antd/card';
         NzStepsModule,
         NzBadgeModule,
         NzBreadCrumbModule,
-        NzCardModule
+        NzCardModule,
+        NzAutocompleteModule
     ],
 })
 export class NzModules {}

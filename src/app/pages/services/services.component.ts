@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
@@ -7,6 +7,10 @@ import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { PageParams } from '../orders/models/page-params.interface';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { trigger, style, transition, animate, state } from '@angular/animations';
+import { ServicesService } from './services/services.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { ServiceFormComponent } from './components/service-form/service-form.component';
 
 @Component({
   selector: 'app-services',
@@ -35,13 +39,31 @@ export class ServicesComponent implements OnInit {
     sortBy: '',
     sortType: '',
   };
-  constructor() {}
+  constructor(
+    private servicesService: ServicesService,
+    private drawer: NzDrawerService,
+    private translate: TranslateService
+  ) {}
   ngOnInit(): void {
     
   }
 
   getAll() {
+    
+  }
 
+  addService() {
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('add'),
+      nzContent: ServiceFormComponent,
+      nzPlacement: 'right',
+    });
+    drawerRef.afterClose.subscribe((result: any) => {
+      if (result && result.success) {
+        this.getAll();
+        drawerRef.componentInstance?.form.reset();
+      }
+    });
   }
 
   public onQueryParamsChange(params: NzTableQueryParams): void {
@@ -54,11 +76,9 @@ export class ServicesComponent implements OnInit {
     this.pageParams.sortType = sortOrder;
     this.getAll();
   }
-  
   public toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
-
   public resetFilter(): void {
     this.filter = this.initializeFilter();
     this.getAll();

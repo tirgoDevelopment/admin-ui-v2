@@ -364,7 +364,7 @@
     <nz-tab nzTitle="{{ 'transport' | translate }}" *ngIf="data?.driverTransports">
       <div>
         <nz-collapse>
-          <nz-collapse-panel *ngFor="let transport of data?.driverTransports" [nzHeader]="transport.name">
+          <nz-collapse-panel *ngFor="let transport of data?.driverTransports" [nzHeader]="transport.brand">
             <div class="order-info" style="margin: 0; padding: 0;border: none;">
               <div class="info-row">
                 <div class="info-column" style="width: 100%;">
@@ -379,26 +379,41 @@
                 <div class="info-column">
                   <div class="info-label">{{ 'type_transport' | translate }}</div>
                   <div class="info-value">
-                    <p *ngFor="let type of transport.transportTypes">{{ type.name }}</p>
+                    <p>{{ transport.transportType.name }}</p>
                   </div>
                 </div>
 
                 <div class="info-column">
                   <div class="info-label">{{ 'transport_kind' | translate }}</div>
                   <div class="info-value">
-                    <p *ngFor="let type of transport.transportKinds">{{ type.name }}</p>
+                    <p>{{ transport.transportKind.name }}</p>
                   </div>
                 </div>
               </div>
               <div class="info-row">
                 <div class="info-column">
+                  <div class="info-label">{{ 'load_side' | translate }}</div>
+                  <div class="info-value" *ngFor="let item of transport.cargoLoadMethods">
+                    <p>{{ item.name }}</p>
+                  </div>
+                </div>
+
+                <!-- <div class="info-column">
+                  <div class="info-label">{{ 'transport_kind' | translate }}</div>
+                  <div class="info-value">
+                    <p>{{ transport.transportKind.name }}</p>
+                  </div>
+                </div> -->
+              </div>
+              <div class="info-row">
+                <div class="info-column">
                   <div class="info-label">{{ 'state_number_truck' | translate }}</div>
-                  <div class="info-value">{{transport.stateNumber}}</div>
+                  <div class="info-value">{{transport.transportNumber}}</div>
                 </div>
 
                 <div class="info-column">
                   <div class="info-label">{{ 'state_number_trailer' | translate }}</div>
-                  <div class="info-value">{{transport.stateNumberTrailer}}</div>
+                  <div class="info-value">{{transport.stateNumberTrailer ? transport.stateNumberTrailer : 'no_data' | translate}}</div>
                 </div>
               </div>
               <div class="info-row" *ngIf="transport.cisternVolume">
