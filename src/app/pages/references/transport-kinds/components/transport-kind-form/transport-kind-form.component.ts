@@ -26,9 +26,8 @@ export class TransportKindFormComponent implements OnInit {
   form: FormGroup = new FormGroup({
     id: new FormControl(''),
     name: new FormControl('', Validators.required),
-    count: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required),
     isMode: new FormControl(false),
+    code: new FormControl('', Validators.required),
   });
 
   constructor(
@@ -47,9 +46,8 @@ export class TransportKindFormComponent implements OnInit {
       this.form.patchValue({
         id: this.data.id,
         name: this.data.name,
-        count: this.data.count,
-        description: this.data.description,
-        isMode: this.data.isMode
+        isMode: this.data.isMode,
+        code: this.data.code
       });
     }
 
@@ -60,6 +58,7 @@ export class TransportKindFormComponent implements OnInit {
   }
   onSubmit() {
     this.loading = true;
+    this.form.value.code = Number(this.form.value.code)
     const submitObservable = this.data
       ? this.transportKindsService.update(this.form.value)
       : this.transportKindsService.create(this.form.value);

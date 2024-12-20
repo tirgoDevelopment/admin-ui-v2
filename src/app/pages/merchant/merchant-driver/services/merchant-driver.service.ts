@@ -16,7 +16,7 @@ export class MerchantDriverService {
     this.closeEvent.next(data);
   }
   getVerified(params?: any, filter?: any): Observable<Response<DriverMerchantModel[]>> {
-    return this.http.get<Response<DriverMerchantModel[]>>(`${env.adminUrl}/users/driver-merchants/verified-driver-merchants` +
+    return this.http.get<Response<DriverMerchantModel[]>>(`${env.apiUrl}/users/driver-merchants/verified-driver-merchants` +
       `?pageIndex=${(params?.pageIndex ?? 1) - 1}` +
       `&pageSize=${params?.pageSize ?? ''}` +
       `&sortBy=${params?.sortBy ?? ''}` +
@@ -24,30 +24,45 @@ export class MerchantDriverService {
       `&${filter ?? ''}`)
   }
   getUnverified(): Observable<Response<DriverMerchantModel[]>> {
-    return this.http.get<Response<DriverMerchantModel[]>>(`${env.adminUrl}/users/driver-merchants/unverified-driver-merchants`)
+    return this.http.get<Response<DriverMerchantModel[]>>(`${env.apiUrl}/users/driver-merchants/unverified-driver-merchants`)
   }
   verify(id: number | string) {
-    return this.http.patch<Response<DriverMerchantModel>>(`${env.adminUrl}/users/driver-merchants/verify-driver-merchant?id=${id}`, {})
+    return this.http.patch<Response<DriverMerchantModel>>(`${env.apiUrl}/users/driver-merchants/verify-driver-merchant?id=${id}`, {})
   }
   reject(id: number | string) {
-    return this.http.patch<Response<DriverMerchantModel>>(`${env.adminUrl}/users/driver-merchants/reject-driver-merchant?id=${id}`, {})
+    return this.http.patch<Response<DriverMerchantModel>>(`${env.apiUrl}/users/driver-merchants/reject-driver-merchant?id=${id}`, {})
   }
   update(data: DriverMerchantModel) {
-    return this.http.put<Response<DriverMerchantModel>>(`${env.adminUrl}/users/driver-merchants/update-driver-merchant`, data)
+    return this.http.put<Response<DriverMerchantModel>>(`${env.apiUrl}/users/driver-merchants/update-driver-merchant`, data)
   }
   block(id: number | string) {
-    return this.http.patch<Response<DriverMerchantModel>>(`${env.adminUrl}/users/driver-merchants/block-driver-merchant?id=${id}`, {})
+    return this.http.patch<Response<DriverMerchantModel>>(`${env.apiUrl}/users/driver-merchants/block-driver-merchant?id=${id}`, {})
   }
   activate(id: number | string) {
-    return this.http.patch<Response<DriverMerchantModel>>(`${env.adminUrl}/users/driver-merchants/unblock-driver-merchant?id=${id}`, {})
+    return this.http.patch<Response<DriverMerchantModel>>(`${env.apiUrl}/users/driver-merchants/unblock-driver-merchant?id=${id}`, {})
   }
-  transactions(id:any,params?: any, filter?: any) {
-    return this.http.get<Response<DriverMerchantModel>>(`${env.adminUrl}/finance/transaction/driver-merchant-transactions?userId=`+id )
+  balanceTransactions(tmsId:any,params?: any, filter?: any) {
+    return this.http.get<Response<DriverMerchantModel>>(`${env.apiUrl}/users/driver-merchants/${tmsId}/balance/transactions` )
+  }
+  tmsBalance(tmsId:any) {
+    return this.http.get<Response<DriverMerchantModel>>(`${env.apiUrl}/users/driver-merchants/${tmsId}/balance`)
   }
   getMerchantDrivers() {
-    return this.http.get(env.adminUrl+'/users/driver-merchants/all-driver-merchants')
+    return this.http.get(env.apiUrl+'/users/driver-merchants/all-driver-merchants')
   }
   getMerchantVerifiedDrivers() {
-    return this.http.get(env.adminUrl+'/users/driver-merchants/verified-driver-merchants')
+    return this.http.get(env.apiUrl+'/users/driver-merchants/verified-driver-merchants')
+  }
+  getById(id:any) {
+    return this.http.get(env.apiUrl+'/users/driver-merchants/driver-merchant-by?id='+id)
+  }
+  topupBalance(data:any) {
+    return this.http.post(env.apiUrl+`/users/driver-merchants/${data.tmsId}/balance-income`,data)
+  }
+  appendDriver(data:any) {
+    return this.http.post(env.apiUrl+`/users/driver-merchants/append-driver`,data)
+  }
+  unassignDriver(id:number|string) {
+    return this.http.post(env.apiUrl+`/users/driver-merchants/unassign-driver/${id}`,{})
   }
 }

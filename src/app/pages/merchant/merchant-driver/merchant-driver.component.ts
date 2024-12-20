@@ -120,6 +120,9 @@ export class MerchantDriverComponent implements OnInit {
   showHistoryTransaction(item:DriverMerchantModel) {
     this.router.navigate([`/merchant-driver/transactions/${item.id}/${item.companyType + ' ' + item.companyName}`]);
   }
+  showDrivers(item:DriverMerchantModel) {
+    this.router.navigate([`/merchant-driver/drivers/${item.id}`]);
+  }
   onPageIndexChange(pageIndex: number): void {
     this.pageParams.pageIndex = pageIndex;
     this.getVerified();
@@ -162,8 +165,6 @@ export class MerchantDriverComponent implements OnInit {
     }
   }
   blockModal(item:DriverMerchantModel): void {
-    console.log(item);
-    
     this.confirmModal = this.modal.confirm({
       nzTitle: this.translate.instant('are_you_sure'),
       nzContent: this.translate.instant('block_sure'),

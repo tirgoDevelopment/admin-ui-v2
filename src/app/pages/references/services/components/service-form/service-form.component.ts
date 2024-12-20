@@ -50,17 +50,7 @@ export class ServiceFormComponent implements OnInit {
   }
   patchForm() {
     if (this.data) {
-      this.form.patchValue({
-        id: this.data.id,
-        name: this.data.name,
-        code: this.data.code,
-        uzsAmount: this.data.uzsAmount,
-        kztAmount: this.data.kztAmount,
-        tirAmount: this.data.tirAmount,
-        type: this.data.type,
-        withoutSubscription: this.data.withoutSubscription,
-        isLegalEntity: this.data.isLegalEntity
-      });
+      this.form.patchValue(this.data);
     }
   }
   onCancel(): void {

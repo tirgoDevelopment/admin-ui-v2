@@ -7,10 +7,12 @@
         {{ 'filter' | translate }}
       </button>
       
-      <button nz-button class="success-button" (click)="sendNotification()">
+      <!-- <button nz-button class="success-button" (click)="sendNotification()">
         {{ 'send' | translate }}
+      </button> -->
+      <button nz-button class="success-button" (click)="topupBalance()">
+        {{ 'top_up_balance' | translate }}
       </button>
-
       <button nz-button class="success-button" (click)="handleDrawer('add')">
         <span nz-icon nzType="plus" nzTheme="outline"></span>
         {{ 'add' | translate }}
@@ -83,22 +85,23 @@
 </div>
 
 
-<nz-table #sortTable [nzShowSizeChanger]="true" [nzShowPagination]="false" [nzSize]="'middle'" [nzData]="data"
-  [nzLoading]="loader" [nzNoResult]="empty" (nzQueryParams)="onQueryParamsChange($event)">
+<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content' }" [nzFrontPagination]="false"
+[nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"
+(nzQueryParams)="onQueryParamsChange($event)">
   <thead>
     <tr>
       <th>No</th>
       <th nzColumnKey="id" [nzSortFn]="true">ID</th>
-      <th nzColumnKey="firstName" [nzSortFn]="true">{{ 'full_name' | translate }}</th>
+      <th>{{ 'full_name' | translate }}</th>
       <th>{{ 'phone' | translate }}</th>
       <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
-      <th nzColumnKey="isBusy" [nzSortFn]="true">{{ 'status' | translate }}</th>
+      <th>{{ 'status' | translate }}</th>
       <th></th>
     </tr>
   </thead>
 
   <tbody>
-    <tr *ngFor="let item of data; let i = index">
+    <tr *ngFor="let item of data; let i = index" (click)="handleDrawer('view',item.id)">
       <td> {{ i+1 }} </td>
       <td> {{ item.id }} </td>
       <td> {{ item.firstName }} {{ item.lastName }} </td>
@@ -113,7 +116,7 @@
         <span *ngIf="!item?.isBusy" class="edit-icon">{{'not_busy' | translate}}</span>
       </td>
     
-      <td class="action-col">
+      <td class="action-col" (click)="$event.stopPropagation()">
         <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
           <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
         </a>
@@ -140,12 +143,12 @@
               </div>
             </li>
 
-            <li nz-menu-item (click)="assignTmc(item)">
+            <!-- <li nz-menu-item (click)="assignTmc(item)">
               <div class="dropdown-menu">
                 <span nz-icon nzType="paper-clip" nzTheme="outline"></span>
                 <span>{{ 'assign_driver' | translate }}</span>
               </div>
-            </li>
+            </li> -->
 
           </ul>
         </nz-dropdown-menu>
@@ -153,10 +156,6 @@
     </tr>
   </tbody>
 </nz-table>
-<nz-pagination [nzPageIndex]="pageParams.pageIndex" [nzTotal]="pageParams.totalPagesCount" nzShowSizeChanger
-  [nzPageSize]="pageParams.pageSize" (nzPageSizeChange)="onPageSizeChange($event)"
-  (nzPageIndexChange)="onPageIndexChange($event)">
-</nz-pagination>
 <ng-template #empty>
   <nz-empty #empty nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
     [nzNotFoundContent]="contentTpl">

@@ -1,6 +1,6 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, throwError, timeout } from 'rxjs';
 import { AuthService } from 'src/app/pages/auth/services/auth.service';
 
 export const authInterceptor = (
@@ -17,6 +17,7 @@ export const authInterceptor = (
         });
     }
     return next(newReq).pipe(
+        timeout(50000),
         catchError((error) => {
             if (error instanceof HttpErrorResponse && error.status === 401) {
                 authService.signOut();

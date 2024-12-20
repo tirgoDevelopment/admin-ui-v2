@@ -1,0 +1,45 @@
+<form [formGroup]="form">
+
+    <nz-input-group class="input-group">
+      <nz-form-label nzRequired>{{ 'named' | translate }}</nz-form-label>
+      <input formControlName="name" type="text" nz-input placeholder="{{ 'named' | translate }}" required />
+      <div *ngIf="form.get('name').touched && form.get('name').hasError('required')" class="error-message">
+        {{ 'name_required' | translate }}
+      </div>
+    </nz-input-group>
+  
+    <nz-input-group class="input-group">
+      <nz-form-label nzRequired>{{'code' | translate}}</nz-form-label>
+      <input formControlName="code" type="number" nz-input placeholder="{{'code' | translate}}" />
+      <div *ngIf="form.get('code').touched && form.get('code').hasError('required')" class="error-message">
+        {{ 'code_required' | translate }}
+      </div>
+    </nz-input-group>
+
+    <nz-input-group class="input-group">
+        <nz-form-label nzRequired>{{ 'color' | translate }}</nz-form-label>
+        <input
+          formControlName="color"
+          type="color"
+          nz-input
+          placeholder="{{ 'color' | translate }}"
+          style="width: 100%;"
+        />
+        <div
+          *ngIf="form.get('color').touched && form.get('color').hasError('required')"
+          class="error-message"
+        >
+          {{ 'color_required' | translate }}
+        </div>
+      </nz-input-group>
+
+    <div class="button-wrapper">
+      <button nz-button class="danger-button" (click)="onCancel()">
+        {{ 'cancel' | translate }}
+      </button>
+      <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()" [disabled]="form.invalid || loading">
+        {{ 'save' | translate }}
+      </button>
+    </div>
+  
+  </form>

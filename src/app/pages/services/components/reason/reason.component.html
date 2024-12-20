@@ -1,0 +1,31 @@
+<form [formGroup]="form">
+  <nz-input-group class="input-group">
+    <nz-form-label>{{ "cancel_reason" | translate }}</nz-form-label>
+    <input
+      formControlName="cancelReason"
+      type="text"
+      nz-input
+      placeholder="{{ 'cancel_reason' | translate }}"
+    />
+  </nz-input-group>
+
+  <div class="button-wrapper">
+    <button
+      [nzLoading]="loading"
+      nz-button
+      (click)="onCancel()"
+      [disabled]="loading"
+    >
+      {{ "cancel" | translate }}
+    </button>
+    <button
+      [nzLoading]="loading"
+      nz-button
+      class="danger-button"
+      (click)="onSubmit()"
+      [disabled]="loading"
+    >
+      {{ "confirm" | translate }}
+    </button>
+  </div>
+</form>

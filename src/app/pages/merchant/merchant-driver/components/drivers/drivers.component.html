@@ -1,0 +1,124 @@
+<div class="header-page">
+    <nz-breadcrumb>
+        <nz-breadcrumb-item>
+            <a routerLink="/merchant-driver">{{ 'merchant_driver' | translate }}</a>
+        </nz-breadcrumb-item>
+        <nz-breadcrumb-item>{{ 'drivers' | translate }} {{merchantName}}</nz-breadcrumb-item>
+    </nz-breadcrumb>
+    <div class="button-group">
+        <button nz-button class="secondary-button" (click)="toggleFilter()">
+            <span nz-icon nzType="filter" nzTheme="fill"></span>
+            {{ 'filter' | translate }}
+        </button>
+        <button nz-button class="success-button" (click)="addDriver()">
+            <span nz-icon nzType="plus" nzTheme="outline"></span>
+            {{ 'add' | translate }}
+        </button>
+
+    </div>
+</div>
+
+<div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
+    <div>
+        <nz-input-group class="input-group">
+            <input [(ngModel)]="filter['transactionType'] " type="text" nz-input
+                placeholder="{{ 'transactionType' | translate }}" />
+        </nz-input-group>
+    </div>
+    <div>
+        <nz-input-group class="input-group">
+            <nz-date-picker [(ngModel)]="filter['fromDate']" type="date" nz-input [nzAllowClear]="false"
+                nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
+            </nz-date-picker>
+        </nz-input-group>
+    </div>
+    <div>
+        <nz-input-group class="input-group">
+            <nz-date-picker [(ngModel)]="filter['toDate']" type="date" nz-input [nzAllowClear]="false"
+                nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
+            </nz-date-picker>
+        </nz-input-group>
+    </div>
+
+    <button nz-button nzType="primary" class="search-button" (click)="getAll()">
+        <span nz-icon nzType="search" nzTheme="outline"></span>
+    </button>
+    <button nz-button class="reset-button" (click)="resetFilter()">
+        <span nz-icon nzType="reload" nzTheme="outline"></span>
+    </button>
+
+</div>
+
+<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content' }"
+    [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount"
+    [nzShowSizeChanger]="true" [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th nzColumnKey="id" [nzSortFn]="true">ID</th>
+            <th>{{ 'full_name' | translate }}</th>
+            <th>{{ 'phone' | translate }}</th>
+            <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
+            <th>{{ 'status' | translate }}</th>
+            <th nzRight></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of data; let i = index">
+            <td> {{ i+1 }} </td>
+            <td> {{ item.id }} </td>
+            <td> {{ item.firstName }} {{ item.lastName }} </td>
+            <td>
+                <span *ngIf="item.phoneNumbers[0]?.code">{{ item.phoneNumbers[0]?.code + item.phoneNumbers[0]?.number |
+                    phoneFormat}}</span>
+                <span *ngIf="!item.phoneNumbers[0]?.code">{{ 'no_data' | translate}}</span>
+            </td>
+            <td> {{ item.createdAt | date : 'dd.MM.yyyy' }} </td>
+            <td>
+                <span *ngIf="item?.isBusy" class="delete-icon">{{'busy' | translate}}</span>
+                <span *ngIf="!item?.isBusy" class="edit-icon">{{'not_busy' | translate}}</span>
+            </td>
+            <td nzRight class="action-col">
+                <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
+                    <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
+                </a>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <ul nz-menu nzSelectable>
+                        <li nz-menu-item (click)="handleDrawer('view',item.id)">
+                            <div class="dropdown-menu">
+                                <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+                                <span>{{ 'detail' | translate }}</span>
+                            </div>
+                        </li>
+                        <li nz-menu-item (click)="handleDrawer('edit', item.id)">
+                            <div class="dropdown-menu">
+                                <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
+                                <span>{{ 'edit' | translate }}</span>
+                            </div>
+                        </li>
+                        <li nz-menu-item
+                        nz-popconfirm
+                        nzPopconfirmTitle="{{'are_you_sure' | translate }}"
+                        nzPopconfirmPlacement="top"
+                        (nzOnConfirm)="unassignDriver(item.id)">
+                            <div class="dropdown-menu">
+                                <span nz-icon nzType="close-circle" nzTheme="outline" class="delete-icon"></span>
+                                <span>{{ 'unassign_driver' | translate }}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </nz-dropdown-menu>
+            </td>
+        </tr>
+    </tbody>
+</nz-table>
+<ng-template #empty>
+    <nz-empty #empty nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+        [nzNotFoundContent]="contentTpl">
+        <ng-template #contentTpl>
+            <span>
+                {{ 'no_data' | translate }}
+            </span>
+        </ng-template>
+    </nz-empty>
+</ng-template>

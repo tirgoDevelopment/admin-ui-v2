@@ -1,0 +1,29 @@
+<div class="detail" *ngIf="item && !loadingPage">
+  <div class="detail-row">
+    <div class="detail-item">
+      <div class="detail-label">{{ "ID" | translate }}</div>
+      <div class="detail-value">#{{ item.id }}</div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">{{ "driver" | translate }}</div>
+      <div class="detail-value">#{{ item.driver.id }} {{ item.driver.firstName }} {{ item.driver.lastName }}</div>
+    </div>
+  </div>
+
+  <div class="detail-row">
+    <div class="detail-item">
+      <div class="detail-label">{{ "named" | translate }}</div>
+      <div class="detail-value">
+        <div *ngFor="let service of item.services">{{ service.name }}</div>
+      </div>
+    </div>
+    <div class="detail-item">
+      <div class="detail-label">{{ "status" | translate }}</div>
+      <div class="detail-value">{{ item.status?.name.toLowerCase() | translate }}</div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loadingPage" class="loader-container">
+  <span nz-icon nzType="loading" nzTheme="outline" style="font-size: 25px"></span>
+</div>

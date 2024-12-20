@@ -22,8 +22,8 @@ export class DriversService {
   create(data:FormData) {
     return this.http.post<Response<DriverModel[]>>(env.apiUrl + '/users/drivers', data)
   }
-  update(data: FormData) {
-    return this.http.put<Response<DriverModel[]>>(env.apiUrl + '/users/drivers', data)
+  update(id,data: FormData) {
+    return this.http.put<Response<DriverModel[]>>(env.apiUrl + `/users/drivers/${id}`, data)
   }
   delete(id: number | string) { 
     return this.http.delete(env.apiUrl + `/users/drivers?id=${id}`)
@@ -45,6 +45,9 @@ export class DriversService {
   }
   deleteTransport(driverId:number|string,transportId:number|string) {
     return this.http.delete<Response<TransportModel>>(env.apiUrl + `/users/drivers/${driverId}/transports/${transportId}`)
+  }
+  topupDriverBalance(data:any) {
+    return this.http.post<Response<DriverModel>>(env.apiUrl + `/users/drivers/${data.driverId}/balances`, data)
   }
 
 }

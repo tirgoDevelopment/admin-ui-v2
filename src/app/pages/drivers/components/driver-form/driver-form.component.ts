@@ -74,9 +74,13 @@ export class DriverFormComponent implements OnInit {
       firstName: new FormControl('', Validators.required),
       lastName: new FormControl('', Validators.required),
       phoneNumbers: new FormControl([], Validators.required),
-      email: new FormControl('', [Validators.email]),
+      email: new FormControl('', []),
       passport: new FormControl('', []),
       driverLicense: new FormControl('', []),
+      isOwnBalance: new FormControl(false),
+      isOwnService: new FormControl(false),
+      isOwnOrder: new FormControl(false),
+      isKzPaidWay: new FormControl(false),
     });
 
     
@@ -102,17 +106,11 @@ export class DriverFormComponent implements OnInit {
       this.previewUrlPassport = this.data?.passportFilePath;
       this.previewUrlLicense = this.data?.driverLicenseFilePath;
       this.edit = true;
-      const mainPhoneNumber = this.data?.phoneNumbers?.find(phone => phone.isMain);
+      const mainPhoneNumber = this.data?.phoneNumbers?.find(phone => phone.isMain ? phone.isMain : this.data?.phoneNumbers[0]);
       const formattedPhoneNumber = mainPhoneNumber ? `+${mainPhoneNumber.code}${mainPhoneNumber.number}` : '';
-
+      this.form.patchValue(this.data)
       this.form.patchValue({
-        id: this.data.id,
-        firstName: this.data.firstName,
-        lastName: this.data.lastName,
-        email: this.data.email,
         phoneNumbers: formattedPhoneNumber,
-        passport: this.data?.passportFilePath,
-        driverLicense: this.data?.driverLicense,
       });
     }
   }
@@ -126,6 +124,11 @@ export class DriverFormComponent implements OnInit {
     formData.append('firstName', this.form.get('firstName')?.value);
     formData.append('lastName', this.form.get('lastName')?.value);
     formData.append('email', this.form.get('email')?.value);
+    formData.append('isOwnBalance', this.form.get('isOwnBalance')?.value);
+    formData.append('isOwnService', this.form.get('isOwnService')?.value);
+    formData.append('isOwnOrder', this.form.get('isOwnOrder')?.value);
+    formData.append('isKzPaidWay', this.form.get('isKzPaidWay')?.value);
+
     const phoneNumbers = [
       {
         code: this.form.value.phoneNumbers.substring(0, 3),
@@ -147,7 +150,7 @@ export class DriverFormComponent implements OnInit {
     const uniqueFormData = removeDuplicateKeys(formData);
 
     const submitObservable = this.data
-      ? this.driversService.update(uniqueFormData)
+      ? this.driversService.update(this.form.get('id')?.value,uniqueFormData)
       : this.driversService.create(uniqueFormData);
 
     submitObservable.subscribe(

@@ -24,6 +24,7 @@ export class CurrenciesFormComponent implements OnInit {
   form: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required]),
     code: new FormControl('', [Validators.required]),
+    tirRate: new FormControl(''),
   });
 
   constructor(
@@ -41,6 +42,7 @@ export class CurrenciesFormComponent implements OnInit {
         id: this.data.id,
         name: this.data.name,
         code: this.data.code,
+        tirRate: this.data.tirRate,
       });
     }
   }

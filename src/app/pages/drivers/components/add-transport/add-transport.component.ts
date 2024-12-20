@@ -165,6 +165,7 @@ export class AddTransportComponent implements OnInit {
     this.drawerRef.close({ success: false });
   }
   onSubmit() {
+    this.form.value.transportNumber = this.form.value.transportNumber.toUpperCase().substring(0, 8);
     this.form.value.capacity = this.form.value.capacity.toString();
     this.form.value.driverId = this.driverId
     this.loading = true;

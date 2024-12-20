@@ -18,6 +18,7 @@ import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { AddTransportComponent } from './components/add-transport/add-transport.component';
 import { SendPushComponent } from './components/send-push/send-push.component';
 import { AssignTmcComponent } from './components/assign-tmc/assign-tmc.component';
+import { TopupBalanceDriverComponent } from './components/topup-balance-driver/topup-balance-driver.component';
 
 @Component({
   selector: 'app-drivers',
@@ -113,6 +114,9 @@ export class DriversComponent implements OnInit {
             addTransportDrawerRef.afterClose.subscribe(() => {
               this.getAll();
             });
+          },
+          nzOnCancel:() => {
+            this.getAll();
           }
         })
       }
@@ -188,5 +192,16 @@ export class DriversComponent implements OnInit {
       }
     })
   }
- 
+  topupBalance(){
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('top_up_balance'),
+      nzContent: TopupBalanceDriverComponent,
+      nzPlacement: 'right'
+    })
+    drawerRef.afterClose.subscribe((res: any) => {
+      if (res && res?.success) {
+        this.getAll();
+      }
+    });
+  }
 }

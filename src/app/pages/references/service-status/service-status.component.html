@@ -1,0 +1,52 @@
+<div class="container-page">
+    <div class="header-page">
+      <h2>{{ 'status' | translate }}</h2>
+      <div class="button-group">
+        <button nz-button class="success-button" (click)="add()">
+          <span nz-icon nzType="plus" nzTheme="outline"></span>
+          {{ 'add' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <nz-table [nzSize]="'middle'" [nzPaginationPosition]="'bottom'" [nzData]="data" [nzPageSizeOptions]="[10, 20, 30]"
+    [nzShowPagination]="true" [nzShowSizeChanger]="true" [nzLoading]="loader" [nzNoResult]="('no_data' | translate)"
+    (nzPageIndexChange)="onPageIndexChange($event)" (nzPageSizeChange)="onPageSizeChange($event)">
+    <thead>
+      <tr>
+        <th>{{ 'named' | translate }}</th>
+        <th>{{ 'code' | translate }}</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of data; let i = index" (click)="update(item)">
+        <td> 
+         <span [ngStyle]="{ backgroundColor: item.color, padding:'5px',color: 'white'}">{{ item.name }}</span> 
+        </td>
+        <td>{{ item.code }}</td>
+        <td class="action-col" (click)="$event.stopPropagation()">
+          <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
+            <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
+          </a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu nzSelectable>
+              <li nz-menu-item (click)="update(item)">
+                <div class="dropdown-menu">
+                  <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
+                  <span>{{ 'edit' | translate }}</span>
+                </div>
+              </li>
+              <li nz-menu-item (click)="remove(item.id)">
+                <div class="dropdown-menu">
+                  <span nz-icon nzType="delete" nzTheme="outline" class="delete-icon"></span>
+                  <span>{{ 'remove' | translate }}</span>
+                </div>
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>

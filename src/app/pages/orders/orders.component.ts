@@ -8,7 +8,7 @@ import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { OrdersService } from './services/orders.service';
-import { catchError, forkJoin, Observable, of, tap, throwError } from 'rxjs';
+import { catchError, finalize, forkJoin, Observable, of, tap, throwError } from 'rxjs';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { CargoStatusService } from 'src/app/shared/services/references/cargo-status.service';
 import { TransportTypesService } from 'src/app/shared/services/references/transport-type.service';
@@ -90,7 +90,8 @@ export class OrdersComponent implements OnInit {
       .pipe(
         tap(this.handleOrdersResponse.bind(this)),
         catchError(this.handleError.bind(this)),
-        tap(() => this.setLoading(false))
+        tap(() => this.setLoading(false)),
+        finalize(() => this.setLoading(false))
       )
       .subscribe();
     this.removeQuery();
