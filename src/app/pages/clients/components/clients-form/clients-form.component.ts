@@ -24,7 +24,7 @@ import { Router } from '@angular/router';
 })
 export class ClientsFormComponent implements OnInit {
   confirmModal?: NzModalRef;
-  siteUrl: string = env.apiUrl + '/references/files/clients/';
+  siteUrl: string = env.references + '/references/files/clients/';
   @Input() clientId?: number | string;
   @Input() mode?: 'add' | 'edit' | 'view'; 
   @Output() close = new EventEmitter<void>();

@@ -50,8 +50,9 @@
 
 </div>
 
-<nz-table #sortTable [nzShowSizeChanger]="true" [nzShowPagination]="false" [nzSize]="'middle'" [nzData]="data"
-  [nzLoading]="loader" [nzNoResult]="empty" (nzQueryParams)="onQueryParamsChange($event)">
+<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content' }" [nzFrontPagination]="false"
+[nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"
+(nzQueryParams)="onQueryParamsChange($event)">
   <thead>
     <tr>
       <th>No</th>
@@ -63,12 +64,12 @@
       <th>{{ 'balance' | translate }}</th>
       <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
       <th>{{ 'status' | translate }}</th>
-      <th></th>
+      <th nzRight></th>
     </tr>
   </thead>
 
   <tbody>
-    <tr *ngFor="let item of data; let i = index">
+    <tr *ngFor="let item of data; let i = index" (click)="showHistoryTransaction(item)" style="cursor: pointer;">
       <td> {{ i+1 }} </td>
       <td> {{ item.id }} </td>
       <td> {{ item.supervisorFirstName }} {{ item.supervisorLastName }} </td>
@@ -81,7 +82,7 @@
         <span *ngIf="item.blocked" class="delete-icon">{{'inactive' | translate }}</span>
         <span *ngIf="!item.blocked" class="edit-icon">{{'active' | translate }}</span>
       </td>
-      <td class="action-col">
+      <td nzRight class="action-col" (click)="$event.stopPropagation()">
         <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
           <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
         </a>
@@ -98,6 +99,12 @@
               <div class="dropdown-menu">
                 <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
                 <span>{{ 'edit' | translate }}</span>
+              </div>
+            </li>
+            <li nz-menu-item (click)="showDrivers(item)">
+              <div class="dropdown-menu">
+                <span nz-icon nzType="user" nzTheme="outline"></span>
+                <span>{{ 'drivers' | translate }}</span>
               </div>
             </li>
             <li nz-menu-item (click)="showHistoryTransaction(item)">
@@ -119,10 +126,6 @@
     </tr>
   </tbody>
 </nz-table>
-<nz-pagination [nzPageIndex]="pageParams.pageIndex" [nzTotal]="pageParams.totalPagesCount" nzShowSizeChanger
-  [nzPageSize]="pageParams.pageSize" (nzPageSizeChange)="onPageSizeChange($event)"
-  (nzPageIndexChange)="onPageIndexChange($event)">
-</nz-pagination>
 <ng-template #empty>
   <nz-empty #empty nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
     [nzNotFoundContent]="contentTpl">

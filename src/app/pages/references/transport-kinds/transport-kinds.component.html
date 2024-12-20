@@ -16,18 +16,16 @@
     <thead>
       <tr>
         <th>{{ 'named' | translate }}</th>
+        <th>{{ 'code' | translate }}</th>
         <th>{{ 'is_mode' | translate }}</th>
-        <th>{{ 'count' | translate }}</th>
-        <th>{{ 'description' | translate }}</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of data; let i = index">
         <td>{{ item.name }}</td>
+        <td>{{ item.code }}</td>
         <td>{{ item.isMode }}</td>
-        <td>{{ item.count }}</td>
-        <td>{{ item.description }}</td>
         <td class="action-col">
           <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
             <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>

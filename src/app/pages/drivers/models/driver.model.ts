@@ -30,6 +30,12 @@ export interface DriverModel extends BaseModel {
     canceledOrdersCount:number;
     isVerified:boolean;
     profileFile?:string;
+    isOwnBalance?:boolean;
+    isOwnService?:boolean;
+    isOwnOrder?:boolean;
+    isKzPaidWay?:boolean;
+    serviceBalance?:number;
+    tirgoBalance?:number;
     user: {
         id: number;
         lastLogin: Date;

@@ -15,6 +15,11 @@
         {{ 'code_required' | translate }}
       </div>
     </nz-input-group>
+
+    <nz-input-group class="input-group">
+      <nz-form-label >{{'tir_rate' | translate}}</nz-form-label>
+      <input formControlName="tirRate" type="number" nz-input placeholder="{{'tir_rate' | translate}}" />
+    </nz-input-group>
   
     <div class="button-wrapper">
       <button nz-button class="danger-button" (click)="onCancel()">

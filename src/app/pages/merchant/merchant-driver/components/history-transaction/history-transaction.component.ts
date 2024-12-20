@@ -2,24 +2,25 @@ import { Component } from '@angular/core';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
-import { catchError, of, tap } from 'rxjs';
+import { catchError, finalize, of, tap } from 'rxjs';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { NgxMaskDirective } from 'ngx-mask';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { MerchantDriverService } from '../../services/merchant-driver.service';
+import { TopupBalanceTmsComponent } from '../topup-balance-tms/topup-balance-tms.component';
+import { NzDrawerService } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-history-transaction',
   templateUrl: './history-transaction.component.html',
   styleUrls: ['./history-transaction.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule, RouterModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule, RouterModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -30,6 +31,8 @@ import { MerchantDriverService } from '../../services/merchant-driver.service';
   ]
 })
 export class HistoryTransactionComponent {
+  tirBalance: number = 0;
+  serviceBalance: number = 0;
   data: any[] = [];
   merchantId;
   merchantName: string;
@@ -46,6 +49,7 @@ export class HistoryTransactionComponent {
   };
 
   constructor(
+    private drawer: NzDrawerService,
     private toastr: NotificationService,
     private merchantApi: MerchantDriverService,
     private translate: TranslateService,
@@ -53,11 +57,13 @@ export class HistoryTransactionComponent {
     this.merchantId = this.route.snapshot.params['id'];
     this.merchantName = this.route.snapshot.params['name'];
   }
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.getBalance();
+  }
   getAll(): void {
     this.loader = true;
     const queryString = generateQueryFilter(this.filter);
-    this.merchantApi.transactions(this.merchantId, this.pageParams, queryString).pipe(
+    this.merchantApi.balanceTransactions(this.merchantId, this.pageParams, queryString).pipe(
       tap((res: any) => {
         this.data = res?.success ? res.data.content : [];
         this.pageParams.totalPagesCount = res.data.pageSize * res?.data?.totalPagesCount;
@@ -66,8 +72,32 @@ export class HistoryTransactionComponent {
         this.data = [];
         return of(null);
       }),
-      tap(() => (this.loader = false))
+      tap(() => (this.loader = false)),
+      finalize(() => (this.loader = false))
+
     ).subscribe();
+  }
+  getBalance() {
+    this.merchantApi.tmsBalance(this.merchantId).subscribe((res: any) => {
+      if (res && res.success) {
+        this.tirBalance = res.data.tirgoBalance;
+        this.serviceBalance = res.data.serviceBalance;
+      }
+    })
+  }
+  topupBalance() {
+   let drawerRef = this.drawer.create({
+      nzTitle: this.translate.instant('top_up_balance'),
+      nzContent: TopupBalanceTmsComponent,
+      nzPlacement: 'right',
+      nzContentParams: { merchantId: this.merchantId }
+    });
+    drawerRef.afterClose.subscribe((res:any) => {
+      if(res.success){
+        this.getBalance();
+        this.getAll();
+      }
+    });
   }
   private initializeFilter(): Record<string, string> {
     return { transactionType: '', fromDate: '', toDate: '' };

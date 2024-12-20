@@ -32,6 +32,7 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
+import { NzBackTopModule } from 'ng-zorro-antd/back-top';
 
 
 @NgModule({
@@ -68,7 +69,8 @@ import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
         NzBadgeModule,
         NzBreadCrumbModule,
         NzCardModule,
-        NzAutocompleteModule
+        NzAutocompleteModule,
+        NzBackTopModule
     ],
 
     exports: [
@@ -104,7 +106,10 @@ import { NzAutocompleteModule } from 'ng-zorro-antd/auto-complete';
         NzBadgeModule,
         NzBreadCrumbModule,
         NzCardModule,
-        NzAutocompleteModule
+        NzAutocompleteModule,
+        NzBackTopModule
     ],
 })
-export class NzModules {}
+export class NzModules {} 
+
+//7857

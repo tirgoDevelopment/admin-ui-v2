@@ -60,7 +60,7 @@ export class ServiceFormComponent implements OnInit {
   initForm() {
     this.form = new FormGroup({
       driverId: new FormControl(null, [Validators.required]),
-      serviceIds: new FormControl([null], [Validators.required]),
+      servicesIds: new FormControl([], [Validators.required]),
       searchAs: new FormControl('driverId'),
     });
   }
@@ -68,6 +68,14 @@ export class ServiceFormComponent implements OnInit {
     this.drawerRef.close({success: false});
   }
   onSubmit() {
-
+    this.loading = true;
+    this.serviceApi.postDriverServices(this.form.value).subscribe((res:any) => {
+      if (res) {
+        this.loading = false;
+        this.drawerRef.close({success: true});
+      }
+    }, err => {
+      this.loading = false;
+    });
   }
 }
