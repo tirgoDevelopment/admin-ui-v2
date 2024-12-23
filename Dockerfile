@@ -27,7 +27,7 @@ COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 
 # Expose the port the app will run on
-EXPOSE 4300
+EXPOSE 4200
 
 # Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]
