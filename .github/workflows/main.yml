@@ -36,11 +36,11 @@ jobs:
 
       - name: SSH into the instance and deploy
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@65.1.148.56 << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@3.111.49.15 << 'EOF'
            sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/test-admin-ui:latest
            sudo docker stop test-admin-ui-container || true
            sudo docker rm -f test-admin-ui-container || true
            sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/test-admin-ui || true
-           sudo docker run -d -p 4300:4300 --name test-admin-ui-container ${{ secrets.DOCKER_USERNAME }}/test-admin-ui:latest
+           sudo docker run -d -p 4200:4200 --name test-admin-ui-container ${{ secrets.DOCKER_USERNAME }}/test-admin-ui:latest
           EOF
