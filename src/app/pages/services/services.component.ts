@@ -18,13 +18,15 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { ServiceFormComponent } from './components/service-form/service-form.component';
 import { DetailComponent } from './components/detail/detail.component';
-import { catchError, Observable, tap, throwError, Subscription, finalize } from 'rxjs';
+import { catchError, Observable, tap, throwError, Subscription, finalize, BehaviorSubject, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { SocketService } from 'src/app/shared/services/socket.service';
 import { ServicePricingComponent } from './components/service-pricing/service-pricing.component';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { jwtDecode } from 'jwt-decode';
 import { NzButtonType } from 'ng-zorro-antd/button';
+import { MerchantDriverService } from '../merchant/merchant-driver/services/merchant-driver.service';
+import { Router } from '@angular/router';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -85,6 +87,9 @@ export class ServicesComponent implements OnInit, OnDestroy {
   };
   totalItemsCount
   currentUser: any;
+  searchTms$ = new BehaviorSubject<string>('');
+  tms$: Observable<any>;
+
   private sseSubscription: Subscription | null = null;
   constructor(
     private servicesService: ServicesService,
@@ -93,7 +98,9 @@ export class ServicesComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private socketService: SocketService,
     private toastr: NotificationService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private merchantApi: MerchantDriverService,
+    private router: Router
   ) { }
   ngOnInit(): void {
     this.getStatuses();
@@ -105,8 +112,20 @@ export class ServicesComponent implements OnInit, OnDestroy {
         this.getAll();
       }
     });
+    this.tms$ = this.searchTms$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap((searchTerm: string) => this.merchantApi.getVerified({}, searchTerm).pipe(
+        catchError((err) => {
+          return of({ data: { content: [] } });
+        })
+      )),
+    );
   }
-
+  find(ev: string) {
+    let filter = generateQueryFilter({ companyName: ev });
+    this.searchTms$.next(filter);
+  }
   handleSocketEvent(event: any): void {
     const service = this.data.find(i => i.id === event.data.requestId);
     if (!service) return;
@@ -145,10 +164,13 @@ export class ServicesComponent implements OnInit, OnDestroy {
       .getDriverServices(query)
       .pipe(
         tap((res: any) => {
-          if (res?.success) {
+          if (res && res?.success) {
             this.data = res.data.content;
             this.pageParams.totalPagesCount = res.data.totalPagesCount;
             this.totalItemsCount = this.pageParams.pageSize * this.pageParams.totalPagesCount;
+          }
+          else {
+            this.data = [];
           }
         }),
         catchError(this.handleError.bind(this)),
@@ -169,6 +191,9 @@ export class ServicesComponent implements OnInit, OnDestroy {
       nzPlacement: 'right',
       nzContentParams: { item },
     });
+  }
+  showLog(id: string | number) {
+    this.router.navigate(['/services', id, 'log']);
   }
   addService() {
     const drawerRef: any = this.drawer.create({
@@ -291,11 +316,9 @@ export class ServicesComponent implements OnInit, OnDestroy {
       this.confirmStatusChange(currentStatus.code, item);
     }
   }
-  /*** Tekshirish: Status kod cheklangan bo'lsa true qaytaradi.*/
   isRestrictedStatus(code: number, restrictedCodes: number[]): boolean {
     return restrictedCodes.includes(code);
   }
-  /*** Cheklangan status uchun xatolik ko'rsatish.*/
   showRestrictedStatusError(code: number): void {
     const statusName = this.translate.instant(
       this.getStatusName(code).toLowerCase()
@@ -305,7 +328,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
       `Статус в ${statusName} состоянии`
     );
   }
-  /*** Keyingi statusni tasdiqlash oynasini ko'rsatish.*/
   confirmStatusChange(currentCode: number, item: any): void {
     const nextStatus = this.getNextStatus(currentCode);
     if (nextStatus) {
@@ -329,7 +351,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
       });
     }
   }
-  /*** Statusni yangilash uchun so'rov yuborish.*/
   updateStatus(itemId: number, nextStatus: any): void {
     const payload = {
       id: itemId,

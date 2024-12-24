@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
-import { NgxMaskDirective } from 'ngx-mask';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
@@ -24,7 +23,7 @@ import { FormComponent } from './components/form/form.component';
   templateUrl: './merchant-driver.component.html',
   styleUrls: ['./merchant-driver.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule,RouterModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule,RouterModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
