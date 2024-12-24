@@ -30,8 +30,8 @@
                         {{ item.status.name.toLowerCase() | translate }}
                     </span>
                 </td>
-                <td>{{item.createdBy.staff.fullName}} </td>
-                <td>{{ data.driver.id }} {{data.driver.firstName}} {{data.driver.lastName.slice(0,1)}}.</td>
+                <td>{{item?.createdBy?.staff?.fullName}} </td>
+                <td>{{ data?.driver.id }} {{data?.driver.firstName}} {{data.driver.lastName.slice(0,1)}}.</td>
                 <td>{{data.driver?.driverMerchant ? data.driver?.driverMerchant?.companyName : ('no_data' | translate)}}</td>
             </tr>
         </ng-container>
