@@ -292,7 +292,6 @@
   "InvalidUserType": "Invalid user type",
   "successfullCreated": "Successfully created",
   "successfullyUpdated": "Successfully updated",
-
   "successfullyDeleted": "Successfully deleted",
   "SuccessfullyCanceled": "Successfully canceled",
   "SuccessfullyRejected": "Successfully rejected",
@@ -415,7 +414,6 @@
   "cancel_sure": "Are you sure you want to cancel?",
   "named": "Name",
   "confirm": "Confirm",
-
   "name_required": "Name is required",
   "codeTNVED_required": "Code TNVED is required",
   "cargo_group_type_required": "Cargo group type is required",
@@ -428,7 +426,6 @@
   "cargo_type_required": "Cargo type is required",
   "firstName_required": "Name is required",
   "lastName_required": "Last name is required",
-
   "uz": "Uzbekistan",
   "ru": "Russia",
   "kz": "Kazakhstan",
@@ -480,7 +477,9 @@
     "fixed": "Fixed",
     "free": "Free",
     "individual": "Individual",
-    "cancelService": "Cancel service"
+    "cancelService": "Cancel service",
+    "log": "Service log",
+    "operator": "Operator"
   },
   "chat": {
     "title": "Chats",

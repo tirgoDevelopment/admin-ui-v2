@@ -475,7 +475,9 @@
     "fixed": "Belginlangan",
     "free": "Bepul",
     "individual": "Individual",
-    "cancelService": "Bekor qilish"
+    "cancelService": "Bekor qilish",
+    "log": "Xizmat jurnali",
+    "operator": "Operator"
   },
   "chat": {
     "title": "Chats",

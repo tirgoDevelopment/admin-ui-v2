@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, NgIf, NgFor, NgStyle, NgClass } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
+    RouterModule,
     NgIf,
     NgFor,
     NgStyle,
@@ -16,6 +18,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
+    RouterModule,
     NgIf,
     NgFor,
     NgStyle,
