@@ -83,9 +83,9 @@
         <th>{{ "state_number_truck" | translate }}</th>
         <th>{{ "date_creation" | translate }}</th>
         <th>{{ "services.processingTime" | translate }}</th>
+        <th>{{ "services.processingTimeEnd" | translate }}</th>
         <th>{{ "total" | translate }} (TIR)</th>
         <th nzRight>{{ "status" | translate }} </th>
-        <!-- <th nzRight></th> -->
       </tr>
     </thead>
 
@@ -96,12 +96,12 @@
         <td class="ellipsis">
           <div *ngFor="let service of item.services">{{ service.name }}</div>
         </td>
-        <td>
-          <div *ngIf="item.driver.driverMerchant">{{item.driver.driverMerchant?.companyType + ' ' +
+        <td (click)="$event.stopPropagation()" (click)="showTms(item.driver.driverMerchant)">
+          <div class="link" *ngIf="item.driver.driverMerchant">{{item.driver.driverMerchant?.companyType + ' ' +
             item.driver.driverMerchant?.companyName}}</div>
           <div *ngIf="!item.driver.driverMerchant">{{'no' | translate}}</div>
         </td>
-        <td>{{ item.driver.id }}</td>
+        <td (click)="$event.stopPropagation()" (click)="showDriver(item.driver.id)" >  <div class="link">{{ item.driver.id }}</div> </td>
         <td class="ellipsis">
           <ng-container *ngIf="item.driver.driverTransports?.length; else noTransports">
             <div *ngFor="let truck of item.driver.driverTransports">
@@ -113,7 +113,8 @@
           </ng-template>
         </td>
         <td>{{ item.createdAt | date : "dd.MM.yyyy" }}</td>
-        <td>{{ item.status.createdAt | date : "dd.MM.yyyy HH:mm" }}</td>
+        <td>{{ item.statusesHistory | createdAt : 3 | date : "dd.MM.yyyy HH:mm" }}</td>
+        <td>{{ item.statusesHistory | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</td>
         <td>
           <div *ngIf="item.amountDetails && item.amountDetails.length > 0">
             {{ calculateSum(item.amountDetails) | priceFormat }}

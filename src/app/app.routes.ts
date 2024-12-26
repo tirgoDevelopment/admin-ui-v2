@@ -22,6 +22,7 @@ export const appRoutes: Route[] = [
       { path: 'merchant-driver/transactions/:id/:name', loadChildren: () => import('./pages/merchant/merchant-driver/components/history-transaction/history-transaction.routes').then(m => m.default), canActivate: [AuthGuard]},
       { path: 'merchant-driver/drivers/:id', loadChildren: () => import('./pages/merchant/merchant-driver/components/drivers/drivers.routes').then(m => m.default), canActivate: [AuthGuard]},
       { path: 'services', loadChildren: () => import('./pages/services/services.routes').then(m => m.default), canActivate: [AuthGuard] },
+      { path: 'gsm', loadChildren: () => import('./pages/gsm/gsm.routes').then(m => m.default), canActivate: [AuthGuard] },
 
       // References
       { path: 'references/cargo-type-groups', loadChildren: () => import('./pages/references/cargo-type-groups/cargo-type-groups.routes').then(m => m.default), canActivate: [AuthGuard] },

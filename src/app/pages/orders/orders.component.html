@@ -51,9 +51,9 @@
       <tr style="cursor: pointer;" *ngFor="let data of sortTable.data; let i = index" (click)="handleDrawer('view', data.id)">
         <td>{{i+1}}</td>
         <td>{{data.id}}</td>
-        <td class="ellipsis">
+        <td class="ellipsis" (click)="$event.stopPropagation()" (click)="showClientProfile(data.id)">
           <ng-container *ngIf="data.client; else noData">
-            {{data.client.firstName}} {{data.client.lastName}}
+           <div class="link">{{data.client.firstName}} {{data.client.lastName}}</div> 
           </ng-container>
         </td>
         <td class="ellipsis">{{data.loadingLocation.name}}</td>

@@ -29,7 +29,7 @@ export interface DriverModel extends BaseModel {
     isBusy?:boolean;
     canceledOrdersCount:number;
     isVerified:boolean;
-    profileFile?:string;
+    profileFile?:any;
     isOwnBalance?:boolean;
     isOwnService?:boolean;
     isOwnOrder?:boolean;

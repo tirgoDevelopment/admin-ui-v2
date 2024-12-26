@@ -22,6 +22,7 @@ import { CargoStatusCodes } from 'src/app/shared/enum/statusCode.enum';
 import { PageParams } from './models/page-params.interface';
 import { OrderFilterComponent } from './components/order-filter/order-filter.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ClientsFormComponent } from '../clients/components/clients-form/clients-form.component';
 
 @Component({
   selector: 'app-orders',
@@ -213,5 +214,18 @@ export class OrdersComponent implements OnInit {
   }
   removeQuery() {
     this.router.navigate(['/orders'], { queryParams: {} });
+  }
+  showClientProfile(id: number | string) {
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('information'),
+      nzContent: ClientsFormComponent,
+      nzMaskClosable: false,
+      nzPlacement: 'right',
+      nzWidth: '400px',
+      nzContentParams: {
+        clientId: id,
+        mode: 'view'
+      }
+    });
   }
 }

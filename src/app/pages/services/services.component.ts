@@ -17,7 +17,6 @@ import { ServicesService } from './services/services.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { ServiceFormComponent } from './components/service-form/service-form.component';
-import { DetailComponent } from './components/detail/detail.component';
 import { catchError, Observable, tap, throwError, Subscription, finalize, BehaviorSubject, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { SocketService } from 'src/app/shared/services/socket.service';
 import { ServicePricingComponent } from './components/service-pricing/service-pricing.component';
@@ -27,6 +26,8 @@ import { jwtDecode } from 'jwt-decode';
 import { NzButtonType } from 'ng-zorro-antd/button';
 import { MerchantDriverService } from '../merchant/merchant-driver/services/merchant-driver.service';
 import { Router } from '@angular/router';
+import { DriverFormComponent } from '../drivers/components/driver-form/driver-form.component';
+import { DetailComponent } from '../merchant/merchant-driver/components/detail/detail.component';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -185,12 +186,12 @@ export class ServicesComponent implements OnInit, OnDestroy {
     return throwError(new Error('Error fetching orders'));
   }
   showDetails(item: any) {
-    const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant('information'),
-      nzContent: DetailComponent,
-      nzPlacement: 'right',
-      nzContentParams: { item },
-    });
+    // const drawerRef: any = this.drawer.create({
+    //   nzTitle: this.translate.instant('information'),
+    //   nzContent: DetailComponent,
+    //   nzPlacement: 'right',
+    //   nzContentParams: { item },
+    // });
   }
   showLog(id: string | number) {
     this.router.navigate(['/services', id, 'log']);
@@ -359,10 +360,13 @@ export class ServicesComponent implements OnInit, OnDestroy {
 
     this.servicesService.patchServiceStatus(payload, nextStatus.apiPath)
       .subscribe((response: any) => {
-        if (response?.success) {
+        if (response && response?.success) {
           this.toastr.success(this.translate.instant('successfullUpdated'));
           this.getAll();
           this.modal.closeAll();
+        }
+        else if(response?.messages[0] == 'notEnoughBalance') {
+          this.toastr.error(this.translate.instant('notEnoughBalance'));
         }
       });
   }
@@ -399,5 +403,32 @@ export class ServicesComponent implements OnInit, OnDestroy {
       },
     });
   }
-  
+  showDriver(id) {
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('information'),
+      nzContent: DriverFormComponent,
+      nzMaskClosable: false,
+      nzPlacement: 'right',
+      nzWidth: '400px',
+      nzContentParams: {
+        id: id,
+        mode: 'view'
+      }
+    });
+  }
+  showTms(item) {
+    if(item) {
+      const drawerRef: any = this.drawer.create({
+        nzTitle: this.translate.instant('information'),
+        nzContent: DetailComponent,
+        nzMaskClosable: false,
+        nzPlacement: 'right',
+        nzWidth: '400px',
+        nzContentParams: {
+          data: item,
+        }
+      });
+    }
+    
+  }
 }

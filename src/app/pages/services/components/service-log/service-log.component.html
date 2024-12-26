@@ -3,8 +3,14 @@
         <nz-breadcrumb-item>
             <a routerLink="/services">{{ 'services.title' | translate }}</a>
         </nz-breadcrumb-item>
-        <nz-breadcrumb-item>{{ 'services.log' | translate }}</nz-breadcrumb-item>
+        <nz-breadcrumb-item>{{ 'services.log' | translate }} </nz-breadcrumb-item>
     </nz-breadcrumb>
+
+    <div class="info">
+        <div> <b> {{ "services.serviceId" | translate }}:</b>  {{serviceId}}</div>
+        <div> <b>{{ "driver" | translate }}:</b>  {{data?.driver.firstName}} {{data?.driver.lastName.slice(0,1)}}. ({{ data?.driver.id }}) </div>
+        <div><b>{{ "driver_merchant" | translate }}:</b> {{data?.driver?.driverMerchant ? data.driver?.driverMerchant?.companyName : ('no' | translate)}}</div>
+    </div>
 </div>
 
 <nz-table #sortTable [nzData]="data?.statusesHistory" [nzLoading]="loading" [nzShowPagination]="false">
@@ -13,8 +19,6 @@
             <th>{{ "date" | translate }}</th>
             <th>{{ "status" | translate }}</th>
             <th>{{'services.operator' | translate}}</th>
-            <th>{{ "driver" | translate }}</th>
-            <th>{{ "merchant_driver" | translate }}</th>
         </tr>
     </thead>
 
@@ -30,9 +34,10 @@
                         {{ item.status.name.toLowerCase() | translate }}
                     </span>
                 </td>
-                <td>{{item?.createdBy?.staff?.fullName}} </td>
-                <td>{{ data?.driver.id }} {{data?.driver.firstName}} {{data.driver.lastName.slice(0,1)}}.</td>
-                <td>{{data.driver?.driverMerchant ? data.driver?.driverMerchant?.companyName : ('no_data' | translate)}}</td>
+                <td>
+                    <div *ngIf="item.createdBy.staff">{{item?.createdBy?.staff?.fullName}}</div>
+                    <div *ngIf="!item.createdBy.staff">{{ item.createdBy.userType == 'driver' ? ('driver' | translate) : ('driver_merchant' | translate)}}</div>
+                     </td>
             </tr>
         </ng-container>
 
