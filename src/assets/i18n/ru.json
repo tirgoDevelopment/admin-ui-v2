@@ -172,7 +172,7 @@
   "volume_f": "Объем(f)",
   "volume_m": "Объем(м³)",
   "volume_l": "Объем(l)",
-  "good_transportation_lisense": "Лицензия на грузоперевозку",
+  "good_transportation_lisense": "Лицензия на грузоеревозку",
   "driver_lisense_card": "Водительское удостоверение водителя",
   "mode": "Режим",
   "hook": "Крюк",
@@ -355,7 +355,7 @@
   "userType": "Тип пользователя",
   "welcome": "Добро пожаловать",
   "assign_merchant_driver": "Назначить водителя продавца",
-  "driver_merchant": "Транспортные компании ",
+  "driver_merchant": "Транспортная компания",
   "about_agent": "Подробнее об агенте",
   "bank_account": "Банковский счет",
   "merchant_confirm": "Merchant confirmation",
@@ -466,10 +466,10 @@
   "confirmed": "Подтвержденный",
   "completed": "Выполнен",
   "working": "Работает",
-  "paid_way": "Платный дорога",
-  "take_orders": "Брать заказы самостоятельно",
-  "apply_service": "Заявка на услуги самостоятельно",
-  "total_balance": "Использовать собственного баланса",
+  "paid_way": "Подключить услугу 'Платная дорога'",
+  "take_orders": "Разрешить брать заказы самостоятельно",
+  "apply_service": "Разрешить подавать заявки на услуги самостоятельно",
+  "total_balance": "Оплачивать сервисы с собственного баланса",
   "confirm-price": "Подтвержденный",
   "tirBalance": "Tirgo баланс",
   "serviceBalance": "Сервис баланс",
@@ -482,6 +482,7 @@
     "serviceName": "Наименование сервиса",
     "driverId": "Водитель ID",
     "processingTime": "Время начала обработки",
+    "processingTimeEnd": "Время завершения обработки",
     "withoutSubscription": "Без подписки",
     "isLegalEntity": "Юридическое лицо",
     "from": "От суммы",
@@ -507,5 +508,9 @@
       "MB": "МБ",
       "GB": "ГБ"
     }
+  },
+  "gsm": {
+    "title": "ГСМ",
+    "assignCard": "Привязывать карты"
   }
 }

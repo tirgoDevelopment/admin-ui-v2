@@ -32,9 +32,10 @@ import {
   ArrowLeftOutline,
   RollbackOutline,
   FilePdfOutline,
+  FireOutline
 } from '@ant-design/icons-angular/icons';
 
-const icons = [FilePdfOutline,RollbackOutline,ArrowLeftOutline,WechatOutline,SendOutline,FileTextOutline,UnlockOutline,HistoryOutline,PaperClipOutline,StarFill,InfoCircleOutline,PictureTwoTone,ReloadOutline,FrownFill,TeamOutline,FileSearchOutline,SyncOutline,FilterFill,EllipsisOutline,MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, FormOutline, LogoutOutline,UserOutline,LockOutline,EyeOutline,EyeInvisibleOutline,MailOutline,PlusOutline];
+const icons = [FireOutline,FilePdfOutline,RollbackOutline,ArrowLeftOutline,WechatOutline,SendOutline,FileTextOutline,UnlockOutline,HistoryOutline,PaperClipOutline,StarFill,InfoCircleOutline,PictureTwoTone,ReloadOutline,FrownFill,TeamOutline,FileSearchOutline,SyncOutline,FilterFill,EllipsisOutline,MenuFoldOutline, MenuUnfoldOutline, DashboardOutline, FormOutline, LogoutOutline,UserOutline,LockOutline,EyeOutline,EyeInvisibleOutline,MailOutline,PlusOutline];
 
 @NgModule({
   imports: [NzIconModule],

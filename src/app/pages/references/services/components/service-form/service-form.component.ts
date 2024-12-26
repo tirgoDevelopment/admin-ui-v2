@@ -24,6 +24,7 @@ export class ServiceFormComponent implements OnInit {
   loading: boolean = false;
   showAmounts: boolean = false;
   form: FormGroup = new FormGroup({
+    id: new FormControl(''),
     name: new FormControl(null, [Validators.required]),
     code: new FormControl(null, [Validators.required]),
     uzsAmount: new FormControl(null),

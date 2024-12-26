@@ -8,12 +8,13 @@ import { ReferencePointsPipe } from './reference-points.pipe';
 import { LabelPipe } from './label.pipe';
 import { FileFormatPipe } from './fileType.pipe';
 import { UppercaseValidationDirective } from './uppercase.directive';
+import { CreatedAtPipe } from './createdAt.pipe';
 
 @NgModule({
-  declarations: [PhoneFormatPipe,FileFetchPipe, DateFormatPipe,PriceFormatPipe,ReferencePointsPipe,LabelPipe,FileFormatPipe,UppercaseValidationDirective],
+  declarations: [PhoneFormatPipe,FileFetchPipe, DateFormatPipe,PriceFormatPipe,ReferencePointsPipe,LabelPipe,FileFormatPipe,UppercaseValidationDirective,CreatedAtPipe],
   imports: [
     CommonModule
   ],
-  exports: [PhoneFormatPipe,FileFetchPipe,DateFormatPipe, PriceFormatPipe,ReferencePointsPipe,LabelPipe,FileFormatPipe,UppercaseValidationDirective],
+  exports: [PhoneFormatPipe,FileFetchPipe,DateFormatPipe, PriceFormatPipe,ReferencePointsPipe,LabelPipe,FileFormatPipe,UppercaseValidationDirective,CreatedAtPipe],
 })
 export class PipeModule { }

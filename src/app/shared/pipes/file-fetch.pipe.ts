@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, map, finalize, BehaviorSubject } from 'rxjs';
 import { FileUrlService } from '../services/file.service';
 import { HttpClient } from '@angular/common/http';
 import { env } from 'src/environmens/environment';
@@ -8,6 +8,8 @@ import { env } from 'src/environmens/environment';
   name: 'fileFetch'
 })
 export class FileFetchPipe implements PipeTransform {
+  private loading = new BehaviorSubject<boolean>(false);
+  public loading$ = this.loading.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -15,10 +17,12 @@ export class FileFetchPipe implements PipeTransform {
     if (!fileName || typeof fileName === 'object') {
       return null;
     }
+    
+    this.loading.next(true);
     return this.http.get(env.references + `/references/files?keyName=${keyName}&fileName=${fileName}`, { responseType: 'blob' })
       .pipe(
-        map((blob: Blob) => URL.createObjectURL(blob))
+        map((blob: Blob) => URL.createObjectURL(blob)),
+        finalize(() => this.loading.next(false))
       );
   }
-
 }

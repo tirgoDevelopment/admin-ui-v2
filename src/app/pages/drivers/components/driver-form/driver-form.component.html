@@ -306,7 +306,17 @@
   <div class="detail-header">
     <div class="avatar-wrapper">
       <img *ngIf="!data?.profileFile" class="avatar-img" src="./assets/images/avatars/default_avatar.svg" alt="">
-      <img *ngIf="data?.profileFile" class="avatar-img" [src]="data?.profileFile" alt="">
+      <ng-container *ngIf="data?.profileFile">
+        <ng-template #indicatorTemplate>  <span nz-icon nzType="loading" nzTheme="outline"></span>
+        </ng-template>
+        <nz-spin *ngIf="(data?.profileFile.name | fileFetch:'drivers/profiles' | async) === null" nzSimple [nzIndicator]="indicatorTemplate"></nz-spin>
+        <nz-space *ngIf="(data?.profileFile.name | fileFetch:'drivers/profiles' | async)  !== null" >
+          <img *nzSpaceItem nz-image 
+          class="avatar-img" 
+          [nzSrc]="data?.profileFile.name | fileFetch:'drivers/profiles' | async " 
+          alt="">
+        </nz-space>
+      </ng-container>
     </div>
     <div>
       <div class="user-name">{{ data?.firstName }} {{ data?.lastName }}</div>

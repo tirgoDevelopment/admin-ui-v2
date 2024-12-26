@@ -109,7 +109,8 @@ export class ChatComponent implements OnInit {
         let a = this.chats.find(i => i.id == event.data.requestId)
         a.unreadMessagesCount = a.unreadMessagesCount + 1;
         if (this.selectedChat && (event.data.requestId == this.selectedChat.id)) {
-          this.messages.push(event.data.message)
+          this.messages.push(event.data.message);
+
         }
       }
     });
@@ -203,6 +204,7 @@ export class ChatComponent implements OnInit {
       }
       this.serviceApi.postChatMessages(this.selectedChat.id, message).subscribe({
         next: (res: any) => {
+          this.scrollToBottom();
           // this.messages.push(message);
           // this.getChatMessages();
         },
