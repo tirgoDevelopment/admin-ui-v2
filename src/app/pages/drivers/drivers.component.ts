@@ -60,6 +60,11 @@ export class DriversComponent implements OnInit {
   ngOnInit(): void { }
 
   getAll(): void {
+    if (this.filter['phoneNumber']) {
+      const phoneNumber = this.filter['phoneNumber'].replace(/\s/g, '');
+      this.filter['phoneCode'] = phoneNumber.substring(0, 3);
+      this.filter['phoneNumber'] = phoneNumber.substring(3);
+    }
     this.loader = true;
     const queryString = generateQueryFilter(this.filter);
     this.driversService.getAll(this.pageParams, queryString).pipe(

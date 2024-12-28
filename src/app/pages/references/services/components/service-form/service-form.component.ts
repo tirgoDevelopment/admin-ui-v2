@@ -8,13 +8,14 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { Response } from 'src/app/shared/models/reponse';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-service-form',
   templateUrl: './service-form.component.html',
   styleUrls: ['./service-form.component.scss'],
   standalone: true,
-  imports: [NzModules, TranslateModule, CommonModules],
+  imports: [NzModules, TranslateModule, CommonModules, NgxMaskDirective],
 })
 
 export class ServiceFormComponent implements OnInit {

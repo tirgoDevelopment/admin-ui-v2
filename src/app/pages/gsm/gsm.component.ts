@@ -19,13 +19,16 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { BehaviorSubject, catchError, debounceTime, distinctUntilChanged, Observable, of, switchMap } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
+import { AssignDriverCardComponent } from './components/assign-driver-card/assign-driver-card.component';
+import { TopUpGsmBalanceComponent } from './components/top-up-gsm-balance/top-up-gsm-balance.component';
+import { GSMService } from './services/gsm.service';
 
 @Component({
   selector: 'app-gsm',
   templateUrl: './gsm.component.html',
   styleUrls: ['./gsm.component.scss'],
   standalone: true,
-  imports: [ CommonModules, NzModules,TranslateModule, IconsProviderModule, PipeModule,],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule,],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -35,7 +38,7 @@ import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
     ]),
   ],
 })
-export class GSMComponent implements OnInit{
+export class GSMComponent implements OnInit {
   public data: any[] = [];
   public loader = false;
   public isFilterVisible = false;
@@ -54,7 +57,7 @@ export class GSMComponent implements OnInit{
   searchTms$ = new BehaviorSubject<string>('');
   tms$: Observable<any>;
   constructor(
-    private servicesService: ServicesService,
+    private gsmService: GSMService,
     private modal: NzModalService,
     private drawer: NzDrawerService,
     private translate: TranslateService,
@@ -63,10 +66,9 @@ export class GSMComponent implements OnInit{
     private cdr: ChangeDetectorRef,
     private merchantApi: MerchantDriverService,
     private router: Router
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.currentUser = jwtDecode(localStorage.getItem('accessToken') || '');
-   
     this.tms$ = this.searchTms$.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -82,68 +84,83 @@ export class GSMComponent implements OnInit{
     this.searchTms$.next(filter);
   }
   getAll() {
-
+    
   }
-  changeStatus(item) {}
-    showDriver(id) {
+  assignDriverCard() {
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('gsm.assignCard'),
+      nzContent: AssignDriverCardComponent,
+      nzPlacement: 'right',
+      nzWidth: '400px',
+    });
+  }
+  topUpBalance() {
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('top_up_balance'),
+      nzContent: TopUpGsmBalanceComponent,
+      nzPlacement: 'right',
+      nzWidth: '400px',
+    });
+  }
+  changeStatus(item) { }
+  showDriver(id) {
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('information'),
+      nzContent: DriverFormComponent,
+      nzMaskClosable: false,
+      nzPlacement: 'right',
+      nzWidth: '400px',
+      nzContentParams: {
+        id: id,
+        mode: 'view'
+      }
+    });
+  }
+  showTms(item) {
+    if (item) {
       const drawerRef: any = this.drawer.create({
         nzTitle: this.translate.instant('information'),
-        nzContent: DriverFormComponent,
+        nzContent: DetailComponent,
         nzMaskClosable: false,
         nzPlacement: 'right',
         nzWidth: '400px',
         nzContentParams: {
-          id: id,
-          mode: 'view'
+          data: item,
         }
       });
     }
-    showTms(item) {
-      if(item) {
-        const drawerRef: any = this.drawer.create({
-          nzTitle: this.translate.instant('information'),
-          nzContent: DetailComponent,
-          nzMaskClosable: false,
-          nzPlacement: 'right',
-          nzWidth: '400px',
-          nzContentParams: {
-            data: item,
-          }
-        });
-      }
-      
-    }
 
-    public toggleFilter(): void {
-      this.isFilterVisible = !this.isFilterVisible;
-    }
-    public resetFilter(): void {
-      this.filter = this.initializeFilter();
-      this.getAll();
-    }
-    private initializeFilter(): Record<string, string> {
-      return {
-        serviceId: '',
-        driverId: '',
-        statusId: '',
-        createdAtFrom: '',
-        createdAtTo: '',
-      };
-    }
-    public onQueryParamsChange(params: NzTableQueryParams): void {
-      this.pageParams.pageIndex = params.pageIndex;
-      this.pageParams.pageSize = params.pageSize;
-      let { sort } = params;
-      let currentSort = sort.find((item) => item.value !== null);
-      let sortField = (currentSort && currentSort.key) || null;
-      let sortOrder = (currentSort && currentSort.value) || null;
-      sortOrder === 'ascend'
-        ? (sortOrder = 'asc')
-        : sortOrder === 'descend'
-          ? (sortOrder = 'desc')
-          : (sortOrder = '');
-      this.pageParams.sortBy = sortField;
-      this.pageParams.sortType = sortOrder;
-      this.getAll();
-    }
+  }
+  public toggleFilter(): void {
+    this.isFilterVisible = !this.isFilterVisible;
+  }
+  public resetFilter(): void {
+    this.filter = this.initializeFilter();
+    this.getAll();
+  }
+  private initializeFilter(): Record<string, string> {
+    return {
+      driverId: '',
+      merchantId:'',
+      statusId: '',
+      createdAtFrom: '',
+      createdAtTo: '',
+    };
+  }
+  public onQueryParamsChange(params: NzTableQueryParams): void {
+    this.pageParams.pageIndex = params.pageIndex;
+    this.pageParams.pageSize = params.pageSize;
+    let { sort } = params;
+    let currentSort = sort.find((item) => item.value !== null);
+    let sortField = (currentSort && currentSort.key) || null;
+    let sortOrder = (currentSort && currentSort.value) || null;
+    sortOrder === 'ascend'
+      ? (sortOrder = 'asc')
+      : sortOrder === 'descend'
+        ? (sortOrder = 'desc')
+        : (sortOrder = '');
+    this.pageParams.sortBy = sortField;
+    this.pageParams.sortType = sortOrder;
+    this.getAll();
+  }
 }

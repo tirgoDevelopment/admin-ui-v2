@@ -46,6 +46,8 @@ export class ChatComponent implements OnInit {
   @ViewChild('messageInput') private messageInput!: ElementRef;
   @Output() closeChatEvent = new EventEmitter<void>();
   @Output() newMessageCountChange = new EventEmitter<number>();
+  @Input() outputServiceId: string;
+
   chatIconPosition = {
     x: window.innerWidth - 400,
     y: window.innerHeight - window.innerHeight * 0.9,
@@ -97,6 +99,12 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.outputServiceId) {
+      this.loading = true;
+      this.serviceApi.getServiceRequestById(this.outputServiceId).subscribe((res: any) => {
+        this.selectChat(res.data.data)
+      })
+    }
     this.searchControl.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((searchTerm) => {

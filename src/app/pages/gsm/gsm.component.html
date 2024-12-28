@@ -5,12 +5,11 @@
             <button nz-button class="secondary-button" (click)="toggleFilter()">
                 <span nz-icon nzType="filter" nzTheme="fill"></span>
                 {{ "filter" | translate }}
-            </button><button nz-button class="success-button">
-                <span nz-icon nzType="paper-clip"></span>
+            </button>
+            <button nz-button class="success-button" (click)="assignDriverCard()">
                 {{ "gsm.assignCard" | translate }}
             </button>
-            <button nz-button class="success-button">
-                <span nz-icon nzType="plus"></span>
+            <button nz-button class="success-button" (click)="topUpBalance()">
                 {{ "top_up_balance" | translate }}
             </button>
         </div>

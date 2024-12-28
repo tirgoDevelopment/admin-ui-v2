@@ -11,7 +11,7 @@ export class LabelPipe implements PipeTransform {
       case 'phoneNumber':
         return '+' +driver.phoneNumbers[0].code + driver.phoneNumbers[0].number + ' (' + driver.firstName + ' ' + driver.lastName.substring(0, 1) + '.)'; 
       case 'transportNumber':
-        return driver.driverTransports[0].transportNumber + ' (' + driver.firstName + ' ' + driver.lastName.substring(0, 1) + '.)';
+        return driver.driverTransports ? driver?.driverTransports[0].transportNumber + ' (' + driver.firstName + ' ' + driver.lastName.substring(0, 1) + '.)' : null;
       default:
         return driver.firstName + ' ' + driver.lastName;
     }

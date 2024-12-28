@@ -22,6 +22,7 @@ export class CurrenciesFormComponent implements OnInit {
   showForm: boolean = false;
   loading: boolean = false;
   form: FormGroup = new FormGroup({
+    id: new FormControl(),
     name: new FormControl('', [Validators.required]),
     code: new FormControl('', [Validators.required]),
     tirRate: new FormControl(''),
