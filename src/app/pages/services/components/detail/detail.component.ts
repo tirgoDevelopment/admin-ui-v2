@@ -3,17 +3,19 @@ import { CommonModule } from '@angular/common';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { TranslateModule } from '@ngx-translate/core';
+import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
   standalone: true,
-  imports: [CommonModule, NzIconModule, PipeModule, TranslateModule]
+  imports: [CommonModule, NzIconModule, PipeModule, TranslateModule, NzModules]
 })
-export class DetailComponent implements OnInit {
+export class ServiceDetailComponent implements OnInit {
   @Input() item?: any;
   loadingPage = true;
+  loading = false;
   constructor() { }
 
   ngOnInit(): void {

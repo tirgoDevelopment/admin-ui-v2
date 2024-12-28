@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { catchError, Observable, of, Subject } from 'rxjs';
 import { env } from 'src/environmens/environment';
 import { Response } from 'src/app/shared/models/reponse';
 import { DriverMerchantModel } from '../models/driver-merchant.model';
+import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 @Injectable({
   providedIn: 'root'
 })
@@ -64,5 +65,11 @@ export class MerchantDriverService {
   }
   unassignDriver(id:number|string) {
     return this.http.post(env.apiUrl+`/users/driver-merchants/unassign-driver/${id}`,{})
+  }
+  findTms(searchTerm: string, searchAs: string) {
+    const filter = generateQueryFilter({ [searchAs]: searchTerm });
+    return this.getVerified({}, filter).pipe(
+      catchError(() => of({ data: { content: [] } }))
+    );
   }
 }

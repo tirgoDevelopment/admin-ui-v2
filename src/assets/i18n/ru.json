@@ -171,7 +171,7 @@
   "mode_to": "До (°C)",
   "volume_f": "Объем(f)",
   "volume_m": "Объем(м³)",
-  "volume_l": "Объем(l)",
+  "volume_l": "Объем (литр)",
   "good_transportation_lisense": "Лицензия на грузоеревозку",
   "driver_lisense_card": "Водительское удостоверение водителя",
   "mode": "Режим",
@@ -270,6 +270,7 @@
   "clientIdOrMerchantIdIsRequired": "Требуется идентификатор клиента или идентификатор продавца",
   "merchantIdIsRequired": "Требуется Merchantid",
   "allFieldsRequired": "Все поля обязательны",
+  "internalError": "Внутренняя ошибка, Повторите позже",
   "subscriptionNotFound": "Подписка не найдена",
   "currencyNotFound": "Валюта не найдена",
   "cargoTypeNotFound": "Тип груза не найден",
@@ -298,6 +299,7 @@
   "verifyDataFailed": "Проверка не удалась",
   "blockDataFailed": "Блокировка не удалась",
   "awsStoreFileFailed": "Ошибка хранилища файлов",
+  "duplicateError": "Этот номер телефона уже существует",
   "duplateError": "Дубликат ошибки",
   "phoneNumberDuplateError": "ошибка дублирования номера телефона",
   "phoneNumbeersMustBeArray": "номера телефонов должны быть массивом",
@@ -476,6 +478,7 @@
   "balance_type": "Тип баланса",
   "tir_rate": "Курс TIR",
   "unassign_driver": "Открепить водитель",
+  "errorOccurred": "Произошла ошибка",
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",
@@ -511,6 +514,7 @@
   },
   "gsm": {
     "title": "ГСМ",
-    "assignCard": "Привязывать карты"
+    "assignCard": "Привязывать карты",
+    "cardNumber": "Номер карта"
   }
 }

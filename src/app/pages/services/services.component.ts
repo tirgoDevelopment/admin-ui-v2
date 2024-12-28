@@ -28,6 +28,8 @@ import { MerchantDriverService } from '../merchant/merchant-driver/services/merc
 import { Router } from '@angular/router';
 import { DriverFormComponent } from '../drivers/components/driver-form/driver-form.component';
 import { DetailComponent } from '../merchant/merchant-driver/components/detail/detail.component';
+import { ChatComponent } from 'src/app/shared/components/chat/chat.component';
+import { ServiceDetailComponent } from './components/detail/detail.component';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -62,6 +64,7 @@ export enum SseEventNames {
     TranslateModule,
     IconsProviderModule,
     PipeModule,
+    ChatComponent
   ],
   providers: [NzModalService],
   animations: [
@@ -73,6 +76,9 @@ export enum SseEventNames {
   ],
 })
 export class ServicesComponent implements OnInit, OnDestroy {
+  showChat: boolean = false;
+  selectedServiceId: string | null = null;
+
   public data: any[] = [];
   public loader = false;
   public isFilterVisible = false;
@@ -186,12 +192,12 @@ export class ServicesComponent implements OnInit, OnDestroy {
     return throwError(new Error('Error fetching orders'));
   }
   showDetails(item: any) {
-    // const drawerRef: any = this.drawer.create({
-    //   nzTitle: this.translate.instant('information'),
-    //   nzContent: DetailComponent,
-    //   nzPlacement: 'right',
-    //   nzContentParams: { item },
-    // });
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('information'),
+      nzContent: ServiceDetailComponent,
+      nzPlacement: 'right',
+      nzContentParams: { item },
+    });
   }
   showLog(id: string | number) {
     this.router.navigate(['/services', id, 'log']);
@@ -430,5 +436,13 @@ export class ServicesComponent implements OnInit, OnDestroy {
       });
     }
     
+  }
+  showChatForService(id) {
+    this.selectedServiceId = id;
+    this.showChat = true;
+  }
+  onChatClose() {
+    this.showChat = false;
+    this.selectedServiceId = null;
   }
 }
