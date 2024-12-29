@@ -22,7 +22,7 @@ export class AssignDriverCardComponent implements OnInit {
   form: FormGroup;
   drivers$
   loading: boolean = false;
-
+  type = 'assign'
   constructor(
     private driverService: DriversService,
     private gsmService: GSMService,
@@ -43,19 +43,54 @@ export class AssignDriverCardComponent implements OnInit {
     this.form = new FormGroup({
       id: new FormControl(null, [Validators.required]),
       searchAs: new FormControl('driverId'),
-      gsmCardNumber: new FormControl(null, [Validators.required])
+      gsmCardNumber: new FormControl(null, this.type == 'assign' ? Validators.required : null)
     })
+    this.updateGsmCardValidation();
+
   }
   onSubmit() {
-   this.loading = true;
-    this.gsmService.postGSMCardNumber(this.form.value).subscribe((res:any) => {
-      if(res && res.success) {
-        this.loading = false;
-        this.drawerRef.close({success:true});
-        this.toastr.success(this.translate.instant('successfullUpdated'));
-      }
-    },err => {
-      this.loading = false;
-    })
+    this.loading = true;
+  
+    if (this.type === 'assign') {
+      this.gsmService.postGSMCardNumber(this.form.value).subscribe(
+        (res: any) => {
+          if (res && res.success) {
+            this.loading = false;
+            this.drawerRef.close({ success: true });
+            this.toastr.success(this.translate.instant('successfullUpdated'));
+          }
+        },
+        (err) => {
+          this.loading = false;
+        }
+      );
+    } else if (this.type === 'unAssign') {
+      this.gsmService.deleteGSMCardNumber(this.form.value).subscribe(
+        (res: any) => {
+          if (res && res.success) {
+            this.loading = false;
+            this.drawerRef.close({ success: true });
+            this.toastr.success(this.translate.instant('successfullDeleted'));
+          }
+        },
+        (err) => {
+          this.loading = false;
+        }
+      );
+    }
+  }
+  
+  onTabChange(index) {
+    index == 0 ? this.type = 'assign' : this.type = 'unAssign';
+    this.updateGsmCardValidation();
+  } 
+  private updateGsmCardValidation() {
+    const gsmCardControl = this.form.get('gsmCardNumber');
+    if (this.type === 'assign') {
+      gsmCardControl.setValidators([Validators.required]);
+    } else {
+      gsmCardControl.clearValidators();
+    }
+    gsmCardControl.updateValueAndValidity();
   }
 }

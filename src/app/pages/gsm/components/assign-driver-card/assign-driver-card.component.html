@@ -1,5 +1,12 @@
-<form [formGroup]="form">
+<nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
+    <nz-tab nzTitle="{{ 'gsm.assignCard' | translate }}">
+       
+    </nz-tab>
+    <nz-tab nzTitle="{{ 'gsm.unassignCard' | translate }}"></nz-tab>
+   
+</nz-tabset>
 
+<form [formGroup]="form">
     <nz-input-group class="input-group w-full">
         <nz-form-label>{{ 'searchAs' | translate }}</nz-form-label>
         <nz-select style="width: 100%;" nzPlaceHolder="{{ 'searchAs' | translate }}" formControlName="searchAs">
@@ -19,15 +26,15 @@
         </nz-select>
     </nz-input-group>
 
-    <nz-input-group class="input-group w-full">
+    <nz-input-group class="input-group w-full" *ngIf="type == 'assign'">
         <nz-form-label nzRequired>{{ 'gsm.cardNumber' | translate }}</nz-form-label>
         <input nz-input type="text" formControlName="gsmCardNumber">
     </nz-input-group>
 
     <div class="button-wrapper">
-        <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
-          [disabled]="form.invalid || loading">
-          {{ 'save' | translate }}
+        <button [nzLoading]="loading" nz-button [ngClass]="{'success-button': type == 'assign' ,'danger-button': type == 'unAssign' }" (click)="onSubmit()"
+            [disabled]="form.invalid || loading">
+            {{ type | translate }}
         </button>
-      </div>
+    </div>
 </form>
