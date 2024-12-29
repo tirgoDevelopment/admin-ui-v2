@@ -481,6 +481,8 @@
   "unassign_driver": "Открепить водитель",
   "errorOccurred": "Произошла ошибка",
   "topUp": "Пополнение",
+  "assign": "Прикрепить",
+  "unAssign": "Открепить ",
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",
@@ -516,7 +518,9 @@
   },
   "gsm": {
     "title": "ГСМ",
-    "assignCard": "Привязывать карты",
+    "cardManagment": "Управление карты",
+    "assignCard": "Прикрепить карты",
+    "unassignCard": "Открепить карты",
     "cardNumber": "Номер карта",
     "gsmRequest": "Поступил запрос на {{volume}} литров от {{companyName}}.",
     "sure": "Вы хотите принять или отклонить этот запрос?"

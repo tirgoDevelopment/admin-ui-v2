@@ -9,7 +9,7 @@ import { appRoutes } from "./app.routes";
 import { BrowserModule } from "@angular/platform-browser";
 import { IconsProviderModule } from "./shared/modules/icons-provider.module";
 import { NzNotificationService } from "ng-zorro-antd/notification";
-import { NgxPermissionsModule, NgxPermissionsService } from "ngx-permissions";
+import { NgxPermissionsModule } from "ngx-permissions";
 import { AngularYandexMapsModule, YaConfig } from "angular8-yandex-maps";
 import { NZ_I18N} from 'ng-zorro-antd/i18n';
 import { ru_RU } from 'ng-zorro-antd/i18n';

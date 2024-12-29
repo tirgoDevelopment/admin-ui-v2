@@ -12,6 +12,9 @@ export class GSMService {
     postGSMCardNumber(data) {
         return this.http.post(`${env.apiUrl}/users/drivers/${data.id}/gsm-card-number`, data);
     }
+    deleteGSMCardNumber(data) {
+        return this.http.delete(`${env.apiUrl}/users/drivers/${data.id}/gsm-card-number`);
+    }
     topUpTmsGSMBalance(data) {
         return this.http.post(`${env.apiUrl}/users/driver-merchants/${data.tmsId}/gsm-balance-income`, data);
     }
