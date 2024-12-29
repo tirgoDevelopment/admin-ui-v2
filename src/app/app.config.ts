@@ -15,7 +15,7 @@ import { NZ_I18N} from 'ng-zorro-antd/i18n';
 import { ru_RU } from 'ng-zorro-antd/i18n';
 import { errorInterceptor } from "./shared/interceptors/error.interceptor";
 import { authInterceptor } from "./shared/interceptors/api.interceptor";
-import { provideEnvironmentNgxMask } from "ngx-mask";
+import { provideEnvironmentNgxMask } from "ngx-mask"; 
 import ru from '@angular/common/locales/ru'; 
 import { registerLocaleData } from "@angular/common";
 import { GeoDbProModule } from "wft-geodb-angular-client";
