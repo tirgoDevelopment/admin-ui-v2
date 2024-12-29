@@ -1,6 +1,5 @@
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -8,10 +7,7 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
-import { NotificationService } from 'src/app/shared/services/notification.service';
-import { SocketService } from 'src/app/shared/services/socket.service';
 import { MerchantDriverService } from '../merchant/merchant-driver/services/merchant-driver.service';
-import { ServicesService } from '../services/services/services.service';
 import { DriverFormComponent } from '../drivers/components/driver-form/driver-form.component';
 import { DetailComponent } from '../merchant/merchant-driver/components/detail/detail.component';
 import { PageParams } from '../orders/models/page-params.interface';
@@ -52,20 +48,16 @@ export class GSMComponent implements OnInit {
     sortBy: '',
     sortType: '',
   };
+
   totalItemsCount
   currentUser: any;
   searchTms$ = new BehaviorSubject<string>('');
   tms$: Observable<any>;
   constructor(
     private gsmService: GSMService,
-    private modal: NzModalService,
     private drawer: NzDrawerService,
     private translate: TranslateService,
-    private socketService: SocketService,
-    private toastr: NotificationService,
-    private cdr: ChangeDetectorRef,
     private merchantApi: MerchantDriverService,
-    private router: Router
   ) { }
   ngOnInit(): void {
     this.currentUser = jwtDecode(localStorage.getItem('accessToken') || '');
@@ -83,8 +75,25 @@ export class GSMComponent implements OnInit {
     let filter = generateQueryFilter({ companyName: ev });
     this.searchTms$.next(filter);
   }
-  getAll() {
-    
+  getAll(): void {
+    const params = {
+      ...this.filter,
+      pageIndex: this.pageParams.pageIndex,
+      pageSize: this.pageParams.pageSize
+    };
+    this.loader = true;
+    this.gsmService.getTmsGSMTransactios(generateQueryFilter(params)).subscribe(
+      (res: any) => {
+        if (res?.success) {
+          this.data = res.data?.content || [];
+          this.totalItemsCount = res.data?.totalItemsCount || 0;
+        }
+        this.loader = false;
+      },
+      () => {
+        this.loader = false;
+      }
+    );
   }
   assignDriverCard() {
     const drawerRef: any = this.drawer.create({
@@ -102,7 +111,15 @@ export class GSMComponent implements OnInit {
       nzWidth: '400px',
     });
   }
-  changeStatus(item) { }
+  changeStatus(item, type) {
+    item.status = type
+    this.gsmService.postGsmBalanceRequest(item).subscribe((res: any) => {
+      if (res && res.success) {
+        this.getAll();
+      }
+    })
+  }
+
   showDriver(id) {
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant('information'),
@@ -141,26 +158,24 @@ export class GSMComponent implements OnInit {
   private initializeFilter(): Record<string, string> {
     return {
       driverId: '',
-      merchantId:'',
-      statusId: '',
+      merchantId: '',
+      transactionType: 'request',
       createdAtFrom: '',
       createdAtTo: '',
     };
   }
-  public onQueryParamsChange(params: NzTableQueryParams): void {
+  onQueryParamsChange(params: NzTableQueryParams): void {
     this.pageParams.pageIndex = params.pageIndex;
     this.pageParams.pageSize = params.pageSize;
-    let { sort } = params;
-    let currentSort = sort.find((item) => item.value !== null);
-    let sortField = (currentSort && currentSort.key) || null;
-    let sortOrder = (currentSort && currentSort.value) || null;
-    sortOrder === 'ascend'
-      ? (sortOrder = 'asc')
-      : sortOrder === 'descend'
-        ? (sortOrder = 'desc')
-        : (sortOrder = '');
-    this.pageParams.sortBy = sortField;
-    this.pageParams.sortType = sortOrder;
+
+    const currentSort = params.sort.find((item) => item.value !== null);
+    this.pageParams.sortBy = currentSort?.key || '';
+    this.pageParams.sortType = currentSort?.value === 'ascend' ? 'asc' : currentSort?.value === 'descend' ? 'desc' : '';
+
+    this.getAll();
+  }
+  onTabChange(index: number): void {
+    this.filter['transactionType'] = index === 0 ? 'request' : 'topup';
     this.getAll();
   }
 }
