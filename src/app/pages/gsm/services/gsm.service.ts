@@ -16,7 +16,11 @@ export class GSMService {
         return this.http.post(`${env.apiUrl}/users/driver-merchants/${data.tmsId}/gsm-balance-income`, data);
     }
 
-    getTmsGSMTransactios(data) {
-        return this.http.get(`${env.apiUrl}/users/driver-merchants/${data.id}/balance/transactions`);
+    getTmsGSMTransactios(filter) {
+        return this.http.get(`${env.apiUrl}/users/driver-merchants/gsm-transactions?` + filter);
     }
+    postGsmBalanceRequest(data) {
+        return this.http.post(`${env.apiUrl}/users/driver-merchants/${data.tmsId}/gsm-balance-request/${data.id}/${data.status}`, {});
+    }
+
 }

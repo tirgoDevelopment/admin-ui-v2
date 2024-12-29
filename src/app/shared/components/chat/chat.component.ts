@@ -100,6 +100,7 @@ export class ChatComponent implements OnInit {
 
   ngOnInit() {
     if (this.outputServiceId) {
+      this.showChatList = false;
       this.loading = true;
       this.serviceApi.getServiceRequestById(this.outputServiceId).subscribe((res: any) => {
         this.selectChat(res.data.data)

@@ -16,30 +16,30 @@
     </div>
 
     <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
-        <div>
+        <!-- <div>
             <nz-input-group class="input-group">
                 <input [(ngModel)]="filter['driverId']" type="text" nz-input
                     placeholder="{{ 'services.driverId' | translate }}" />
             </nz-input-group>
-        </div>
+        </div> -->
         <div>
             <nz-input-group class="input-group w-full">
                 <nz-select style="width: 100%; min-width: 150px;" nzShowSearch nzServerSearch
                     nzPlaceHolder="{{ 'merchant_driver' | translate }}" [nzShowArrow]="false"
-                    [(ngModel)]="filter['merchantId']" (nzOnSearch)="find($event)">
+                    [(ngModel)]="filter['tmsId']" (nzOnSearch)="find($event)">
                     <nz-option *ngFor="let o of (tms$ | async)?.data?.content" [nzLabel]="o.companyName"
                         [nzValue]="o.id">
                     </nz-option>
                 </nz-select>
             </nz-input-group>
         </div>
-        <div>
+        <!-- <div>
             <nz-select nzAllowClear="true" [(ngModel)]="filter['statusId']" nzPlaceHolder="{{ 'status' | translate }}">
                 <nz-option nzValue="requests" [nzLabel]="'requests' | translate"></nz-option>
                 <nz-option nzValue="approve" [nzLabel]="'approve' | translate"></nz-option>
                 <nz-option nzValue="reject" [nzLabel]="'reject' | translate"></nz-option>
             </nz-select>
-        </div>
+        </div> -->
 
         <div>
             <nz-input-group class="input-group">
@@ -65,63 +65,75 @@
         </button>
     </div>
 
-    <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content' }"
-        [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize" [nzTotal]="totalItemsCount"
-        [nzShowSizeChanger]="true" [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>{{'driver_merchant' | translate}}</th>
-                <th>{{ "services.driverId" | translate }}</th>
-                <th>{{ "state_number_truck" | translate }}</th>
-                <th>{{ "date_creation" | translate }}</th>
-                <th>{{ "total" | translate }} (TIR)</th>
-                <th nzRight>{{ "status" | translate }} </th>
-            </tr>
-        </thead>
+    <nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
+        <nz-tab nzTitle="{{ 'requests' | translate }}">
+            <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty"
+            [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize" [nzTotal]="totalItemsCount"
+            [nzShowSizeChanger]="true" [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>{{ "type" | translate }}</th>
+                        <th>{{'services.operator' | translate}}</th>
+                        <th>{{'driver_merchant' | translate}}</th>
+                        <th>{{'driver' | translate}}</th>
+                        <th>{{'volume_l' | translate}}</th>
+                        <th>{{ "date_creation" | translate }}</th>
+                    </tr>
+                </thead>
 
-        <tbody>
-            <tr *ngFor="let item of data; let i = index">
-                <td>{{ i + 1 }}</td>
-                <td (click)="$event.stopPropagation()" (click)="showTms(item.driver.driverMerchant)">
-                    <div class="link" *ngIf="item.driver.driverMerchant">{{item.driver.driverMerchant?.companyType + ' '
-                        +
-                        item.driver.driverMerchant?.companyName}}</div>
-                    <div *ngIf="!item.driver.driverMerchant">{{'no' | translate}}</div>
-                </td>
-                <td (click)="$event.stopPropagation()" (click)="showDriver(item.driver.id)">
-                    <div class="link">{{ item.driver.id }}</div>
-                </td>
-                <td class="ellipsis">
-                    <ng-container *ngIf="item.driver.driverTransports?.length; else noTransports">
-                        <div *ngFor="let truck of item.driver.driverTransports">
-                            {{ truck.transportNumber }}
-                        </div>
-                    </ng-container>
-                    <ng-template #noTransports>
-                        {{ "no_data" | translate }}
-                    </ng-template>
-                </td>
-                <td>{{ item.createdAt | date : "dd.MM.yyyy" }}</td>
-                <td>
-                    <div *ngIf="item.amountDetails && item.amountDetails.length > 0">
-                        {{ item.amountDetails | priceFormat }}
-                    </div>
-                    <div *ngIf="!item.amountDetails || item.amountDetails.length === 0">
-                        {{ 'no_data' | translate }}
-                    </div>
-                </td>
-                <td nzRight (click)="$event.stopPropagation()" (click)="changeStatus(item)">
-                    <span class="status" [ngStyle]="{
-                color: item.status.color,
-                borderColor: item.status.color
-              }">
-                        {{ item.status.name.toLowerCase() | translate }}
-                    </span>
-                </td>
-            </tr>
-        </tbody>
-    </nz-table>
+                <tbody>
+                    <tr *ngFor="let item of data; let i = index">
+                        <td>{{i+1}}</td>
+                        <td nz-popconfirm
+                            [nzPopconfirmTitle]="!item.isVerified && !item.isRejected ? ('gsm.gsmRequest' | translate : {volume: item.amount, companyName: item.tmsCompanyName }) : null"
+                            (nzOnConfirm)="changeStatus(item,'verify')" (nzOnCancel)="changeStatus(item,'reject')"
+                            [nzOkText]="!item.isVerified && !item.isRejected ? ('confirm' | translate) : null"
+                            [nzCancelText]="!item.isVerified && !item.isRejected ? ('reject' | translate) : null">
+                            <span [ngStyle]="{
+      'color': item.isRejected ? 'red' : item.isVerified ? 'green' : 'blue' }">
+                                {{ item.isRejected ? ('rejected'|translate) : item.isVerified ? ('accepted' |translate)
+                                :
+                                ('request' |translate) }}
+                            </span>
+                        </td>
+                        <td>
+                            {{ item.rejectedBy?.fullName ? item.rejectedBy.fullName : item.verifiedBy?.fullName ?
+                            item.verifiedBy.fullName : '' }}
+                        </td>
+                        <td>{{item.tmsCompanyName}}</td>
+                        <td>{{'('+item.driverId+')' + item.driverFullName}}</td>
+                        <td>{{item.amount}}</td>
+                        <td>{{item.createdAt | date : "dd.MM.yyyy HH:mm"}}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-tab>
+        <nz-tab nzTitle="{{ 'topUp' | translate }}">
+            <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false"
+                [nzPageSize]="pageParams.pageSize" [nzTotal]="totalItemsCount" [nzShowSizeChanger]="true"
+                [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>{{'driver_merchant' | translate}}</th>
+                        <th>{{'volume_l' | translate}}</th>
+                        <th>{{ "date_creation" | translate }}</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let item of data; let i = index">
+                        <td>{{i+1}}</td>
+                        <td>{{item.tmsCompanyName}}</td>
+                        <td>{{item.amount | priceFormat}}</td>
+                        <td>{{item.createdAt | date : "dd.MM.yyyy HH:mm"}}</td>
+                    </tr>
+                </tbody>
+            </nz-table>
+        </nz-tab>
+    </nz-tabset>
+
 </div>
 
 <ng-template #empty>
