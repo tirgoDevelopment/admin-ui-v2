@@ -19,10 +19,12 @@ import { Response } from 'src/app/shared/models/reponse';
 })
 export class DetailComponent implements OnInit {
   confirmModal?: NzModalRef;
-  @Input() data?: DriverMerchantModel;
+  @Input() id?: string | number;
   @Input() mode?: 'add' | 'edit' | 'view'; 
   loading: boolean = false;
   form: FormGroup;
+  data:DriverMerchantModel;
+  loadingPage = false;
 
   constructor(
     private toastr: NotificationService,
@@ -31,8 +33,18 @@ export class DetailComponent implements OnInit {
     private drawerRef: NzDrawerRef,
     private modal: NzModalService
   ) {}
-  ngOnInit(): void { }
-
+  ngOnInit(): void { 
+    this.getTms();
+  }
+  getTms() {
+    this.loadingPage = true;
+    this.merchantApi.getById(this.id).subscribe((res:any) => {
+      if(res) {
+        this.data = res.data;
+        this.loadingPage = false;
+      }
+    })
+  }
   onApprove() {
     this.loading = true;
     this.merchantApi.verify(this.data.id).subscribe((res: any) => {

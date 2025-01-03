@@ -76,6 +76,7 @@ export class GSMComponent implements OnInit {
     this.searchTms$.next(filter);
   }
   getAll(): void {
+    this.data = [];
     const params = {
       ...this.filter,
       pageIndex: this.pageParams.pageIndex,
@@ -86,8 +87,9 @@ export class GSMComponent implements OnInit {
       (res: any) => {
         if (res?.success) {
           this.data = res.data?.content || [];
-          this.totalItemsCount = res.data?.totalItemsCount || 0;
-        }
+          this.pageParams.totalPagesCount = res.data.totalPagesCount;
+          this.totalItemsCount = this.pageParams.pageSize * this.pageParams.totalPagesCount;
+      }
         this.loader = false;
       },
       () => {
@@ -97,7 +99,7 @@ export class GSMComponent implements OnInit {
   }
   assignDriverCard() {
     const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant('gsm.assignCard'),
+      nzTitle: this.translate.instant('gsm.cardManagment'),
       nzContent: AssignDriverCardComponent,
       nzPlacement: 'right',
       nzWidth: '400px',
@@ -119,7 +121,6 @@ export class GSMComponent implements OnInit {
       }
     })
   }
-
   showDriver(id) {
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant('information'),
@@ -133,8 +134,8 @@ export class GSMComponent implements OnInit {
       }
     });
   }
-  showTms(item) {
-    if (item) {
+  showTms(tmsId) {
+    if (tmsId) {
       const drawerRef: any = this.drawer.create({
         nzTitle: this.translate.instant('information'),
         nzContent: DetailComponent,
@@ -142,7 +143,7 @@ export class GSMComponent implements OnInit {
         nzPlacement: 'right',
         nzWidth: '400px',
         nzContentParams: {
-          data: item,
+          id: tmsId,
         }
       });
     }

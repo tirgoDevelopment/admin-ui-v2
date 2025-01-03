@@ -41,14 +41,14 @@ export class RequestsComponent implements OnInit {
     }
     )
   }
-  open(item: DriverMerchantModel) {
+  open(id: string | number) {
     const drawerRef = this.drawer.create({
       nzTitle: this.translate.instant('detail'),
       nzContent: DetailComponent,
       nzPlacement: 'right',
       nzWidth: '430px',
       nzContentParams: {
-        data: item,
+        id: id,
         mode: 'view'
       }
     });

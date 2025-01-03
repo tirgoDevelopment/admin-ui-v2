@@ -308,8 +308,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
       0
     );
   }
-
-
   changeStatus(currentStatus: any, item: any): void {
     let restrictedCodes = [];
     this.currentUser.userId == 1 ? restrictedCodes = [6, 7] : restrictedCodes = [5,6, 7];
@@ -422,8 +420,10 @@ export class ServicesComponent implements OnInit, OnDestroy {
       }
     });
   }
-  showTms(item) {
-    if(item) {
+  showTms(id) {
+    console.log(id);
+    
+    if(id) {
       const drawerRef: any = this.drawer.create({
         nzTitle: this.translate.instant('information'),
         nzContent: DetailComponent,
@@ -431,7 +431,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
         nzPlacement: 'right',
         nzWidth: '400px',
         nzContentParams: {
-          data: item,
+          id: id,
         }
       });
     }

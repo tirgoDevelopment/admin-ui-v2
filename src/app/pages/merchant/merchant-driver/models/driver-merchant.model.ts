@@ -38,5 +38,6 @@ export interface DriverMerchantModel extends BaseModel {
     garageAddress?: string,
     postalCode?: string,
     internationalCargoLisensePath?: string,
-    blocked: boolean
+    blocked: boolean,
+    balance:any
 }

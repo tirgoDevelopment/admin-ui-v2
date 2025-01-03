@@ -320,7 +320,8 @@
     </div>
     <div>
       <div class="user-name">{{ data?.firstName }} {{ data?.lastName }}</div>
-      <div class="user-id">#{{ data?.id }}</div>
+      <div class="user-id">ID: {{ data?.id }}</div>
+      <div class="user-id">{{'driver_merchant' | translate}}: {{data.driverMerchant.companyType}} {{data.driverMerchant.companyName}} </div>
     </div>
     <div class="rating">
       <i nz-icon nzType="star" nzTheme="fill"></i>
@@ -350,19 +351,27 @@
   </div>
   <div class="order-title">{{'information' | translate }}</div>
   <nz-tabset>
-    <nz-tab nzTitle="{{ 'drivers' | translate }}">
+    <nz-tab nzTitle="{{ 'driver' | translate }}">
       <div class="order-info">
         <div class="info-row">
           <div class="info-column">
             <div class="info-label">{{ 'serviceBalance' | translate }}</div>
             <div class="info-value">
-              {{data?.serviceBalance | priceFormat}} Tir
+              {{data?.serviceBalance | priceFormat}} TIR
             </div>
           </div>
           <div class="info-column">
             <div class="info-label">{{ 'tirBalance' | translate }}</div>
             <div class="info-value">
-              {{data?.tirgoBalance | priceFormat}} Tir
+              {{data?.tirgoBalance | priceFormat}} TIR
+            </div>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{ 'gsm.cardNumber' | translate }}</div>
+            <div class="info-value">
+              {{data?.gsmCardNumber }}
             </div>
           </div>
         </div>
