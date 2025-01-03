@@ -60,11 +60,6 @@ export class DriversComponent implements OnInit {
   ngOnInit(): void { }
 
   getAll(): void {
-    if (this.filter['phoneNumber']) {
-      const phoneNumber = this.filter['phoneNumber'].replace(/\s/g, '');
-      this.filter['phoneCode'] = phoneNumber.substring(0, 3);
-      this.filter['phoneNumber'] = phoneNumber.substring(3);
-    }
     this.loader = true;
     const queryString = generateQueryFilter(this.filter);
     this.driversService.getAll(this.pageParams, queryString).pipe(
@@ -166,7 +161,7 @@ export class DriversComponent implements OnInit {
   }
 
   private initializeFilter(): Record<string, string> {
-    return { firstName: '', clientId: '', phoneNumber: '', createdAtTo: '', createdAtFrom: '', lastLoginFrom: '', lastLoginTo: '' };
+    return { firstName: '', clientId: '', phoneCode: '998', phoneNumber: '', createdAtTo: '', createdAtFrom: '', lastLoginFrom: '', lastLoginTo: '' };
   }
 
   onQueryParamsChange(params: NzTableQueryParams): void {
