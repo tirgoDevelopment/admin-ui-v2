@@ -141,7 +141,7 @@ export class GSMComponent implements OnInit {
         nzContent: DetailComponent,
         nzMaskClosable: false,
         nzPlacement: 'right',
-        nzWidth: '400px',
+        nzWidth: '500px',
         nzContentParams: {
           id: tmsId,
         }
