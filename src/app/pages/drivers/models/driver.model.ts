@@ -1,4 +1,5 @@
 import { BaseModel } from "src/app/shared/models/base-model";
+import { MerchantModel } from "../../merchant/merchant-client/models/merchant.model";
 
 export interface DriverModel extends BaseModel {
     name?: string;
@@ -36,9 +37,11 @@ export interface DriverModel extends BaseModel {
     isKzPaidWay?:boolean;
     serviceBalance?:number;
     tirgoBalance?:number;
+    gsmCardNumber: string;
+    gsmBalance: string | number;
     user: {
         id: number;
         lastLogin: Date;
     }
-    // driverMerchant?:MerchantModel;
+    driverMerchant?:MerchantModel;
 }

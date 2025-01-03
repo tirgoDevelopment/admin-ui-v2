@@ -105,7 +105,7 @@ export class MerchantDriverComponent implements OnInit {
       nzPlacement: 'right',
       nzWidth: '430px',
       nzContentParams: {
-        data: item,
+        data:  item,
         mode: action
       }
     });
@@ -115,6 +115,20 @@ export class MerchantDriverComponent implements OnInit {
         this.getUnverified();
       }
     });
+  }
+  showDetail(id) {
+    if(id) {
+      const drawerRef: any = this.drawer.create({
+        nzTitle: this.translate.instant('information'),
+        nzContent: DetailComponent,
+        nzMaskClosable: false,
+        nzPlacement: 'right',
+        nzWidth: '400px',
+        nzContentParams: {
+          id: id,
+        }
+      });
+    }
   }
   showHistoryTransaction(item:DriverMerchantModel) {
     this.router.navigate([`/merchant-driver/transactions/${item.id}/${item.companyType + ' ' + item.companyName}`]);

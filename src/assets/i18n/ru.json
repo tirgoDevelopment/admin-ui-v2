@@ -18,6 +18,7 @@
   "codeTNVED": "Код ТНВЭД",
   "chat": "Чат",
   "activity": "Активность",
+  "alreadyRequested": "Уже запрошенный",
   "verification": "Верификация",
   "agents": "Агенты",
   "role_user": "Роли пользователей",
@@ -483,6 +484,8 @@
   "topUp": "Пополнение",
   "assign": "Прикрепить",
   "unAssign": "Открепить ",
+  "date_creation_from": "Дата создания от",
+  "date_creation_to": "Дата создания по",
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",
@@ -518,10 +521,11 @@
   },
   "gsm": {
     "title": "ГСМ",
-    "cardManagment": "Управление карты",
+    "cardManagment": "Управление картами",
     "assignCard": "Прикрепить карты",
     "unassignCard": "Открепить карты",
-    "cardNumber": "Номер карта",
+    "cardNumber": "Номер карта ГСМ",
+    "balance": "Баланс ГСМ",
     "gsmRequest": "Поступил запрос на {{volume}} литров от {{companyName}}.",
     "sure": "Вы хотите принять или отклонить этот запрос?"
   }
