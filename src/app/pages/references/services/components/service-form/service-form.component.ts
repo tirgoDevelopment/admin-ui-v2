@@ -68,6 +68,9 @@ export class ServiceFormComponent implements OnInit {
       formValue.kztAmount = '0';
       formValue.tirAmount = '0';
     }
+    formValue.uzsAmount = formValue.uzsAmount.toString();
+    formValue.kztAmount = formValue.kztAmount.toString();
+    formValue.tirAmount = formValue.tirAmount.toString();
     const submitObservable = this.data
       ? this.serviceApi.putService(formValue)
       : this.serviceApi.postService(formValue);
