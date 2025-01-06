@@ -70,6 +70,9 @@ export class MainComponent {
         this.changeDetector.detectChanges();
         this.pushService.showPushNotification(`Новое сообщение поступило на сервис в id ${event.data.requestId}`, event.data.message.message );
       }
+      if (event.event === 'newServiceRequest') {
+        this.pushService.showPushNotification(`Новая заявка на сервис `, '' );
+      }
     });
 
   }

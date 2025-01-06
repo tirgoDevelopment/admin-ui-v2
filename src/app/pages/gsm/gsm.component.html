@@ -69,7 +69,7 @@
 
     <nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
         <nz-tab nzTitle="{{ 'requests' | translate }}">
-            <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false"
+            <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false" [nzPaginationPosition]="'both'"
                 [nzPageSize]="pageParams.pageSize" [nzTotal]="totalItemsCount" [nzShowSizeChanger]="true"
                 [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
                 <thead>
