@@ -50,7 +50,7 @@
 
 </div>
 
-<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content' }" [nzFrontPagination]="false"
+<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content' }" [nzFrontPagination]="false" [nzPaginationPosition]="'both'"
 [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"
 (nzQueryParams)="onQueryParamsChange($event)">
   <thead>
@@ -69,7 +69,7 @@
   </thead>
 
   <tbody>
-    <tr *ngFor="let item of data; let i = index" (click)="showHistoryTransaction(item)" style="cursor: pointer;">
+    <tr *ngFor="let item of data; let i = index" (click)="showDrivers(item)" style="cursor: pointer;">
       <td> {{ i+1 }} </td>
       <td> {{ item.id }} </td>
       <td> {{ item.supervisorFirstName }} {{ item.supervisorLastName }} </td>

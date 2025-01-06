@@ -58,14 +58,7 @@ export enum SseEventNames {
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.scss'],
   standalone: true,
-  imports: [
-    CommonModules,
-    NzModules,
-    TranslateModule,
-    IconsProviderModule,
-    PipeModule,
-    ChatComponent
-  ],
+  imports: [ CommonModules,NzModules,TranslateModule,IconsProviderModule,PipeModule,ChatComponent],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -114,7 +107,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.getRefServices();
     this.currentUser = jwtDecode(localStorage.getItem('accessToken') || '');
     this.sseSubscription = this.socketService.getSSEEvents().subscribe((event) => {
-    this.handleSocketEvent(event);
+      this.handleSocketEvent(event);
       if (event.event === 'newServiceRequest') {
         this.getAll();
       }
@@ -310,7 +303,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
   changeStatus(currentStatus: any, item: any): void {
     let restrictedCodes = [];
-    this.currentUser.userId == 1 ? restrictedCodes = [6, 7] : restrictedCodes = [5,6, 7];
+    this.currentUser.userId == 1 ? restrictedCodes = [6, 7] : restrictedCodes = [5, 6, 7];
     if (this.isRestrictedStatus(currentStatus.code, restrictedCodes)) {
       this.showRestrictedStatusError(currentStatus.code);
       return;
@@ -369,14 +362,14 @@ export class ServicesComponent implements OnInit, OnDestroy {
           this.getAll();
           this.modal.closeAll();
         }
-        else if(response?.messages[0] == 'notEnoughBalance') {
+        else if (response?.messages[0] == 'notEnoughBalance') {
           this.toastr.error(this.translate.instant('notEnoughBalance'));
         }
       });
   }
   getCancelButtonConfig(selectedService: any): { text: string; onCancel: () => void } {
     const currentUser: any = jwtDecode(localStorage.getItem('accessToken') || '');
-  
+
     if (currentUser.userId == 1) {
       return {
         text: this.translate.instant('services.cancelService'),
@@ -385,7 +378,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     } else {
       return {
         text: this.translate.instant('cancel'),
-        onCancel: () => {},
+        onCancel: () => { },
       };
     }
   }
@@ -421,9 +414,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     });
   }
   showTms(id) {
-    console.log(id);
-    
-    if(id) {
+    if (id) {
       const drawerRef: any = this.drawer.create({
         nzTitle: this.translate.instant('information'),
         nzContent: DetailComponent,
@@ -435,7 +426,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
         }
       });
     }
-    
+
   }
   showChatForService(id) {
     this.selectedServiceId = id;

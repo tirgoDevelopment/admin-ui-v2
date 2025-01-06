@@ -140,17 +140,6 @@ export class DriversComponent implements OnInit {
     });
   }
 
-  onPageIndexChange(pageIndex: number): void {
-    this.pageParams.pageIndex = pageIndex;
-    this.getAll();
-  }
-
-  onPageSizeChange(pageSize: number): void {
-    this.pageParams.pageSize = pageSize;
-    this.pageParams.pageIndex = 0;
-    this.getAll();
-  }
-
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
@@ -165,13 +154,14 @@ export class DriversComponent implements OnInit {
   }
 
   onQueryParamsChange(params: NzTableQueryParams): void {
-    let { sort } = params;
-    let currentSort = sort.find(item => item.value !== null);
-    let sortField = (currentSort && currentSort.key) || null;
-    let sortOrder = (currentSort && currentSort.value) || null;
-    sortOrder === 'ascend' ? (sortOrder = 'asc') : sortOrder === 'descend' ? (sortOrder = 'desc') : sortOrder = '';
-    this.pageParams.sortBy = sortField;
-    this.pageParams.sortType = sortOrder;
+    const { pageIndex, pageSize, sort } = params;
+    this.pageParams.pageIndex = pageIndex - 1;
+    this.pageParams.pageSize = pageSize;
+  
+    const currentSort = sort.find(item => item.value !== null);
+    this.pageParams.sortBy = currentSort?.key || null;
+    this.pageParams.sortType = currentSort?.value === 'ascend' ? 'asc' : currentSort?.value === 'descend' ? 'desc' : '';
+  
     this.getAll();
   }
 
