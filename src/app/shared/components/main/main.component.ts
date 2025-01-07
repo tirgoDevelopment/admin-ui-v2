@@ -13,6 +13,7 @@ import { ServicesService } from 'src/app/pages/services/services/services.servic
 import { jwtDecode } from 'jwt-decode';
 import { PushService } from '../../services/push.service';
 import { PermissionService } from '../../services/permission.service';
+import { Permission } from '../../enum/per.enum';
 
 @Component({
   selector: 'app-main',
@@ -22,9 +23,8 @@ import { PermissionService } from '../../services/permission.service';
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent {
-
+  Permission = Permission;
   chatIconPosition = { x: 0, y: 0 };
-
   isLoading: boolean = false;
   theme: 'light' | 'dark';
   isCollapsed = true;
@@ -46,7 +46,7 @@ export class MainComponent {
     public authService: AuthService,
     private serviceApi: ServicesService,
     private pushService: PushService,
-    private permissionService: PermissionService,
+    public permissionService: PermissionService,
     private router: Router) {
   }
   ngOnInit(): void {
@@ -102,7 +102,9 @@ export class MainComponent {
     this.router.navigate(['/auth/sign-up']);
   } 
   toggleChat() {
-    this.isChatVisible = !this.isChatVisible;
+    if(this.permissionService.hasPermission(Permission.ServiceChat)) {
+      this.isChatVisible = !this.isChatVisible;
+    }
   }
   closeChat() {
     this.isChatVisible = false;

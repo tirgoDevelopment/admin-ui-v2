@@ -16,6 +16,8 @@ import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { SendPushComponent } from '../drivers/components/send-push/send-push.component';
+import { PermissionService } from 'src/app/shared/services/permission.service';
+import { Permission } from 'src/app/shared/enum/per.enum';
 
 @Component({
   selector: 'app-clients',
@@ -33,6 +35,7 @@ import { SendPushComponent } from '../drivers/components/send-push/send-push.com
   ]
 })
 export class ClientsComponent implements OnInit {
+  Permission = Permission;
   confirmModal?: NzModalRef;
   data: ClientModel[] = [];
   loader: boolean = false;
@@ -52,7 +55,8 @@ export class ClientsComponent implements OnInit {
     private modal: NzModalService,
     private clientsService: ClientsService,
     private drawer: NzDrawerService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public  perService: PermissionService
   ) { }
 
   ngOnInit(): void {  

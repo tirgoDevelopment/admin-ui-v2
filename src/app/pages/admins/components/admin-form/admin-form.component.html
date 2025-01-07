@@ -25,11 +25,11 @@
     </nz-select>
   </nz-input-group>
 
-  <div style="position: absolute; bottom: 10px; right: 10px; display: flex; gap: 10px;">
-    <button nz-button class="danger-button" (click)="onCancel()">
-      {{ 'cancel' | translate }}
+  <div class="button-wrapper">
+    <button nz-button class="danger-button"  *ngIf="perService.hasPermission(Permission.AdminDelete)" (click)="remove()" [nzLoading]="loading">
+      {{ 'remove' | translate }}
     </button>
-    <button nz-button class="success-button" [disabled]="form.invalid" (click)="onSubmit()">
+    <button nz-button class="success-button"  *ngIf="perService.hasPermission(Permission.AdminUpdate) || perService.hasPermission(Permission.AdminCreate)" [disabled]="form.invalid" (click)="onSubmit()" [nzLoading]="loading">
       {{ 'save' | translate }}
     </button>
   </div>

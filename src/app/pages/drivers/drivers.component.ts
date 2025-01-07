@@ -19,6 +19,8 @@ import { AddTransportComponent } from './components/add-transport/add-transport.
 import { SendPushComponent } from './components/send-push/send-push.component';
 import { AssignTmcComponent } from './components/assign-tmc/assign-tmc.component';
 import { TopupBalanceDriverComponent } from './components/topup-balance-driver/topup-balance-driver.component';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 @Component({
   selector: 'app-drivers',
@@ -36,6 +38,8 @@ import { TopupBalanceDriverComponent } from './components/topup-balance-driver/t
   ]
 })
 export class DriversComponent implements OnInit {
+  Permission = Permission;
+
   confirmModal?: NzModalRef;
   data: DriverModel[] = [];
   loader: boolean = false;
@@ -54,7 +58,8 @@ export class DriversComponent implements OnInit {
     private modal: NzModalService,
     private driversService: DriversService,
     private drawer: NzDrawerService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public perService: PermissionService,
   ) { }
 
   ngOnInit(): void { }
@@ -74,7 +79,7 @@ export class DriversComponent implements OnInit {
       tap(() => (this.loader = false))
     ).subscribe();
   }
-  handleDrawer(action: 'add' | 'edit' | 'view', id?:number|string): void {
+  handleDrawer(action: 'add' | 'edit' | 'view', id?: number | string): void {
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant(
         action === 'add' ? 'add' :
@@ -94,7 +99,7 @@ export class DriversComponent implements OnInit {
         this.getAll();
         drawerRef.componentInstance?.form.reset();
       }
-      if (res && res.success && res?.mode === 'add') {
+      if (res && res.success && res?.mode === 'add' && (this.perService.hasPermission(Permission.DriverAddTransport))) {
         this.confirmModal = this.modal.confirm({
           nzTitle: this.translate.instant('Вы хотите добавить транспорт ?'),
           nzOkText: this.translate.instant('yes'),
@@ -114,7 +119,7 @@ export class DriversComponent implements OnInit {
               this.getAll();
             });
           },
-          nzOnCancel:() => {
+          nzOnCancel: () => {
             this.getAll();
           }
         })
@@ -123,20 +128,22 @@ export class DriversComponent implements OnInit {
   }
 
   remove(id: number | string): void {
-    this.confirmModal = this.modal.confirm({
-      nzTitle: this.translate.instant('are_you_sure'),
-      nzOkText: this.translate.instant('remove'),
-      nzCancelText: this.translate.instant('cancel'),
-      nzOkDanger: true,
-      nzOnOk: () => {
-        this.driversService.delete(id).subscribe((res: any) => {
-          if (res?.success) {
-            this.toastr.success(this.translate.instant('successfullDeleted'), '');
-            this.getAll();
-          }
-        });
-      }
-    });
+    if (this.perService.hasPermission(Permission.DriverDelete)) {
+      this.confirmModal = this.modal.confirm({
+        nzTitle: this.translate.instant('are_you_sure'),
+        nzOkText: this.translate.instant('remove'),
+        nzCancelText: this.translate.instant('cancel'),
+        nzOkDanger: true,
+        nzOnOk: () => {
+          this.driversService.delete(id).subscribe((res: any) => {
+            if (res?.success) {
+              this.toastr.success(this.translate.instant('successfullDeleted'), '');
+              this.getAll();
+            }
+          });
+        }
+      });
+    }
   }
 
   toggleFilter(): void {
@@ -149,18 +156,18 @@ export class DriversComponent implements OnInit {
   }
 
   private initializeFilter(): Record<string, string> {
-    return { firstName: '', clientId: '', phoneCode: '998', phoneNumber: '', createdAtTo: '', createdAtFrom: '', lastLoginFrom: '', lastLoginTo: '' };
+    return { firstName: '', clientId: '', phoneNumber: '', createdAtTo: '', createdAtFrom: '', lastLoginFrom: '', lastLoginTo: '' };
   }
 
   onQueryParamsChange(params: NzTableQueryParams): void {
     const { pageIndex, pageSize, sort } = params;
     this.pageParams.pageIndex = pageIndex - 1;
     this.pageParams.pageSize = pageSize;
-  
+
     const currentSort = sort.find(item => item.value !== null);
     this.pageParams.sortBy = currentSort?.key || null;
     this.pageParams.sortType = currentSort?.value === 'ascend' ? 'asc' : currentSort?.value === 'descend' ? 'desc' : '';
-  
+
     this.getAll();
   }
 
@@ -181,16 +188,36 @@ export class DriversComponent implements OnInit {
       }
     })
   }
-  topupBalance(){
-    const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant('top_up_balance'),
-      nzContent: TopupBalanceDriverComponent,
-      nzPlacement: 'right'
-    })
-    drawerRef.afterClose.subscribe((res: any) => {
-      if (res && res?.success) {
-        this.getAll();
-      }
-    });
+  topupBalance() {
+    if (this.perService.hasPermission(Permission.DriverTopUpBalance)) {
+      const drawerRef: any = this.drawer.create({
+        nzTitle: this.translate.instant('top_up_balance'),
+        nzContent: TopupBalanceDriverComponent,
+        nzPlacement: 'right'
+      })
+      drawerRef.afterClose.subscribe((res: any) => {
+        if (res && res?.success) {
+          this.getAll();
+        }
+      });
+    }
+  }
+  addTransport(id) {
+    if (this.perService.hasPermission(Permission.DriverAddTransport)) {
+      const drawerRef: any = this.drawer.create({
+        nzTitle: this.translate.instant('add_transport'),
+        nzContent: AddTransportComponent,
+        nzPlacement: 'right',
+        nzContentParams: {
+          driverId: id,
+          mode: 'add'
+        }
+      });
+      drawerRef.afterClose.subscribe((res: any) => {
+        if (res && res?.success) {
+          this.getAll();
+        }
+      });
+    }
   }
 }
