@@ -1,9 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import { RolesService } from 'src/app/shared/services/references/role.service';
 
 @Component({
   selector: 'app-role-form',
@@ -15,41 +18,96 @@ import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 export class RoleFormComponent implements OnInit {
   @Input() data?: any;
   form: FormGroup;
-  permissionKeys: string[] = [];
+  
+  permissionKeys = [
+    'create',
+    'update',
+    'delete',
+    'cancel',
+    'verify',
+    'reject',
+    'sendPush',
+    'chat',
+    'trackingPage',
+    'adminsPage',
+    'tmsesPage',
+    'merchantsPage',
+    'dashboardPage',
+    'archivePage',
+    'ordersPage',
+    'driverServicesPage',
+    'referencesPage',
+    'driversPage',
+    'clientsPage',
+    'gsmPage',
+  ];
+
   loading = false;
+
   constructor(
     private fb: FormBuilder,
+    private roleService: RolesService,
+    private toastr: NotificationService,
+    private translate: TranslateService,
+    private drawerRef: NzDrawerRef
   ) {
     this.form = this.fb.group({
+      id: new FormControl(''),
       name: new FormControl('', Validators.required),
       permission: this.fb.group({})
     });
-
   }
 
   ngOnInit(): void {
     if (this.data) {
-      this.permissionKeys = Object.keys(this.data.permission || {});
       this.permissionKeys = Object.keys(this.data.permission || {}).filter(
         (key) => !['id', 'createdAt', 'active', 'deleted'].includes(key)
       );
+      
       const permissionGroup = this.fb.group({});
       this.permissionKeys.forEach((key) => {
         permissionGroup.addControl(key, new FormControl(this.data.permission[key] || false));
       });
+      
       this.form.setControl('permission', permissionGroup);
-      this.form.patchValue({
-        name: this.data.name,
+      this.form.patchValue(this.data);
+    } else {
+      const permissionGroup = this.fb.group({});
+      this.permissionKeys.forEach((key) => {
+        permissionGroup.addControl(key, new FormControl(false));
       });
+
+      this.form.setControl('permission', permissionGroup);
     }
   }
 
   onSubmit(): void {
     if (this.form.valid) {
-
+      this.loading = true;
+      if (this.data) {
+        this.roleService.update(this.form.value).subscribe((res: any) => {
+          if (res && res.success) {
+            this.loading = false;
+            this.toastr.success(this.translate.instant('successfullUpdated'), '');
+            this.drawerRef.close({ success: true });
+          }
+        }, (err) => {
+          this.loading = false;
+        });
+      } else {
+        this.roleService.create(this.form.value).subscribe((res: any) => {
+          if (res && res.success) {
+            this.loading = false;
+            this.toastr.success(this.translate.instant('successfullCreated'), '');
+            this.drawerRef.close({ success: true });
+          }
+        }, (err) => {
+          this.loading = false;
+        });
+      }
     }
   }
-  onDelete() {
 
+  onDelete() {
   }
 }

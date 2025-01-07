@@ -64,6 +64,7 @@ export class RolesComponent implements OnInit {
       nzTitle: this.translate.instant('add'),
       nzContent: RoleFormComponent,
       nzPlacement: 'right',
+      nzWidth: '50%'
     });
     drawerRef.afterClose.subscribe((res:any) => {
       if(res && res.success){
