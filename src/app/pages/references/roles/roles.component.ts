@@ -9,6 +9,7 @@ import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.modul
 import { RoleFormComponent } from './components/role-form/role-form.component';
 import { RolesService } from 'src/app/shared/services/references/role.service';
 import { RoleModel } from './models/role.model';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-roles',
@@ -19,7 +20,6 @@ import { RoleModel } from './models/role.model';
   providers: [NzModalService]
 })
 export class RolesComponent implements OnInit {
-
   confirmModal?: NzModalRef;
   data: any[];
   loader: boolean = false;
@@ -45,6 +45,7 @@ export class RolesComponent implements OnInit {
   ngOnInit(): void {
     this.getAll();
   }
+
   getAll() {
     this.loader = true;
     this.rolesService.getAll().subscribe((res:any) => {
@@ -76,6 +77,7 @@ export class RolesComponent implements OnInit {
       nzTitle: this.translate.instant('edit_admins'),
       nzContent: RoleFormComponent,
       nzPlacement: 'right',
+      nzWidth: '50%',
       nzContentParams: { data: item }
     });
     drawerRef.afterClose.subscribe((res:any) => {

@@ -59,14 +59,7 @@ export enum SseEventNames {
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.scss'],
   standalone: true,
-  imports: [
-    CommonModules,
-    NzModules,
-    TranslateModule,
-    IconsProviderModule,
-    PipeModule,
-    ChatComponent
-  ],
+  imports: [ CommonModules,NzModules,TranslateModule,IconsProviderModule,PipeModule,ChatComponent],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -424,8 +417,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
     });
   }
   showTms(id) {
-    console.log(id);
-
     if (id) {
       const drawerRef: any = this.drawer.create({
         nzTitle: this.translate.instant('information'),

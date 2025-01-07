@@ -29,8 +29,9 @@
     [nzShowPagination]="false" 
     [nzSize]="'middle'" 
     [nzData]="data"
-    [nzLoading]="loader" 
-    [nzNoResult]="empty" 
+    [nzLoading]="loader"
+    [nzNoResult]="empty"
+    [nzPaginationPosition]="'both'"
     (nzQueryParams)="onQueryParamsChange($event)"
     [nzScroll]="{ x: 'max-content' }">
     <thead>

@@ -115,16 +115,41 @@ export class ChatComponent implements OnInit {
     this.getChats();
     this.sseSubscription = this.socketService.getSSEEvents().subscribe((event) => {
       if (event.event === 'newMessage') {
+        console.log(event.data.message);
+        
+        this.showPushNotification(event.data.message);
         let a = this.chats.find(i => i.id == event.data.requestId)
         a.unreadMessagesCount = a.unreadMessagesCount + 1;
         if (this.selectedChat && (event.data.requestId == this.selectedChat.id)) {
           this.messages.push(event.data.message);
-
+          this.showPushNotification(event.data.message);
         }
       }
     });
 
   }
+  showPushNotification(message: string) {
+    if ('Notification' in window) {
+      if (Notification.permission === 'granted') {
+        new Notification('Yangi xabar', {
+          body: message,
+          icon: 'assets/icon.png',
+        });
+      } else if (Notification.permission !== 'denied') {
+        Notification.requestPermission().then((permission) => {
+          if (permission === 'granted') {
+            new Notification('Yangi xabar', {
+              body: message,
+              icon: 'assets/icon.png',
+            });
+          }
+        });
+      }
+    } else {
+      console.error('Brauzer Notification API ni qo‘llab-quvvatlamaydi.');
+    }
+  }
+  
   ngOnDestroy() {
     if (this.sseSubscription) {
       this.sseSubscription.unsubscribe();

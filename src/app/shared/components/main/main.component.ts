@@ -79,6 +79,7 @@ export class MainComponent {
     });
 
   }
+ 
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();

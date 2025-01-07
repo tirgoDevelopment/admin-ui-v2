@@ -12,109 +12,16 @@
 
 <nz-table [nzSize]="'middle'" [nzPaginationPosition]="'bottom'" [nzData]="data" [nzPageSizeOptions]="[10, 20, 30]"
   [nzShowPagination]="true" [nzShowSizeChanger]="true" [nzLoading]="loader" [nzNoResult]="('no_data' | translate)"
-  (nzPageIndexChange)="onPageIndexChange($event)" (nzPageSizeChange)="onPageSizeChange($event)" [nzScroll]="{ x: 'max-content' }">
+  (nzPageIndexChange)="onPageIndexChange($event)" (nzPageSizeChange)="onPageSizeChange($event)">
   <thead>
     <tr>
       <th nzLeft>{{ 'role' | translate }}</th>
-      <th>{{ 'add_driver' | translate }}</th>
-      <th>{{ 'add_client' | translate }}</th>
-      <th>{{ 'add_order' | translate }}</th>
-      <th>{{ 'cancel_order' | translate }}</th>
-      <th>{{ 'send_push' | translate }}</th>
-      <th>{{ 'chat' | translate }}</th>
-      <th>{{ 'tracking' | translate }}</th>
-      <th>{{ 'registr_merchant' | translate }}</th>
-      <th>{{ 'driver_merchant_page' | translate }}</th>
-      <th>{{ 'client_merchant_page' | translate }}</th>
-      <th>{{ 'driver_verification' | translate }}</th>
-      <th>{{ 'agent_page' | translate }}</th>
-      <th>{{ 'dashboard_page' | translate }}</th>
-      <th>{{ 'archived_page' | translate }}</th>
-      <th>{{ 'order_page' | translate }}</th>
-      <th>{{ 'reference_page' | translate }}</th>
-      <th>{{ 'active_page' | translate }}</th>
-      <th>{{ 'admin_agent_page' | translate }}</th>
       <th></th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let item of data; let i = index">
+    <tr *ngFor="let item of data; let i = index" (click)="update(item)">
       <td nzLeft>{{ item.name }}</td>
-      <td>
-        <span *ngIf="item?.permission?.addDriver">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.addDriver">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.addClient">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.addClient">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.addOrder">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.addOrder">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.cancelOrder">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.cancelOrder">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.sendPush">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.sendPush">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.chat">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.chat">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.tracking">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.tracking">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.registrMerchant">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.registrMerchant">{{"no"|translate}}</span>
-      </td>
-  
-      <td>
-        <span *ngIf="item?.permission?.driverMerchantPage">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.driverMerchantPage">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.clientMerchantPage">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.clientMerchantPage">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.driverVerification">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.driverVerification">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.agentPage">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.agentPage">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.dashboardPage">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.dashboardPage">{{"no"|translate}}</span>
-      </td>
-
-      <td>
-        <span *ngIf="item?.permission?.archivedPage">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.archivedPage">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.orderPage">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.orderPage">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.referencesPage">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.referencesPage">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.activePage">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.activePage">{{"no"|translate}}</span>
-      </td>
-      <td>
-        <span *ngIf="item?.permission?.adminAgentPage">{{"yes"|translate}}</span>
-        <span *ngIf="!item?.permission?.adminAgentPage">{{"no"|translate}}</span>
-      </td>
-
       <td class="action-col">
         <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
           <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>

@@ -145,15 +145,7 @@ export class MerchantDriverComponent implements OnInit {
       nzContentParams: { merchantId: id }
     });
   }
-  onPageIndexChange(pageIndex: number): void {
-    this.pageParams.pageIndex = pageIndex;
-    this.getVerified();
-  }
-  onPageSizeChange(pageSize: number): void {
-    this.pageParams.pageSize = pageSize;
-    // this.pageParams.pageIndex = 0;
-    this.getVerified();
-  }
+
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
@@ -161,13 +153,14 @@ export class MerchantDriverComponent implements OnInit {
     return { companyName: '', merchantId: '', createdAtFrom: '', createdAtTo: '' };
   }
   onQueryParamsChange(params: NzTableQueryParams): void {
-    let { sort } = params;
-    let currentSort = sort.find(item => item.value !== null);
-    let sortField = (currentSort && currentSort.key) || null;
-    let sortOrder = (currentSort && currentSort.value) || null;
-    sortOrder === 'ascend' ? (sortOrder = 'asc') : sortOrder === 'descend' ? (sortOrder = 'desc') : sortOrder = '';
-    this.pageParams.sortBy = sortField;
-    this.pageParams.sortType = sortOrder;
+    const { pageIndex, pageSize, sort } = params;
+    this.pageParams.pageIndex = pageIndex ;
+    this.pageParams.pageSize = pageSize;
+  
+    const currentSort = sort.find(item => item.value !== null);
+    this.pageParams.sortBy = currentSort?.key || null;
+    this.pageParams.sortType = currentSort?.value === 'ascend' ? 'asc' : currentSort?.value === 'descend' ? 'desc' : '';
+  
     this.getVerified();
   }
   resetFilter(): void {
