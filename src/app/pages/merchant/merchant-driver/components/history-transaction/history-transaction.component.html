@@ -53,7 +53,7 @@
       <div class="card-title">{{ 'tirBalance' | translate }}</div>
       <div class="card-content">
         <span class="amount">{{tirBalance | priceFormat}}</span>
-        <span class="currency">Tir</span> 
+        <span class="currency">Tir</span>
       </div>
     </div>
   </nz-card>
@@ -68,8 +68,8 @@
   </nz-card>
 </div>
 <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false"
-[nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"
-(nzQueryParams)="onQueryParamsChange($event)">
+  [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true"
+  [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)"  #fixedTable nzTableLayout="fixed">
   <thead>
     <tr>
       <th>No</th>
@@ -78,6 +78,7 @@
       <th> {{ 'sum' | translate }} (Tir)</th>
       <th>{{ 'date' | translate }}</th>
       <th>{{ 'type' | translate }}</th>
+      <th nzEllipsis>{{'description' | translate}} </th>
     </tr>
   </thead>
 
@@ -87,8 +88,9 @@
       <td> {{ item.id }} </td>
       <td> {{ item.createdBy?.staff?.username }}</td>
       <td> {{ item?.tirAmount | priceFormat }} </td>
-      <td> {{ item.createdAt | date:'dd/MM/yyyy HH:mm'}} </td>
+      <td> {{ item.createdAt | date:'dd.MM.yyyy HH:mm'}} </td>
       <td> {{item.balanceType == 'tirgo' ? ('tirBalance' | translate) : ('serviceBalance' | translate)}}</td>
+      <td nzEllipsis [nzTooltipTitle]="item.description" nzTooltipPlacement="top" nz-button nz-tooltip>{{item.description}}</td>
     </tr>
   </tbody>
 </nz-table>

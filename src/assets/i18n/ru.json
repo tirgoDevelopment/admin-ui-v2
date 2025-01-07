@@ -16,6 +16,7 @@
   "cargo_type": "Тип груза",
   "cargo_group_type": "Тип группы груза",
   "codeTNVED": "Код ТНВЭД",
+  "driverHasNotGsmCard": "У водителя нету карты",
   "chat": "Чат",
   "activity": "Активность",
   "alreadyRequested": "Уже запрошенный",

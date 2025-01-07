@@ -72,12 +72,18 @@ export class DriversComponent implements OnInit {
     });
   }
   getAll() {
+    this.loader = true;
     if (this.merchantId) {
       this.driverApi.getAll(this.pageParams, generateQueryFilter({merchantId:this.merchantId})).subscribe((res: any) => {
         if (res && res.success) {
           this.data = res.data.content;
           this.pageParams.totalPagesCount = res.data.totalPagesCount;
+          this.loader = false;
+        }else {
+          this.loader = false;
         }
+      },err => {
+        this.loader = false;
       });
     }
   }

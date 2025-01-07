@@ -17,13 +17,14 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { RequestsComponent } from './components/requests/requests.component';
 import { DetailComponent } from './components/detail/detail.component';
 import { FormComponent } from './components/form/form.component';
+import { TopupBalanceTmsComponent } from './components/topup-balance-tms/topup-balance-tms.component';
 
 @Component({
   selector: 'app-merchant-driver',
   templateUrl: './merchant-driver.component.html',
   styleUrls: ['./merchant-driver.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule,RouterModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule, RouterModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -105,7 +106,7 @@ export class MerchantDriverComponent implements OnInit {
       nzPlacement: 'right',
       nzWidth: '430px',
       nzContentParams: {
-        data:  item,
+        data: item,
         mode: action
       }
     });
@@ -117,7 +118,7 @@ export class MerchantDriverComponent implements OnInit {
     });
   }
   showDetail(id) {
-    if(id) {
+    if (id) {
       const drawerRef: any = this.drawer.create({
         nzTitle: this.translate.instant('information'),
         nzContent: DetailComponent,
@@ -130,11 +131,19 @@ export class MerchantDriverComponent implements OnInit {
       });
     }
   }
-  showHistoryTransaction(item:DriverMerchantModel) {
+  showHistoryTransaction(item: DriverMerchantModel) {
     this.router.navigate([`/merchant-driver/transactions/${item.id}/${item.companyType + ' ' + item.companyName}`]);
   }
-  showDrivers(item:DriverMerchantModel) {
-    this.router.navigate([`/merchant-driver/drivers/${item.id}`]);
+  showDrivers(id) {
+    this.router.navigate([`/merchant-driver/drivers/${id}`]);
+  }
+  topupBalance(id) {
+    let drawerRef = this.drawer.create({
+      nzTitle: this.translate.instant('top_up_balance'),
+      nzContent: TopupBalanceTmsComponent,
+      nzPlacement: 'right',
+      nzContentParams: { merchantId: id }
+    });
   }
   onPageIndexChange(pageIndex: number): void {
     this.pageParams.pageIndex = pageIndex;
@@ -165,7 +174,7 @@ export class MerchantDriverComponent implements OnInit {
     this.filter = this.initializeFilter();
     this.getVerified();
   }
-  onBlock(item:DriverMerchantModel) {
+  onBlock(item: DriverMerchantModel) {
     if (item.blocked) {
       this.merchantApi.activate(item.id).subscribe((res) => {
         this.toastr.success(this.translate.instant('successfullyActivated'), '');
@@ -177,7 +186,7 @@ export class MerchantDriverComponent implements OnInit {
       this.blockModal(item)
     }
   }
-  blockModal(item:DriverMerchantModel): void {
+  blockModal(item: DriverMerchantModel): void {
     this.confirmModal = this.modal.confirm({
       nzTitle: this.translate.instant('are_you_sure'),
       nzContent: this.translate.instant('block_sure'),

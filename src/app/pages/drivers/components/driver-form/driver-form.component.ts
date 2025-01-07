@@ -92,9 +92,12 @@ export class DriverFormComponent implements OnInit {
     if (this.id && (this.mode == 'view' || this.mode == 'edit')) {
       this.loadingPage = true;
       this.driversService.getById(this.id).subscribe((res: Response<DriverModel>) => {
-        this.data = res.data;
-        this.patchForm();
-        this.loadingPage = false;
+        if(res) {
+          this.data = res.data;
+          this.patchForm();
+          this.loadingPage = false;
+        }
+        
       }, err => {
         this.loadingPage = false;
       });

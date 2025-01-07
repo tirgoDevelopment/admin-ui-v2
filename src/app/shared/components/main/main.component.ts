@@ -11,6 +11,7 @@ import { CommonModules } from '../../modules/common.module';
 import { SocketService } from '../../services/socket.service';
 import { ServicesService } from 'src/app/pages/services/services/services.service';
 import { jwtDecode } from 'jwt-decode';
+import { PushService } from '../../services/push.service';
 
 @Component({
   selector: 'app-main',
@@ -43,6 +44,7 @@ export class MainComponent {
     private translate: TranslateService,
     public authService: AuthService,
     private serviceApi: ServicesService,
+    private pushService: PushService,
     private router: Router) {
   }
   ngOnInit(): void {
@@ -63,10 +65,16 @@ export class MainComponent {
     });
     this.getChats();
     this.subscription = this.socketService.getSSEEvents().subscribe((event) => {
-      console.log(event);
       if (event.event === 'newMessage' && event.data.userType != 'staff' && (this.chat && this.chat.id) !== event.data.requestId) {
         this.newMessageCount = this.newMessageCount + 1;
         this.changeDetector.detectChanges();
+        this.pushService.showPushNotification(`Новое сообщение поступило на услугу в id ${event.data.requestId}`, event.data.message.message, 'service' );
+      }
+      if (event.event === 'tmsGsmBalanceTopup') {
+        this.pushService.showPushNotification('Поступил запрос на пополнение ГСМ баланса', 'от компании '+ event.data?.driverMerchant.companyType +  event.data?.driverMerchant.companyName,'gsm')
+      }
+      if (event.event === 'newServiceRequest') {
+        this.pushService.showPushNotification('Заявка за новую услугу', '','service')
       }
     });
 
