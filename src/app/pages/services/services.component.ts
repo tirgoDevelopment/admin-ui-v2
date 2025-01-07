@@ -30,6 +30,7 @@ import { DriverFormComponent } from '../drivers/components/driver-form/driver-fo
 import { DetailComponent } from '../merchant/merchant-driver/components/detail/detail.component';
 import { ChatComponent } from 'src/app/shared/components/chat/chat.component';
 import { ServiceDetailComponent } from './components/detail/detail.component';
+import { PushService } from 'src/app/shared/services/push.service';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -100,7 +101,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
     private toastr: NotificationService,
     private cdr: ChangeDetectorRef,
     private merchantApi: MerchantDriverService,
-    private router: Router
+    private router: Router,
+    private pushService: PushService
   ) { }
   ngOnInit(): void {
     this.getStatuses();
@@ -109,6 +111,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.sseSubscription = this.socketService.getSSEEvents().subscribe((event) => {
       this.handleSocketEvent(event);
       if (event.event === 'newServiceRequest') {
+        // this.pushService.showPushNotification('Заявка за новую услугу', '')
         this.getAll();
       }
     });

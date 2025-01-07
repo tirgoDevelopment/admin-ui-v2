@@ -111,7 +111,7 @@
                             <div class="link"> {{'('+item.driverId+')' + item.driverFullName}}</div>
                         </td>
                         <td>{{item.gsmCardNumber}}</td>
-                        <td>{{item.amount}}</td>
+                        <td>{{item.amount | priceFormat}}</td>
                         <td>{{item.createdAt | date : "dd.MM.yyyy HH:mm"}}</td>
                     </tr>
                 </tbody>

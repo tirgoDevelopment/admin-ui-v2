@@ -18,6 +18,8 @@ import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { AssignDriverCardComponent } from './components/assign-driver-card/assign-driver-card.component';
 import { TopUpGsmBalanceComponent } from './components/top-up-gsm-balance/top-up-gsm-balance.component';
 import { GSMService } from './services/gsm.service';
+import { SocketService } from 'src/app/shared/services/socket.service';
+import { PushService } from 'src/app/shared/services/push.service';
 
 @Component({
   selector: 'app-gsm',
@@ -53,11 +55,14 @@ export class GSMComponent implements OnInit {
   currentUser: any;
   searchTms$ = new BehaviorSubject<string>('');
   tms$: Observable<any>;
+  sseSubscription
   constructor(
     private gsmService: GSMService,
     private drawer: NzDrawerService,
     private translate: TranslateService,
     private merchantApi: MerchantDriverService,
+    private socketService: SocketService,
+    private pushService: PushService
   ) { }
   ngOnInit(): void {
     this.currentUser = jwtDecode(localStorage.getItem('accessToken') || '');
@@ -70,6 +75,14 @@ export class GSMComponent implements OnInit {
         })
       )),
     );
+    this.handleEvent();
+  }
+  handleEvent() {
+    this.sseSubscription = this.socketService.getSSEEvents().subscribe((event) => {
+      if (event.event === 'tmsGsmBalanceTopup') {
+        this.getAll();
+      }
+    });
   }
   find(ev: string) {
     let filter = generateQueryFilter({ companyName: ev });

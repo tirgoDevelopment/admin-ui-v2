@@ -1,22 +1,18 @@
 
 import { Injectable } from '@angular/core';
-import { NzNotificationService } from 'ng-zorro-antd/notification';
-import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PushService { 
 
-showPushNotification(title, message: string) {
+showPushNotification(title, message, type) {
     if ('Notification' in window) {
-      const audio = new Audio('assets/sound/notify.mp3');
+      const audio = new Audio(`assets/sound/notify-${type}.mp3`);
       if (Notification.permission === 'granted') {
         new Notification(title, {
           body: message,
           icon: "assets/images/logo/auth-logo.svg",
-          tag: 'update-notification',
-          renotify: true,
         });
         audio.play();
       } else if (Notification.permission !== 'denied') {
@@ -25,8 +21,6 @@ showPushNotification(title, message: string) {
             new Notification(title, {
               body: message,
               icon: "assets/images/logo/auth-logo.svg",
-              tag: 'update-notification',
-              renotify: true,
             });
           }
         });
