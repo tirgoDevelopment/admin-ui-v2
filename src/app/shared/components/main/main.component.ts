@@ -12,6 +12,7 @@ import { SocketService } from '../../services/socket.service';
 import { ServicesService } from 'src/app/pages/services/services/services.service';
 import { jwtDecode } from 'jwt-decode';
 import { PushService } from '../../services/push.service';
+import { PermissionService } from '../../services/permission.service';
 
 @Component({
   selector: 'app-main',
@@ -45,6 +46,7 @@ export class MainComponent {
     public authService: AuthService,
     private serviceApi: ServicesService,
     private pushService: PushService,
+    private permissionService: PermissionService,
     private router: Router) {
   }
   ngOnInit(): void {
@@ -60,6 +62,7 @@ export class MainComponent {
         if (event.urlAfterRedirects.startsWith('/services')) {
           this.serviceReqCount = 0;
           this.changeDetector.detectChanges();
+
         }
       }
     });
