@@ -19,12 +19,12 @@
         <span nz-icon nzType="dashboard"></span>
         <span>{{ "control_panel" | translate }}</span>
       </li> -->
-      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right" *ngIf="permissionService.hasPermission(Permission.AdminsPage)"
         [nzTooltipTitle]="isCollapsed ? ('administrators' | translate) : ''" routerLink="/admins">
         <span nz-icon nzType="user"></span>
         <span>{{ "administrators" | translate }}</span>
       </li>
-      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right" *ngIf="permissionService.hasPermission(Permission.DriversPage)"
         [nzTooltipTitle]="isCollapsed ? ('drivers' | translate) : ''" routerLink="/drivers">
         <span class="sidebar-icon" nz-icon>
           <img *ngIf="themeService.colorTheme == 'light-mode'" src="../../../../assets/images/sidebar/drivers.svg"
@@ -34,7 +34,7 @@
         </span>
         <span>{{ "drivers" | translate }}</span>
       </li>
-      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right" *ngIf="permissionService.hasPermission(Permission.ClientsPage)"
         [nzTooltipTitle]="isCollapsed ? ('clients' | translate) : ''" routerLink="/clients">
         <span nz-icon nzType="team"></span>
         <span>{{ "clients" | translate }}</span>
@@ -51,19 +51,19 @@
         <span nz-icon nzType="team"></span>
         <span>{{ "archived_users" | translate }}</span>
       </li> -->
-      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right" *ngIf="permissionService.hasPermission(Permission.DriverServicesPage)"
         [nzTooltipTitle]="isCollapsed ? ('services.title' | translate) : ''" routerLink="/services">
         <nz-badge [nzCount]="serviceReqCount" class="w-full">
           <span nz-icon nzType="file-text"></span>
           <span>{{ "services.title" | translate }}</span>
         </nz-badge>
       </li>
-      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right" *ngIf="permissionService.hasPermission(Permission.GsmPage)"
         [nzTooltipTitle]="isCollapsed ? ('gsm.title' | translate) : ''" routerLink="/gsm">
         <span nz-icon nzType="fire"></span>
         <span>{{ "gsm.title" | translate }}</span>
       </li>
-      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right" *ngIf="permissionService.hasPermission(Permission.OrdersPage)"
         [nzTooltipTitle]="isCollapsed ? ('orders' | translate) : ''" routerLink="/orders">
         <span class="sidebar-icon" nz-icon>
           <img *ngIf="themeService.colorTheme == 'light-mode'" src="../../../../assets/images/sidebar/tracking.svg"
@@ -74,65 +74,75 @@
         <span>{{ "orders" | translate }}</span>
       </li>
 
-      <li nz-submenu nzOpen nzTitle="{{ 'merchant' | translate }}" nzIcon="team">
+      <li nz-submenu nzOpen nzTitle="{{ 'merchant' | translate }}" nzIcon="team" *ngIf="permissionService.hasAnyPermission([Permission.MerchantsPage, Permission.TmsesPage])">
         <ul>
-          <li nz-menu-item nzMatchRouter routerLink="/merchant-client">
+          <li nz-menu-item nzMatchRouter routerLink="/merchant-client" *ngIf="permissionService.hasPermission(Permission.MerchantsPage)">
             <a>{{ "merchant_client" | translate }}</a>
           </li>
-          <li nz-menu-item nzMatchRouter routerLink="/merchant-driver">
+          <li nz-menu-item nzMatchRouter routerLink="/merchant-driver" *ngIf="permissionService.hasPermission(Permission.TmsesPage)">
             <a>{{ "merchant_driver" | translate }}</a>
-          </li>
-          <li nz-menu-item nzMatchRouter routerLink="/agent">
-            <a>{{ "agents" | translate }}</a>
           </li>
         </ul>
       </li>
 
-      <li nz-submenu nzOpen nzTitle="{{ 'directories' | translate }}" nzIcon="file-search">
+      <li nz-submenu nzOpen nzTitle="{{ 'directories' | translate }}" nzIcon="file-search"  *ngIf="permissionService.hasAnyPermission([
+      Permission.RolesPage,
+      Permission.ServicesPage,
+      Permission.ServiceStatusPage,
+      Permission.CargoTypeGroupsPage,
+      Permission.CargoTypesPage,
+      Permission.LoadingMethodsPage,
+      Permission.SubscriptionTypesPage,
+      Permission.CurrenciesPage,
+      Permission.TransportTypesPage,
+      Permission.TransportKindsPage,
+      Permission.CargoStatusPage,
+      Permission.CargoPackagesPage
+    ])">
         <ul>
-          <li nz-menu-item nzMatchRouter routerLink="/references/roles">
+          <li nz-menu-item nzMatchRouter routerLink="/references/roles" *ngIf="permissionService.hasPermission(Permission.RolesPage)">
             <a>{{ "user_roles" | translate }}</a>
           </li>
-          <li nz-menu-item nzMatchRouter routerLink="/references/services">
+          <li nz-menu-item nzMatchRouter routerLink="/references/services" *ngIf="permissionService.hasPermission(Permission.ServicesPage)">
             <a>{{ "services.title" | translate }}</a>
           </li>
 
-          <li nz-menu-item nzMatchRouter routerLink="/references/service-status">
+          <li nz-menu-item nzMatchRouter routerLink="/references/service-status" *ngIf="permissionService.hasPermission(Permission.ServiceStatusPage)">
             <a>{{ "serviceStatus" | translate }}</a>
           </li>
-          <li nz-menu-item nzMatchRouter routerLink="/references/cargo-type-groups">
+          <li nz-menu-item nzMatchRouter routerLink="/references/cargo-type-groups" *ngIf="permissionService.hasPermission(Permission.CargoTypeGroupsPage)">
             <a>{{ "cargo_group_type" | translate }}</a>
           </li>
 
-          <li nz-menu-item nzMatchRouter routerLink="/references/cargo-types">
+          <li nz-menu-item nzMatchRouter routerLink="/references/cargo-types" *ngIf="permissionService.hasPermission(Permission.CargoTypesPage)">
             <a>{{ "cargo_type" | translate }}</a>
           </li>
 
-          <li nz-menu-item nzMatchRouter routerLink="/references/loading-method">
+          <li nz-menu-item nzMatchRouter routerLink="/references/loading-method"  *ngIf="permissionService.hasPermission(Permission.LoadingMethodsPage)">
             <a>{{ "loading_method" | translate }}</a>
           </li>
 
-          <li nz-menu-item nzMatchRouter routerLink="/references/subscription-types">
+          <li nz-menu-item nzMatchRouter routerLink="/references/subscription-types" *ngIf="permissionService.hasPermission(Permission.SubscriptionTypesPage)">
             <a>{{ "subscription_types" | translate }}</a>
           </li>
 
-          <li nz-menu-item nzMatchRouter routerLink="/references/currencies">
+          <li nz-menu-item nzMatchRouter routerLink="/references/currencies" *ngIf="permissionService.hasPermission(Permission.CurrenciesPage)">
             <a>{{ "currency" | translate }}</a>
           </li>
 
-          <li nz-menu-item nzMatchRouter routerLink="/references/transport-types">
+          <li nz-menu-item nzMatchRouter routerLink="/references/transport-types" *ngIf="permissionService.hasPermission(Permission.TransportTypesPage)">
             <a>{{ "truck_type" | translate }}</a>
           </li>
 
-          <li nz-menu-item nzMatchRouter routerLink="/references/transport-kinds">
+          <li nz-menu-item nzMatchRouter routerLink="/references/transport-kinds" *ngIf="permissionService.hasPermission(Permission.TransportKindsPage)">
             <a>{{ "transport_kind" | translate }}</a>
           </li>
 
-          <li nz-menu-item nzMatchRouter routerLink="/references/cargo-status">
+          <li nz-menu-item nzMatchRouter routerLink="/references/cargo-status" *ngIf="permissionService.hasPermission(Permission.CargoStatusPage)">
             <a>{{ "orderStatus" | translate }}</a>
           </li>
 
-          <li nz-menu-item nzMatchRouter routerLink="/references/cargo-packages">
+          <li nz-menu-item nzMatchRouter routerLink="/references/cargo-packages" *ngIf="permissionService.hasPermission(Permission.CargoPackagesPage)">
             <a>{{ "package" | translate }}</a>
           </li>
         </ul>
@@ -219,7 +229,7 @@
         <!-- <div (click)="toggleChat()" class="chat-icon">
           <i nz-icon nzType="wechat" nzTheme="outline"></i>
         </div> -->
-        <div style="position: relative;" (click)="toggleChat()">
+        <div style="position: relative;" (click)="toggleChat()" *ngIf="permissionService.hasPermission(Permission.ServiceChat)">
           <nz-badge [nzCount]="newMessageCount" class="chat-icon">
             <div class="chat-icon-content">
               <i nz-icon nzType="wechat" nzTheme="outline" style="color: #fff;"></i>

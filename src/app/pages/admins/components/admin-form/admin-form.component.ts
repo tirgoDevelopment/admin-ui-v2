@@ -11,22 +11,27 @@ import { AdminsService } from '../../services/admins.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { AdminModel } from '../../models/admin.model';
 import { RolesService } from 'src/app/shared/services/references/role.service';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { ResponseContent } from 'src/app/shared/models/res-content.model';
+import { PermissionService } from 'src/app/shared/services/permission.service';
+import { Permission } from 'src/app/shared/enum/per.enum';
 
 @Component({
   selector: 'app-admin-form',
   templateUrl: './admin-form.component.html',
   styleUrls: ['./admin-form.component.scss'],
   imports: [NzModules, TranslateModule, ReactiveFormsModule, NgIf, CommonModule, NgxMaskDirective],
+  providers: [NzModalService],
   standalone: true,
 })
 export class AdminFormComponent implements OnInit {
+  Permission = Permission;
   @Input() admin?: AdminModel;
   @Output() close = new EventEmitter<void>();
   @Output() formSubmitted = new EventEmitter<void>();
-
   visible: boolean = false;
   roles: RoleModel[] = [];
-
+  loading = false
   form: FormGroup = new FormGroup({
     id: new FormControl(''),
     fullName: new FormControl('', [Validators.required]),
@@ -41,6 +46,8 @@ export class AdminFormComponent implements OnInit {
     private roleService: RolesService,
     private drawerRef: NzDrawerRef,
     private adminService: AdminsService,
+    private modal: NzModalService,
+    public perService: PermissionService,
     private translate: TranslateService) { }
 
   ngOnInit(): void {
@@ -82,26 +89,51 @@ export class AdminFormComponent implements OnInit {
       password: Math.random().toString(36).slice(-8)
     });
   }
-  onCancel(): void {
-    this.drawerRef.close({ success: false });
-    this.form.reset();
+  remove() {
+    if (this.admin && this.perService.hasPermission(Permission.AdminDelete)) {
+      let confirmModal = this.modal.confirm({
+        nzTitle: this.translate.instant('are_you_sure'),
+        nzContent: this.translate.instant('delete_sure'),
+        nzOkText: this.translate.instant('remove'),
+        nzCancelText: this.translate.instant('cancel'),
+        nzOkDanger: true,
+        nzOnOk: () =>
+          this.adminService.delete(this.admin.id).subscribe((res: ResponseContent<AdminModel[]>) => {
+            this.loading = true
+            if (res && res.success) {
+              this.toastr.success(this.translate.instant('successfullDeleted'), '');
+              this.drawerRef.close({ success: true });
+              this.loading = false;
+            }
+          }),
+      });
+    }
   }
   onSubmit() {
-    if (this.admin) {
+    if (this.admin && this.perService.hasPermission(Permission.AdminUpdate)) {
+      this.loading = true;
       this.adminService.update(this.form.value).subscribe((res: any) => {
         if (res && res.success) {
           this.toastr.success(this.translate.instant('successfullUpdated'), '');
           this.drawerRef.close({ success: true });
           this.form.reset();
+          this.loading = false;
         }
+      }, err => {
+        this.loading = false;
       });
-    } else {
+    }
+    else if (this.perService.hasPermission(Permission.AdminCreate)) {
       this.adminService.create(this.form.value).subscribe((res: any) => {
         if (res && res.success) {
           this.toastr.success(this.translate.instant('successfullCreated'), '');
           this.drawerRef.close({ success: true });
           this.form.reset();
+          this.loading = false;
         }
+      }, err => {
+        this.loading = false;
+
       });
     }
   }

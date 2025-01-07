@@ -9,14 +9,13 @@ import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.modul
 import { RoleFormComponent } from './components/role-form/role-form.component';
 import { RolesService } from 'src/app/shared/services/references/role.service';
 import { RoleModel } from './models/role.model';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-roles',
   templateUrl: './roles.component.html',
   styleUrls: ['./roles.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, RoleFormComponent],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule],
   providers: [NzModalService]
 })
 export class RolesComponent implements OnInit {
