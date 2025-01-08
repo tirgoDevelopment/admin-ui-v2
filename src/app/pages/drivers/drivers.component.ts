@@ -46,7 +46,7 @@ export class DriversComponent implements OnInit {
   isFilterVisible: boolean = false;
   filter: Record<string, string> = this.initializeFilter();
   pageParams = {
-    pageIndex: 0,
+    pageIndex: 1,
     pageSize: 10,
     totalPagesCount: 1,
     sortBy: '',
@@ -161,7 +161,7 @@ export class DriversComponent implements OnInit {
 
   onQueryParamsChange(params: NzTableQueryParams): void {
     const { pageIndex, pageSize, sort } = params;
-    this.pageParams.pageIndex = pageIndex - 1;
+    this.pageParams.pageIndex = pageIndex;
     this.pageParams.pageSize = pageSize;
 
     const currentSort = sort.find(item => item.value !== null);
