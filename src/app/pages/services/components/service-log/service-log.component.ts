@@ -5,6 +5,8 @@ import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { ServicesService } from '../../services/services.service';
 import { ActivatedRoute } from '@angular/router';
+import { PermissionService } from 'src/app/shared/services/permission.service';
+import { Permission } from 'src/app/shared/enum/per.enum';
 
 @Component({
   selector: 'app-service-log',
@@ -14,12 +16,14 @@ import { ActivatedRoute } from '@angular/router';
   imports: [NzModules, TranslateModule, CommonModules, PipeModule],
 })
 export class ServiceLogComponent implements OnInit{
+  Per = Permission;
   @Input() serviceId:number | string;
   data
   loading = false;
   constructor(
     private serviceService: ServicesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public perService: PermissionService
   ) {
     this.serviceId = this.route.snapshot.params['id'];
   }

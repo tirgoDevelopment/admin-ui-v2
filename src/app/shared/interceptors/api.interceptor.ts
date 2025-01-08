@@ -20,7 +20,7 @@ export const authInterceptor = (
         timeout(50000),
         catchError((error) => {
             if (error instanceof HttpErrorResponse && error.status === 401) {
-                authService.signOut();
+                authService.logout();
                 location.reload();
             }
             return throwError(error);

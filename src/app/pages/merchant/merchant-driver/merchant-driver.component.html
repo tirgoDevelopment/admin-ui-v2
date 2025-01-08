@@ -1,144 +1,168 @@
-<div class="header-page">
-  <h2>{{ 'merchant_driver' | translate }}</h2>
-  <div class="button-group">
-    <button nz-button class="secondary-button" (click)="toggleFilter()">
-      <span nz-icon nzType="filter" nzTheme="fill"></span>
-      {{ 'filter' | translate }}
+<div *ngIf="perService.hasPermission(Per.TmsesPage)">
+  <div class="header-page">
+    <h2>{{ 'merchant_driver' | translate }}</h2>
+    <div class="button-group">
+      <button nz-button class="secondary-button" (click)="toggleFilter()">
+        <span nz-icon nzType="filter" nzTheme="fill"></span>
+        {{ 'filter' | translate }}
+      </button>
+
+      <nz-badge [nzCount]="requestsCount" *ngIf="perService.hasPermission(Per.TmsRequstsList)">
+        <button nz-button class="success-button" [disabled]="requestsCount === 0" (click)="requests()">
+          <span nz-icon nzTheme="outline"></span>
+          {{ 'requests' | translate }}
+        </button>
+      </nz-badge>
+    </div>
+  </div>
+
+  <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
+    <div>
+      <nz-input-group class="input-group">
+        <input [(ngModel)]="filter['merchantId'] " type="text" nz-input placeholder="ID" />
+      </nz-input-group>
+    </div>
+    <div>
+      <nz-input-group class="input-group">
+        <input [(ngModel)]="filter['companyName'] " type="text" nz-input placeholder="{{'company_name' | translate}}" />
+      </nz-input-group>
+    </div>
+    <div>
+      <nz-input-group class="input-group">
+        <nz-date-picker [(ngModel)]="filter['createdAtFrom']" type="date" nz-input [nzAllowClear]="false"
+          nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
+        </nz-date-picker>
+      </nz-input-group>
+    </div>
+    <div>
+      <nz-input-group class="input-group">
+        <nz-date-picker [(ngModel)]="filter['createdAtTo']" type="date" nz-input [nzAllowClear]="false"
+          nzPlaceHolder="{{ 'end_date_reg' | translate }}" class="custom-date-picker">
+        </nz-date-picker>
+      </nz-input-group>
+    </div>
+
+    <button nz-button nzType="primary" class="search-button" (click)="getVerified()">
+      <span nz-icon nzType="search" nzTheme="outline"></span>
+    </button>
+    <button nz-button class="reset-button" (click)="resetFilter()">
+      <span nz-icon nzType="reload" nzTheme="outline"></span>
     </button>
 
-    <nz-badge [nzCount]="requestsCount">
-      <button nz-button class="success-button" [disabled]="requestsCount === 0" (click)="requests()">
-        <span nz-icon nzTheme="outline"></span>
-        {{ 'requests' | translate }}
-      </button>
-    </nz-badge>
   </div>
+
+  <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content' }"
+    [nzFrontPagination]="false" [nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize"
+    [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"
+    (nzQueryParams)="onQueryParamsChange($event)">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th nzColumnKey="id" [nzSortFn]="true">ID</th>
+        <th>{{ 'full_name' | translate }}</th>
+        <th> {{ 'company_name' | translate }}</th>
+        <th>{{ 'tax_payer_code' | translate }}</th>
+        <th>{{ 'loads' | translate }}</th>
+        <th>{{ 'balance' | translate }}</th>
+        <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
+        <th>{{ 'status' | translate }}</th>
+        <th nzRight *ngIf="perService.hasAnyPermission([
+        Per.TmsUpdate,
+        Per.TmsDetail,
+        Per.TmsDriversList,
+        Per.TmsTransactionsHistory,
+        Per.TmsTopupBalance,
+        Per.TmsBlock
+      ])"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let item of data; let i = index" (click)="showDrivers(item.id)" style="cursor: pointer;">
+        <td> {{ i+1 }} </td>
+        <td> {{ item.id }} </td>
+        <td> {{ item.supervisorFirstName }} {{ item.supervisorLastName }} </td>
+        <td> {{ item.companyType }} {{ item.companyName }} </td>
+        <td> {{ item.taxPayerCode }} </td>
+        <td> {{ 0 }} </td>
+        <td> {{0}} </td>
+        <td> {{ item.createdAt | date:'dd/MM/yyyy HH:mm'}} </td>
+        <td>
+          <span *ngIf="item.blocked" class="delete-icon">{{'inactive' | translate }}</span>
+          <span *ngIf="!item.blocked" class="edit-icon">{{'active' | translate }}</span>
+        </td>
+        <td nzRight class="action-col" (click)="$event.stopPropagation()" *ngIf="perService.hasAnyPermission([
+            Per.TmsUpdate,
+            Per.TmsDetail,
+            Per.TmsDriversList,
+            Per.TmsTransactionsHistory,
+            Per.TmsTopupBalance,
+            Per.TmsBlock
+          ])">
+          <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
+            <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
+          </a>
+          <nz-dropdown-menu #menu="nzDropdownMenu">
+            <ul nz-menu nzSelectable>
+              <li nz-menu-item (click)="showDetail(item.id)" *ngIf="perService.hasPermission(Per.TmsDetail)">
+                <div class="dropdown-menu">
+                  <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+                  <span>{{ 'detail' | translate }}</span>
+                </div>
+              </li>
+
+              <li nz-menu-item (click)="handleDrawer('edit', item)" *ngIf="perService.hasPermission(Per.TmsUpdate)">
+                <div class="dropdown-menu">
+                  <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
+                  <span>{{ 'edit' | translate }}</span>
+                </div>
+              </li>
+              <li nz-menu-item (click)="showDrivers(item.id)" *ngIf="perService.hasPermission(Per.TmsDriversList)">
+                <div class="dropdown-menu">
+                  <span nz-icon nzType="user" nzTheme="outline"></span>
+                  <span>{{ 'drivers' | translate }}</span>
+                </div>
+              </li>
+              <li nz-menu-item (click)="showHistoryTransaction(item)"
+                *ngIf="perService.hasPermission(Per.TmsTransactionsHistory)">
+                <div class="dropdown-menu">
+                  <span nz-icon nzType="history" nzTheme="outline"></span>
+                  <span>{{ 'history_transaction' | translate }}</span>
+                </div>
+              </li>
+              <li nz-menu-item (click)="topupBalance(item.id)" *ngIf="perService.hasPermission(Per.TmsTopupBalance)">
+                <div class="dropdown-menu">
+                  <span nz-icon nzType="plus" nzTheme="outline"></span>
+                  <span>{{ 'top_up_balance' | translate }}</span>
+                </div>
+              </li>
+              <li nz-menu-item (click)="onBlock(item)" [ngStyle]="{color: item.blocked ? 'green'  : 'red' }"
+                *ngIf="perService.hasPermission(Per.TmsBlock)">
+                <div class="dropdown-menu">
+                  <span *ngIf="!item.blocked" nz-icon nzType="lock" nzTheme="outline" class="delete-icon"></span>
+                  <span *ngIf="item.blocked" nz-icon nzType="unlock" nzTheme="outline" class="edit-icon"></span>
+                  <span>{{ item.blocked ? ('unblock' | translate) : ('block' | translate) }}</span>
+                </div>
+              </li>
+            </ul>
+          </nz-dropdown-menu>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #empty>
+    <nz-empty #empty nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+      [nzNotFoundContent]="contentTpl">
+      <ng-template #contentTpl>
+        <span>
+          {{ 'no_data' | translate }}
+        </span>
+      </ng-template>
+    </nz-empty>
+  </ng-template>
 </div>
 
-<div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
-  <div>
-    <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['merchantId'] " type="text" nz-input placeholder="ID" />
-    </nz-input-group>
-  </div>
-  <div>
-    <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['companyName'] " type="text" nz-input placeholder="{{'company_name' | translate}}" />
-    </nz-input-group>
-  </div>
-  <div>
-    <nz-input-group class="input-group">
-      <nz-date-picker [(ngModel)]="filter['createdAtFrom']" type="date" nz-input [nzAllowClear]="false"
-        nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
-      </nz-date-picker>
-    </nz-input-group>
-  </div>
-  <div>
-    <nz-input-group class="input-group">
-      <nz-date-picker [(ngModel)]="filter['createdAtTo']" type="date" nz-input [nzAllowClear]="false"
-        nzPlaceHolder="{{ 'end_date_reg' | translate }}" class="custom-date-picker">
-      </nz-date-picker>
-    </nz-input-group>
-  </div>
-
-  <button nz-button nzType="primary" class="search-button" (click)="getVerified()">
-    <span nz-icon nzType="search" nzTheme="outline"></span>
-  </button>
-  <button nz-button class="reset-button" (click)="resetFilter()">
-    <span nz-icon nzType="reload" nzTheme="outline"></span>
-  </button>
-
+<div *ngIf="!perService.hasPermission(Per.TmsesPage)" class="no-access-container">
+  <nz-result nzStatus="error" nzTitle="403" nzSubTitle="{{'accessDeniedPage' | translate}}">
+  </nz-result>
 </div>
-
-<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content' }" [nzFrontPagination]="false" [nzPaginationPosition]="'both'"
-[nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"
-(nzQueryParams)="onQueryParamsChange($event)">
-  <thead>
-    <tr>
-      <th>No</th>
-      <th nzColumnKey="id" [nzSortFn]="true">ID</th>
-      <th>{{ 'full_name' | translate }}</th>
-      <th> {{ 'company_name' | translate }}</th>
-      <th>{{ 'tax_payer_code' | translate }}</th>
-      <th>{{ 'loads' | translate }}</th>
-      <th>{{ 'balance' | translate }}</th>
-      <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
-      <th>{{ 'status' | translate }}</th>
-      <th nzRight></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr *ngFor="let item of data; let i = index" (click)="showDrivers(item.id)" style="cursor: pointer;">
-      <td> {{ i+1 }} </td>
-      <td> {{ item.id }} </td>
-      <td> {{ item.supervisorFirstName }} {{ item.supervisorLastName }} </td>
-      <td> {{ item.companyType }} {{ item.companyName }} </td>
-      <td> {{ item.taxPayerCode }} </td>
-      <td> {{ 0 }} </td>
-      <td> {{0}} </td>
-      <td> {{ item.createdAt | date:'dd/MM/yyyy HH:mm'}} </td>
-      <td>
-        <span *ngIf="item.blocked" class="delete-icon">{{'inactive' | translate }}</span>
-        <span *ngIf="!item.blocked" class="edit-icon">{{'active' | translate }}</span>
-      </td>
-      <td nzRight class="action-col" (click)="$event.stopPropagation()">
-        <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
-          <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
-        </a>
-        <nz-dropdown-menu #menu="nzDropdownMenu">
-          <ul nz-menu nzSelectable>
-            <li nz-menu-item (click)="showDetail(item.id)">
-              <div class="dropdown-menu">
-                <span nz-icon nzType="info-circle" nzTheme="outline"></span>
-                <span>{{ 'detail' | translate }}</span>
-              </div>
-            </li>
-
-            <li nz-menu-item (click)="handleDrawer('edit', item)">
-              <div class="dropdown-menu">
-                <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
-                <span>{{ 'edit' | translate }}</span>
-              </div>
-            </li>
-            <li nz-menu-item (click)="showDrivers(item.id)">
-              <div class="dropdown-menu">
-                <span nz-icon nzType="user" nzTheme="outline"></span>
-                <span>{{ 'drivers' | translate }}</span>
-              </div>
-            </li>
-            <li nz-menu-item (click)="showHistoryTransaction(item)">
-              <div class="dropdown-menu">
-                <span nz-icon nzType="history" nzTheme="outline"></span>
-                <span>{{ 'history_transaction' | translate }}</span>
-              </div>
-            </li>
-            <li nz-menu-item (click)="topupBalance(item.id)">
-              <div class="dropdown-menu">
-                <span nz-icon nzType="plus" nzTheme="outline"></span>
-                <span>{{ 'top_up_balance' | translate }}</span>
-              </div>
-            </li>
-            <li nz-menu-item (click)="onBlock(item)" [ngStyle]="{color: item.blocked ? 'green'  : 'red' }">
-              <div class="dropdown-menu">
-                <span *ngIf="!item.blocked" nz-icon nzType="lock" nzTheme="outline" class="delete-icon"></span>
-                <span *ngIf="item.blocked" nz-icon nzType="unlock" nzTheme="outline" class="edit-icon"></span>
-                <span>{{ item.blocked ? ('unblock' | translate) : ('block' | translate) }}</span>
-              </div>
-            </li>
-          </ul>
-        </nz-dropdown-menu>
-      </td>
-    </tr>
-  </tbody>
-</nz-table>
-<ng-template #empty>
-  <nz-empty #empty nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-    [nzNotFoundContent]="contentTpl">
-    <ng-template #contentTpl>
-      <span>
-        {{ 'no_data' | translate }}
-      </span>
-    </ng-template>
-  </nz-empty>
-</ng-template>

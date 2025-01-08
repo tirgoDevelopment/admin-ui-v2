@@ -14,7 +14,8 @@ export class AppComponent implements OnInit {
   sseSubscription
   constructor(
     private translate: TranslateService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    
   ) {}
   ngOnInit(): void {
     if (localStorage.getItem('lang') == null) {

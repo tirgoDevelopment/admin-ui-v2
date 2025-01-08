@@ -34,6 +34,8 @@ import { RejectOfferComponent } from '../reject-offer/reject-offer.component';
 import { CargoStatusService } from 'src/app/shared/services/references/cargo-status.service';
 import { CargoStatusModel } from 'src/app/pages/references/cargo-status/models/cargo-status.model';
 import { ClientsFormComponent } from 'src/app/pages/clients/components/clients-form/clients-form.component';
+import { PermissionService } from 'src/app/shared/services/permission.service';
+import { Permission } from 'src/app/shared/enum/per.enum';
 
 @Component({
   selector: 'app-order-form',
@@ -44,6 +46,7 @@ import { ClientsFormComponent } from 'src/app/pages/clients/components/clients-f
   providers: [NzModalService],
 })
 export class OrderFormComponent implements OnInit, OnDestroy {
+  Per = Permission;
   public CargoStatusCodes = CargoStatusCodes;
   @Input() orderId: string | number;
   @Input() mode: string;
@@ -88,6 +91,7 @@ export class OrderFormComponent implements OnInit, OnDestroy {
     private drawerRef: NzDrawerRef,
     private geoDbService: GeoDbService,
     private drawer: NzDrawerService,
+    public perService: PermissionService
   ) {
     this.initForm();
   }
@@ -101,13 +105,13 @@ export class OrderFormComponent implements OnInit, OnDestroy {
       )),
       takeUntil(this.destroy$)
     );
-    
+
     this.getTypes();
     if (this.orderId) {
       this.getById();
     }
   }
- 
+
   getById() {
     this.loadingPage = true;
     this.orderApi.getById(this.orderId).subscribe((res: any) => {
@@ -190,7 +194,7 @@ export class OrderFormComponent implements OnInit, OnDestroy {
       this.cargoTypeApi.getAll(),
       this.statusesApi.getAll(),
       this.loadingMethodApi.getAll(),
-    ]).subscribe(([currencies, transportTypes, transportKinds, cargoTypes, statuses,  loadingMethods]) => {
+    ]).subscribe(([currencies, transportTypes, transportKinds, cargoTypes, statuses, loadingMethods]) => {
       this.currencies = currencies.data;
       this.transportTypes = transportTypes.data;
       this.transportKinds = transportKinds.data;
@@ -206,16 +210,16 @@ export class OrderFormComponent implements OnInit, OnDestroy {
     if (this.step === 1) {
       const requiredControls = ['sendDate', 'loadingLocation', 'deliveryLocation'];
       const isValid = requiredControls.every(controlName => this.form.get(controlName)?.valid);
-      
+
       if (isValid) {
         this.step++;
       } else {
         this.showErrorMessages();
       }
     } else if (this.step === 2) {
-      const priceValid = !this.form.get('offeredPrice')?.value || 
-                        this.form.get('offeredPrice')?.valid;
-      
+      const priceValid = !this.form.get('offeredPrice')?.value ||
+        this.form.get('offeredPrice')?.valid;
+
       if (priceValid) {
         this.step++;
       } else {
@@ -233,8 +237,8 @@ export class OrderFormComponent implements OnInit, OnDestroy {
     this.loading = true;
     this.cityFormatter();
 
-    const request$ = this.form.value.id ? 
-      this.orderApi.update(this.form.value) : 
+    const request$ = this.form.value.id ?
+      this.orderApi.update(this.form.value) :
       this.orderApi.create(this.form.value);
 
     request$.pipe(
@@ -242,10 +246,10 @@ export class OrderFormComponent implements OnInit, OnDestroy {
     ).subscribe({
       next: (res: any) => {
         if (res.success) {
-          const message = this.form.value.id ? 
-            'Заказ успешно изменен' : 
+          const message = this.form.value.id ?
+            'Заказ успешно изменен' :
             'Заказ успешно создан';
-          
+
           this.toastr.success(message, '');
           this.step = 1;
           this.drawerRef.close({ success: true });
@@ -272,7 +276,7 @@ export class OrderFormComponent implements OnInit, OnDestroy {
           }
         }
       });
-      
+
       if (errors.length > 0) {
         this.toastr.error(errors.join('\n'), '');
       } else {
@@ -334,7 +338,7 @@ export class OrderFormComponent implements OnInit, OnDestroy {
     }
 
     const lang = this.detectLanguage(input);
-    
+
     if (this.cityInputSubscription) {
       this.cityInputSubscription.unsubscribe();
     }
@@ -429,40 +433,44 @@ export class OrderFormComponent implements OnInit, OnDestroy {
     })
   }
   showDriverProfile(id: number | string) {
-    const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant('information'),
-      nzContent: DriverFormComponent,
-      nzMaskClosable: false,
-      nzPlacement: 'right',
-      nzWidth: '400px',
-      nzContentParams: {
-        id: id,
-        mode: 'view'
-      }
-    });
-    drawerRef.afterClose.subscribe((result: any) => {
-      if (result?.success) {
-        this.drawerRef.close();
-      }
-    })
+    if (this.perService.hasPermission(this.Per.DriverDetail)) {
+      const drawerRef: any = this.drawer.create({
+        nzTitle: this.translate.instant('information'),
+        nzContent: DriverFormComponent,
+        nzMaskClosable: false,
+        nzPlacement: 'right',
+        nzWidth: '400px',
+        nzContentParams: {
+          id: id,
+          mode: 'view'
+        }
+      });
+      drawerRef.afterClose.subscribe((result: any) => {
+        if (result?.success) {
+          this.drawerRef.close();
+        }
+      })
+    }
   }
   showClientProfile(id: number | string) {
-    const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant('information'),
-      nzContent: ClientsFormComponent,
-      nzMaskClosable: false,
-      nzPlacement: 'right',
-      nzWidth: '400px',
-      nzContentParams: {
-        clientId: id,
-        mode: 'view'
-      }
-    });
-    drawerRef.afterClose.subscribe((result: any) => {
-      if (result?.success) {
-        this.drawerRef.close();
-      }
-    })
+    if (this.perService.hasPermission(this.Per.ClientDetail)) {
+      const drawerRef: any = this.drawer.create({
+        nzTitle: this.translate.instant('information'),
+        nzContent: ClientsFormComponent,
+        nzMaskClosable: false,
+        nzPlacement: 'right',
+        nzWidth: '400px',
+        nzContentParams: {
+          clientId: id,
+          mode: 'view'
+        }
+      });
+      drawerRef.afterClose.subscribe((result: any) => {
+        if (result?.success) {
+          this.drawerRef.close();
+        }
+      })
+    }
   }
   replyToDriverOffer(offer?: any) {
     const modal = this.modal.create({
@@ -602,7 +610,7 @@ export class OrderFormComponent implements OnInit, OnDestroy {
     ).subscribe(isRefrigerator => {
       const fromControl = this.form.get('refrigeratorFromCount');
       const toControl = this.form.get('refrigeratorToCount');
-      
+
       if (isRefrigerator) {
         fromControl?.setValidators([Validators.required, Validators.min(0)]);
         toControl?.setValidators([Validators.required, Validators.min(0)]);
@@ -610,7 +618,7 @@ export class OrderFormComponent implements OnInit, OnDestroy {
         fromControl?.clearValidators();
         toControl?.clearValidators();
       }
-      
+
       fromControl?.updateValueAndValidity();
       toControl?.updateValueAndValidity();
     });
