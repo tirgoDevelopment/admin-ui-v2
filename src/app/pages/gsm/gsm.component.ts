@@ -20,6 +20,8 @@ import { TopUpGsmBalanceComponent } from './components/top-up-gsm-balance/top-up
 import { GSMService } from './services/gsm.service';
 import { SocketService } from 'src/app/shared/services/socket.service';
 import { PushService } from 'src/app/shared/services/push.service';
+import { PermissionService } from 'src/app/shared/services/permission.service';
+import { Permission } from 'src/app/shared/enum/per.enum';
 
 @Component({
   selector: 'app-gsm',
@@ -50,7 +52,7 @@ export class GSMComponent implements OnInit {
     sortBy: '',
     sortType: '',
   };
-
+  Per = Permission;
   totalItemsCount
   currentUser: any;
   searchTms$ = new BehaviorSubject<string>('');
@@ -62,7 +64,8 @@ export class GSMComponent implements OnInit {
     private translate: TranslateService,
     private merchantApi: MerchantDriverService,
     private socketService: SocketService,
-    private pushService: PushService
+    private pushService: PushService,
+    public perService: PermissionService
   ) { }
   ngOnInit(): void {
     this.currentUser = jwtDecode(localStorage.getItem('accessToken') || '');

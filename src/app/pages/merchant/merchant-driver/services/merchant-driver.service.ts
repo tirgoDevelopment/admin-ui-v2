@@ -18,7 +18,7 @@ export class MerchantDriverService {
   }
   getVerified(params?: any, filter?: any): Observable<Response<DriverMerchantModel[]>> {
     return this.http.get<Response<DriverMerchantModel[]>>(`${env.apiUrl}/users/driver-merchants/verified-driver-merchants` +
-      `?pageIndex=${(params?.pageIndex ?? 1) - 1}` +
+      `?pageIndex=${(params?.pageIndex ?? 1)}` +
       `&pageSize=${params?.pageSize ?? ''}` +
       `&sortBy=${params?.sortBy ?? ''}` +
       `&sortType=${params?.sortType ?? ''}` +

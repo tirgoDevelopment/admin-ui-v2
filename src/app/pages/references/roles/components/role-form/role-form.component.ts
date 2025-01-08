@@ -18,31 +18,24 @@ import { RolesService } from 'src/app/shared/services/references/role.service';
 export class RoleFormComponent implements OnInit {
   @Input() data?: any;
   form: FormGroup;
-  
-  permissionKeys = [
-    'create',
-    'update',
-    'delete',
-    'cancel',
-    'verify',
-    'reject',
-    'sendPush',
-    'chat',
-    'trackingPage',
-    'adminsPage',
-    'tmsesPage',
-    'merchantsPage',
-    'dashboardPage',
-    'archivePage',
-    'ordersPage',
-    'driverServicesPage',
-    'referencesPage',
-    'driversPage',
-    'clientsPage',
-    'gsmPage',
-  ];
-
   loading = false;
+  permissionKeys = [
+    "sendPush", "chat", "trackingPage",
+    "adminsPage", "adminCreate", "adminUpdate", "adminDelete",
+    "driversPage", "driverTopUpBalance", "driverCreate", "driverUpdate", "driverDelete", 
+    "driverDetail", "driverBlock", "driverAddTransport", "driverPush",
+    "clientsPage", "clientCreate", "clientUpdate", "clientDetail", "clientDelete", 
+    "clientPush", "servicesPage", "serviceCreate", "serviceDetail", "serviceStatusChange", 
+    "serviceLog", "serviceChat", "gsmPage", "gsmTopUpBalance", "gsmCardManagment", 
+    "ordersPage", "orderCreate", "orderUpdate", "orderDetail", "orderOffer", 
+    "orderCancel", "orderAssignDriver", "orderSendOfferToDriver", "orderChangeStatus", 
+    "tmsesPage", "tmsDeatil", "tmsUpdate", "tmsDriversList", "tmsTransactionsHistory", 
+    "tmsTopupBalance", "tmsBlock", "tmsRequstsList", "merchantsPage", "dashboardPage", 
+    "archivePage", "driverServicesPage", "rolesPage", "loadingMethodsPage", 
+    "subscriptionTypesPage", "currenciesPage", "transportTypesPage", "transportKindsPage", 
+    "cargoStatusPage", "cargoPackagesPage", "serviceStatusPage", "cargoTypeGroupsPage", 
+    "cargoTypesPage"
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -57,7 +50,6 @@ export class RoleFormComponent implements OnInit {
       permission: this.fb.group({})
     });
   }
-
   ngOnInit(): void {
     if (this.data) {
       this.permissionKeys = Object.keys(this.data.permission || {}).filter(
@@ -80,7 +72,6 @@ export class RoleFormComponent implements OnInit {
       this.form.setControl('permission', permissionGroup);
     }
   }
-
   onSubmit(): void {
     if (this.form.valid) {
       this.loading = true;
@@ -107,7 +98,6 @@ export class RoleFormComponent implements OnInit {
       }
     }
   }
-
   onDelete() {
   }
 }

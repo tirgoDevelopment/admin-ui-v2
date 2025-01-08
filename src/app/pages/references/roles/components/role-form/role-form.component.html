@@ -7,14 +7,10 @@
   <fieldset formGroupName="permission">
     <legend>{{ 'Разрешения' | translate }}</legend>
 
-    <!-- Grid tuzilishi -->
     <div class="permissions">
-      <div
-        *ngFor="let perm of permissionKeys"
-        class="permission-item"
-      >
+      <div *ngFor="let perm of permissionKeys" class="permission-item">
         <label nz-checkbox [formControlName]="perm">
-          {{ perm  }}
+          {{ perm }}
         </label>
       </div>
     </div>

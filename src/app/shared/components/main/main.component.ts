@@ -98,7 +98,7 @@ export class MainComponent {
     this.themeService.setTheme(newTheme);
   }
   logout() {
-    this.authService.signOut();
+    this.authService.logout();
     this.router.navigate(['/auth/sign-up']);
   } 
   toggleChat() {

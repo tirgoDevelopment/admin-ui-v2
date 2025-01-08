@@ -11,6 +11,8 @@ import { ServicesService } from '../../services/services.service';
 import { ServiceModel } from '../../models/service.model';
 import { Response } from 'src/app/shared/models/reponse';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 @Component({
   selector: 'app-service-form',
@@ -20,6 +22,7 @@ import { NzDrawerRef } from 'ng-zorro-antd/drawer';
   imports: [NzModules, TranslateModule, CommonModules, PipeModule],
 })
 export class ServiceFormComponent implements OnInit {
+  Per = Permission;
   form: FormGroup;
   services: ServiceModel[] = [];
   searchDriver$ = new BehaviorSubject<string>('');
@@ -29,6 +32,7 @@ export class ServiceFormComponent implements OnInit {
     private driverService: DriversService,
     private serviceApi: ServicesService,
     private drawerRef: NzDrawerRef,
+    public perService:PermissionService
   ) { }
   ngOnInit(): void {
     this.initForm();
