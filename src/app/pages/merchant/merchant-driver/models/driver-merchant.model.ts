@@ -39,5 +39,7 @@ export interface DriverMerchantModel extends BaseModel {
     postalCode?: string,
     internationalCargoLisensePath?: string,
     blocked: boolean,
-    balance:any
+    balance:any,
+    debtLimit: number
+    kzPaidWayCommission: number
 }

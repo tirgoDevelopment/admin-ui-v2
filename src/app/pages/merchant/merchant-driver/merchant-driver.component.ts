@@ -112,7 +112,7 @@ export class MerchantDriverComponent implements OnInit {
       ),
       nzContent: component,
       nzPlacement: 'right',
-      nzWidth: '430px',
+      nzWidth: '500px',
       nzContentParams: {
         data: item,
         mode: action
@@ -132,7 +132,7 @@ export class MerchantDriverComponent implements OnInit {
         nzContent: DetailComponent,
         nzMaskClosable: false,
         nzPlacement: 'right',
-        nzWidth: '400px',
+        nzWidth: '500px',
         nzContentParams: {
           id: id,
         }

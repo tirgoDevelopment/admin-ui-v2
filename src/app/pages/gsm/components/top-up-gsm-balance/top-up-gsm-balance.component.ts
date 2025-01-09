@@ -42,7 +42,11 @@ export class TopUpGsmBalanceComponent implements OnInit {
   }
   find(searchTerm) {
     this.tmsService.findTms(searchTerm, 'companyName').subscribe((response:any) => {
-      this.tms$ = of(response.data.content);
+      if(response && response.success) {
+        this.tms$ = of(response.data.content);
+      } else {
+        this.tms$ = of([]);
+      }
     });
   }
   onSubmit() {

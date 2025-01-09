@@ -47,7 +47,7 @@ export enum Permission {
   OrderChangeStatus = 'orderChangeStatus',
 
   TmsesPage = 'tmsesPage',
-  TmsDetail = 'tmsDeatil',
+  TmsDetail = 'tmsDetail',
   TmsUpdate = 'tmsUpdate',
   TmsDriversList = 'tmsDriversList',
   TmsTransactionsHistory = 'tmsTransactionsHistory',
@@ -71,6 +71,5 @@ export enum Permission {
   ServiceStatusPage = 'serviceStatusPage',
   CargoTypeGroupsPage = 'cargoTypeGroupsPage',
   CargoTypesPage = 'cargoTypesPage',
-
 
 }

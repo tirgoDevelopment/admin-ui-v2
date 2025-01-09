@@ -32,7 +32,7 @@ export class ServiceFormComponent implements OnInit {
     private driverService: DriversService,
     private serviceApi: ServicesService,
     private drawerRef: NzDrawerRef,
-    public perService:PermissionService
+    public perService: PermissionService
   ) { }
   ngOnInit(): void {
     this.initForm();
@@ -67,16 +67,22 @@ export class ServiceFormComponent implements OnInit {
       servicesIds: new FormControl([], [Validators.required]),
       searchAs: new FormControl('driverId'),
     });
+
   }
   onCancel() {
-    this.drawerRef.close({success: false});
+    this.drawerRef.close({ success: false });
   }
   onSubmit() {
     this.loading = true;
-    this.serviceApi.postDriverServices(this.form.value).subscribe((res:any) => {
+    this.form.patchValue({
+      servicesIds: Array.isArray(this.form.value.servicesIds)
+        ? this.form.value.servicesIds
+        : [this.form.value.servicesIds]
+    });
+    this.serviceApi.postDriverServices(this.form.value).subscribe((res: any) => {
       if (res) {
         this.loading = false;
-        this.drawerRef.close({success: true});
+        this.drawerRef.close({ success: true });
       }
     }, err => {
       this.loading = false;

@@ -1,5 +1,4 @@
 <form [formGroup]="form">
-
   <nz-input-group class="input-group">
     <nz-form-label nzRequired>{{ 'company_name' | translate }}</nz-form-label>
     <input formControlName="companyName" type="text" nz-input placeholder="{{ 'company_name' | translate }}" required />
@@ -30,7 +29,8 @@
   </nz-input-group>
   <nz-input-group class="input-group">
     <nz-form-label nzRequired>{{ 'phone' | translate }}</nz-form-label>
-    <input formControlName="phoneNumber" type="text" nz-input placeholder="{{ 'phone' | translate }}" mask="+999 99 999 99 99" required />
+    <input formControlName="phoneNumber" type="text" nz-input placeholder="{{ 'phone' | translate }}"
+      mask="+999 99 999 99 99" required />
   </nz-input-group>
   <nz-input-group class="input-group">
     <nz-form-label nzRequired>{{ 'fact_address' | translate }}</nz-form-label>
@@ -38,50 +38,65 @@
   </nz-input-group>
   <nz-input-group class="input-group">
     <nz-form-label nzRequired>{{ 'legal_address' | translate }}</nz-form-label>
-    <input formControlName="legalAddress" type="text" nz-input placeholder="{{ 'legal_address' | translate }}" required />
+    <input formControlName="legalAddress" type="text" nz-input placeholder="{{ 'legal_address' | translate }}"
+      required />
   </nz-input-group>
   <nz-input-group class="input-group">
     <nz-form-label nzRequired>{{ 'bank_name' | translate }}</nz-form-label>
     <input formControlName="bankName" type="text" nz-input placeholder="{{ 'bank_name' | translate }}" required />
   </nz-input-group>
-
   <nz-input-group class="input-group" formArrayName="bankAccounts">
     <nz-form-label nzRequired>{{ 'bank_account' | translate }}</nz-form-label>
-    <div *ngFor="let bankAccount of bankAccounts.controls; let i = index" [formGroupName]="i" style="display: flex; align-items: center;">
-      <nz-select formControlName="currency" >
+    <div *ngFor="let bankAccount of bankAccounts.controls; let i = index" [formGroupName]="i"
+      style="display: flex; align-items: center;">
+      <nz-select formControlName="currency">
         <nz-option *ngFor="let item of currencies" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
       </nz-select>
-      <input formControlName="account" nz-input placeholder="{{ 'bank_account' | translate }}" required style="margin: 5px 0; width: 250px;" />
-      <i (click)="removeBankAccount(i)" nz-icon nzType="close-circle" style="color: red; cursor: pointer; margin-left: 5px;" nzTheme="outline" *ngIf="bankAccounts.controls.length > 1"></i>
-      <i (click)="addBankAccount()" nz-icon nzType="plus" style="color: green; cursor: pointer; margin-left: 5px;" nzTheme="outline" *ngIf="bankAccounts.controls.length === 0 || bankAccounts.controls.length === 1"></i>
+      <input formControlName="account" nz-input placeholder="{{ 'bank_account' | translate }}" required
+        style="margin: 5px 0; width: 250px;" />
+      <i (click)="removeBankAccount(i)" nz-icon nzType="close-circle"
+        style="color: red; cursor: pointer; margin-left: 5px;" nzTheme="outline"
+        *ngIf="bankAccounts.controls.length > 1"></i>
+      <i (click)="addBankAccount()" nz-icon nzType="plus" style="color: green; cursor: pointer; margin-left: 5px;"
+        nzTheme="outline" *ngIf="bankAccounts.controls.length === 0 || bankAccounts.controls.length === 1"></i>
     </div>
   </nz-input-group>
-
   <nz-input-group class="input-group">
     <nz-form-label nzRequired>{{ 'inn' | translate }}</nz-form-label>
-    <input formControlName="inn" type="text" nz-input placeholder="{{ 'inn' | translate }}" required  />
+    <input formControlName="inn" type="text" nz-input placeholder="{{ 'inn' | translate }}" required />
   </nz-input-group>
   <nz-input-group class="input-group">
     <nz-form-label nzRequired>{{ 'oked' | translate }}</nz-form-label>
-    <input formControlName="oked" type="text" nz-input placeholder="{{ 'oked' | translate }}" mask="999999999999" required />
+    <input formControlName="oked" type="text" nz-input placeholder="{{ 'oked' | translate }}" mask="999999999999"
+      required />
   </nz-input-group>
   <nz-input-group class="input-group">
     <nz-form-label nzRequired>{{ 'mfo' | translate }}</nz-form-label>
     <input formControlName="mfo" type="text" nz-input placeholder="{{ 'mfo' | translate }}" mask="99999" required />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label >{{ 'duns_number' | translate }}</nz-form-label>
+    <nz-form-label>{{ 'duns_number' | translate }}</nz-form-label>
     <input formControlName="dunsNumber" type="number" nz-input placeholder="{{ 'duns_number' | translate }}" />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label >{{ 'iban_number' | translate }}</nz-form-label>
+    <nz-form-label>{{ 'iban_number' | translate }}</nz-form-label>
     <input formControlName="ibanNumber" type="number" nz-input placeholder="{{ 'iban_number' | translate }}" />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label >{{ 'notes' | translate }}</nz-form-label>
-    <input formControlName="notes" type="text" nz-input placeholder="{{ 'notes' | translate }}"  />
+    <nz-form-label>{{ 'notes' | translate }}</nz-form-label>
+    <input formControlName="notes" type="text" nz-input placeholder="{{ 'notes' | translate }}" />
+  </nz-input-group>
+  <hr class="my-2">
+  <nz-input-group class="input-group">
+    <nz-form-label>{{ 'kzPaidWayCommission' | translate }}</nz-form-label>
+    <input formControlName="kzPaidWayCommission" type="number" nz-input placeholder="{{ 'kzPaidWayCommission' | translate }}" />
+  </nz-input-group>
+  <nz-input-group class="input-group">
+    <nz-form-label>{{ 'debtLimit' | translate }}</nz-form-label>
+    <input formControlName="debtLimit" type="number" nz-input placeholder="{{ 'debtLimit' | translate }}" />
   </nz-input-group>
   <div class="button-wrapper">
-    <button nz-button class="success-button" [nzLoading]="loading" [disabled]="form.invalid" (click)="submit()">{{ 'save' | translate }}</button>
+    <button nz-button class="success-button" [nzLoading]="loading" [disabled]="form.invalid" (click)="submit()">{{
+      'save' | translate }}</button>
   </div>
 </form>

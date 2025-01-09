@@ -128,6 +128,11 @@ export class GSMComponent implements OnInit {
       nzPlacement: 'right',
       nzWidth: '400px',
     });
+    drawerRef.afterClose.subscribe((res: any) => {
+      if (res && res.success) {
+        this.getAll();
+      }
+    })
   }
   changeStatus(item, type) {
     item.status = type

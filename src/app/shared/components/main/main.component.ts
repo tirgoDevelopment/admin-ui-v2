@@ -68,7 +68,10 @@ export class MainComponent {
     });
     this.getChats();
     this.subscription = this.socketService.getSSEEvents().subscribe((event) => {
-      if (event.event === 'newMessage' && event.data.userType != 'staff' && (this.chat && this.chat.id) !== event.data.requestId) {
+      console.log(event);
+      
+      console.log(event.event === 'newMessage' && event.data.userType != 'staff');
+      if ((event.event === 'newMessage' && event.data.userType != 'staff') && ((this.chat && this.chat.id) !== event.data.requestId)) {
         this.newMessageCount = this.newMessageCount + 1;
         this.changeDetector.detectChanges();
         this.pushService.showPushNotification(`Новое сообщение поступило на услугу в id ${event.data.requestId}`, event.data.message.message, 'service' );
