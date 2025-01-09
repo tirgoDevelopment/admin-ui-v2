@@ -27,6 +27,5 @@ export class ServiceDetailComponent implements OnInit {
     if(this.item) {
       this.loadingPage = false;
     }
-    console.log(this.item);
   }
 }

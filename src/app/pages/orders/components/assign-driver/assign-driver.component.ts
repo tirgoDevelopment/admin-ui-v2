@@ -94,7 +94,6 @@ export class AssignDriverComponent implements OnInit {
     
     this.loading = true;
     if(this.type == 'offer') {
-      console.log(this.form.value);
       this.orderApi.sendOffer(this.form.value).subscribe((res: any) => {
         if(res && res.success) { 
           this.loading = false;
