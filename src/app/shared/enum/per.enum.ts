@@ -72,5 +72,4 @@ export enum Permission {
   CargoTypeGroupsPage = 'cargoTypeGroupsPage',
   CargoTypesPage = 'cargoTypesPage',
 
-
 }
