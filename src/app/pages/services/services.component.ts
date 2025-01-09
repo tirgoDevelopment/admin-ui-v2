@@ -33,6 +33,7 @@ import { ServiceDetailComponent } from './components/detail/detail.component';
 import { PushService } from 'src/app/shared/services/push.service';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
+import { KazjulTokenComponent } from './components/kazjul-token/kazjul-token.component';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -451,5 +452,12 @@ export class ServicesComponent implements OnInit, OnDestroy {
   onChatClose() {
     this.showChat = false;
     this.selectedServiceId = null;
+  }
+  kazjulToken() {
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('Казжул'),
+      nzContent: KazjulTokenComponent,
+      nzWidth: '400px',
+    });
   }
 }

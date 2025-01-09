@@ -3,6 +3,9 @@
     <div class="header-page">
       <h2>{{ "services.title" | translate }}</h2>
       <div class="button-group">
+        <button nz-button class="success-button" (click)="kazjulToken()" *ngIf="perService.hasPermission(Per.ServicesPage)">
+          {{ "Казжул" | translate }}
+        </button>
         <button nz-button class="secondary-button" (click)="toggleFilter()">
           <span nz-icon nzType="filter" nzTheme="fill"></span>
           {{ "filter" | translate }}
@@ -74,7 +77,7 @@
     </div>
   
     <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content' }"
-      [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize" [nzTotal]="totalItemsCount"
+      [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize" [nzTotal]="totalItemsCount" [nzPaginationPosition]="'both'"
       [nzShowSizeChanger]="true" [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
       <thead>
         <tr>

@@ -1,0 +1,17 @@
+<form [formGroup]="form" *ngIf="!loading">
+    <nz-input-group class="input-group">
+        <nz-form-label>{{ 'kzt_rate' | translate }}</nz-form-label>
+        <input nz-input type="text" formControlName="kzCurrencyRate" mask="separator.2">
+      </nz-input-group>
+      <nz-input-group class="input-group">
+        <nz-form-label>{{ 'token' | translate }}</nz-form-label>
+        <textarea nz-input formControlName="token" rows="8"> </textarea>
+      </nz-input-group>
+      <div class="button-wrapper">
+         <button class="success-button" nz-button (click)="onSubmit()">{{'save' | translate}} </button>
+      </div>
+</form>
+
+<div *ngIf="loading" class="loader-container" >
+    <span nz-icon nzType="loading" nzTheme="outline" style="font-size: 25px"></span>
+  </div>
