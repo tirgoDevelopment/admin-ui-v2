@@ -16,6 +16,8 @@ import { jwtDecode } from 'jwt-decode';
 import { AddTransportComponent } from '../add-transport/add-transport.component';
 import { TransportModel } from 'src/app/pages/references/transport-types/models/transport.model';
 import { Router } from '@angular/router';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 @Component({
   selector: 'app-driver-form',
@@ -25,6 +27,7 @@ import { Router } from '@angular/router';
   imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PipeModule, NgxMaskDirective]
 })
 export class DriverFormComponent implements OnInit {
+  Permission = Permission;
   confirmModal?: NzModalRef;
   @Input() id?: number|string;
   @Input() mode?: 'add' | 'edit' | 'view';
@@ -61,7 +64,8 @@ export class DriverFormComponent implements OnInit {
     private driversService: DriversService,
     private translate: TranslateService,
     private drawer: NzDrawerService,
-    private router: Router
+    private router: Router,
+    public perService: PermissionService
   ) { }
 
   ngOnInit(): void {
@@ -92,9 +96,12 @@ export class DriverFormComponent implements OnInit {
     if (this.id && (this.mode == 'view' || this.mode == 'edit')) {
       this.loadingPage = true;
       this.driversService.getById(this.id).subscribe((res: Response<DriverModel>) => {
-        this.data = res.data;
-        this.patchForm();
-        this.loadingPage = false;
+        if(res) {
+          this.data = res.data;
+          this.patchForm();
+          this.loadingPage = false;
+        }
+        
       }, err => {
         this.loadingPage = false;
       });

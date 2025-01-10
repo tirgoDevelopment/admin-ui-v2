@@ -18,6 +18,8 @@ import { FormComponent } from './components/form/form.component';
 import { DetailComponent } from '../merchant-driver/components/detail/detail.component';
 import { RequestsComponent } from './components/requests/requests.component';
 import { Router, RouterModule } from '@angular/router';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 @Component({
   selector: 'app-merchant-client',
@@ -35,6 +37,7 @@ import { Router, RouterModule } from '@angular/router';
   ]
 })
 export class MerchantClientComponent implements OnInit {
+  Per = Permission;
   confirmModal?: NzModalRef;
   data: MerchantModel[] = [];
   loader: boolean = false;
@@ -55,6 +58,7 @@ export class MerchantClientComponent implements OnInit {
     private modal: NzModalService,
     private merchantApi: MerchantClientService,
     private drawer: NzDrawerService,
+    public perService: PermissionService,
     private translate: TranslateService) { }
 
   ngOnInit(): void {

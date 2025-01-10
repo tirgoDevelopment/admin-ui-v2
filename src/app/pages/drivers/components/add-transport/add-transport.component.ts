@@ -263,8 +263,6 @@ export class AddTransportComponent implements OnInit {
   }
   transportKindIdsChangeEdit() {
     this.form.get('transportKindId').valueChanges.subscribe((values) => {
-      console.log(values);
-
       if (values) {
         let tranportKind = this.transportKinds.find(x => x.id == values.id);
         this.isAutotransport = tranportKind?.name?.includes('Автовоз');

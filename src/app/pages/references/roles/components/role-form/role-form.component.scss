@@ -1,0 +1,12 @@
+.permissions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px; 
+    margin-bottom: 16px;
+  }
+  
+  .permission-item {
+    display: flex;
+    align-items: center;
+  }
+  

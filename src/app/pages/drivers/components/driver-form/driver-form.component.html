@@ -1,4 +1,4 @@
-<div *ngIf="mode == 'add'">
+<div *ngIf="mode == 'add'&& perService.hasPermission(Permission.DriverCreate)">
   <form [formGroup]="form">
 
     <nz-input-group class="input-group">
@@ -143,7 +143,7 @@
   </form>
 </div>
 
-<nz-tabset *ngIf="mode == 'edit' && data && !loadingPage">
+<nz-tabset *ngIf="mode == 'edit' && data && !loadingPage && perService.hasPermission(Permission.DriverUpdate)">
   <nz-tab nzTitle="{{ 'drivers' | translate }}">
     <form [formGroup]="form">
 
@@ -279,7 +279,7 @@
         <!-- <button nz-button class="danger-button" (click)="onCancel()">
           {{ 'cancel' | translate }}
         </button> -->
-        <button nz-button class="secondary-button" (click)="onBlock()" *ngIf="mode == 'edit'">
+        <button nz-button class="secondary-button" (click)="onBlock()" *ngIf="mode == 'edit' && perService.hasPermission(Permission.DriverBlock)">
           {{ data.blocked ? ('unblock' | translate) : ('block' | translate) }}
         </button>
         <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
@@ -294,7 +294,7 @@
     <button nz-button nzBlock="true" style="margin: 5px 0;" *ngFor="let item of data.driverTransports"
       (click)="editTransport(item)">{{item.brand}}</button>
 
-    <div style="margin: 10px 0;">
+    <div style="margin: 10px 0;" *ngIf="perService.hasPermission(Permission.DriverAddTransport)">
       <button (click)="addTransport()" nz-button class="ant-btn success-button" nzBlock> <i nz-icon nzType="plus"
           nzTheme="outline"></i> {{ 'add'
         | translate }} </button>
@@ -302,7 +302,7 @@
   </nz-tab>
 </nz-tabset>
 
-<div *ngIf="mode == 'view' && data && !loadingPage">
+<div *ngIf="mode == 'view' && data && !loadingPage && perService.hasPermission(Permission.DriverDetail)">
   <div class="detail-header">
     <div class="avatar-wrapper">
       <img *ngIf="!data?.profileFile" class="avatar-img" src="./assets/images/avatars/default_avatar.svg" alt="">
@@ -432,7 +432,7 @@
       <div>
         <nz-collapse>
           <nz-collapse-panel *ngFor="let transport of data?.driverTransports" [nzHeader]="transport.brand">
-            <div class="order-info" style="margin: 0; padding: 0;border: none;">
+            <div class="order-info" style="margin: 0; padding: 0;border: none;" *ngIf="transport">
               <div class="info-row">
                 <div class="info-column" style="width: 100%;">
                   <div class="info-label">{{ 'verified' | translate }}</div>
@@ -446,21 +446,21 @@
                 <div class="info-column">
                   <div class="info-label">{{ 'type_transport' | translate }}</div>
                   <div class="info-value">
-                    <p>{{ transport.transportType.name }}</p>
+                    <p>{{ transport?.transportType?.name }}</p>
                   </div>
                 </div>
 
                 <div class="info-column">
                   <div class="info-label">{{ 'transport_kind' | translate }}</div>
                   <div class="info-value">
-                    <p>{{ transport.transportKind.name }}</p>
+                    <p>{{ transport?.transportKind?.name }}</p>
                   </div>
                 </div>
               </div>
               <div class="info-row">
                 <div class="info-column">
                   <div class="info-label">{{ 'load_side' | translate }}</div>
-                  <div class="info-value" *ngFor="let item of transport.cargoLoadMethods">
+                  <div class="info-value" *ngFor="let item of transport?.cargoLoadMethods">
                     <p>{{ item.name }}</p>
                   </div>
                 </div>
@@ -510,7 +510,7 @@
               <div class="info-row">
                 <div class="info-column">
                   <div class="info-label">{{ 'isAdr' | translate }}</div>
-                  <div class="info-value"> {{(transport.containerVolume ? 'yes' : 'no') | translate}}</div>
+                  <div class="info-value"> {{(transport.isAdr ? 'yes' : 'no') | translate}}</div>
                 </div>
 
                 <div class="info-column">

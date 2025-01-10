@@ -223,7 +223,7 @@
 </ng-container>
 
 
-<ng-container *ngIf="mode == 'view' && data && !loadingPage">
+<ng-container *ngIf="mode == 'view' && data && !loadingPage && perService.hasPermission(Per.OrderDetail)">
   <div class="map" style="width: 400px; height: 200px">
     <ya-map [center]="[data?.loadingLocation?.latitude, data?.loadingLocation?.longitude]" [zoom]="12">
       <ya-multiroute [referencePoints]="data | referencePoints">
@@ -237,7 +237,7 @@
         <div class="info-row">
           <div class="info-column">
             <div class="info-label">{{'id_order' | translate}}</div>
-            <div class="info-value">#{{data.id}} </div>
+            <div class="info-value">{{data.id}} </div>
           </div>
 
           <div class="info-column">
@@ -250,7 +250,8 @@
         <div class="info-row">
           <div class="info-column">
             <div class="info-label">{{'client' | translate}}</div>
-            <div class="info-value link" (click)="showClientProfile(data.client.id)">{{data.client.firstName + ' ' + data.client.lastName }} </div>
+            <div class="info-value" [ngClass]="perService.hasPermission(Per.ClientDetail) ? 'link' : ''"
+              (click)="showClientProfile(data.client.id)">{{data.client.firstName + ' ' + data.client.lastName }} </div>
           </div>
           <div class="info-column">
           </div>
@@ -401,11 +402,12 @@
           </div>
         </div>
       </div>
-      <div class="flex gap" *ngIf="data.cargoStatus.code !== CargoStatusCodes.Canceled && data.cargoStatus.code !== CargoStatusCodes.Closed">
-        <button nz-button class="danger-button"
+      <div class="flex gap"
+        *ngIf="data.cargoStatus.code !== CargoStatusCodes.Canceled && data.cargoStatus.code !== CargoStatusCodes.Closed">
+        <button nz-button class="danger-button" *ngIf="perService.hasPermission(Per.OrderCancel)"
           (click)="onCancel()">{{'cancel_order' | translate}}</button>
         <button class="success-button"
-          *ngIf="data.cargoStatus.code !== CargoStatusCodes.Waiting"
+          *ngIf="(data.cargoStatus.code !== CargoStatusCodes.Waiting) && perService.hasPermission(Per.OrderChangeStatus)"
           nz-button (click)="changeStatusOrder()">{{ getButtonText(data.cargoStatus.code)
           }}</button>
       </div>
@@ -423,7 +425,8 @@
               </div>
               <div class="info-column">
                 <div class="info-label">{{'full_name' | translate}}</div>
-                <div class="info-value link" (click)="showDriverProfile(offer.driver.id)"> {{offer.driver.firstName + '
+                <div class="info-value" [ngClass]="perService.hasPermission(Per.DriverDetail) ? 'link' : ''"
+                  (click)="showDriverProfile(offer.driver.id)"> {{offer.driver.firstName + '
                   ' +
                   offer.driver.lastName }} </div>
               </div>
@@ -482,7 +485,8 @@
               </div>
               <div class="info-column">
                 <div class="info-label">{{'full_name' | translate}}</div>
-                <div class="info-value link" (click)="showDriverProfile(offer.driver.id)"> {{offer.driver.firstName + '
+                <div class="info-value" [ngClass]="perService.hasPermission(Per.DriverDetail) ? 'link' : ''"
+                  (click)="showDriverProfile(offer.driver.id)"> {{offer.driver.firstName + '
                   ' +
                   offer.driver.lastName }} </div>
               </div>
@@ -518,10 +522,12 @@
         </nz-collapse-panel>
       </nz-collapse>
       <div class="my-4 flex gap">
-        <button *ngIf="data.cargoStatus.code === CargoStatusCodes.Waiting" nz-button class="success-button"
-          (click)="onAssignDriver('assign')">{{'assign_driver' | translate}}</button>
-        <button *ngIf="data.cargoStatus.code === CargoStatusCodes.Waiting" nz-button class="success-button"
-          (click)="onAssignDriver('offer')">{{'sendOffer' | translate}}</button>
+        <button
+          *ngIf="(data.cargoStatus.code === CargoStatusCodes.Waiting) && perService.hasPermission(Per.OrderAssignDriver)"
+          nz-button class="success-button" (click)="onAssignDriver('assign')">{{'assign_driver' | translate}}</button>
+        <button
+          *ngIf="(data.cargoStatus.code === CargoStatusCodes.Waiting) && perService.hasPermission(Per.OrderSendOfferToDriver) "
+          nz-button class="success-button" (click)="onAssignDriver('offer')">{{'sendOffer' | translate}}</button>
       </div>
     </nz-tab>
   </nz-tabset>

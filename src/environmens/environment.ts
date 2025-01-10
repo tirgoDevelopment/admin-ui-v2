@@ -13,4 +13,12 @@ export const env = {
 //   references: 'http://192.168.1.218:3002/api/v2',
 //   merchantUrl: 'http://192.168.1.218:3003/api/v2',
 //   orderApiUrl: 'http://192.168.1.218:3001/api/v2',
-// };1
+// };
+// export const env = {
+//   production: false,
+//   apiUrl: 'https://api.tirgo.io/api/v2',
+//   adminUrl: 'https://api.tirgo.io/api/v2',
+//   references: 'https://api.tirgo.io/api/v2',
+//   merchantUrl: 'https://api.tirgo.io/api/v2',
+//   orderApiUrl: 'https://api.tirgo.io/api/v2',
+// };

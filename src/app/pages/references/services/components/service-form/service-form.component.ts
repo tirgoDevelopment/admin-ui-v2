@@ -62,28 +62,48 @@ export class ServiceFormComponent implements OnInit {
   onSubmit() {
     this.loading = true;
     const formValue = { ...this.form.value };
-
+  
     if (formValue.type !== 'fixed' && formValue.type !== 'from') {
       formValue.uzsAmount = '0';
       formValue.kztAmount = '0';
       formValue.tirAmount = '0';
     }
-    const submitObservable = this.data
-      ? this.serviceApi.putService(formValue)
-      : this.serviceApi.postService(formValue);
-
-    submitObservable.subscribe((res: Response<ServiceModel>) => {
-      if (res && res.success) {
+    
+    formValue.uzsAmount = formValue.uzsAmount.toString();
+    formValue.kztAmount = formValue.kztAmount.toString();
+    formValue.tirAmount = formValue.tirAmount.toString();
+  
+    const isDifferent =
+      this.data?.description !== formValue.description ||
+      this.data?.uzsAmount !== formValue.uzsAmount ||
+      this.data?.kztAmount !== formValue.kztAmount ||
+      this.data?.tirAmount !== formValue.tirAmount;
+    console.log(isDifferent);
+    console.log(formValue);
+    console.log(this.data);
+    
+    const submitObservable = isDifferent
+      ? this.serviceApi.changePriceStatus(formValue)
+      : this.data
+        ? this.serviceApi.putService(formValue)
+        : this.serviceApi.postService(formValue); 
+  
+    submitObservable.subscribe(
+      (res: Response<ServiceModel>) => {
+        if (res && res.success) {
+          this.loading = false;
+          const messageKey = this.data ? 'successfullUpdated' : 'successfullCreated';
+          this.toastr.success(this.translate.instant(messageKey), '');
+          this.drawerRef.close({ success: true });
+          this.form.reset();
+        }
+      },
+      (error) => {
         this.loading = false;
-        const messageKey = this.data ? 'successfullUpdated' : 'successfullCreated';
-        this.toastr.success(this.translate.instant(messageKey), '');
-        this.drawerRef.close({ success: true });
-        this.form.reset();
       }
-    }, (error) => {
-      this.loading = false;
-    });
+    );
   }
+  
   updateAmountValidators(type: string): void {
     const requiredValidators = [Validators.required];
     if (type === 'fixed' || type === 'from') {

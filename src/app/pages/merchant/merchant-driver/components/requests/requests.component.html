@@ -3,7 +3,7 @@
   <ng-container *ngIf="!loading">
     <div class="merchant-card" *ngFor="let item of data">
       <span>{{item.companyType + ' ' + item.companyName}} </span>
-      <button nz-button class="success-button" (click)="open(item.id)">{{'open' | translate}}</button>
+      <button nz-button class="success-button" (click)="open(item.id)">{{'view' | translate}}</button>
     </div>
   </ng-container>
 </div>

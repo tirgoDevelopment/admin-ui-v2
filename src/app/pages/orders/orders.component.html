@@ -1,111 +1,109 @@
-<div class="container-page">
-  <div class="header-page">
-    <h2>{{ 'orders' | translate }}</h2>
-    <div class="button-group">
-      <button nz-button class="secondary-button" (click)="toggleFilter()">
-        <span nz-icon nzType="filter" nzTheme="fill"></span>
-        {{ 'filter' | translate }}
-      </button>
+<div *ngIf="permissionService.hasPermission(Permission.OrdersPage)">
+  <div class="container-page">
+    <div class="header-page">
+      <h2>{{ 'orders' | translate }}</h2>
+      <div class="button-group">
+        <button nz-button class="secondary-button" (click)="toggleFilter()">
+          <span nz-icon nzType="filter" nzTheme="fill"></span>
+          {{ 'filter' | translate }}
+        </button>
 
-      <button nz-button class="success-button" (click)="handleDrawer('add')">
-        <span nz-icon nzType="plus" nzTheme="outline"></span>
-        {{ 'add' | translate }}
-      </button>
+        <button nz-button class="success-button" (click)="handleDrawer('add')"
+          *ngIf="permissionService.hasPermission(Permission.OrderCreate)">
+          <span nz-icon nzType="plus" nzTheme="outline"></span>
+          {{ 'add' | translate }}
+        </button>
+      </div>
     </div>
-  </div>
 
-  <app-order-filter
-    [isVisible]="isFilterVisible"
-    [filter]="filter"
-    [statuses]="statuses"
-    (filterChange)="filter = $event"
-    (search)="getAll()"
-    (reset)="resetFilter()">
-  </app-order-filter>
+    <app-order-filter [isVisible]="isFilterVisible" [filter]="filter" [statuses]="statuses"
+      (filterChange)="filter = $event" (search)="getAll()" (reset)="resetFilter()">
+    </app-order-filter>
 
-  <nz-table 
-    #sortTable 
-    [nzShowSizeChanger]="true" 
-    [nzShowPagination]="false" 
-    [nzSize]="'middle'" 
-    [nzData]="data"
-    [nzLoading]="loader" 
-    [nzNoResult]="empty" 
-    (nzQueryParams)="onQueryParamsChange($event)"
-    [nzScroll]="{ x: 'max-content' }">
-    <thead>
-      <tr>
-        <th>No</th>
-        <th nzColumnKey="id" [nzSortFn]="true">ID</th>
-        <th>{{ 'client' | translate }}</th>
-        <th>{{ 'place_shipment' | translate }}</th>
-        <th>{{ 'delivery_shipment' | translate }}</th>
-        <th>{{ 'status' | translate }}</th>
-        <th>{{ 'shipment_date' | translate }}</th>
-        <th>{{ 'price' | translate }}</th>
-        <th nzRight></th>
-      </tr>
-    </thead>
+    <nz-table #sortTable [nzShowSizeChanger]="true" [nzShowPagination]="false" [nzSize]="'middle'" [nzData]="data"
+      [nzLoading]="loader" [nzNoResult]="empty" [nzPaginationPosition]="'both'"
+      (nzQueryParams)="onQueryParamsChange($event)" [nzScroll]="{ x: 'max-content' }">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th nzColumnKey="id" [nzSortFn]="true">ID</th>
+          <th>{{ 'client' | translate }}</th>
+          <th>{{ 'place_shipment' | translate }}</th>
+          <th>{{ 'delivery_shipment' | translate }}</th>
+          <th>{{ 'status' | translate }}</th>
+          <th>{{ 'shipment_date' | translate }}</th>
+          <th>{{ 'price' | translate }}</th>
+          <th nzRight *ngIf="permissionService.hasAnyPermission([Permission.OrderDetail, Permission.OrderUpdate])"></th>
+        </tr>
+      </thead>
 
-    <tbody>
-      <tr style="cursor: pointer;" *ngFor="let data of sortTable.data; let i = index" (click)="handleDrawer('view', data.id)">
-        <td>{{i+1}}</td>
-        <td>{{data.id}}</td>
-        <td class="ellipsis" (click)="$event.stopPropagation()" (click)="showClientProfile(data.id)">
-          <ng-container *ngIf="data.client; else noData">
-           <div class="link">{{data.client.firstName}} {{data.client.lastName}}</div> 
-          </ng-container>
-        </td>
-        <td class="ellipsis">{{data.loadingLocation.name}}</td>
-        <td class="ellipsis">{{data.deliveryLocation.name}}</td>
-        <td>
-          <span class="status" [ngStyle]="{
+      <tbody>
+        <tr style="cursor: pointer;" *ngFor="let data of sortTable.data; let i = index"
+          (click)="handleDrawer('view', data.id)">
+          <td>{{i+1}}</td>
+          <td>{{data.id}}</td>
+          <td class="ellipsis" [ngClass]="permissionService.hasPermission(Permission.ClientDetail) ? 'link' : ''"
+            (click)="$event.stopPropagation()" (click)="showClientProfile(data.id)">
+            <ng-container *ngIf="data.client; else noData">
+              <div>{{data.client.firstName}} {{data.client.lastName}}</div>
+            </ng-container>
+          </td>
+          <td class="ellipsis">{{data.loadingLocation.name}}</td>
+          <td class="ellipsis">{{data.deliveryLocation.name}}</td>
+          <td>
+            <span class="status" [ngStyle]="{
             color: data.cargoStatus.color, 
             borderColor: data.cargoStatus.color
           }">
-            {{data.cargoStatus.name | lowercase | translate}}
-          </span>
-        </td>
-        <td>{{data.sendDate | date : 'dd.MM.yyyy'}}</td>
-        <td>
-          <ng-container *ngIf="data.offeredPrice; else noData">
-            {{data.offeredPrice | priceFormat}} {{data.offeredPriceCurrency?.name}}
-          </ng-container>
-        </td>
-        <td class="action-col" nzRight  (click)="$event.stopPropagation()">
-          <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
-            <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
-          </a>
-          <nz-dropdown-menu #menu="nzDropdownMenu">
-            <ul nz-menu nzSelectable>
-              <li nz-menu-item (click)="handleDrawer('view', data.id)">
-                <div class="dropdown-menu">
-                  <span nz-icon nzType="info-circle" nzTheme="outline"></span>
-                  <span>{{ 'detail' | translate }}</span>
-                </div>
-              </li>
+              {{data.cargoStatus.name | lowercase | translate}}
+            </span>
+          </td>
+          <td>{{data.sendDate | date : 'dd.MM.yyyy'}}</td>
+          <td>
+            <ng-container *ngIf="data.offeredPrice; else noData">
+              {{data.offeredPrice | priceFormat}} {{data.offeredPriceCurrency?.name}}
+            </ng-container>
+          </td>
+          <td class="action-col" nzRight (click)="$event.stopPropagation()"
+            *ngIf="permissionService.hasAnyPermission([Permission.OrderDetail, Permission.OrderUpdate])">
+            <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
+              <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
+            </a>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu nzSelectable>
+                <li nz-menu-item (click)="handleDrawer('view', data.id)"
+                  *ngIf="permissionService.hasPermission(Permission.OrderDetail)">
+                  <div class="dropdown-menu">
+                    <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+                    <span>{{ 'detail' | translate }}</span>
+                  </div>
+                </li>
 
-              <li nz-menu-item 
-                  (click)="handleDrawer('edit', data.id)" 
-                  *ngIf="data.cargoStatus.code !== CargoStatusCodes.Canceled && 
-                         data.cargoStatus.code !== CargoStatusCodes.Closed">
-                <div class="dropdown-menu">
-                  <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
-                  <span>{{ 'edit' | translate }}</span>
-                </div>
-              </li>
-            </ul>
-          </nz-dropdown-menu>
-        </td>
-      </tr>
-    </tbody>
-  </nz-table>
+                <li nz-menu-item (click)="handleDrawer('edit', data.id)"
+                  *ngIf="(data.cargoStatus.code !== CargoStatusCodes.Canceled && 
+                         data.cargoStatus.code !== CargoStatusCodes.Closed) && permissionService.hasPermission(Permission.OrderUpdate)">
+                  <div class="dropdown-menu">
+                    <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
+                    <span>{{ 'edit' | translate }}</span>
+                  </div>
+                </li>
+              </ul>
+            </nz-dropdown-menu>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+  <ng-template #noData>
+    <span>{{ 'no_data' | translate }}</span>
+  </ng-template>
+
+  <ng-template #empty>
+    <nz-empty></nz-empty>
+  </ng-template>
 </div>
 
-<ng-template #noData>
-  <span>{{ 'no_data' | translate }}</span>
-</ng-template>
-
-<ng-template #empty>
-  <nz-empty></nz-empty>
-</ng-template>
+<div *ngIf="!permissionService.hasPermission(Permission.OrdersPage)" class="no-access-container">
+  <nz-result nzStatus="error" nzTitle="403" nzSubTitle="{{'accessDeniedPage' | translate}}">
+  </nz-result>
+</div>

@@ -27,7 +27,6 @@ export class SocketService {
       });
 
       this.eventSource.onopen = () => {
-        console.log('SSE connection opened successfully');
         this.reconnectAttempts = 0;
       };
 
@@ -43,7 +42,6 @@ export class SocketService {
       this.eventSource.onerror = (error) => {
         console.error('SSE connection error:', error);
         if (this.eventSource?.readyState === EventSource.CONNECTING) {
-          console.log('Connection is in pending state, attempting to reconnect...');
         }
 
         this.eventSource?.close();
@@ -52,9 +50,6 @@ export class SocketService {
         if (this.reconnectAttempts < this.maxReconnectAttempts) {
           this.reconnectAttempts++;
           const backoffTime = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 10000);
-          
-          console.log(`Attempting to reconnect in ${backoffTime}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
-          
           this.reconnectTimeout = setTimeout(() => {
             this.connectToSSE(token);
           }, backoffTime);

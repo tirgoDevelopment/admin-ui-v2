@@ -12,6 +12,8 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { ResponseContent } from 'src/app/shared/models/res-content.model';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 @Component({
   selector: 'app-admins',
@@ -38,12 +40,13 @@ import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.modul
   ]
 })
 export class AdminsComponent implements OnInit {
+  Permission = Permission;
 
   confirmModal?: NzModalRef;
   data: AdminModel[];
   loader: boolean = false;
   isFilterVisible: boolean = false
-  filter = {id: '',loadingLocation: '',deliveryLocation: '',statusId: ''};
+  filter = { id: '', loadingLocation: '', deliveryLocation: '', statusId: '' };
   showForm: boolean = false;
   pageParams = {
     pageIndex: 1,
@@ -58,7 +61,9 @@ export class AdminsComponent implements OnInit {
     private modal: NzModalService,
     private adminsService: AdminsService,
     private drawer: NzDrawerService,
-    private translate: TranslateService) { }
+    private translate: TranslateService,
+    public permissionService: PermissionService,
+  ) { }
 
   ngOnInit(): void {
     this.getAll();
@@ -80,38 +85,26 @@ export class AdminsComponent implements OnInit {
       nzContent: AdminFormComponent,
       nzPlacement: 'right',
     });
-    drawerRef.afterClose.subscribe(() => {
-      this.getAll();
-      drawerRef.componentInstance?.form.reset();
+    drawerRef.afterClose.subscribe((res: any) => {
+      if (res && res.success) {
+        this.getAll();
+      }
     });
   }
-  update(item:AdminModel) {
-    const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant('edit_admins'),
-      nzContent: AdminFormComponent,
-      nzPlacement: 'right',
-      nzContentParams: { admin: item }
-    });
-    drawerRef.afterClose.subscribe(() => {
-      this.getAll();
-      drawerRef.componentInstance?.form.reset();
-    });
-  }
-  remove(id: number | string) {
-    this.confirmModal = this.modal.confirm({
-      nzTitle: this.translate.instant('are_you_sure'),
-      nzContent: this.translate.instant('delete_sure'),
-      nzOkText: this.translate.instant('remove'),
-      nzCancelText: this.translate.instant('cancel'),
-      nzOkDanger: true,
-      nzOnOk: () =>
-        this.adminsService.delete(id).subscribe((res: ResponseContent<AdminModel[]>) => {
-          if (res && res.success) {
-            this.toastr.success(this.translate.instant('successfullDeleted'),'');
-            this.getAll();
-          }
-        }),
-    });
+  update(item: AdminModel) {
+    if (this.permissionService.hasPermission(Permission.AdminUpdate)) {
+      const drawerRef: any = this.drawer.create({
+        nzTitle: this.translate.instant('edit_admins'),
+        nzContent: AdminFormComponent,
+        nzPlacement: 'right',
+        nzContentParams: { admin: item }
+      });
+      drawerRef.afterClose.subscribe((res: any) => {
+        if (res && res.success) {
+          this.getAll();
+        }
+      });
+    }
   }
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;

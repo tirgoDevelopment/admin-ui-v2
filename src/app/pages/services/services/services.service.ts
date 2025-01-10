@@ -13,6 +13,8 @@ export class ServicesService {
   private readonly baseRefUrl = `${env.references}/references/driver-services`;
   private readonly baseUrl = `${env.apiUrl}/users/services-requests`;
   private readonly chatUrl = `${env.apiUrl}/users/services-requests`;
+  private readonly r = `${env.references}/references/`;
+
 
   constructor(private http: HttpClient) { }
   // REEFERENCES
@@ -35,7 +37,9 @@ export class ServicesService {
   deleteService(id: number | string): Observable<Response<ServiceModel>> {
     return this.http.delete<Response<ServiceModel>>(`${this.baseRefUrl}/${id}`);
   }
-
+  changePriceStatus(data): Observable<Response<ServiceModel>> {
+    return this.http.post<Response<ServiceModel>>(`${this.baseRefUrl}/${data.id}`, data)
+  }
 
 
   // Service Status
@@ -83,4 +87,14 @@ export class ServicesService {
   patchServiceCount(id) {
     return this.http.post(`${this.chatUrl}/${id}/messages/read`, {})
   }
+
+  // KZ PAID WAY
+
+  kzPaidWayAccount() {
+    return this.http.get(`${this.r}kz-paid-way-account`);
+  }
+  putkzPaidWayAccount(data: any) {
+    return this.http.put(`${this.r}/kz-paid-way-account`, data);
+  }
+
 }

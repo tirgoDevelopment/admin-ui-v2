@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +12,8 @@ import { SocketService } from '../../services/socket.service';
 import { ServicesService } from 'src/app/pages/services/services/services.service';
 import { jwtDecode } from 'jwt-decode';
 import { PushService } from '../../services/push.service';
+import { PermissionService } from '../../services/permission.service';
+import { Permission } from '../../enum/per.enum';
 
 @Component({
   selector: 'app-main',
@@ -21,9 +23,8 @@ import { PushService } from '../../services/push.service';
   styleUrls: ['./main.component.scss'],
 })
 export class MainComponent {
-
+  Permission = Permission;
   chatIconPosition = { x: 0, y: 0 };
-
   isLoading: boolean = false;
   theme: 'light' | 'dark';
   isCollapsed = true;
@@ -39,17 +40,18 @@ export class MainComponent {
   chat
   constructor(
     private socketService: SocketService,
-    private changeDetector: ChangeDetectorRef,
+    private cdr: ChangeDetectorRef,
     public themeService: ThemeService,
     private translate: TranslateService,
     public authService: AuthService,
     private serviceApi: ServicesService,
     private pushService: PushService,
+    public permissionService: PermissionService,
     private router: Router) {
   }
   ngOnInit(): void {
-   this.currentUser = jwtDecode(localStorage.getItem('accessToken'));
-      
+    this.currentUser = jwtDecode(localStorage.getItem('accessToken'));
+
     const lang = localStorage.getItem('lang') || 'uz';
     this.changeLanguage(lang.toLocaleLowerCase(), `../assets/images/flags/${lang}.svg`);
     this.themeService.initTheme();
@@ -59,21 +61,28 @@ export class MainComponent {
       if (event instanceof NavigationEnd) {
         if (event.urlAfterRedirects.startsWith('/services')) {
           this.serviceReqCount = 0;
-          this.changeDetector.detectChanges();
+          this.cdr.detectChanges();
+
         }
       }
     });
     this.getChats();
     this.subscription = this.socketService.getSSEEvents().subscribe((event) => {
-      if (event.event === 'newMessage' && event.data.userType != 'staff' && (this.chat && this.chat.id) !== event.data.requestId) {
+      if ((event.event === 'newMessage' && event.data.userType != 'staff') && ((this.chat && this.chat.id) !== event.data.requestId)) {
         this.newMessageCount = this.newMessageCount + 1;
-        this.changeDetector.detectChanges();
-        this.pushService.showPushNotification(`Новое сообщение поступило на сервис в id ${event.data.requestId}`, event.data.message.message );
+        this.cdr.detectChanges();
+        this.pushService.showPushNotification(`Новое сообщение поступило на услугу в id ${event.data.requestId}`, event.data.message.message, 'service');
+      }
+      if (event.event === 'tmsGsmBalanceTopup') {
+        this.pushService.showPushNotification('Поступил запрос на пополнение ГСМ баланса', 'от компании ' + event.data?.driverMerchant.companyType + event.data?.driverMerchant.companyName, 'gsm')
+      }
+      if (event.event === 'newServiceRequest') {
+        this.pushService.showPushNotification('Заявка за новую услугу', '', 'service')
       }
     });
 
   }
- 
+
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
@@ -89,11 +98,13 @@ export class MainComponent {
     this.themeService.setTheme(newTheme);
   }
   logout() {
-    this.authService.signOut();
+    this.authService.logout();
     this.router.navigate(['/auth/sign-up']);
-  } 
+  }
   toggleChat() {
-    this.isChatVisible = !this.isChatVisible;
+    if (this.permissionService.hasPermission(Permission.ServiceChat)) {
+      this.isChatVisible = !this.isChatVisible;
+    }
   }
   closeChat() {
     this.isChatVisible = false;
@@ -118,7 +129,8 @@ export class MainComponent {
   getChats() {
     this.serviceApi.getDriverServices({}).subscribe({
       next: (res: any) => {
-        this.newMessageCount = res.data.content.reduce((total, item) => total + (item.unreadMessagesCount || 0), 0);
+        if (res && res.data)
+          this.newMessageCount = res.data.content.reduce((total, item) => total + (item.unreadMessagesCount || 0), 0);
       },
       error: (error) => {
       },
@@ -129,5 +141,8 @@ export class MainComponent {
   updateNewMessageCount(count: number) {
     this.newMessageCount += count;
   }
-  
+  toggleCollapse(): void {
+    this.isCollapsed = !this.isCollapsed;
+    this.cdr.detectChanges();
+  }
 }

@@ -15,11 +15,10 @@ import { RoleModel } from './models/role.model';
   templateUrl: './roles.component.html',
   styleUrls: ['./roles.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, RoleFormComponent],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule],
   providers: [NzModalService]
 })
 export class RolesComponent implements OnInit {
-
   confirmModal?: NzModalRef;
   data: any[];
   loader: boolean = false;
@@ -45,6 +44,7 @@ export class RolesComponent implements OnInit {
   ngOnInit(): void {
     this.getAll();
   }
+
   getAll() {
     this.loader = true;
     this.rolesService.getAll().subscribe((res:any) => {
@@ -63,6 +63,7 @@ export class RolesComponent implements OnInit {
       nzTitle: this.translate.instant('add'),
       nzContent: RoleFormComponent,
       nzPlacement: 'right',
+      nzWidth: '50%'
     });
     drawerRef.afterClose.subscribe((res:any) => {
       if(res && res.success){
@@ -76,6 +77,7 @@ export class RolesComponent implements OnInit {
       nzTitle: this.translate.instant('edit_admins'),
       nzContent: RoleFormComponent,
       nzPlacement: 'right',
+      nzWidth: '50%',
       nzContentParams: { data: item }
     });
     drawerRef.afterClose.subscribe((res:any) => {

@@ -1,74 +1,103 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { CommonModules } from 'src/app/shared/modules/common.module';
+import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
+import { NotificationService } from 'src/app/shared/services/notification.service';
+import { RolesService } from 'src/app/shared/services/references/role.service';
 
 @Component({
   selector: 'app-role-form',
   templateUrl: './role-form.component.html',
-  styleUrls: ['./role-form.component.scss'],
+  styleUrls:['./role-form.component.scss'],
   standalone: true,
-  imports: [NzModules, TranslateModule, CommonModules],
+  imports: [TranslateModule, CommonModules, NzModules, IconsProviderModule],
 })
 export class RoleFormComponent implements OnInit {
-  permissionsForm: FormGroup;
   @Input() data?: any;
-  constructor(private fb: FormBuilder) {
-    this.permissionsForm = this.fb.group({});
-  }
-  ngOnInit(): void {
-    this.permissions.forEach(permission => {
-      this.permissionsForm.addControl(permission.name, this.fb.control(permission.value));
+  form: FormGroup;
+  loading = false;
+  permissionKeys = [
+    "sendPush", "chat", "trackingPage",
+    "adminsPage", "adminCreate", "adminUpdate", "adminDelete",
+    "driversPage", "driverTopUpBalance", "driverCreate", "driverUpdate", "driverDelete", 
+    "driverDetail", "driverBlock", "driverAddTransport", "driverPush",
+    "clientsPage", "clientCreate", "clientUpdate", "clientDetail", "clientDelete", 
+    "clientPush", "servicesPage", "serviceCreate", "serviceDetail", "serviceStatusChange", 
+    "serviceLog", "serviceChat", "gsmPage", "gsmTopUpBalance", "gsmCardManagment", 
+    "ordersPage", "orderCreate", "orderUpdate", "orderDetail", "orderOffer", 
+    "orderCancel", "orderAssignDriver", "orderSendOfferToDriver", "orderChangeStatus", 
+    "tmsesPage", "tmsDeatil", "tmsUpdate", "tmsDriversList", "tmsTransactionsHistory", 
+    "tmsTopupBalance", "tmsBlock", "tmsRequstsList", "merchantsPage", "dashboardPage", 
+    "archivePage", "driverServicesPage", "rolesPage", "loadingMethodsPage", 
+    "subscriptionTypesPage", "currenciesPage", "transportTypesPage", "transportKindsPage", 
+    "cargoStatusPage", "cargoPackagesPage", "serviceStatusPage", "cargoTypeGroupsPage", 
+    "cargoTypesPage"
+  ];
+
+  constructor(
+    private fb: FormBuilder,
+    private roleService: RolesService,
+    private toastr: NotificationService,
+    private translate: TranslateService,
+    private drawerRef: NzDrawerRef
+  ) {
+    this.form = this.fb.group({
+      id: new FormControl(''),
+      name: new FormControl('', Validators.required),
+      permission: this.fb.group({})
     });
   }
-  permissions = [
-    { name: 'activePage', value: true },
-    { name: 'addBalanceAgent', value: true },
-    { name: 'addClient', value: true },
-    { name: 'addDriver', value: true },
-    { name: 'addOrder', value: true },
-    { name: 'adminAgentPage', value: true },
-    { name: 'adminPage', value: true },
-    { name: 'agentPage', value: false },
-    { name: 'archivedPage', value: true },
-    { name: 'attachDriverAgent', value: true },
-    { name: 'cancelOrder', value: true },
-    { name: 'chat', value: true },
-    { name: 'clientMerchantFinance', value: true },
-    { name: 'clientMerchantList', value: true },
-    { name: 'clientMerchantPage', value: true },
-    { name: 'dashboardPage', value: true },
-    { name: 'driverFinance', value: true },
-    { name: 'driverMerchantFinance', value: true },
-    { name: 'driverMerchantList', value: true },
-    { name: 'driverMerchantPage', value: true },
-    { name: 'driverVerification', value: true },
-    { name: 'finRequest', value: true },
-    { name: 'orderPage', value: true },
-    { name: 'referencesPage', value: true },
-    { name: 'registerClientMerchant', value: true },
-    { name: 'registerDriverMerchant', value: true },
-    { name: 'seeClientsInfo', value: true },
-    { name: 'seeDriversInfo', value: true },
-    { name: 'seePaymentTransactionAdmin', value: true },
-    { name: 'seeServiceTransactionAdmin', value: true },
-    { name: 'seeSubscriptionTransactionAgent', value: true },
-    { name: 'sendPush', value: true },
-    { name: 'tracking', value: true },
-    { name: 'verifyDriver', value: true },
-  ];
-  toKebabCase(str: string): string {
-    return str.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
-  }
-  toCamelCase(str: string): string {
-    return str.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+  ngOnInit(): void {
+    if (this.data) {
+      this.permissionKeys = Object.keys(this.data.permission || {}).filter(
+        (key) => !['id', 'createdAt', 'active', 'deleted'].includes(key)
+      );
+      
+      const permissionGroup = this.fb.group({});
+      this.permissionKeys.forEach((key) => {
+        permissionGroup.addControl(key, new FormControl(this.data.permission[key] || false));
+      });
+      
+      this.form.setControl('permission', permissionGroup);
+      this.form.patchValue(this.data);
+    } else {
+      const permissionGroup = this.fb.group({});
+      this.permissionKeys.forEach((key) => {
+        permissionGroup.addControl(key, new FormControl(false));
+      });
+
+      this.form.setControl('permission', permissionGroup);
+    }
   }
   onSubmit(): void {
-    const formattedPermissions = Object.keys(this.permissionsForm.value).reduce((acc:any, key) => {
-      const camelCaseKey = this.toCamelCase(key);
-      acc[camelCaseKey] = this.permissionsForm.value[key];
-      return acc;
-    }, {});
+    if (this.form.valid) {
+      this.loading = true;
+      if (this.data) {
+        this.roleService.update(this.form.value).subscribe((res: any) => {
+          if (res && res.success) {
+            this.loading = false;
+            this.toastr.success(this.translate.instant('successfullUpdated'), '');
+            this.drawerRef.close({ success: true });
+          }
+        }, (err) => {
+          this.loading = false;
+        });
+      } else {
+        this.roleService.create(this.form.value).subscribe((res: any) => {
+          if (res && res.success) {
+            this.loading = false;
+            this.toastr.success(this.translate.instant('successfullCreated'), '');
+            this.drawerRef.close({ success: true });
+          }
+        }, (err) => {
+          this.loading = false;
+        });
+      }
+    }
+  }
+  onDelete() {
   }
 }

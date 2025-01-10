@@ -1,5 +1,4 @@
 <form [formGroup]="form">
-
     <nz-input-group class="input-group w-full">
         <nz-form-label nzRequired>{{ 'balance_type' | translate }}</nz-form-label>
         <nz-select formControlName="balanceType" class="w-full">
@@ -10,16 +9,21 @@
 
     <nz-form-label nzRequired>{{ 'amount' | translate }}</nz-form-label>
     <div class="flex">
-        <nz-select formControlName="currencyId" >
+        <nz-select formControlName="currencyId">
             <nz-option *ngFor="let item of currencies" [nzLabel]="item.name" [nzValue]="item.id"></nz-option>
         </nz-select>
         <input nz-input type="text" formControlName="currencyAmount" mask="separator.2">
     </div>
     <nz-input-group>
-        <nz-form-label nzRequired>{{  'amount' | translate }} (Tir)</nz-form-label>
+        <nz-form-label nzRequired>{{ 'amount' | translate }} (Tir)</nz-form-label>
         <input nz-input type="text" formControlName="tirAmount" mask="separator.2">
     </nz-input-group>
+    <nz-input-group>
+        <nz-form-label>{{ 'description' | translate }}</nz-form-label>
+        <input nz-input type="text" formControlName="description">
+    </nz-input-group>
     <div class="button-wrapper">
-        <button nz-button class="success-button" [nzLoading]="loading" [disabled]="form.invalid" (click)="submit()">{{ 'save' | translate }}</button>
-      </div>
+        <button nz-button class="success-button" [nzLoading]="loading" [disabled]="form.invalid" (click)="submit()">{{
+            'save' | translate }}</button>
+    </div>
 </form>

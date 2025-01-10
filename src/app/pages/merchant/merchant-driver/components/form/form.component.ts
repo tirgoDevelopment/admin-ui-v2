@@ -53,7 +53,9 @@ export class FormComponent implements OnInit {
       supervisorFirstName: new FormControl(''),
       supervisorLastName: new FormControl(''),
       taxPayerCode: new FormControl(''),
-      responsbilePersonPhoneNumber: new FormControl('')
+      responsbilePersonPhoneNumber: new FormControl(''),
+      kzPaidWayCommission: new FormControl(''),
+      debtLimit: new FormControl('')
     });
   }
 

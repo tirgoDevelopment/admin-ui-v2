@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+<form [formGroup]="form" *ngIf="perService.hasPermission(Per.ServiceCreate)">
 
     <nz-input-group class="input-group w-full">
         <nz-form-label>{{ 'searchAs' | translate }}</nz-form-label>
@@ -21,18 +21,19 @@
 
     <nz-input-group class="input-group w-full">
         <nz-form-label nzRequired>{{ 'services.title' | translate }}</nz-form-label>
-        <nz-select style="width: 100%;" nzPlaceHolder="{{ 'services.title' | translate }}" formControlName="servicesIds" nzMode="multiple">
+        <nz-select style="width: 100%;" nzPlaceHolder="{{ 'services.title' | translate }}"
+            formControlName="servicesIds">
             <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of services"></nz-option>
         </nz-select>
     </nz-input-group>
 
     <div class="button-wrapper">
         <button nz-button class="danger-button" (click)="onCancel()">
-          {{ 'cancel' | translate }}
+            {{ 'cancel' | translate }}
         </button>
         <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
-          [disabled]="form.invalid || loading">
-          {{ 'save' | translate }}
+            [disabled]="form.invalid || loading">
+            {{ 'save' | translate }}
         </button>
-      </div>
+    </div>
 </form>

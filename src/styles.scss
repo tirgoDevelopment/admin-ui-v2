@@ -572,8 +572,9 @@ input[type=number]::-webkit-outer-spin-button {
   border-radius: 8px;
   padding: 8px;
   margin-top: 20px;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
 }
-
 .detail-header {
   display: flex;
   align-items: center;
@@ -732,7 +733,9 @@ input[type=number]::-webkit-outer-spin-button {
 .my-2 {
   margin: 10px 0;
 }
-
+.mb-2 {
+  margin-bottom: 20px;
+}
 .my-4 {
   margin-top: 20px;
 }
@@ -808,4 +811,12 @@ input[type=number]::-webkit-outer-spin-button {
 .ant-scroll-number {
   top: 5px !important;
   right: 10px !important;
+}
+
+// Access Denied Page
+.no-access-container {
+  height: 100vh;
+}
+.ant-result-subtitle {
+  font-size: 18px !important;
 }

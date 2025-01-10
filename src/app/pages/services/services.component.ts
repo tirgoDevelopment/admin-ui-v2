@@ -30,6 +30,10 @@ import { DriverFormComponent } from '../drivers/components/driver-form/driver-fo
 import { DetailComponent } from '../merchant/merchant-driver/components/detail/detail.component';
 import { ChatComponent } from 'src/app/shared/components/chat/chat.component';
 import { ServiceDetailComponent } from './components/detail/detail.component';
+import { PushService } from 'src/app/shared/services/push.service';
+import { PermissionService } from 'src/app/shared/services/permission.service';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { KazjulTokenComponent } from './components/kazjul-token/kazjul-token.component';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -58,7 +62,7 @@ export enum SseEventNames {
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.scss'],
   standalone: true,
-  imports: [ CommonModules,NzModules,TranslateModule,IconsProviderModule,PipeModule,ChatComponent],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule, ChatComponent],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -69,6 +73,7 @@ export enum SseEventNames {
   ],
 })
 export class ServicesComponent implements OnInit, OnDestroy {
+  Per = Permission;
   showChat: boolean = false;
   selectedServiceId: string | null = null;
 
@@ -100,7 +105,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
     private toastr: NotificationService,
     private cdr: ChangeDetectorRef,
     private merchantApi: MerchantDriverService,
-    private router: Router
+    private router: Router,
+    public perService: PermissionService
   ) { }
   ngOnInit(): void {
     this.getStatuses();
@@ -109,6 +115,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.sseSubscription = this.socketService.getSSEEvents().subscribe((event) => {
       this.handleSocketEvent(event);
       if (event.event === 'newServiceRequest') {
+        // this.pushService.showPushNotification('Заявка за новую услугу', '')
         this.getAll();
       }
     });
@@ -193,20 +200,24 @@ export class ServicesComponent implements OnInit, OnDestroy {
     });
   }
   showLog(id: string | number) {
-    this.router.navigate(['/services', id, 'log']);
+    if (this.perService.hasPermission(this.Per.ServiceLog)) {
+      this.router.navigate(['/services', id, 'log']);
+    }
   }
   addService() {
-    const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant('add'),
-      nzContent: ServiceFormComponent,
-      nzPlacement: 'right',
-    });
-    drawerRef.afterClose.subscribe((result: any) => {
-      if (result && result.success) {
-        this.getAll();
-        drawerRef.componentInstance?.form.reset();
-      }
-    });
+    if (this.perService.hasPermission(this.Per.ServiceCreate)) {
+      const drawerRef: any = this.drawer.create({
+        nzTitle: this.translate.instant('add'),
+        nzContent: ServiceFormComponent,
+        nzPlacement: 'right',
+      });
+      drawerRef.afterClose.subscribe((result: any) => {
+        if (result && result.success) {
+          this.getAll();
+          drawerRef.componentInstance?.form.reset();
+        }
+      });
+    }
   }
   servicePricing(service: any) {
     const drawerRef = this.drawer.create({
@@ -302,16 +313,18 @@ export class ServicesComponent implements OnInit, OnDestroy {
     );
   }
   changeStatus(currentStatus: any, item: any): void {
-    let restrictedCodes = [];
-    this.currentUser.userId == 1 ? restrictedCodes = [6, 7] : restrictedCodes = [5, 6, 7];
-    if (this.isRestrictedStatus(currentStatus.code, restrictedCodes)) {
-      this.showRestrictedStatusError(currentStatus.code);
-      return;
-    }
-    if (currentStatus.code === 0) {
-      this.servicePricing(item);
-    } else {
-      this.confirmStatusChange(currentStatus.code, item);
+    if (this.perService.hasPermission(this.Per.ServiceStatusChange)) {
+      let restrictedCodes = [];
+      this.currentUser.userId == 1 ? restrictedCodes = [6, 7] : restrictedCodes = [5, 6, 7];
+      if (this.isRestrictedStatus(currentStatus.code, restrictedCodes)) {
+        this.showRestrictedStatusError(currentStatus.code);
+        return;
+      }
+      if (currentStatus.code === 0) {
+        this.servicePricing(item);
+      } else {
+        this.confirmStatusChange(currentStatus.code, item);
+      }
     }
   }
   isRestrictedStatus(code: number, restrictedCodes: number[]): boolean {
@@ -401,20 +414,22 @@ export class ServicesComponent implements OnInit, OnDestroy {
     });
   }
   showDriver(id) {
-    const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant('information'),
-      nzContent: DriverFormComponent,
-      nzMaskClosable: false,
-      nzPlacement: 'right',
-      nzWidth: '400px',
-      nzContentParams: {
-        id: id,
-        mode: 'view'
-      }
-    });
+    if (this.perService.hasPermission(this.Per.DriverDetail)) {
+      const drawerRef: any = this.drawer.create({
+        nzTitle: this.translate.instant('information'),
+        nzContent: DriverFormComponent,
+        nzMaskClosable: false,
+        nzPlacement: 'right',
+        nzWidth: '400px',
+        nzContentParams: {
+          id: id,
+          mode: 'view'
+        }
+      });
+    }
   }
   showTms(id) {
-    if (id) {
+    if (id && this.perService.hasPermission(this.Per.TmsDetail)) {
       const drawerRef: any = this.drawer.create({
         nzTitle: this.translate.instant('information'),
         nzContent: DetailComponent,
@@ -429,11 +444,20 @@ export class ServicesComponent implements OnInit, OnDestroy {
 
   }
   showChatForService(id) {
-    this.selectedServiceId = id;
-    this.showChat = true;
+    if (this.perService.hasPermission(this.Per.ServiceCreate)) {
+      this.selectedServiceId = id;
+      this.showChat = true;
+    }
   }
   onChatClose() {
     this.showChat = false;
     this.selectedServiceId = null;
+  }
+  kazjulToken() {
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('Казжул'),
+      nzContent: KazjulTokenComponent,
+      nzWidth: '400px',
+    });
   }
 }

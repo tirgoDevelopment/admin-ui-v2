@@ -60,8 +60,6 @@ export class CurrenciesComponent implements OnInit {
       nzPlacement: 'right',
     });
     drawerRef.afterClose.subscribe((result: any) => {
-      console.log(result);
-      
       if (result && result.success) {
         this.getAll();
       }

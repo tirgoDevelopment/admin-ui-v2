@@ -23,6 +23,8 @@ import { PageParams } from './models/page-params.interface';
 import { OrderFilterComponent } from './components/order-filter/order-filter.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientsFormComponent } from '../clients/components/clients-form/clients-form.component';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 @Component({
   selector: 'app-orders',
@@ -33,8 +35,7 @@ import { ClientsFormComponent } from '../clients/components/clients-form/clients
 })
 export class OrdersComponent implements OnInit {
   public readonly CargoStatusCodes = CargoStatusCodes;
-  private confirmModal?: NzModalRef;
-
+  Permission = Permission;
   public data: OrderModel[] = [];
   public loader = false;
   public isFilterVisible = false;
@@ -59,7 +60,8 @@ export class OrdersComponent implements OnInit {
     public readonly translate: TranslateService,
     private readonly drawer: NzDrawerService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public permissionService: PermissionService
   ) {
 
   }
@@ -115,6 +117,13 @@ export class OrdersComponent implements OnInit {
   }
 
   public handleDrawer(action: 'add' | 'edit' | 'view', orderId?: string | number): void {
+    if (action === 'view') {
+      if (this.permissionService.hasPermission(Permission.OrderDetail)) {
+        const drawerRef = this.createDrawer(action, orderId);
+        this.handleDrawerClose(drawerRef);
+      }
+      return; 
+    }
     const drawerRef = this.createDrawer(action, orderId);
     this.handleDrawerClose(drawerRef);
   }
@@ -216,16 +225,18 @@ export class OrdersComponent implements OnInit {
     this.router.navigate(['/orders'], { queryParams: {} });
   }
   showClientProfile(id: number | string) {
-    const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant('information'),
-      nzContent: ClientsFormComponent,
-      nzMaskClosable: false,
-      nzPlacement: 'right',
-      nzWidth: '400px',
-      nzContentParams: {
-        clientId: id,
-        mode: 'view'
-      }
-    });
+    if (this.permissionService.hasPermission(Permission.ClientsPage)) {
+      const drawerRef: any = this.drawer.create({
+        nzTitle: this.translate.instant('information'),
+        nzContent: ClientsFormComponent,
+        nzMaskClosable: false,
+        nzPlacement: 'right',
+        nzWidth: '400px',
+        nzContentParams: {
+          clientId: id,
+          mode: 'view'
+        }
+      });
+    }
   }
 }

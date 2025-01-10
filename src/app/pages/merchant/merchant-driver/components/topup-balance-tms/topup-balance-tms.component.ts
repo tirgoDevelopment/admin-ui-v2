@@ -33,7 +33,6 @@ export class TopupBalanceTmsComponent implements OnInit {
     this.initializeForm();
     this.getCurrencies();
     this.setupValueChangeListeners();
-
   }
   getCurrencies(): void {
     this.currenciesService.getAll().subscribe((res: any) => {
@@ -50,10 +49,10 @@ export class TopupBalanceTmsComponent implements OnInit {
       currencyRate: new FormControl(null),
       tirAmount: new FormControl('', [Validators.required]),
       balanceType: new FormControl(null, [Validators.required]),
+      description: new FormControl(null)
     });
   }
   submit(): void {
-    console.log(this.form.value);
     this.form.value.currencyAmount = this.form.value.currencyAmount.toString();
     this.form.value.tirAmount = this.form.value.tirAmount.toString();
     this.loading = true;

@@ -21,6 +21,7 @@ import { debounceTime, distinctUntilChanged, map, Observable } from 'rxjs';
 import { generateQueryFilter } from '../../pipes/queryFIlter';
 import { SocketService } from '../../services/socket.service';
 import { PipeModule } from '../../pipes/pipes.module';
+import { PushService } from '../../services/push.service';
 
 @Component({
   selector: 'app-chat',
@@ -92,7 +93,8 @@ export class ChatComponent implements OnInit {
   constructor(
     private serviceApi: ServicesService,
     private translate: TranslateService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private pushService: PushService
   ) {
     const currentLang = localStorage.getItem('lang') || 'us';
     this.translate.use(currentLang.toLowerCase());
@@ -113,41 +115,6 @@ export class ChatComponent implements OnInit {
         this.getChats();
       });
     this.getChats();
-    this.sseSubscription = this.socketService.getSSEEvents().subscribe((event) => {
-      if (event.event === 'newMessage') {
-        console.log(event.data.message);
-        
-        this.showPushNotification(event.data.message);
-        let a = this.chats.find(i => i.id == event.data.requestId)
-        a.unreadMessagesCount = a.unreadMessagesCount + 1;
-        if (this.selectedChat && (event.data.requestId == this.selectedChat.id)) {
-          this.messages.push(event.data.message);
-          this.showPushNotification(event.data.message);
-        }
-      }
-    });
-
-  }
-  showPushNotification(message: string) {
-    if ('Notification' in window) {
-      if (Notification.permission === 'granted') {
-        new Notification('Yangi xabar', {
-          body: message,
-          icon: 'assets/icon.png',
-        });
-      } else if (Notification.permission !== 'denied') {
-        Notification.requestPermission().then((permission) => {
-          if (permission === 'granted') {
-            new Notification('Yangi xabar', {
-              body: message,
-              icon: 'assets/icon.png',
-            });
-          }
-        });
-      }
-    } else {
-      console.error('Brauzer Notification API ni qo‘llab-quvvatlamaydi.');
-    }
   }
   
   ngOnDestroy() {
@@ -239,7 +206,7 @@ export class ChatComponent implements OnInit {
       this.serviceApi.postChatMessages(this.selectedChat.id, message).subscribe({
         next: (res: any) => {
           this.scrollToBottom();
-          // this.messages.push(message);
+          this.messages.push(message);
           // this.getChatMessages();
         },
         error: (error) => {
