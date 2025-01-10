@@ -1,5 +1,5 @@
 export const env = {
-  production: false,
+  production: true,
   apiUrl: 'https://api.tirgo.io/api/v2',
   adminUrl: 'https://api.tirgo.io/api/v2',
   references: 'https://api.tirgo.io/api/v2',
