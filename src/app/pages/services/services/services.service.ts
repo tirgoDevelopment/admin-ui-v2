@@ -37,7 +37,9 @@ export class ServicesService {
   deleteService(id: number | string): Observable<Response<ServiceModel>> {
     return this.http.delete<Response<ServiceModel>>(`${this.baseRefUrl}/${id}`);
   }
-
+  changePriceStatus(data): Observable<Response<ServiceModel>> {
+    return this.http.post<Response<ServiceModel>>(`${this.baseRefUrl}/${data.id}`, data)
+  }
 
 
   // Service Status
