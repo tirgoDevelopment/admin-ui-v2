@@ -44,7 +44,7 @@ export class SignUpComponent implements OnInit {
   buildForm(): void {
     this.form = this.formBuilder.group({
       username: ['superadmin', [Validators.required, Validators.maxLength(20), Validators.minLength(4)]],
-      password: ['admin', [Validators.required, Validators.maxLength(8), Validators.minLength(4)]],
+      password: ['admin', [Validators.required]],
       userType: ['staff'],
     });
   }

@@ -27,11 +27,11 @@
           <span nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" style="cursor: pointer;"
             (click)="togglePasswordVisibility()"></span>
         </ng-template>
-        <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="error-message">
+        <!-- <div *ngIf="form.get('password')?.invalid && form.get('password')?.touched" class="error-message">
           <span *ngIf="form.get('password')?.errors['required']">Пароль не может быть пустым</span>
           <span *ngIf="form.get('password')?.errors['minlength']">Пароль должен содержать минимум 4 символов</span>
           <span *ngIf="form.get('password')?.errors['maxlength']">Пароль не может превышать 8 символов</span>
-        </div>
+        </div> -->
         <button type="submit" nz-button nzType="primary" class="login-button" [disabled]="form.invalid" [nzLoading]="form.disabled">Войти</button>
       </form>
       <!-- <button nz-button nzType="link" >Забыли пароль?</button> -->
