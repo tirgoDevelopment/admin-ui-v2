@@ -10,7 +10,7 @@
     <div class="permissions">
       <div *ngFor="let perm of permissionKeys" class="permission-item">
         <label nz-checkbox [formControlName]="perm">
-          {{ perm }}
+          {{ 'permissions.'+perm | translate }}
         </label>
       </div>
     </div>
