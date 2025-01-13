@@ -72,7 +72,7 @@
         </nz-input-group>
       </div>
   
-      <button nz-button nzType="primary" class="search-button" (click)="getAll()">
+      <button nz-button nzType="primary" class="search-button" (click)="fiterApply()">
         <span nz-icon nzType="search" nzTheme="outline"></span>
       </button>
       <button nz-button class="reset-button" (click)="resetFilter()">
@@ -80,7 +80,7 @@
       </button>
     </div>
   
-    <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content' }"
+    <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content', y: '60vh' }"
       [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize" [nzTotal]="totalItemsCount" [nzPaginationPosition]="'both'"
       [nzShowSizeChanger]="true" [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
       <thead>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { DriverFormComponent } from './components/driver-form/driver-form.component';
 import { DriverModel } from './models/driver.model';
@@ -27,7 +27,7 @@ import { PermissionService } from 'src/app/shared/services/permission.service';
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -53,6 +53,7 @@ export class DriversComponent implements OnInit {
     sortType: '',
   };
 
+
   constructor(
     private toastr: NotificationService,
     private modal: NzModalService,
@@ -62,7 +63,8 @@ export class DriversComponent implements OnInit {
     public perService: PermissionService,
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+   }
 
   getAll(): void {
     this.loader = true;
@@ -149,7 +151,10 @@ export class DriversComponent implements OnInit {
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
-
+  fiterApply() {
+    this.pageParams.pageIndex = 1;
+    this.getAll();
+  }
   resetFilter(): void {
     this.filter = this.initializeFilter();
     this.getAll();

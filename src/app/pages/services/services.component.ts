@@ -470,8 +470,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
       ...this.filter,
     };
     let query = generateQueryFilter(params)
-    
-    this.servicesService.excelService(query).subscribe((res:any) => {
+
+    this.servicesService.excelService(query).subscribe((res: any) => {
       const url = window.URL.createObjectURL(res);
       const a = document.createElement('a');
       document.body.appendChild(a);
@@ -481,5 +481,9 @@ export class ServicesComponent implements OnInit, OnDestroy {
       a.click();
       window.URL.revokeObjectURL(url);
     })
+  }
+  fiterApply() {
+    this.pageParams.pageIndex = 1;
+    this.getAll();
   }
 }

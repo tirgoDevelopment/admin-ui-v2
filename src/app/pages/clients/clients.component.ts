@@ -24,7 +24,7 @@ import { Permission } from 'src/app/shared/enum/per.enum';
   templateUrl: './clients.component.html',
   styleUrls: ['./clients.component.scss'],
   standalone: true,
-  imports: [ CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule],
+  imports: [ CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -116,17 +116,13 @@ export class ClientsComponent implements OnInit {
       }
     });
   }
-  onPageIndexChange(pageIndex: number): void {
-    this.pageParams.pageIndex = pageIndex;
-    this.getAll();
-  }
-  onPageSizeChange(pageSize: number): void {
-    this.pageParams.pageSize = pageSize;
-    this.pageParams.pageIndex = 0;
-    this.getAll();
-  }
+  
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
+  }
+  fiterApply() {
+    this.pageParams.pageIndex = 1;
+    this.getAll();
   }
   resetFilter(): void {
     this.filter = this.initializeFilter();
@@ -136,13 +132,14 @@ export class ClientsComponent implements OnInit {
     return { firstName: '', clientId: '', phoneNumber: '', createdAtTo: '', createdAtFrom: '', lastLoginFrom: '', lastLoginTo: '' };
   }
   onQueryParamsChange(params: NzTableQueryParams): void {
-    let { sort } = params;
-    let currentSort = sort.find(item => item.value !== null);
-    let sortField = (currentSort && currentSort.key) || null;
-    let sortOrder = (currentSort && currentSort.value) || null;
-    sortOrder === 'ascend' ? (sortOrder = 'asc') : sortOrder === 'descend' ? (sortOrder = 'desc') : sortOrder = '';
-    this.pageParams.sortBy = sortField;
-    this.pageParams.sortType = sortOrder;
+    const { pageIndex, pageSize, sort } = params;
+    this.pageParams.pageIndex = pageIndex;
+    this.pageParams.pageSize = pageSize;
+
+    const currentSort = sort.find(item => item.value !== null);
+    this.pageParams.sortBy = currentSort?.key || null;
+    this.pageParams.sortType = currentSort?.value === 'ascend' ? 'asc' : currentSort?.value === 'descend' ? 'desc' : '';
+
     this.getAll();
   }
   sendNotification() {
