@@ -29,7 +29,7 @@ export class RoleFormComponent implements OnInit {
     "serviceLog", "serviceChat", "gsmPage", "gsmTopUpBalance", "gsmCardManagment", 
     "ordersPage", "orderCreate", "orderUpdate", "orderDetail", "orderOffer", 
     "orderCancel", "orderAssignDriver", "orderSendOfferToDriver", "orderChangeStatus", 
-    "tmsesPage", "tmsDeatil", "tmsUpdate", "tmsDriversList", "tmsTransactionsHistory", 
+    "tmsesPage", "tmsDetail", "tmsUpdate", "tmsDriversList", "tmsTransactionsHistory", 
     "tmsTopupBalance", "tmsBlock", "tmsRequstsList", "merchantsPage", "dashboardPage", 
     "archivePage", "driverServicesPage", "rolesPage", "loadingMethodsPage", 
     "subscriptionTypesPage", "currenciesPage", "transportTypesPage", "transportKindsPage", 

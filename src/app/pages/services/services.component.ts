@@ -129,6 +129,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
       )),
     );
   }
+
   find(ev: string) {
     let filter = generateQueryFilter({ companyName: ev });
     this.searchTms$.next(filter);
@@ -459,5 +460,26 @@ export class ServicesComponent implements OnInit, OnDestroy {
       nzContent: KazjulTokenComponent,
       nzWidth: '400px',
     });
+  }
+  getExcel() {
+    const params = {
+      pageIndex: this.pageParams.pageIndex,
+      pageSize: this.pageParams.pageSize,
+      sortBy: this.pageParams.sortBy,
+      sortType: this.pageParams.sortType,
+      ...this.filter,
+    };
+    let query = generateQueryFilter(params)
+    
+    this.servicesService.excelService(query).subscribe((res:any) => {
+      const url = window.URL.createObjectURL(res);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.style.display = 'none';
+      a.href = url;
+      a.download = 'services.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    })
   }
 }

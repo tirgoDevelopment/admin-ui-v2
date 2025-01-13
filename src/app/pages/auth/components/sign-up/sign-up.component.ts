@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
-import { NotificationService } from 'src/app/shared/services/notification.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, UntypedFormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
@@ -43,8 +42,8 @@ export class SignUpComponent implements OnInit {
 
   buildForm(): void {
     this.form = this.formBuilder.group({
-      username: ['superadmin', [Validators.required, Validators.maxLength(20), Validators.minLength(4)]],
-      password: ['admin', [Validators.required]],
+      username: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(4)]],
+      password: ['', [Validators.required]],
       userType: ['staff'],
     });
   }

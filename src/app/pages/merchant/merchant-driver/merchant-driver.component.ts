@@ -159,7 +159,6 @@ export class MerchantDriverComponent implements OnInit {
       });
     }
   }
-
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
