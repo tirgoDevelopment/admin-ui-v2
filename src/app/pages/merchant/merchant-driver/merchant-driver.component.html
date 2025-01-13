@@ -42,7 +42,7 @@
       </nz-input-group>
     </div>
 
-    <button nz-button nzType="primary" class="search-button" (click)="getVerified()">
+    <button nz-button nzType="primary" class="search-button" (click)="filterApply()">
       <span nz-icon nzType="search" nzTheme="outline"></span>
     </button>
     <button nz-button class="reset-button" (click)="resetFilter()">
@@ -53,7 +53,7 @@
 
   <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty"
     [nzFrontPagination]="false" [nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize"
-    [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"
+    [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"  [nzScroll]="data.length > 0 ? { y: '60vh' } : { y: '' }"
     (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
       <tr>

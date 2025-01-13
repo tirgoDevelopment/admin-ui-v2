@@ -12,7 +12,7 @@
 
   <nz-table [nzSize]="'middle'" [nzPaginationPosition]="'bottom'" [nzData]="data" [nzPageSizeOptions]="[10, 20, 30]"
     [nzShowPagination]="true" [nzShowSizeChanger]="true" [nzLoading]="loader" [nzNoResult]="('no_data' | translate)"
-    (nzPageIndexChange)="onPageIndexChange($event)" (nzPageSizeChange)="onPageSizeChange($event)">
+    (nzPageIndexChange)="onPageIndexChange($event)" (nzPageSizeChange)="onPageSizeChange($event)" [nzScroll]="data.length > 0 ? { y: '60vh' } : { y: '' }">
     <thead>
       <tr>
         <th> No </th>

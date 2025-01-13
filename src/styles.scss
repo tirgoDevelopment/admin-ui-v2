@@ -820,3 +820,13 @@ input[type=number]::-webkit-outer-spin-button {
 .ant-result-subtitle {
   font-size: 18px !important;
 }
+
+:host ::ng-deep .ant-table-body {
+  height: 50vh; // Standart balandlik (80% of viewport height)
+}
+
+@media (max-width: 768px) {
+  :host ::ng-deep .ant-table-body {
+    height: 60vh; // Kichik ekranlar uchun mos balandlik
+  }
+}

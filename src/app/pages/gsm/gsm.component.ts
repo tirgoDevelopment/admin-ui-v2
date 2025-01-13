@@ -173,6 +173,10 @@ export class GSMComponent implements OnInit {
   public toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
+  filterApply() {
+    this.pageParams.pageIndex = 1;
+    this.getAll();
+  }
   public resetFilter(): void {
     this.filter = this.initializeFilter();
     this.getAll();

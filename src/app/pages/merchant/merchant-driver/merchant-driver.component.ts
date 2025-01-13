@@ -210,4 +210,8 @@ export class MerchantDriverComponent implements OnInit {
       }
     });
   }
+  filterApply() { 
+    this.pageParams.pageIndex = 1;
+    this.getVerified();
+  }
 }
