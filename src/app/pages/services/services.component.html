@@ -6,6 +6,10 @@
         <button nz-button class="success-button" (click)="kazjulToken()" *ngIf="perService.hasPermission(Per.ServicesPage)">
           {{ "Казжул" | translate }}
         </button>
+        <button nz-button class="success-button" (click)="getExcel()" *ngIf="perService.hasPermission(Per.ServicesPage)">
+          <span nz-icon nzType="file-excel" nzTheme="fill"></span>
+          {{ "excel" | translate }}
+        </button>
         <button nz-button class="secondary-button" (click)="toggleFilter()">
           <span nz-icon nzType="filter" nzTheme="fill"></span>
           {{ "filter" | translate }}
