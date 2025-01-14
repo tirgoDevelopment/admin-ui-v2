@@ -7,17 +7,19 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ThemeService } from 'src/app/shared/services/theme.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 
 @Component({
   selector: 'app-kazjul-token',
   templateUrl: './kazjul-token.component.html',
   styleUrls: ['./kazjul-token.component.scss'],
   standalone: true,
-  imports: [NzModules, CommonModules, TranslateModule],
+  imports: [NzModules, CommonModules, TranslateModule, PipeModule],
 })
 export class KazjulTokenComponent {
   form: FormGroup;
   loading = false;
+  kazJulBalance = 0;
   constructor(
     private serviceApi: ServicesService,
     private drawerRef: NzDrawerRef,
@@ -41,6 +43,7 @@ export class KazjulTokenComponent {
     this.serviceApi.kzPaidWayAccount().subscribe((res: any) => {
       if (res && res.success)
         this.form.patchValue(res.data);
+        this.kazJulBalance = res.data.balance
         this.loading = false;
     })
   }

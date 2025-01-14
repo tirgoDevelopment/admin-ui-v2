@@ -497,7 +497,8 @@
   "kzPaidWayCommission": "Комиссия КазЖул",
   "debtLimit": "Лимит долга",
   "status_subscription": "Статус подписки",
-
+  "kazjulBalance":"Kazjul баланс",
+  "kzPaidWay":"Казжол",
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",

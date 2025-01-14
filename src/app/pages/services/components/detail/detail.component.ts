@@ -19,6 +19,7 @@ export class ServiceDetailComponent implements OnInit {
   Per = Permission;
   loadingPage = true;
   loading = false;
+
   constructor(
    public perService: PermissionService
   ) { }
