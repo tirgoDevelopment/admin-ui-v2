@@ -95,7 +95,7 @@
       (nzQueryParams)="onQueryParamsChange($event)">
       <thead>
         <tr>
-          <th>No</th>
+          <th nzWidth="50px">No</th>
           <th nzLeft>{{ "services.serviceId" | translate }}</th>
           <th class="ellipsis" nzLeft>{{ "services.serviceName" | translate }}</th>
           <th>{{'merchant_driver' | translate}}</th>
@@ -106,7 +106,7 @@
           <th>{{ "services.processingTimeEnd" | translate }}</th>
           <th>{{ "total" | translate }} (TIR)</th>
           <th nzRight>{{ "status" | translate }} </th>
-          <th nzRight *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
+          <th nzWidth="50px" nzRight *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
         </tr>
       </thead>
 

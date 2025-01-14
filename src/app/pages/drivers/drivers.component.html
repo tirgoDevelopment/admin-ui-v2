@@ -36,7 +36,11 @@
         <input [(ngModel)]="filter['firstName']" type="text" nz-input placeholder="{{ 'name' | translate }}" />
       </nz-input-group>
     </div>
-
+    <div>
+      <nz-input-group class="input-group">
+        <input [(ngModel)]="filter['transportNumber']" type="text" nz-input placeholder="{{ 'state_number' | translate }}" />
+      </nz-input-group>
+    </div>
     <div>
       <nz-input-group class="input-group">
         <input [(ngModel)]="filter['phoneNumber']" type="text" nz-input placeholder="{{ 'phone' | translate }}" />
@@ -100,13 +104,13 @@
     [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
       <tr>
-        <th>No</th>
+        <th nzWidth="50px">No</th>
         <th nzColumnKey="id" [nzSortFn]="true">ID</th>
         <th>{{ 'full_name' | translate }}</th>
         <th>{{ 'phone' | translate }}</th>
         <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
         <th>{{ 'status' | translate }}</th>
-        <th></th>
+        <th nzWidth="50px"></th>
       </tr>
     </thead>
 
