@@ -821,12 +821,49 @@ input[type=number]::-webkit-outer-spin-button {
   font-size: 18px !important;
 }
 
-:host ::ng-deep .ant-table-body {
-  height: 50vh; // Standart balandlik (80% of viewport height)
-}
+.cards {
+  margin-bottom: 24px;
 
-@media (max-width: 768px) {
-  :host ::ng-deep .ant-table-body {
-    height: 60vh; // Kichik ekranlar uchun mos balandlik
+  .balance-card {
+    flex: 1;
+    background-color: #3880ff;
+    border: none;
+    max-width: 300px;
+
+    ::ng-deep .ant-card-body {
+      padding: 16px;
+    }
+
+    .card-inner {
+      color: white;
+    }
+
+    .card-title {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+
+    .card-content {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+
+      .amount {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .currency {
+        font-size: 13px;
+        opacity: 0.85;
+      }
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      transition: transform 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
   }
 }

@@ -44,7 +44,7 @@ export class OrdersComponent implements OnInit {
   public transportTypes: any[] = [];
   public statuses: CargoStatusModel[] = [];
 
-  private pageParams: PageParams = {
+  pageParams = {
     pageIndex: 1,
     pageSize: 10,
     totalPagesCount: 1,

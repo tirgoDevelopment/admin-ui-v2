@@ -34,6 +34,8 @@ import { PushService } from 'src/app/shared/services/push.service';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { KazjulTokenComponent } from './components/kazjul-token/kazjul-token.component';
+import { NzResizableModule, NzResizeEvent } from 'ng-zorro-antd/resizable';
+import { NzTableModule } from 'ng-zorro-antd/table';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -94,7 +96,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   currentUser: any;
   searchTms$ = new BehaviorSubject<string>('');
   tms$: Observable<any>;
-
+  cols
   private sseSubscription: Subscription | null = null;
   constructor(
     private servicesService: ServicesService,
@@ -301,7 +303,9 @@ export class ServicesComponent implements OnInit, OnDestroy {
     return {
       serviceId: '',
       driverId: '',
-      statusId: '',
+      transportNumber: '',
+      merchantId: '',
+      statusCode: '',
       createdAtFrom: '',
       createdAtTo: '',
     };
@@ -485,5 +489,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
   fiterApply() {
     this.pageParams.pageIndex = 1;
     this.getAll();
+  }
+  onResize({ width }: NzResizeEvent, col: string): void {
+    this.cols = this.cols.map(e => (e.title === col ? { ...e, width: `${width}px` } : e));
   }
 }

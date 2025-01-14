@@ -3,10 +3,12 @@
     <div class="header-page">
       <h2>{{ "services.title" | translate }}</h2>
       <div class="button-group">
-        <button nz-button class="success-button" (click)="kazjulToken()" *ngIf="perService.hasPermission(Per.ServicesPage)">
+        <button nz-button class="success-button" (click)="kazjulToken()"
+          *ngIf="perService.hasPermission(Per.ServicesPage)">
           {{ "Казжул" | translate }}
         </button>
-        <button nz-button class="success-button" (click)="getExcel()" *ngIf="perService.hasPermission(Per.ServicesPage)">
+        <button nz-button class="success-button" (click)="getExcel()"
+          *ngIf="perService.hasPermission(Per.ServicesPage)">
           <span nz-icon nzType="file-excel" nzTheme="fill"></span>
           {{ "excel" | translate }}
         </button>
@@ -21,7 +23,7 @@
         </button>
       </div>
     </div>
-  
+
     <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
       <div>
         <nz-select nzAllowClear="true" [(ngModel)]="filter['serviceId']"
@@ -30,15 +32,21 @@
           </nz-option>
         </nz-select>
       </div>
-  
+
       <div>
         <nz-input-group class="input-group">
           <input [(ngModel)]="filter['driverId']" type="text" nz-input
             placeholder="{{ 'services.driverId' | translate }}" />
         </nz-input-group>
       </div>
+
       <div>
-  
+        <nz-input-group class="input-group">
+          <input [(ngModel)]="filter['transportNumber']" type="text" nz-input
+            placeholder="{{ 'state_number_truck' | translate }}" />
+        </nz-input-group>
+      </div>
+      <div>
         <nz-input-group class="input-group w-full">
           <nz-select style="width: 100%; min-width: 150px;" nzShowSearch nzServerSearch
             nzPlaceHolder="{{ 'merchant_driver' | translate }}" [nzShowArrow]="false" [(ngModel)]="filter['merchantId']"
@@ -48,14 +56,15 @@
           </nz-select>
         </nz-input-group>
       </div>
+
       <div>
-        <nz-select nzAllowClear="true" [(ngModel)]="filter['statusId']" nzPlaceHolder="{{ 'status' | translate }}">
+        <nz-select nzAllowClear="true" [(ngModel)]="filter['statusCode']" nzPlaceHolder="{{ 'status' | translate }}">
           <nz-option [nzValue]="status.id" [nzLabel]="status.name.toLowerCase() | translate"
             *ngFor="let status of statuses">
           </nz-option>
         </nz-select>
       </div>
-  
+
       <div>
         <nz-input-group class="input-group">
           <nz-date-picker style="min-width: 150px;" [(ngModel)]="filter['createdAtFrom']" type="date" nz-input
@@ -63,7 +72,7 @@
           </nz-date-picker>
         </nz-input-group>
       </div>
-  
+
       <div>
         <nz-input-group class="input-group">
           <nz-date-picker style="min-width: 150px;" [(ngModel)]="filter['createdAtTo']" type="date" nz-input
@@ -71,7 +80,7 @@
           </nz-date-picker>
         </nz-input-group>
       </div>
-  
+
       <button nz-button nzType="primary" class="search-button" (click)="fiterApply()">
         <span nz-icon nzType="search" nzTheme="outline"></span>
       </button>
@@ -79,15 +88,16 @@
         <span nz-icon nzType="reload" nzTheme="outline"></span>
       </button>
     </div>
-  
-    <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content', y: '60vh' }"
-      [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize" [nzTotal]="totalItemsCount" [nzPaginationPosition]="'both'"
-      [nzShowSizeChanger]="true" [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
+
+    <nz-table #fixedTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty"
+      [nzScroll]="{ x: '100vw', y: '60vh' }" [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize"
+      [nzTotal]="totalItemsCount" [nzPaginationPosition]="'both'" [nzShowSizeChanger]="true" [nzShowPagination]="true"
+      (nzQueryParams)="onQueryParamsChange($event)">
       <thead>
         <tr>
           <th>No</th>
           <th nzLeft>{{ "services.serviceId" | translate }}</th>
-          <th nzLeft>{{ "services.serviceName" | translate }}</th>
+          <th class="ellipsis" nzLeft>{{ "services.serviceName" | translate }}</th>
           <th>{{'merchant_driver' | translate}}</th>
           <th>{{ "services.driverId" | translate }}</th>
           <th>{{ "state_number_truck" | translate }}</th>
@@ -99,7 +109,7 @@
           <th nzRight *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
         </tr>
       </thead>
-  
+
       <tbody>
         <tr *ngFor="let item of data; let i = index" (click)="showChatForService(item.id)">
           <td>{{ i + 1 }}</td>
@@ -158,7 +168,7 @@
                     <span>{{ "detail" | translate }}</span>
                   </div>
                 </li>
-  
+
                 <li nz-menu-item (click)="showLog(item.id)" *ngIf="perService.hasPermission(Per.ServiceLog)">
                   <div class="dropdown-menu">
                     <span nz-icon nzType="history" nzTheme="outline"></span>
@@ -172,11 +182,11 @@
       </tbody>
     </nz-table>
   </div>
-  
+
   <ng-template #empty>
     <nz-empty></nz-empty>
   </ng-template>
-  
+
   <app-chat *ngIf="showChat" [outputServiceId]="selectedServiceId" (closeChatEvent)="onChatClose()"></app-chat>
 </div>
 
