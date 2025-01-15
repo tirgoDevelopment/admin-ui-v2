@@ -59,7 +59,7 @@
 
       <div>
         <nz-select nzAllowClear="true" [(ngModel)]="filter['statusCode']" nzPlaceHolder="{{ 'status' | translate }}">
-          <nz-option [nzValue]="status.id" [nzLabel]="status.name.toLowerCase() | translate"
+          <nz-option [nzValue]="status.code" [nzLabel]="status.name.toLowerCase() | translate"
             *ngFor="let status of statuses">
           </nz-option>
         </nz-select>
