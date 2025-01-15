@@ -4,7 +4,6 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { ServicesService } from '../../services/services.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ThemeService } from 'src/app/shared/services/theme.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
@@ -58,7 +57,7 @@ export class KazjulTokenComponent {
   }
   onRequst() {
     this.serviceApi.requestKazJul({}).subscribe((res:any) => {
-      if (res && res.success) {
+      if (res) {
         this.toastr.success(this.translate.instant('successfullUpdated'), '');
       }
     })

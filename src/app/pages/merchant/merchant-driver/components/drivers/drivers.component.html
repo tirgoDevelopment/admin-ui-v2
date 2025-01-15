@@ -49,16 +49,17 @@
 
 </div> -->
 
-<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty"
-[nzFrontPagination]="false" [nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize"
-[nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"  [nzScroll]="data.length > 0 ? { y: '60vh' } : { y: '' }"
-(nzQueryParams)="onQueryParamsChange($event)">
+<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false"
+    [nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount"
+    [nzShowSizeChanger]="true" [nzShowPagination]="true" [nzScroll]="data.length > 0 ? { y: '60vh' } : { y: '' }"
+    (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
         <tr>
             <th nzWidth="80px">No</th>
             <th nzColumnKey="id" [nzSortFn]="true">ID</th>
             <th>{{ 'full_name' | translate }}</th>
             <th>{{ 'phone' | translate }}</th>
+            <th>{{'state_number' | translate}}</th>
             <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
             <th>{{ 'status' | translate }}</th>
             <th nzWidth="50px" nzRight></th>
@@ -73,6 +74,11 @@
                 <span *ngIf="item.phoneNumbers[0]?.code">{{ item.phoneNumbers[0]?.code + item.phoneNumbers[0]?.number |
                     phoneFormat}}</span>
                 <span *ngIf="!item.phoneNumbers[0]?.code">{{ 'no_data' | translate}}</span>
+            </td>
+            <td>
+                <div *ngFor="let tr of item.driverTransports; let i = index">
+                    {{tr.transportNumber}}
+                </div>
             </td>
             <td> {{ item.createdAt | date : 'dd.MM.yyyy' }} </td>
             <td>
@@ -97,11 +103,8 @@
                                 <span>{{ 'edit' | translate }}</span>
                             </div>
                         </li>
-                        <li nz-menu-item
-                        nz-popconfirm
-                        nzPopconfirmTitle="{{'are_you_sure' | translate }}"
-                        nzPopconfirmPlacement="top"
-                        (nzOnConfirm)="unassignDriver(item.id)">
+                        <li nz-menu-item nz-popconfirm nzPopconfirmTitle="{{'are_you_sure' | translate }}"
+                            nzPopconfirmPlacement="top" (nzOnConfirm)="unassignDriver(item.id)">
                             <div class="dropdown-menu">
                                 <span nz-icon nzType="close-circle" nzTheme="outline" class="delete-icon"></span>
                                 <span>{{ 'unassign_driver' | translate }}</span>
