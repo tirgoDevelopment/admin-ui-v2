@@ -9,6 +9,8 @@ import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.modul
 import { RoleFormComponent } from './components/role-form/role-form.component';
 import { RolesService } from 'src/app/shared/services/references/role.service';
 import { RoleModel } from './models/role.model';
+import { PermissionService } from 'src/app/shared/services/permission.service';
+import { Permission } from 'src/app/shared/enum/per.enum';
 
 @Component({
   selector: 'app-roles',
@@ -19,6 +21,7 @@ import { RoleModel } from './models/role.model';
   providers: [NzModalService]
 })
 export class RolesComponent implements OnInit {
+  per = Permission;
   confirmModal?: NzModalRef;
   data: any[];
   loader: boolean = false;
@@ -39,6 +42,7 @@ export class RolesComponent implements OnInit {
     private modal: NzModalService,
     private rolesService: RolesService,
     private drawer: NzDrawerService,
+    public perService: PermissionService,
     private translate: TranslateService) { }
 
   ngOnInit(): void {

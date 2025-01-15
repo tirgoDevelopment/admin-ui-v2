@@ -77,6 +77,9 @@ export class ServicesService {
   pricingService(data) {
     return this.http.patch(`${this.baseUrl}/${data.id}/price`, data)
   }
+  requestKazJul(data) {
+    return this.http.post(`${this.baseUrl}/kz-paid-way/transactions`, data)
+  }
   // SERVICE CHAT
   getChatMessages(id: any, params) {
     return this.http.get(`${this.chatUrl}/${id}/messages?${params}`);

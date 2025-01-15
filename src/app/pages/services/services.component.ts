@@ -96,7 +96,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
   currentUser: any;
   searchTms$ = new BehaviorSubject<string>('');
   tms$: Observable<any>;
-  cols
   private sseSubscription: Subscription | null = null;
   constructor(
     private servicesService: ServicesService,
@@ -460,7 +459,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
   kazjulToken() {
     const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant('Казжул'),
+      nzTitle: this.translate.instant('kzPaidWay'),
       nzContent: KazjulTokenComponent,
       nzWidth: '400px',
     });
@@ -490,7 +489,5 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.pageParams.pageIndex = 1;
     this.getAll();
   }
-  onResize({ width }: NzResizeEvent, col: string): void {
-    this.cols = this.cols.map(e => (e.title === col ? { ...e, width: `${width}px` } : e));
-  }
+
 }
