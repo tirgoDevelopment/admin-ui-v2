@@ -19,6 +19,7 @@
     <textarea nz-input formControlName="token" rows="8"> </textarea>
   </nz-input-group>
   <div class="button-wrapper">
+    <button class="success-button" (click)="onRequst()" nz-button>{{'update' | translate}} </button>
     <button class="success-button" nz-button (click)="onSubmit()">{{'save' | translate}} </button>
   </div>
 </form>

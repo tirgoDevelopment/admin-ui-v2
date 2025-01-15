@@ -9,6 +9,8 @@ import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.modul
 import { CargoStatusFormComponent } from './components/cargo-status-form/cargo-status-form.component';
 import { CargoStatusModel } from './models/cargo-status.model';
 import { CargoStatusService } from 'src/app/shared/services/references/cargo-status.service';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 @Component({
   selector: 'app-cargo-status',
@@ -19,7 +21,7 @@ import { CargoStatusService } from 'src/app/shared/services/references/cargo-sta
   providers: [NzModalService]
 })
 export class CargoStatusComponent implements OnInit {
-
+  Per = Permission;
   confirmModal?: NzModalRef;
   data: any[];
   loader: boolean = false;
@@ -38,7 +40,8 @@ export class CargoStatusComponent implements OnInit {
     private modal: NzModalService,
     private cargoStatusService: CargoStatusService,
     private drawer: NzDrawerService,
-    private translate: TranslateService) { }
+    private translate: TranslateService,
+    public perService: PermissionService) { }
 
   ngOnInit(): void {
     this.getAll();

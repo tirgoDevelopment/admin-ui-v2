@@ -1,68 +1,75 @@
-<div class="container-page">
-    <div class="header-page">
-        <h2>{{ 'services.title' | translate }}</h2>
-        <div class="button-group">
-            <button nz-button class="success-button" (click)="add()">
-                <span nz-icon nzType="plus"></span>
-                {{ 'add' | translate }}
-            </button>
+<div *ngIf="perService.hasPermission(per.ServicesPage)">
+    <div class="container-page">
+        <div class="header-page">
+            <h2>{{ 'services.title' | translate }}</h2>
+            <div class="button-group">
+                <button nz-button class="success-button" (click)="add()">
+                    <span nz-icon nzType="plus"></span>
+                    {{ 'add' | translate }}
+                </button>
+            </div>
         </div>
+
+        <nz-table #sortTable [nzShowSizeChanger]="true" [nzShowPagination]="false" [nzSize]="'middle'" [nzData]="data"
+            [nzLoading]="loader" [nzNoResult]="empty" class="my-2">
+            <thead>
+                <tr>
+                    <th>{{ 'ID' | translate }}</th>
+                    <th>{{ 'services.serviceName' | translate }}</th>
+                    <th>{{ 'code' | translate }}</th>
+                    <th>{{ 'type' | translate }}</th>
+                    <th>{{ 'priceKzt' | translate }}</th>
+                    <th>{{ 'priceUzs' | translate }}</th>
+                    <th>{{ 'priceTir' | translate }}</th>
+                    <th>{{ 'subscription' | translate }}</th>
+                    <th>{{ 'services.isLegalEntity' | translate }}</th>
+                    <th nzRight></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr style="cursor: pointer;" *ngFor="let data of data; let i = index" (click)="update(data)">
+                    <td>{{data.id}}</td>
+                    <td>{{data.name}}</td>
+                    <td>{{data.code}}</td>
+                    <td>{{ 'services.' + data.type.toLowerCase() | translate}}</td>
+                    <td>{{data.uzsAmount | priceFormat}}</td>
+                    <td>{{data.kztAmount | priceFormat}} </td>
+                    <td>{{data.tirAmount | priceFormat}}</td>
+                    <td>{{data.withoutSubscription ? ('yes' | translate):('no' | translate)}}</td>
+                    <td>{{data.isLegalEntity ? ('yes' | translate):('no' | translate)}}</td>
+                    <td class="action-col" nzRight (click)="$event.stopPropagation()">
+                        <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
+                            <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
+                        </a>
+                        <nz-dropdown-menu #menu="nzDropdownMenu">
+                            <ul nz-menu nzSelectable>
+                                <li nz-menu-item (click)="update(data)">
+                                    <div class="dropdown-menu">
+                                        <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
+                                        <span>{{ 'edit' | translate }}</span>
+                                    </div>
+                                </li>
+                                <li nz-menu-item (click)="remove(data.id)">
+                                    <div class="dropdown-menu">
+                                        <span nz-icon nzType="delete" nzTheme="outline" class="delete-icon"></span>
+                                        <span>{{ 'remove' | translate }}</span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </nz-dropdown-menu>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
     </div>
 
-    <nz-table #sortTable [nzShowSizeChanger]="true" [nzShowPagination]="false" [nzSize]="'middle'" [nzData]="data"
-        [nzLoading]="loader" [nzNoResult]="empty" class="my-2">
-        <thead>
-            <tr>
-                <th>{{ 'ID' | translate }}</th>
-                <th>{{ 'services.serviceName' | translate }}</th>
-                <th>{{ 'code' | translate }}</th>
-                <th>{{ 'type' | translate }}</th>
-                <th>{{ 'priceKzt' | translate }}</th>
-                <th>{{ 'priceUzs' | translate }}</th>
-                <th>{{ 'priceTir' | translate }}</th>
-                <th>{{ 'subscription' | translate }}</th>
-                <th>{{ 'services.isLegalEntity' | translate }}</th>
-                <th nzRight></th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr style="cursor: pointer;" *ngFor="let data of data; let i = index" (click)="update(data)">
-                <td>{{data.id}}</td>
-                <td>{{data.name}}</td>
-                <td>{{data.code}}</td>
-                <td>{{ 'services.' + data.type.toLowerCase() | translate}}</td>
-                <td>{{data.uzsAmount | priceFormat}}</td>
-                <td>{{data.kztAmount | priceFormat}} </td>
-                <td>{{data.tirAmount | priceFormat}}</td>
-                <td>{{data.withoutSubscription ? ('yes' | translate):('no' | translate)}}</td>
-                <td>{{data.isLegalEntity ? ('yes' | translate):('no' | translate)}}</td>
-                <td class="action-col" nzRight (click)="$event.stopPropagation()">
-                    <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
-                        <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
-                    </a>
-                    <nz-dropdown-menu #menu="nzDropdownMenu">
-                        <ul nz-menu nzSelectable>
-                            <li nz-menu-item (click)="update(data)">
-                                <div class="dropdown-menu">
-                                    <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
-                                    <span>{{ 'edit' | translate }}</span>
-                                </div>
-                            </li>
-                            <li nz-menu-item (click)="remove(data.id)">
-                                <div class="dropdown-menu">
-                                    <span nz-icon nzType="delete" nzTheme="outline" class="delete-icon"></span>
-                                    <span>{{ 'remove' | translate }}</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </nz-dropdown-menu>
-                </td>
-            </tr>
-        </tbody>
-    </nz-table>
+    <ng-template #empty>
+        <nz-empty></nz-empty>
+    </ng-template>
 </div>
 
-<ng-template #empty>
-    <nz-empty></nz-empty>
-</ng-template>
+<div *ngIf="!perService.hasPermission(per.ServicesPage)" class="no-access-container">
+    <nz-result nzStatus="error" nzTitle="403" nzSubTitle="{{'accessDeniedPage' | translate}}">
+    </nz-result>
+</div>

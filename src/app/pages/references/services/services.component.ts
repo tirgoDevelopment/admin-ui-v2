@@ -11,6 +11,8 @@ import { ServiceModel } from '../../services/models/service.model';
 import { Response } from 'src/app/shared/models/reponse';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 @Component({
   selector: 'app-services',
@@ -21,6 +23,7 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
   providers: [NzModalService]
 })
 export class ServicesComponent implements OnInit {
+  per = Permission;
   public data: ServiceModel[] = [];
   public loader = false;
 
@@ -29,7 +32,8 @@ export class ServicesComponent implements OnInit {
     private drawer: NzDrawerService,
     private serviceApi: ServicesService,
     private modal: NzModalService,
-    private toastr: NotificationService
+    private toastr: NotificationService,
+    public perService: PermissionService
   ) { }
   ngOnInit(): void {
     this.getAll();

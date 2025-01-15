@@ -56,4 +56,11 @@ export class KazjulTokenComponent {
       }
     })
   }
+  onRequst() {
+    this.serviceApi.requestKazJul({}).subscribe((res:any) => {
+      if (res && res.success) {
+        this.toastr.success(this.translate.instant('successfullUpdated'), '');
+      }
+    })
+  }
 }

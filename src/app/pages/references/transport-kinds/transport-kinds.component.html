@@ -25,7 +25,7 @@
       <tr *ngFor="let item of data; let i = index">
         <td>{{ item.name }}</td>
         <td>{{ item.code }}</td>
-        <td>{{ item.isMode }}</td>
+        <td>{{ item.isMode ? ('yes' | translate) : ('no' | translate) }}</td>
         <td class="action-col">
           <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
             <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>

@@ -9,6 +9,8 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { SubscriptionModel } from './models/subscription.model';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 @Component({
   selector: 'app-subscription-type',
@@ -20,7 +22,7 @@ import { SubscriptionModel } from './models/subscription.model';
 
 })
 export class SubscriptionTypeComponent implements OnInit {
-
+  Per = Permission;
   confirmModal?: NzModalRef;
   data: any[];
   loader: boolean = false;
@@ -39,7 +41,8 @@ export class SubscriptionTypeComponent implements OnInit {
     private modal: NzModalService,
     private subscriptionTypesService: SubscriptionTypesService,
     private drawer: NzDrawerService,
-    private translate: TranslateService) { }
+    private translate: TranslateService,
+    public perService: PermissionService) { }
 
   ngOnInit(): void {
     this.getAll();

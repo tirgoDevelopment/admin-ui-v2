@@ -8,6 +8,8 @@ import { CurrenciesFormComponent } from './components/currencies-form/currencies
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { CurrenciesService } from 'src/app/shared/services/references/currencies.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 @Component({
   selector: 'app-currencies',
@@ -18,6 +20,7 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
   providers: [NzModalService]
 })
 export class CurrenciesComponent implements OnInit {
+  Per = Permission;
   confirmModal?: NzModalRef;
   data: any[];
   loader: boolean = false;
@@ -35,7 +38,8 @@ export class CurrenciesComponent implements OnInit {
     private modal: NzModalService,
     private currenciesService: CurrenciesService,
     private drawer: NzDrawerService,
-    private translate: TranslateService) { }
+    private translate: TranslateService,
+    public perService: PermissionService) { }
 
   ngOnInit(): void {
     this.getAll();

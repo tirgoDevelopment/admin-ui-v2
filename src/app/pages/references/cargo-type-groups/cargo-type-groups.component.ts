@@ -11,6 +11,8 @@ import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.modul
 import { CargoGroupModel } from './models/cargo-group.model';
 import { Response } from 'src/app/shared/models/reponse';
 import { CommonModules } from 'src/app/shared/modules/common.module';
+import { PermissionService } from 'src/app/shared/services/permission.service';
+import { Permission } from 'src/app/shared/enum/per.enum';
 
 @Component({
   selector: 'app-cargo-type-groups',
@@ -21,7 +23,7 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
   providers: [NzModalService, CargoTypeGroupsFormComponent]
 })
 export class CargoTypeGroupsComponent implements OnInit {
-
+  Per = Permission;
   confirmModal?: NzModalRef;
   data: CargoGroupModel[];
   loader: boolean = false;
@@ -39,7 +41,9 @@ export class CargoTypeGroupsComponent implements OnInit {
     private modal: NzModalService,
     private cargoTypeGroupsService: CargoTypeGroupsService,
     private drawer: NzDrawerService,
-    private translate: TranslateService) { }
+    private translate: TranslateService,
+    public perService: PermissionService
+    ) { }
 
   ngOnInit(): void {
     this.getAll();
