@@ -26,9 +26,9 @@
 
     <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
       <div>
-        <nz-select nzAllowClear="true" [(ngModel)]="filter['serviceId']"
-          nzPlaceHolder="{{ 'services.serviceId' | translate }}">
-          <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of services">
+        <nz-select nzAllowClear="true" [(ngModel)]="filter['serviceCode']"
+          nzPlaceHolder="{{ 'services.title' | translate }}">
+          <nz-option [nzValue]="item.code" [nzLabel]="item.name" *ngFor="let item of services">
           </nz-option>
         </nz-select>
       </div>
@@ -136,7 +136,7 @@
               {{ "no_data" | translate }}
             </ng-template>
           </td>
-          <td>{{ item.createdAt | date : "dd.MM.yyyy" }}</td>
+          <td>{{ item.createdAt | date : "dd.MM.yyyy HH:mm" }}</td>
           <td>{{ item.statusesHistory | createdAt : 3 | date : "dd.MM.yyyy HH:mm" }}</td>
           <td>{{ item.statusesHistory | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</td>
           <td>

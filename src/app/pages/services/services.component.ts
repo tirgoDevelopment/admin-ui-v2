@@ -238,7 +238,14 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
   getRefServices() {
     this.servicesService.getServiceList().subscribe((res: any) => {
-      this.services = res.data;
+      if (res.data && Array.isArray(res.data)) {
+        const uniqueServices = Array.from(new Set(res.data.map((service: any) => service.name)))
+          .map((name: any) => res.data.find((service: any) => service.name === name));
+
+        this.services = uniqueServices;
+      } else {
+        this.services = [];
+      }
     });
   }
   private getNextStatus(currentCode: number): { status: string, apiPath: string } | null {
