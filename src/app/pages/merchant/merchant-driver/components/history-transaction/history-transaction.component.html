@@ -39,7 +39,7 @@
     </nz-input-group>
   </div>
 
-  <button nz-button nzType="primary" class="search-button" (click)="getAll()">
+  <button nz-button nzType="primary" class="search-button" (click)="filterApply()">
     <span nz-icon nzType="search" nzTheme="outline"></span>
   </button>
   <button nz-button class="reset-button" (click)="resetFilter()">
@@ -67,9 +67,10 @@
     </div>
   </nz-card>
 </div>
-<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false"
-  [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true"
-  [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)"  #fixedTable nzTableLayout="fixed">
+<nz-table [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false"
+  [nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount"
+  [nzShowSizeChanger]="true" [nzShowPagination]="true" [nzScroll]="data.length > 0 ? { y: '60vh' } : { y: '' }"
+  (nzQueryParams)="onQueryParamsChange($event)">
   <thead>
     <tr>
       <th>No</th>
@@ -90,7 +91,8 @@
       <td> {{ item?.tirAmount | priceFormat }} </td>
       <td> {{ item.createdAt | date:'dd.MM.yyyy HH:mm'}} </td>
       <td> {{item.balanceType == 'tirgo' ? ('tirBalance' | translate) : ('serviceBalance' | translate)}}</td>
-      <td nzEllipsis [nzTooltipTitle]="item.description" nzTooltipPlacement="top" nz-button nz-tooltip>{{item.description}}</td>
+      <td nzEllipsis [nzTooltipTitle]="item.description" nzTooltipPlacement="top" nz-button nz-tooltip>
+        {{item.description}}</td>
     </tr>
   </tbody>
 </nz-table>
