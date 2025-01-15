@@ -6,10 +6,10 @@
         <nz-breadcrumb-item>{{ 'drivers' | translate }} {{merchantName}}</nz-breadcrumb-item>
     </nz-breadcrumb>
     <div class="button-group">
-        <button nz-button class="secondary-button" (click)="toggleFilter()">
+        <!-- <button nz-button class="secondary-button" (click)="toggleFilter()">
             <span nz-icon nzType="filter" nzTheme="fill"></span>
             {{ 'filter' | translate }}
-        </button>
+        </button> -->
         <button nz-button class="success-button" (click)="addDriver()">
             <span nz-icon nzType="plus" nzTheme="outline"></span>
             {{ 'add' | translate }}
@@ -18,7 +18,7 @@
     </div>
 </div>
 
-<div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
+<!-- <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
     <div>
         <nz-input-group class="input-group">
             <input [(ngModel)]="filter['transactionType'] " type="text" nz-input
@@ -40,27 +40,28 @@
         </nz-input-group>
     </div>
 
-    <button nz-button nzType="primary" class="search-button" (click)="getAll()">
+    <button nz-button nzType="primary" class="search-button" (click)="filterApply()">
         <span nz-icon nzType="search" nzTheme="outline"></span>
     </button>
     <button nz-button class="reset-button" (click)="resetFilter()">
         <span nz-icon nzType="reload" nzTheme="outline"></span>
     </button>
 
-</div>
+</div> -->
 
-<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content' }"
-    [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount"
-    [nzShowSizeChanger]="true" [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
+<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty"
+[nzFrontPagination]="false" [nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize"
+[nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"  [nzScroll]="data.length > 0 ? { y: '60vh' } : { y: '' }"
+(nzQueryParams)="onQueryParamsChange($event)">
     <thead>
         <tr>
-            <th>No</th>
+            <th nzWidth="80px">No</th>
             <th nzColumnKey="id" [nzSortFn]="true">ID</th>
             <th>{{ 'full_name' | translate }}</th>
             <th>{{ 'phone' | translate }}</th>
             <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
             <th>{{ 'status' | translate }}</th>
-            <th nzRight></th>
+            <th nzWidth="50px" nzRight></th>
         </tr>
     </thead>
     <tbody>

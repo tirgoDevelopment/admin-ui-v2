@@ -57,13 +57,13 @@
     (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
       <tr>
-        <th>No</th>
+        <th nzWidth="70px">No</th>
         <th nzColumnKey="id" [nzSortFn]="true">ID</th>
         <th> {{ 'company_name' | translate }}</th>
         <th>{{ 'loads' | translate }}</th>
         <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
         <th>{{ 'status' | translate }}</th>
-        <th nzRight *ngIf="perService.hasAnyPermission([
+        <th nzWidth="50px" nzRight *ngIf="perService.hasAnyPermission([
         Per.TmsUpdate,
         Per.TmsDetail,
         Per.TmsDriversList,

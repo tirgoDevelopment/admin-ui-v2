@@ -77,7 +77,7 @@ export class DriversComponent implements OnInit {
       this.driverApi.getAll(this.pageParams, generateQueryFilter({merchantId:this.merchantId})).subscribe((res: any) => {
         if (res && res.success) {
           this.data = res.data.content;
-          this.pageParams.totalPagesCount = res.data.totalPagesCount;
+          this.pageParams.totalPagesCount = res.data.totalPagesCount * res.data.pageSize;
           this.loader = false;
         }else {
           this.loader = false;
@@ -107,13 +107,14 @@ export class DriversComponent implements OnInit {
     this.getAll();
   }
   onQueryParamsChange(params: NzTableQueryParams): void {
-    let { sort } = params;
-    let currentSort = sort.find((item) => item.value !== null);
-    let sortField = (currentSort && currentSort.key) || null;
-    let sortOrder = (currentSort && currentSort.value) || null;
-    sortOrder === 'ascend' ? (sortOrder = 'asc') : sortOrder === 'descend' ? (sortOrder = 'desc') : sortOrder = '';
-    this.pageParams.sortBy = sortField;
-    this.pageParams.sortType = sortOrder;
+    const { pageIndex, pageSize, sort } = params;
+    this.pageParams.pageIndex = pageIndex ;
+    this.pageParams.pageSize = pageSize;
+  
+    const currentSort = sort.find(item => item.value !== null);
+    this.pageParams.sortBy = currentSort?.key || null;
+    this.pageParams.sortType = currentSort?.value === 'ascend' ? 'asc' : currentSort?.value === 'descend' ? 'desc' : '';
+  
     this.getAll();
   }
   handleDrawer(action: 'add' | 'edit' | 'view', id?:number|string): void {
@@ -185,5 +186,9 @@ export class DriversComponent implements OnInit {
         this.getAll();
       }
     });
+  }
+  filterApply() { 
+    this.pageParams.pageIndex = 1;
+    this.getAll();
   }
 }
