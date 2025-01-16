@@ -81,7 +81,7 @@
     [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
       <tr>
-        <th nzWidth="50px">No</th>
+        <th nzWidth="70px">No</th>
         <th nzColumnKey="id" [nzSortFn]="true">ID</th>
         <th>{{ 'full_name' | translate }}</th>
         <th>{{ 'phone' | translate }}</th>
@@ -94,7 +94,7 @@
 
     <tbody>
       <tr *ngFor="let item of data; let i = index" (click)="handleDrawer('view',item.id)">
-        <td> {{ i+1 }} </td>
+        <td>{{ item.rowIndex }}</td>
         <td> {{ item.id }} </td>
         <td> {{ item.firstName }} {{ item.lastName }} </td>
         <td>
