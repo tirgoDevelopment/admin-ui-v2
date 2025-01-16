@@ -64,7 +64,7 @@ export class DriversComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-   }
+  }
 
   getAll(): void {
     this.loader = true;
@@ -72,7 +72,7 @@ export class DriversComponent implements OnInit {
     this.driversService.getAll(this.pageParams, queryString).pipe(
       tap((res: any) => {
         this.data = res?.success ? res.data.content : [];
-        this.pageParams.totalPagesCount = res.data.pageSize * res?.data?.totalPagesCount;
+        this.pageParams.totalPagesCount = res?.data?.totalPagesCount * this.pageParams.pageSize;
       }),
       catchError(() => {
         this.data = [];

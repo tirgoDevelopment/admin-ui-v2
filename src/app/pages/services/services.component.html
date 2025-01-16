@@ -117,7 +117,7 @@
 
       <tbody>
         <tr *ngFor="let item of data; let i = index" (click)="showChatForService(item.id)">
-          <td>{{ i + 1 }}</td>
+          <td>{{ item.rowIndex }}</td>
           <td nzLeft>{{ item.id}} / {{ item.services[0].code}}</td>
           <td nzLeft class="ellipsis">
             <div *ngFor="let service of item.services">{{ service.name }}</div>
