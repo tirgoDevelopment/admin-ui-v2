@@ -18,7 +18,9 @@ import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 export class KazjulTokenComponent {
   form: FormGroup;
   loading = false;
+  loadingPage = false;
   kazJulBalance = 0;
+
   constructor(
     private serviceApi: ServicesService,
     private drawerRef: NzDrawerRef,
@@ -38,12 +40,12 @@ export class KazjulTokenComponent {
 
   }
   getData() {
-    this.loading = true;
+    this.loadingPage = true;
     this.serviceApi.kzPaidWayAccount().subscribe((res: any) => {
       if (res && res.success)
         this.form.patchValue(res.data);
         this.kazJulBalance = res.data.balance
-        this.loading = false;
+        this.loadingPage = false;
     })
   }
   onSubmit() {
@@ -56,10 +58,14 @@ export class KazjulTokenComponent {
     })
   }
   onRequst() {
+    this.loading = true;
     this.serviceApi.requestKazJul({}).subscribe((res:any) => {
       if (res) {
+        this.loading = false;
         this.toastr.success(this.translate.instant('successfullUpdated'), '');
       }
+    }, err => {
+      this.loading = false;
     })
   }
 }

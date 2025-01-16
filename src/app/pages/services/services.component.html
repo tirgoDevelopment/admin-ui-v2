@@ -25,10 +25,10 @@
     </div>
 
     <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
-      <div>
-        <nz-select nzAllowClear="true" [(ngModel)]="filter['serviceCode']"
+      <div *ngIf="tabType == 0">
+        <nz-select style="width:250px" nzAllowClear="true" [(ngModel)]="filter['servicesIds']" (ngModelChange)="onServiceSelect($event)"
           nzPlaceHolder="{{ 'services.title' | translate }}">
-          <nz-option [nzValue]="item.code" [nzLabel]="item.name" *ngFor="let item of services">
+          <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of uniqueServices">
           </nz-option>
         </nz-select>
       </div>
@@ -89,13 +89,18 @@
       </button>
     </div>
 
+    <nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
+      <nz-tab nzTitle="{{'services.title' | translate}}"></nz-tab>
+      <nz-tab nzTitle="{{'kzPaidWay' | translate}}"></nz-tab>
+    </nz-tabset>
+
     <nz-table #fixedTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty"
       [nzScroll]="{ x: '100vw', y: '60vh' }" [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize"
       [nzTotal]="totalItemsCount" [nzPaginationPosition]="'both'" [nzShowSizeChanger]="true" [nzShowPagination]="true"
       (nzQueryParams)="onQueryParamsChange($event)">
       <thead>
         <tr>
-          <th nzWidth="50px">No</th>
+          <th nzWidth="70px">No</th>
           <th nzLeft>{{ "services.serviceId" | translate }}</th>
           <th class="ellipsis" nzLeft>{{ "services.serviceName" | translate }}</th>
           <th>{{'merchant_driver' | translate}}</th>
