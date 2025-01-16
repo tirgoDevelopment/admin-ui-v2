@@ -14,6 +14,7 @@ import { jwtDecode } from 'jwt-decode';
 import { PushService } from '../../services/push.service';
 import { PermissionService } from '../../services/permission.service';
 import { Permission } from '../../enum/per.enum';
+import { generateQueryFilter } from '../../pipes/queryFIlter';
 
 @Component({
   selector: 'app-main',
@@ -127,7 +128,7 @@ export class MainComponent {
     }
   }
   getChats() {
-    this.serviceApi.getDriverServices({}).subscribe({
+    this.serviceApi.getDriverServices(generateQueryFilter({servicesIds:[],excludedServicesIds:[]}) ).subscribe({
       next: (res: any) => {
         if (res && res.data)
           this.newMessageCount = res.data.content.reduce((total, item) => total + (item.unreadMessagesCount || 0), 0);

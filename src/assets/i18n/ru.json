@@ -500,6 +500,7 @@
   "kazjulBalance":"QAJ баланс",
   "kzPaidWay":"QAJ",
   "update": "Обнавить",
+  "invalidTransportNumber": "Неверный транспортный номер",
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",
