@@ -339,14 +339,14 @@ export class ServicesComponent implements OnInit, OnDestroy {
       excludedServicesIds: [16, 15]
     }
   }
- calculateSum(amountDetails: any[]): number {
+  calculateSum(amountDetails: any[]): number {
     if (!Array.isArray(amountDetails)) return 0;
     const sum = amountDetails.reduce(
-        (sum, detail) => sum + detail.amount || 0,
-        0
+      (sum, detail) => sum + detail.amount || 0,
+      0
     );
     return sum;
-}
+  }
   changeStatus(currentStatus: any, item: any): void {
     if (this.perService.hasPermission(this.Per.ServiceStatusChange)) {
       let restrictedCodes = [];
@@ -524,12 +524,12 @@ export class ServicesComponent implements OnInit, OnDestroy {
   onTabChange(selectedIndex: number): void {
     this.pageParams.pageIndex = 1;
     this.tabType = selectedIndex;
-    if(this.tabType) {
+    if (this.tabType) {
       this.filter['excludedServicesIds'] = [null];
-      this.filter['servicesIds'] = [15,16];
+      this.filter['servicesIds'] = [15, 16];
     }
     else {
-      this.filter['excludedServicesIds'] = [15,16];
+      this.filter['excludedServicesIds'] = [15, 16];
       this.filter['servicesIds'] = [''];
     }
     this.getAll();

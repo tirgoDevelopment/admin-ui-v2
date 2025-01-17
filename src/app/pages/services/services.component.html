@@ -107,6 +107,7 @@
           <th>{{ "services.driverId" | translate }}</th>
           <th>{{ "state_number_truck" | translate }}</th>
           <th>{{ "date_creation" | translate }}</th>
+          <th *ngIf="tabType == 1">{{ "date_debit" | translate }}</th>
           <th>{{ "services.processingTime" | translate }}</th>
           <th>{{ "services.processingTimeEnd" | translate }}</th>
           <th>{{ "total" | translate }} (TIR)</th>
@@ -142,6 +143,7 @@
             </ng-template>
           </td>
           <td>{{ item.createdAt | date : "dd.MM.yyyy HH:mm" }}</td>
+          <td *ngIf="tabType == 1">{{ item.kzPaidWayTransactionIssuedDate | date : "dd.MM.yyyy HH:mm" }}</td>
           <td>{{ item.statusesHistory | createdAt : 3 | date : "dd.MM.yyyy HH:mm" }}</td>
           <td>{{ item.statusesHistory | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</td>
           <td>
