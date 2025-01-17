@@ -1,9 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FormsModule } from '@angular/forms';
 import { NzModules } from '../../modules/nz-modules.module';
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { AuthService } from 'src/app/pages/auth/services/auth.service';
 import { ThemeService } from '../../services/theme.service';
 import { ChatComponent } from '../chat/chat.component';
@@ -19,7 +17,7 @@ import { generateQueryFilter } from '../../pipes/queryFIlter';
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [FormsModule, TranslateModule, NzModules, NgIf, RouterLink, RouterOutlet, ChatComponent, CommonModules],
+  imports: [TranslateModule, NzModules, RouterLink, ChatComponent, CommonModules,],
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
 })
@@ -128,7 +126,7 @@ export class MainComponent {
     }
   }
   getChats() {
-    this.serviceApi.getDriverServices(generateQueryFilter({servicesIds:[],excludedServicesIds:[]}) ).subscribe({
+    this.serviceApi.getDriverServices(generateQueryFilter({ servicesIds: [], excludedServicesIds: [] })).subscribe({
       next: (res: any) => {
         if (res && res.data)
           this.newMessageCount = res.data.content.reduce((total, item) => total + (item.unreadMessagesCount || 0), 0);

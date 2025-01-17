@@ -15,12 +15,22 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { ResponseContent } from 'src/app/shared/models/res-content.model';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzWaveModule } from 'ng-zorro-antd/core/wave';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzNotificationModule } from 'ng-zorro-antd/notification';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 @Component({
   selector: 'app-admin-form',
   templateUrl: './admin-form.component.html',
   styleUrls: ['./admin-form.component.scss'],
-  imports: [NzModules, TranslateModule, ReactiveFormsModule, NgIf, CommonModule, NgxMaskDirective],
+  imports: [TranslateModule, ReactiveFormsModule, NgIf, CommonModule, NgxMaskDirective, NzInputModule, NzSelectModule, NzButtonModule, NzIconModule, NzFormModule, NzSpinModule, NzNotificationModule, NzToolTipModule, NzCheckboxModule, NzWaveModule],
   providers: [NzModalService],
   standalone: true,
 })
@@ -105,6 +115,8 @@ export class AdminFormComponent implements OnInit {
               this.drawerRef.close({ success: true });
               this.loading = false;
             }
+          }, err => {
+            this.loading = false;
           }),
       });
     }
@@ -124,6 +136,7 @@ export class AdminFormComponent implements OnInit {
       });
     }
     else if (this.perService.hasPermission(Permission.AdminCreate)) {
+      this.loading = true;
       this.adminService.create(this.form.value).subscribe((res: any) => {
         if (res && res.success) {
           this.toastr.success(this.translate.instant('successfullCreated'), '');
