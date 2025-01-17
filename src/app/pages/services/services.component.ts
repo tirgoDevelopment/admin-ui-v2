@@ -325,6 +325,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
   public resetFilter(): void {
     this.filter = this.initializeFilter();
+    this.tabType == 0 ? this.filter['excludedServicesIds'] = [16, 15] : this.filter['excludedServicesIds'] = [], this.filter['servicesIds'] = [15, 16];
     this.getAll();
   }
   private initializeFilter(): Record<any, any> {
@@ -348,7 +349,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     return sum;
   }
   changeStatus(currentStatus: any, item: any): void {
-    if (this.perService.hasPermission(this.Per.ServiceStatusChange)) {
+    if (this.perService.hasPermission(this.Per.ServiceStatusChange) && this.tabType == 0) {
       let restrictedCodes = [];
       this.currentUser.userId == 1 ? restrictedCodes = [6, 7] : restrictedCodes = [5, 6, 7];
       if (this.isRestrictedStatus(currentStatus.code, restrictedCodes)) {
@@ -479,7 +480,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
 
   }
   showChatForService(id) {
-    if (this.perService.hasPermission(this.Per.ServiceCreate)) {
+    if (this.perService.hasPermission(this.Per.ServiceChat) && this.tabType == 0) {
       this.selectedServiceId = id;
       this.showChat = true;
     }

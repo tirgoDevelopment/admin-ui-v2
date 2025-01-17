@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
       if (splashScreen) {
         splashScreen.style.display = 'none';
       }  
-    },1000)
+    },100)
     
   }
 
