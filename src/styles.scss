@@ -349,7 +349,11 @@ input {
     color: var(--textColor) !important;
     margin: 0 !important;
   }
-
+  .ant-drawer-header-title {
+    button {
+      font-size: 18px;
+    }
+  }
   .ant-drawer-title {
     order: 1 !important;
     font-weight: bold !important;
@@ -456,6 +460,10 @@ input:-webkit-autofill:focus {
 
 .action-col {
   text-align: right;
+  padding: 0 !important;
+   a {
+    padding: 20px;
+   }
 }
 
 .dropdown-menu {

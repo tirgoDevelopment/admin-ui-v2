@@ -501,6 +501,7 @@
   "kzPaidWay":"QAJ",
   "update": "Обнавить",
   "invalidTransportNumber": "Неверный транспортный номер",
+  "last_update": "Последнее обновление",
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",
