@@ -28,6 +28,13 @@ export class AppComponent implements OnInit {
     } else {
       console.error('No access token found');
     }
+    setTimeout(() => {
+      const splashScreen = document.getElementById('splash-screen');
+      if (splashScreen) {
+        splashScreen.style.display = 'none';
+      }  
+    },1000)
+    
   }
 
   private connectToSSE(token: string) {

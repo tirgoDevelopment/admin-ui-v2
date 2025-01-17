@@ -139,6 +139,7 @@
   "from_where": "Откуда",
   "where": "Куда",
   "date_creation": "Дата создания",
+  "date_debit": "Дата списание",
   "shipment_date": "Дата поргрузки",
   "suggested_cost": "Предлагаемая цена",
   "status_processing": "Status processing",
