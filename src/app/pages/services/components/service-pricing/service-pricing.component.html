@@ -6,7 +6,7 @@
       >
         <nz-input-group class="input-group">
             <nz-form-label nzRequired>{{service.services[i]?.name}}</nz-form-label>
-            <input formControlName="amount" type="text" nz-input placeholder="{{ service.services[i]?.name }}" required mask="separator.2" />
+            <input formControlName="amount" type="text" nz-input placeholder="{{ 'price' | translate }}" required mask="separator.2" />
           </nz-input-group>
 
       </div>

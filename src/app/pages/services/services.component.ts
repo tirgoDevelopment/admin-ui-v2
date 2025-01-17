@@ -270,8 +270,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
       this.filter['servicesIds'] = Array.from(new Set([...this.filter['servicesIds'], ...duplicateIds]));
     }
   }
-
-
   private getNextStatus(currentCode: number): { status: string, apiPath: string } | null {
     switch (currentCode) {
       case ServicesRequestsStatusesCodes.Waiting:
@@ -341,13 +339,14 @@ export class ServicesComponent implements OnInit, OnDestroy {
       excludedServicesIds: [16, 15]
     }
   }
-  calculateSum(amountDetails: any[]): number {
+ calculateSum(amountDetails: any[]): number {
     if (!Array.isArray(amountDetails)) return 0;
-    return amountDetails.reduce(
-      (sum, detail) => sum + parseFloat(detail.amount || 0),
-      0
+    const sum = amountDetails.reduce(
+        (sum, detail) => sum + parseFloat(detail.amount || 0),
+        0
     );
-  }
+    return parseFloat(sum.toFixed(2));
+}
   changeStatus(currentStatus: any, item: any): void {
     if (this.perService.hasPermission(this.Per.ServiceStatusChange)) {
       let restrictedCodes = [];

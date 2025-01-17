@@ -20,7 +20,7 @@ export class KazjulTokenComponent {
   loading = false;
   loadingPage = false;
   kazJulBalance = 0;
-
+  last_update: Date;
   constructor(
     private serviceApi: ServicesService,
     private drawerRef: NzDrawerRef,
@@ -44,7 +44,8 @@ export class KazjulTokenComponent {
     this.serviceApi.kzPaidWayAccount().subscribe((res: any) => {
       if (res && res.success)
         this.form.patchValue(res.data);
-        this.kazJulBalance = res.data.balance
+        this.kazJulBalance = res.data.balance;
+        this.last_update = res.data.transactionsLastUpdatedate;
         this.loadingPage = false;
     })
   }

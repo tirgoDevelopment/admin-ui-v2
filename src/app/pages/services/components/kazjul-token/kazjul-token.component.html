@@ -18,6 +18,9 @@
     <nz-form-label>{{ 'token' | translate }}</nz-form-label>
     <textarea nz-input formControlName="token" rows="8"> </textarea>
   </nz-input-group>
+
+  <span class="delete-icon">{{'last_update' | translate}}: <b>{{last_update | date:'dd.MM.YYYY HH:mm'}}</b> </span> 
+
   <div class="button-wrapper">
     <button class="success-button" [nzLoading]="loading" (click)="onRequst()" nz-button>{{'update' | translate}} </button>
     <button class="success-button" [nzLoading]="loading" nz-button (click)="onSubmit()">{{'save' | translate}} </button>

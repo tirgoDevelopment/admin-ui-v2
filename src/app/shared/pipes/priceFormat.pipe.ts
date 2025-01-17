@@ -10,7 +10,7 @@ export class PriceFormatPipe implements PipeTransform {
     const numValue = typeof value === 'string' ? parseFloat(value) : value;
     if (isNaN(numValue)) return value.toString();
     return numValue
-      .toFixed(0)
+      .toFixed(2)
       .replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 }
