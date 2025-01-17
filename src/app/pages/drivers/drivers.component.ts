@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { DriverFormComponent } from './components/driver-form/driver-form.component';
 import { DriverModel } from './models/driver.model';
@@ -10,7 +10,6 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { DriversService } from './services/drivers.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { NgxMaskDirective } from 'ngx-mask';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
@@ -39,7 +38,6 @@ import { PermissionService } from 'src/app/shared/services/permission.service';
 })
 export class DriversComponent implements OnInit {
   Permission = Permission;
-
   confirmModal?: NzModalRef;
   data: DriverModel[] = [];
   loader: boolean = false;
@@ -52,7 +50,6 @@ export class DriversComponent implements OnInit {
     sortBy: '',
     sortType: '',
   };
-
 
   constructor(
     private toastr: NotificationService,

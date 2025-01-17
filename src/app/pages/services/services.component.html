@@ -188,11 +188,12 @@
         </tr>
       </tbody>
     </nz-table>
+    <ng-template #empty>
+      <nz-empty></nz-empty>
+    </ng-template>
   </div>
 
-  <ng-template #empty>
-    <nz-empty></nz-empty>
-  </ng-template>
+
 
   <app-chat *ngIf="showChat" [outputServiceId]="selectedServiceId" (closeChatEvent)="onChatClose()"></app-chat>
 </div>
