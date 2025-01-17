@@ -143,7 +143,7 @@
             </ng-template>
           </td>
           <td>{{ item.createdAt | date : "dd.MM.yyyy HH:mm" }}</td>
-          <td *ngIf="tabType == 1">{{ item.kzPaidWayTransactionIssuedDate | date : "dd.MM.yyyy HH:mm" }}</td>
+          <td *ngIf="tabType == 1">{{ item.kzPaidWayTransactionIssuedDate | date : "dd.MM.yyyy HH:mm" : '+0' }}</td>
           <td>{{ item.statusesHistory | createdAt : 3 | date : "dd.MM.yyyy HH:mm" }}</td>
           <td>{{ item.statusesHistory | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</td>
           <td>

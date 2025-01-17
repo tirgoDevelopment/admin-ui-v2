@@ -1,6 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
-@import "../node_modules/ng-zorro-antd/ng-zorro-antd.min.css";
 @import '/src/assets/styles/light-variables.scss';
+
+@font-face {
+  font-family: 'Nunito';
+  src:
+    url('assets/fonts/nunito/Nunito-VariableFont_wght.ttf') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 
 * {
   font-family: 'Nunito';
@@ -67,9 +73,11 @@ body {
     }
   }
 }
+
 .ant-layout-header {
-z-index: 999 !important;
+  z-index: 999 !important;
 }
+
 .ant-table-container {
   overflow: auto !important;
   background-color: var(--bgColor);
@@ -270,56 +278,6 @@ nz-select {
   background-color: var(--menu-item-bgcolor) !important;
 }
 
-.floating-label {
-  position: relative;
-  // margin: 20px 0;
-}
-
-input {
-  // padding: 5px 10px !important;
-  background-color: var(--input-bg) !important;
-  border-color: var(--input-border) !important;
-  width: 100% !important;
-  color: var(--textColor) !important;
-}
-
-.floating-label label {
-  position: absolute;
-  top: 6px;
-  left: 10px;
-  background-color: transparent;
-  color: var(--textColor);
-  pointer-events: none;
-  transition: 0.2s ease all;
-  font-weight: 600;
-}
-
-.floating-label input:focus~label,
-.floating-label input:not(:placeholder-shown)~label {
-  top: -13px;
-  left: 7px;
-  background-color: var(--bgColor);
-}
-
-.floating-label input:focus {
-  outline: none;
-}
-
-.reset-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #aaa;
-  font-size: 14px;
-  display: none;
-}
-
-.floating-label input:not(:placeholder-shown)+label+.reset-icon {
-  display: block;
-}
-
 .error-message {
   color: red;
   font-weight: 600;
@@ -349,11 +307,13 @@ input {
     color: var(--textColor) !important;
     margin: 0 !important;
   }
+
   .ant-drawer-header-title {
     button {
       font-size: 18px;
     }
   }
+
   .ant-drawer-title {
     order: 1 !important;
     font-weight: bold !important;
@@ -421,9 +381,11 @@ input:-webkit-autofill:focus {
 .ant-modal-body {
   padding-top: 0px !important;
 }
+
 .ant-modal-confirm-title {
   margin-top: 20px;
 }
+
 .ant-modal-content {
   background-color: var(--bgColor) !important;
 
@@ -461,9 +423,10 @@ input:-webkit-autofill:focus {
 .action-col {
   text-align: right;
   padding: 0 !important;
-   a {
+
+  a {
     padding: 20px;
-   }
+  }
 }
 
 .dropdown-menu {
@@ -583,6 +546,7 @@ input[type=number]::-webkit-outer-spin-button {
   word-wrap: break-word;
   overflow-wrap: anywhere;
 }
+
 .detail-header {
   display: flex;
   align-items: center;
@@ -741,9 +705,11 @@ input[type=number]::-webkit-outer-spin-button {
 .my-2 {
   margin: 10px 0;
 }
+
 .mb-2 {
   margin-bottom: 20px;
 }
+
 .my-4 {
   margin-top: 20px;
 }
@@ -816,6 +782,7 @@ input[type=number]::-webkit-outer-spin-button {
   text-decoration: underline;
   cursor: pointer;
 }
+
 .ant-scroll-number {
   top: 5px !important;
   right: 10px !important;
@@ -825,6 +792,7 @@ input[type=number]::-webkit-outer-spin-button {
 .no-access-container {
   height: 100vh;
 }
+
 .ant-result-subtitle {
   font-size: 18px !important;
 }
@@ -926,19 +894,25 @@ input[type=number]::-webkit-outer-spin-button {
 .bounce-dots span:nth-child(1) {
   animation-delay: 0s;
 }
+
 .bounce-dots span:nth-child(2) {
   animation-delay: 0.2s;
 }
+
 .bounce-dots span:nth-child(3) {
   animation-delay: 0.4s;
 }
 
 /* Keyframes for bounce effect */
 @keyframes bounce {
-  0%, 80%, 100% {
+
+  0%,
+  80%,
+  100% {
     transform: scale(0);
     opacity: 0.5;
   }
+
   40% {
     transform: scale(1);
     opacity: 1;
@@ -947,9 +921,12 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* Keyframes for pulse effect */
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.1);
   }

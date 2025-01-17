@@ -43,17 +43,6 @@
         <span>{{ "clients" | translate }}</span>
       </li>
 
-      <!-- <li
-        nzMatchRouter
-        nz-menu-item
-        nz-tooltip
-        nzTooltipPlacement="right"
-        [nzTooltipTitle]="isCollapsed ? ('archived_users' | translate) : ''"
-        routerLink="/archive-users"
-      >
-        <span nz-icon nzType="team"></span>
-        <span>{{ "archived_users" | translate }}</span>
-      </li> -->
       <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
         *ngIf="permissionService.hasPermission(Permission.DriverServicesPage)"
         [nzTooltipTitle]="isCollapsed ? ('services.title' | translate) : ''" routerLink="/services">
@@ -73,9 +62,9 @@
         [nzTooltipTitle]="isCollapsed ? ('orders' | translate) : ''" routerLink="/orders">
         <span class="sidebar-icon" nz-icon>
           <img *ngIf="themeService.colorTheme == 'light-mode'" src="../../../../assets/images/sidebar/tracking.svg"
-            alt="" width="15" />
+            alt="" width="15" height="15" />
           <img *ngIf="themeService.colorTheme == 'dark-mode'" src="../../../../assets/images/sidebar/tracking-w.svg"
-            alt="" width="15" />
+            alt="" width="15" height="15" />
         </span>
         <span>{{ "orders" | translate }}</span>
       </li>
@@ -201,6 +190,7 @@
           <button nz-button nzType="link" (click)="toggleTheme()" style="
               background-color: rgba(148, 163, 184, 0.12);
               border-radius: 15px;
+              width: 20px;
             ">
             <svg *ngIf="themeService.colorTheme === 'light-mode'" style="color: rgb(100, 116, 139)"
               xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" fit=""
