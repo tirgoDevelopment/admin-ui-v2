@@ -342,10 +342,10 @@ export class ServicesComponent implements OnInit, OnDestroy {
  calculateSum(amountDetails: any[]): number {
     if (!Array.isArray(amountDetails)) return 0;
     const sum = amountDetails.reduce(
-        (sum, detail) => sum + parseFloat(detail.amount || 0),
+        (sum, detail) => sum + detail.amount || 0,
         0
     );
-    return parseFloat(sum.toFixed(2));
+    return sum;
 }
   changeStatus(currentStatus: any, item: any): void {
     if (this.perService.hasPermission(this.Per.ServiceStatusChange)) {
