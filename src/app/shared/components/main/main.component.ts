@@ -126,7 +126,7 @@ export class MainComponent {
     }
   }
   getChats() {
-    this.serviceApi.getDriverServices(generateQueryFilter({ servicesIds: [], excludedServicesIds: [] })).subscribe({
+    this.serviceApi.getDriverServices(generateQueryFilter({ servicesIds: [], excludedServicesIds: [15,16] })).subscribe({
       next: (res: any) => {
         if (res && res.data)
           this.newMessageCount = res.data.content.reduce((total, item) => total + (item.unreadMessagesCount || 0), 0);
