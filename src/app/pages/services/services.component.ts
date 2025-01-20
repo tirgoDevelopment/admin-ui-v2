@@ -30,12 +30,9 @@ import { DriverFormComponent } from '../drivers/components/driver-form/driver-fo
 import { DetailComponent } from '../merchant/merchant-driver/components/detail/detail.component';
 import { ChatComponent } from 'src/app/shared/components/chat/chat.component';
 import { ServiceDetailComponent } from './components/detail/detail.component';
-import { PushService } from 'src/app/shared/services/push.service';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { KazjulTokenComponent } from './components/kazjul-token/kazjul-token.component';
-import { NzResizableModule, NzResizeEvent } from 'ng-zorro-antd/resizable';
-import { NzTableModule } from 'ng-zorro-antd/table';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
