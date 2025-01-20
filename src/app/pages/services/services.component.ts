@@ -78,6 +78,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   Per = Permission;
   showChat: boolean = false;
   selectedServiceId: string | null = null;
+  filteredServiceId: string | null = null;
   tabType = 0
   public data: any[] = [];
   public loader = false;
@@ -100,6 +101,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   searchTms$ = new BehaviorSubject<string>('');
   tms$: Observable<any>;
   private sseSubscription: Subscription | null = null;
+   
   constructor(
     private servicesService: ServicesService,
     private modal: NzModalService,
@@ -248,22 +250,19 @@ export class ServicesComponent implements OnInit, OnDestroy {
     });
   }
 
-  onServiceSelect(selectedServiceId: number): void {
-    if (!Array.isArray(this.filter['servicesIds'])) {
-      this.filter['servicesIds'] = [];
-    }
-
-    if (!selectedServiceId) {
+  onServiceSelect(filteredServiceId): void {
+    this.filter['servicesIds'] = [];
+    if (!filteredServiceId) {
       this.filter['servicesIds'] = [];
       return;
     }
-
-    const selectedService = this.services.find((service) => service.id === selectedServiceId);
-
+    const selectedService = this.services.find(service => service.id === filteredServiceId);
+    
     if (selectedService) {
       const duplicateIds = this.services
-        .filter((service) => service.name === selectedService.name)
-        .map((service) => service.id);
+        .filter(service => service.name === selectedService.name)
+        .map(service => service.id);
+  
       this.filter['servicesIds'] = Array.from(new Set([...this.filter['servicesIds'], ...duplicateIds]));
     }
   }
@@ -321,8 +320,16 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.isFilterVisible = !this.isFilterVisible;
   }
   public resetFilter(): void {
+    this.filteredServiceId = null;
     this.filter = this.initializeFilter();
-    this.tabType == 0 ? this.filter['excludedServicesIds'] = [16, 15] : this.filter['excludedServicesIds'] = [], this.filter['servicesIds'] = [15, 16];
+    if (this.tabType) {
+      this.filter['excludedServicesIds'] = [null];
+      this.filter['servicesIds'] = [15, 16];
+    }
+    else {
+      this.filter['excludedServicesIds'] = [15, 16];
+      this.filter['servicesIds'] = [''];
+    }
     this.getAll();
   }
   private initializeFilter(): Record<any, any> {
@@ -520,6 +527,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.getAll();
   }
   onTabChange(selectedIndex: number): void {
+    this.filteredServiceId = null;
     this.pageParams.pageIndex = 1;
     this.tabType = selectedIndex;
     this.filterServices();
