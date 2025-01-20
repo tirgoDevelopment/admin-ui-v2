@@ -261,7 +261,7 @@ export class DriverFormComponent implements OnInit {
     }
   }
   onBlock() {
-    if (this.data.blocked) {
+    if (this.data.isBlocked) {
       this.driversService.unblock(this.data.id).subscribe((res: Response<DriverModel>) => {
         this.toastr.success(this.translate.instant('successfullyActivated'), '');
         this.drawerRef.close({ success: true });

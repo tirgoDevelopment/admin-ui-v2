@@ -46,7 +46,6 @@
       </div>
     </nz-input-group> -->
 
-
     <nz-input-group class="input-group" [nzAddOnBefore]="countryDropdown" style="width: 100%;">
       <input nz-input formControlName="phoneNumbers" placeholder="{{ 'phone' | translate }}" [mask]="currentMask"
         required (ngModelChange)="onPhoneNumberChange($event)" />
@@ -90,7 +89,6 @@
       <label nz-checkbox formControlName="isOwnService" class="m-0" style="margin: 0 !important;">{{'apply_service' |
         translate}}</label>
     </div>
-
 
     <!-- <ul class="gallery">
       <li *ngIf="previewUrlPassport">
@@ -139,7 +137,7 @@
         {{ 'cancel' | translate }}
       </button>
       <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
-        [disabled]="form.invalid || loading">
+        [disabled]="form.invalid || loading || phoneCodeInvalid">
         {{ 'save' | translate }}
       </button>
     </div>
@@ -289,10 +287,10 @@
         </button> -->
         <button nz-button class="secondary-button" (click)="onBlock()"
           *ngIf="mode == 'edit' && perService.hasPermission(Permission.DriverBlock)">
-          {{ data.blocked ? ('unblock' | translate) : ('block' | translate) }}
+          {{ data.isBlocked ? ('unblock' | translate) : ('block' | translate) }}
         </button>
         <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
-          [disabled]="form.invalid || loading">
+          [disabled]="form.invalid || loading || phoneCodeInvalid">
           {{ 'save' | translate }}
         </button>
       </div>
@@ -388,8 +386,8 @@
           <div class="info-column">
             <div class="info-label">{{ 'status' | translate }}</div>
             <div class="info-value">
-              <span *ngIf="!data?.blocked" class="edit-icon">{{ 'active' | translate }}</span>
-              <span *ngIf="data?.blocked" class="delete-icon">{{ 'inactive' | translate }}</span>
+              <span *ngIf="!data?.isBlocked" class="edit-icon">{{ 'active' | translate }}</span>
+              <span *ngIf="data?.isBlocked" class="delete-icon">{{ 'inactive' | translate }}</span>
             </div>
           </div>
           <div class="info-column">

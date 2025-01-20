@@ -538,11 +538,9 @@ export class ServicesComponent implements OnInit, OnDestroy {
       .map((name: any) => this.services.find((service: any) => service.name === name));
     if (this.tabType === 0) {
       this.uniqueServices0 = this.uniqueServices.filter((service: any) => service.id !== 15 && service.id !== 16);
-      console.log(this.uniqueServices0);
     }
     else if (this.tabType === 1) {
       this.uniqueServices1 = this.uniqueServices.filter((service: any) => service.id === 15 || service.id === 16);
-      console.log(this.uniqueServices1);
     }
   }
 }
