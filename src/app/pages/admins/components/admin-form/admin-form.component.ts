@@ -46,7 +46,7 @@ export class AdminFormComponent implements OnInit {
     id: new FormControl(''),
     fullName: new FormControl('', [Validators.required]),
     username: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.minLength(8), Validators.maxLength(16), Validators.pattern('^[a-zA-Z0-9]+$')]),
+    password: new FormControl('', []),
     roleId: new FormControl('', [Validators.required]),
     phone: new FormControl('+998', [Validators.required]),
   });
@@ -77,12 +77,7 @@ export class AdminFormComponent implements OnInit {
       this.form.get('password')?.clearValidators();
       this.form.get('password')?.updateValueAndValidity();
     } else {
-      this.form.get('password')?.setValidators([
-        Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(16),
-        Validators.pattern('^[a-zA-Z0-9]+$')
-      ]);
+      this.form.get('password')?.setValidators([ Validators.required, Validators.minLength(8), Validators.maxLength(16)]);
       this.form.get('password')?.updateValueAndValidity();
     }
 

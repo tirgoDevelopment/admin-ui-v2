@@ -24,10 +24,19 @@
       </div>
     </div>
     <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
-      <div >
-        <nz-select style="width:250px" nzAllowClear="true" [(ngModel)]="filter['servicesIds']" (ngModelChange)="onServiceSelect($event)"
-          nzPlaceHolder="{{ 'services.title' | translate }}">
-          <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of tabType ? uniqueServices1 : uniqueServices0">
+      <div>
+        <nz-select
+          style="width: 250px"
+          nzAllowClear="true"
+          [(ngModel)]="filteredServiceId"
+          (ngModelChange)="onServiceSelect($event)"
+          nzPlaceHolder="{{ 'services.title' | translate }}"
+        >
+          <nz-option
+            [nzValue]="item.id"
+            [nzLabel]="item.name"
+            *ngFor="let item of (tabType ? uniqueServices1 : uniqueServices0)"
+          >
           </nz-option>
         </nz-select>
       </div>
@@ -54,7 +63,7 @@
         </nz-input-group>
       </div>
       <div>
-        <nz-select nzAllowClear="true" [(ngModel)]="filter['statusCode']" nzPlaceHolder="{{ 'status' | translate }}">
+        <nz-select nzAllowClear="true" style="width:150px" [(ngModel)]="filter['statusCode']" nzPlaceHolder="{{ 'status' | translate }}">
           <nz-option [nzValue]="status.code" [nzLabel]="status.name.toLowerCase() | translate"
             *ngFor="let status of statuses">
           </nz-option>
