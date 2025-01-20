@@ -26,8 +26,8 @@ export class DriversService {
   update(id,data: FormData) {
     return this.http.put<Response<DriverModel[]>>(env.apiUrl + `/users/drivers/${id}`, data)
   }
-  delete(id: number | string) { 
-    return this.http.delete(env.apiUrl + `/users/drivers?id=${id}`)
+  delete(id) { 
+    return this.http.delete(env.apiUrl + `/users/drivers/${id}`)
   }
   block(id: number | string) {
     return this.http.patch<Response<DriverModel>>(env.apiUrl + `/users/drivers/block-driver?id=${id}`, {})

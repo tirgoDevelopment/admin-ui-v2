@@ -49,10 +49,14 @@
 
     <nz-input-group class="input-group" [nzAddOnBefore]="countryDropdown" style="width: 100%;">
       <input nz-input formControlName="phoneNumbers" placeholder="{{ 'phone' | translate }}" [mask]="currentMask"
-        required />
+        required (ngModelChange)="onPhoneNumberChange($event)" />
       <div *ngIf="form.get('phoneNumbers').touched && form.get('phoneNumbers').hasError('required')"
         class="error-message">
         {{ 'is_empty' | translate }}
+      </div>
+      <div *ngIf="phoneCodeInvalid"
+        class="error-message">
+        {{ 'phoneCodeInvalid' | translate }}
       </div>
     </nz-input-group>
 
@@ -144,7 +148,7 @@
 </div>
 
 <nz-tabset *ngIf="mode == 'edit' && data && !loadingPage && perService.hasPermission(Permission.DriverUpdate)">
-  <nz-tab nzTitle="{{ 'drivers' | translate }}">
+  <nz-tab nzTitle="{{ 'driver' | translate }}">
     <form [formGroup]="form">
 
       <nz-input-group class="input-group">
@@ -193,10 +197,14 @@
       </nz-input-group> -->
       <nz-input-group class="input-group" [nzAddOnBefore]="countryDropdown" style="width: 100%;">
         <input nz-input formControlName="phoneNumbers" placeholder="{{ 'phone' | translate }}" [mask]="currentMask"
-          required />
+          required (ngModelChange)="onPhoneNumberChange($event)" />
         <div *ngIf="form.get('phoneNumbers').touched && form.get('phoneNumbers').hasError('required')"
           class="error-message">
           {{ 'is_empty' | translate }}
+        </div>
+        <div *ngIf="phoneCodeInvalid"
+          class="error-message">
+          {{ 'phoneCodeInvalid' | translate }}
         </div>
       </nz-input-group>
 
@@ -230,7 +238,7 @@
         <label nz-checkbox formControlName="isOwnService" class="m-0" style="margin: 0 !important;">{{'apply_service' |
           translate}}</label>
       </div>
-      
+
 
       <ul class="gallery" *ngIf="data && data?.isVerified">
         <li *ngIf="previewUrlPassport">
@@ -279,7 +287,8 @@
         <!-- <button nz-button class="danger-button" (click)="onCancel()">
           {{ 'cancel' | translate }}
         </button> -->
-        <button nz-button class="secondary-button" (click)="onBlock()" *ngIf="mode == 'edit' && perService.hasPermission(Permission.DriverBlock)">
+        <button nz-button class="secondary-button" (click)="onBlock()"
+          *ngIf="mode == 'edit' && perService.hasPermission(Permission.DriverBlock)">
           {{ data.blocked ? ('unblock' | translate) : ('block' | translate) }}
         </button>
         <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
@@ -290,7 +299,7 @@
 
     </form>
   </nz-tab>
-  <nz-tab nzTitle="{{ 'transport' | translate }}">
+  <nz-tab nzTitle="{{ 'transport' | translate }}" *ngIf="data.driverTransports && data.driverTransports.length > 0">
     <button nz-button nzBlock="true" style="margin: 5px 0;" *ngFor="let item of data.driverTransports"
       (click)="editTransport(item)">{{item.brand}}</button>
 
@@ -307,21 +316,21 @@
     <div class="avatar-wrapper">
       <img *ngIf="!data?.profileFile" class="avatar-img" src="./assets/images/avatars/default_avatar.svg" alt="">
       <ng-container *ngIf="data?.profileFile">
-        <ng-template #indicatorTemplate>  <span nz-icon nzType="loading" nzTheme="outline"></span>
+        <ng-template #indicatorTemplate> <span nz-icon nzType="loading" nzTheme="outline"></span>
         </ng-template>
-        <nz-spin *ngIf="(data?.profileFile.name | fileFetch:'drivers/profiles' | async) === null" nzSimple [nzIndicator]="indicatorTemplate"></nz-spin>
-        <nz-space *ngIf="(data?.profileFile.name | fileFetch:'drivers/profiles' | async)  !== null" >
-          <img *nzSpaceItem nz-image 
-          class="avatar-img" 
-          [nzSrc]="data?.profileFile.name | fileFetch:'drivers/profiles' | async " 
-          alt="">
+        <nz-spin *ngIf="(data?.profileFile.name | fileFetch:'drivers/profiles' | async) === null" nzSimple
+          [nzIndicator]="indicatorTemplate"></nz-spin>
+        <nz-space *ngIf="(data?.profileFile.name | fileFetch:'drivers/profiles' | async)  !== null">
+          <img *nzSpaceItem nz-image class="avatar-img"
+            [nzSrc]="data?.profileFile.name | fileFetch:'drivers/profiles' | async " alt="">
         </nz-space>
       </ng-container>
     </div>
     <div>
       <div class="user-name">{{ data?.firstName }} {{ data?.lastName }}</div>
       <div class="user-id">ID: {{ data?.id }}</div>
-      <div class="user-id" *ngIf="data.driverMerchant">{{'driver_merchant' | translate}}: {{data?.driverMerchant?.companyType}} {{data?.driverMerchant?.companyName}} </div>
+      <div class="user-id" *ngIf="data.driverMerchant">{{'driver_merchant' | translate}}:
+        {{data?.driverMerchant?.companyType}} {{data?.driverMerchant?.companyName}} </div>
     </div>
     <div class="rating">
       <i nz-icon nzType="star" nzTheme="fill"></i>
@@ -421,7 +430,7 @@
           <div class="info-column">
             <div class="info-label">{{ 'total_balance' | translate }}</div>
             <div class="info-value">
-              {{ data?.isOwnBalance ? ('on'| translate)  : ('off' | translate) }}
+              {{ data?.isOwnBalance ? ('on'| translate) : ('off' | translate) }}
             </div>
           </div>
         </div>

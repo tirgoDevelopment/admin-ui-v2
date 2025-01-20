@@ -25,10 +25,10 @@
     </div>
 
     <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
-      <div *ngIf="tabType == 0">
+      <div >
         <nz-select style="width:250px" nzAllowClear="true" [(ngModel)]="filter['servicesIds']" (ngModelChange)="onServiceSelect($event)"
           nzPlaceHolder="{{ 'services.title' | translate }}">
-          <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of uniqueServices">
+          <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of tabType ? uniqueServices1 : uniqueServices0">
           </nz-option>
         </nz-select>
       </div>

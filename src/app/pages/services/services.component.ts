@@ -86,6 +86,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
   statuses: any[] = [];
   services: any[] = [];
   uniqueServices: any[] = [];
+  uniqueServices0: any[] = [];
+  uniqueServices1: any[] = [];
   pageParams: PageParams = {
     pageIndex: 1,
     pageSize: 10,
@@ -241,16 +243,11 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.servicesService.getServiceList().subscribe((res: any) => {
       if (res.data && Array.isArray(res.data)) {
         this.services = res.data;
-        this.uniqueServices = Array.from(new Set(res.data.map((service: any) => service.name)))
-          .map((name: any) => res.data.find((service: any) => service.name === name));
-        this.uniqueServices = this.uniqueServices.filter(
-          (service: any) => service.id !== 15 && service.id !== 16
-        );
-      } else {
-        this.uniqueServices = [];
+        this.filterServices();
       }
     });
   }
+
   onServiceSelect(selectedServiceId: number): void {
     if (!Array.isArray(this.filter['servicesIds'])) {
       this.filter['servicesIds'] = [];
@@ -525,6 +522,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   onTabChange(selectedIndex: number): void {
     this.pageParams.pageIndex = 1;
     this.tabType = selectedIndex;
+    this.filterServices();
     if (this.tabType) {
       this.filter['excludedServicesIds'] = [null];
       this.filter['servicesIds'] = [15, 16];
@@ -534,5 +532,17 @@ export class ServicesComponent implements OnInit, OnDestroy {
       this.filter['servicesIds'] = [''];
     }
     this.getAll();
+  }
+  filterServices() {
+    this.uniqueServices = Array.from(new Set(this.services.map((service: any) => service.name)))
+      .map((name: any) => this.services.find((service: any) => service.name === name));
+    if (this.tabType === 0) {
+      this.uniqueServices0 = this.uniqueServices.filter((service: any) => service.id !== 15 && service.id !== 16);
+      console.log(this.uniqueServices0);
+    }
+    else if (this.tabType === 1) {
+      this.uniqueServices1 = this.uniqueServices.filter((service: any) => service.id === 15 || service.id === 16);
+      console.log(this.uniqueServices1);
+    }
   }
 }
