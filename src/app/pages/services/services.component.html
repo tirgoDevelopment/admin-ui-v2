@@ -23,7 +23,6 @@
         </button>
       </div>
     </div>
-
     <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
       <div >
         <nz-select style="width:250px" nzAllowClear="true" [(ngModel)]="filter['servicesIds']" (ngModelChange)="onServiceSelect($event)"
@@ -32,14 +31,12 @@
           </nz-option>
         </nz-select>
       </div>
-
       <div>
         <nz-input-group class="input-group">
           <input [(ngModel)]="filter['driverId']" type="text" nz-input
             placeholder="{{ 'services.driverId' | translate }}" />
         </nz-input-group>
       </div>
-
       <div>
         <nz-input-group class="input-group">
           <input [(ngModel)]="filter['transportNumber']" type="text" nz-input
@@ -56,7 +53,6 @@
           </nz-select>
         </nz-input-group>
       </div>
-
       <div>
         <nz-select nzAllowClear="true" [(ngModel)]="filter['statusCode']" nzPlaceHolder="{{ 'status' | translate }}">
           <nz-option [nzValue]="status.code" [nzLabel]="status.name.toLowerCase() | translate"
@@ -64,7 +60,6 @@
           </nz-option>
         </nz-select>
       </div>
-
       <div>
         <nz-input-group class="input-group">
           <nz-date-picker style="min-width: 150px;" [(ngModel)]="filter['createdAtFrom']" type="date" nz-input
@@ -72,7 +67,6 @@
           </nz-date-picker>
         </nz-input-group>
       </div>
-
       <div>
         <nz-input-group class="input-group">
           <nz-date-picker style="min-width: 150px;" [(ngModel)]="filter['createdAtTo']" type="date" nz-input
@@ -80,7 +74,6 @@
           </nz-date-picker>
         </nz-input-group>
       </div>
-
       <button nz-button nzType="primary" class="search-button" (click)="fiterApply()">
         <span nz-icon nzType="search" nzTheme="outline"></span>
       </button>
@@ -88,12 +81,10 @@
         <span nz-icon nzType="reload" nzTheme="outline"></span>
       </button>
     </div>
-
     <nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
       <nz-tab nzTitle="{{'services.title' | translate}}"></nz-tab>
       <nz-tab nzTitle="{{'kzPaidWay' | translate}}"></nz-tab>
     </nz-tabset>
-
     <nz-table #fixedTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty"
       [nzScroll]="{ x: '100vw', y: '60vh' }" [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize"
       [nzTotal]="totalItemsCount" [nzPaginationPosition]="'both'" [nzShowSizeChanger]="true" [nzShowPagination]="true"
@@ -192,9 +183,6 @@
       <nz-empty></nz-empty>
     </ng-template>
   </div>
-
-
-
   <app-chat *ngIf="showChat" [outputServiceId]="selectedServiceId" (closeChatEvent)="onChatClose()"></app-chat>
 </div>
 
