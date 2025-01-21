@@ -27,18 +27,24 @@
   <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
     <div>
       <nz-input-group class="input-group">
-        <input [(ngModel)]="filter['driverId'] " type="text" nz-input placeholder="ID" />
+        <input [(ngModel)]="filter['driverId']" type="text" nz-input placeholder="ID" />
+      </nz-input-group>
+    </div>
+    <div>
+      <nz-input-group class="input-group">
+        <input [(ngModel)]="filter['firstName']" type="text" nz-input 
+          placeholder="{{ 'first_name' | translate }}" />
       </nz-input-group>
     </div>
     <div>
       <nz-input-group class="input-group">
         <input [(ngModel)]="filter['transportNumber']" type="text" nz-input
-          placeholder="{{ 'state_number' | translate }}" />
+          placeholder="{{ 'state_number' | translate }}" trimSpaces />
       </nz-input-group>
     </div>
     <div>
       <nz-input-group class="input-group">
-        <input [(ngModel)]="filter['phoneNumber']" type="text" nz-input placeholder="{{ 'phone' | translate }}" />
+        <input [(ngModel)]="filter['phoneNumber']" trimSpaces type="text" nz-input placeholder="{{ 'phone' | translate }}" />
       </nz-input-group>
     </div>
     <div>

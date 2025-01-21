@@ -74,7 +74,6 @@ export class DriversComponent implements OnInit {
   getAll() {
     this.loader = true;
     if (this.merchantId) {
-      console.log(this.filter);
       this.filter['merchantId'] = this.merchantId;
       this.driverApi.getAll(this.pageParams, generateQueryFilter(this.filter)).subscribe((res: any) => {
         if (res && res.success) {
@@ -174,8 +173,13 @@ export class DriversComponent implements OnInit {
     });
   }
   unassignDriver(id:number|string){
-    this.merchantApi.unassignDriver(id).subscribe((res:any) => {
+    let data = {
+      tmsId: this.merchantId,
+      driverId: id
+    }
+    this.merchantApi.unassignDriver(data).subscribe((res:any) => {
       if(res && res.success){
+        this.toastr.success(this.translate.instant('successfullUpdated'),'');
         this.getAll();
       }
     });

@@ -74,7 +74,7 @@
             <th>{{'state_number' | translate}}</th>
             <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
             <th>{{ 'status' | translate }}</th>
-            <th nzWidth="50px" nzRight></th>
+            <th nzWidth="50px"></th>
         </tr>
     </thead>
     <tbody>
@@ -97,7 +97,7 @@
                 <span *ngIf="item?.isBusy" class="delete-icon">{{'busy' | translate}}</span>
                 <span *ngIf="!item?.isBusy" class="edit-icon">{{'not_busy' | translate}}</span>
             </td>
-            <td nzRight class="action-col">
+            <td class="action-col">
                 <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
                     <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
                 </a>
