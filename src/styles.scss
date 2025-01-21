@@ -1,5 +1,6 @@
 @import '/src/assets/styles/light-variables.scss';
 @import "../node_modules/ng-zorro-antd/ng-zorro-antd.min.css";
+
 @font-face {
   font-family: 'Nunito';
   src:
@@ -254,7 +255,15 @@ nz-select {
   }
 }
 
+.main-username {
+  color: var(--textColor);
+  margin: 0 10px;
+  text-transform: capitalize;
+}
 
+.down-icon {
+  color: var(--textColor) !important;
+}
 
 .ant-dropdown-trigger {
   &:hover {
@@ -292,6 +301,16 @@ nz-select {
   margin: 15px 0;
 }
 
+.ant-breadcrumb-link {
+  color: #999 !important;
+  a {
+    color: var(--textColor) !important;
+  }
+}
+
+.ant-breadcrumb-separator {
+  color: var(--textColor) !important;
+}
 
 .ant-drawer-header {
   background-color: var(--bgColor) !important;
@@ -704,6 +723,7 @@ input[type=number]::-webkit-outer-spin-button {
 .m-0 {
   margin: 0 !important;
 }
+
 .my-2 {
   margin: 10px 0;
 }
