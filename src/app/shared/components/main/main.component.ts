@@ -50,7 +50,8 @@ export class MainComponent {
   }
   ngOnInit(): void {
     this.currentUser = jwtDecode(localStorage.getItem('accessToken'));
-
+    console.log(this.currentUser);
+    
     const lang = localStorage.getItem('lang') || 'uz';
     this.changeLanguage(lang.toLocaleLowerCase(), `../assets/images/flags/${lang}.svg`);
     this.themeService.initTheme();
