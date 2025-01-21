@@ -460,7 +460,7 @@
 
       </div>
     </nz-tab>
-    <nz-tab nzTitle="{{ 'transport' | translate }}" *ngIf="data?.driverTransports">
+    <nz-tab nzTitle="{{ 'transport' | translate }}" *ngIf="data?.driverTransports && data?.driverTransports.length > 0">
       <div>
         <nz-collapse>
           <nz-collapse-panel *ngFor="let transport of data?.driverTransports" [nzHeader]="transport.brand">
@@ -581,6 +581,8 @@
           </nz-collapse-panel>
         </nz-collapse>
       </div>
+
+
     </nz-tab>
   </nz-tabset>
 
