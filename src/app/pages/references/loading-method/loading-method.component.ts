@@ -10,6 +10,8 @@ import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.modul
 import { LoadingMethodFormComponent } from './components/loading-method-form/loading-method-form.component';
 import { LoadingMethodService } from 'src/app/shared/services/references/loading-method.service';
 import { LoadingMethodModel } from './models/loading-method.model';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 @Component({
   selector: 'app-loading-method',
   templateUrl: './loading-method.component.html',
@@ -19,7 +21,7 @@ import { LoadingMethodModel } from './models/loading-method.model';
   providers: [NzModalService]
 })
 export class LoadingMethodComponent implements OnInit {
-
+  Per = Permission;
   confirmModal?: NzModalRef;
   data: any[];
   loader: boolean = false;
@@ -36,6 +38,7 @@ export class LoadingMethodComponent implements OnInit {
   };
 
   constructor(
+    public perService: PermissionService,
     private toastr: NotificationService,
     private modal: NzModalService,
     private loadingMethodService: LoadingMethodService,

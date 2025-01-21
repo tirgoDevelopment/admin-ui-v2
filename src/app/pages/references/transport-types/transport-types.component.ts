@@ -10,6 +10,8 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { TransportModel } from './models/transport.model';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 @Component({
   selector: 'app-transport-types',
@@ -20,7 +22,7 @@ import { TransportModel } from './models/transport.model';
   providers: [NzModalService]
 })
 export class TransportTypesComponent implements OnInit {
-
+  Per = Permission;
   confirmModal?: NzModalRef;
   data: any[];
   loader: boolean = false;
@@ -39,7 +41,8 @@ export class TransportTypesComponent implements OnInit {
     private modal: NzModalService,
     private transportTypesService: TransportTypesService,
     private drawer: NzDrawerService,
-    private translate: TranslateService) { }
+    private translate: TranslateService,
+    public perService: PermissionService) { }
 
   ngOnInit(): void {
     this.getAll();

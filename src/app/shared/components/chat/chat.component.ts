@@ -84,6 +84,8 @@ export class ChatComponent implements OnInit {
     totalPagesCount: 1,
     sortBy: '',
     sortType: '',
+    servicesIds: [],
+    excludedServicesIds:[15,16],
     serviceId: this.serviceId,
   };
   private messagesParams = {

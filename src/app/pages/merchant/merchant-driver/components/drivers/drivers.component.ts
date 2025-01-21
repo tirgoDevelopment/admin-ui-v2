@@ -74,10 +74,12 @@ export class DriversComponent implements OnInit {
   getAll() {
     this.loader = true;
     if (this.merchantId) {
-      this.driverApi.getAll(this.pageParams, generateQueryFilter({merchantId:this.merchantId})).subscribe((res: any) => {
+      console.log(this.filter);
+      this.filter['merchantId'] = this.merchantId;
+      this.driverApi.getAll(this.pageParams, generateQueryFilter(this.filter)).subscribe((res: any) => {
         if (res && res.success) {
           this.data = res.data.content;
-          this.pageParams.totalPagesCount = res.data.totalPagesCount;
+          this.pageParams.totalPagesCount = res.data.totalPagesCount * res.data.pageSize;
           this.loader = false;
         }else {
           this.loader = false;
@@ -88,16 +90,7 @@ export class DriversComponent implements OnInit {
     }
   }
   private initializeFilter(): Record<string, string> {
-    return { merchantId: this.merchantId };
-  }
-  onPageIndexChange(pageIndex: number): void {
-    this.pageParams.pageIndex = pageIndex;
-    this.getAll();
-  }
-  onPageSizeChange(pageSize: number): void {
-    this.pageParams.pageSize = pageSize;
-    // this.pageParams.pageIndex = 0;
-    this.getAll();
+    return { };
   }
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
@@ -107,13 +100,14 @@ export class DriversComponent implements OnInit {
     this.getAll();
   }
   onQueryParamsChange(params: NzTableQueryParams): void {
-    let { sort } = params;
-    let currentSort = sort.find((item) => item.value !== null);
-    let sortField = (currentSort && currentSort.key) || null;
-    let sortOrder = (currentSort && currentSort.value) || null;
-    sortOrder === 'ascend' ? (sortOrder = 'asc') : sortOrder === 'descend' ? (sortOrder = 'desc') : sortOrder = '';
-    this.pageParams.sortBy = sortField;
-    this.pageParams.sortType = sortOrder;
+    const { pageIndex, pageSize, sort } = params;
+    this.pageParams.pageIndex = pageIndex ;
+    this.pageParams.pageSize = pageSize;
+  
+    const currentSort = sort.find(item => item.value !== null);
+    this.pageParams.sortBy = currentSort?.key || null;
+    this.pageParams.sortType = currentSort?.value === 'ascend' ? 'asc' : currentSort?.value === 'descend' ? 'desc' : '';
+  
     this.getAll();
   }
   handleDrawer(action: 'add' | 'edit' | 'view', id?:number|string): void {
@@ -185,5 +179,9 @@ export class DriversComponent implements OnInit {
         this.getAll();
       }
     });
+  }
+  filterApply() { 
+    this.pageParams.pageIndex = 1;
+    this.getAll();
   }
 }

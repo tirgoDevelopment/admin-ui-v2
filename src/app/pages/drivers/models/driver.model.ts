@@ -2,6 +2,7 @@ import { BaseModel } from "src/app/shared/models/base-model";
 import { MerchantModel } from "../../merchant/merchant-client/models/merchant.model";
 
 export interface DriverModel extends BaseModel {
+    rowIndex:number;
     name?: string;
     full_name?: string;
     contry_code?: string;
@@ -24,7 +25,7 @@ export interface DriverModel extends BaseModel {
     subscription?:any;
     driverLicense?:string;
     passport?:string;
-    blocked?:boolean;
+    isBlocked?:boolean;
     passportFilePath:string;
     driverLicenseFilePath:string;
     isBusy?:boolean;

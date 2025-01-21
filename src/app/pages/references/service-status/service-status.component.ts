@@ -9,6 +9,8 @@ import { ServicesService } from '../../services/services/services.service';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { FormComponent } from './components/form/form.component';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 @Component({
   selector: 'app-service-status',
@@ -19,6 +21,7 @@ import { FormComponent } from './components/form/form.component';
   providers: [NzModalService]
 })
 export class ServiceStatusComponent implements OnInit {
+  Per = Permission;
   confirmModal?: NzModalRef;
   data: any[];
   loader: boolean = false;
@@ -37,7 +40,8 @@ export class ServiceStatusComponent implements OnInit {
     private toastr: NotificationService,
     private modal: NzModalService,
     private drawer: NzDrawerService,
-    private translate: TranslateService) { }
+    private translate: TranslateService,
+    public perService: PermissionService) { }
 
   ngOnInit(): void {
     this.getAll();

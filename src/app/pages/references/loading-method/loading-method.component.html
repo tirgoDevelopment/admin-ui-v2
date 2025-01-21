@@ -1,4 +1,5 @@
-<div class="container-page">
+<div *ngIf="perService.hasPermission(Per.LoadingMethodsPage)">
+  <div class="container-page">
     <div class="header-page">
       <h2>{{ 'loading_method' | translate }}</h2>
       <div class="button-group">
@@ -47,3 +48,9 @@
     </tbody>
   </nz-table>
   <app-loading-method-form *ngIf="showForm"></app-loading-method-form>
+</div>
+
+<div *ngIf="!perService.hasPermission(Per.LoadingMethodsPage)" class="no-access-container">
+  <nz-result nzStatus="error" nzTitle="403" nzSubTitle="{{'accessDeniedPage' | translate}}">
+  </nz-result>
+</div>

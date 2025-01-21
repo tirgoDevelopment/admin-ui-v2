@@ -10,7 +10,6 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { DriversService } from './services/drivers.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { NgxMaskDirective } from 'ngx-mask';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
@@ -27,7 +26,7 @@ import { PermissionService } from 'src/app/shared/services/permission.service';
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, NgxMaskDirective, PipeModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -39,7 +38,6 @@ import { PermissionService } from 'src/app/shared/services/permission.service';
 })
 export class DriversComponent implements OnInit {
   Permission = Permission;
-
   confirmModal?: NzModalRef;
   data: DriverModel[] = [];
   loader: boolean = false;
@@ -62,7 +60,8 @@ export class DriversComponent implements OnInit {
     public perService: PermissionService,
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+  }
 
   getAll(): void {
     this.loader = true;
@@ -70,7 +69,7 @@ export class DriversComponent implements OnInit {
     this.driversService.getAll(this.pageParams, queryString).pipe(
       tap((res: any) => {
         this.data = res?.success ? res.data.content : [];
-        this.pageParams.totalPagesCount = res.data.pageSize * res?.data?.totalPagesCount;
+        this.pageParams.totalPagesCount = res?.data?.totalPagesCount * this.pageParams.pageSize;
       }),
       catchError(() => {
         this.data = [];
@@ -149,7 +148,10 @@ export class DriversComponent implements OnInit {
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
-
+  fiterApply() {
+    this.pageParams.pageIndex = 1;
+    this.getAll();
+  }
   resetFilter(): void {
     this.filter = this.initializeFilter();
     this.getAll();

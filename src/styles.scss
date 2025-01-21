@@ -1,6 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
-@import "../node_modules/ng-zorro-antd/ng-zorro-antd.min.css";
 @import '/src/assets/styles/light-variables.scss';
+@import "../node_modules/ng-zorro-antd/ng-zorro-antd.min.css";
+
+@font-face {
+  font-family: 'Nunito';
+  src:
+    url('assets/fonts/nunito/Nunito-VariableFont_wght.ttf') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
 
 * {
   font-family: 'Nunito';
@@ -67,9 +74,11 @@ body {
     }
   }
 }
+
 .ant-layout-header {
-z-index: 999 !important;
+  z-index: 999 !important;
 }
+
 .ant-table-container {
   overflow: auto !important;
   background-color: var(--bgColor);
@@ -246,7 +255,15 @@ nz-select {
   }
 }
 
+.main-username {
+  color: var(--textColor);
+  margin: 0 10px;
+  text-transform: capitalize;
+}
 
+.down-icon {
+  color: var(--textColor) !important;
+}
 
 .ant-dropdown-trigger {
   &:hover {
@@ -270,56 +287,6 @@ nz-select {
   background-color: var(--menu-item-bgcolor) !important;
 }
 
-.floating-label {
-  position: relative;
-  // margin: 20px 0;
-}
-
-input {
-  // padding: 5px 10px !important;
-  background-color: var(--input-bg) !important;
-  border-color: var(--input-border) !important;
-  width: 100% !important;
-  color: var(--textColor) !important;
-}
-
-.floating-label label {
-  position: absolute;
-  top: 6px;
-  left: 10px;
-  background-color: transparent;
-  color: var(--textColor);
-  pointer-events: none;
-  transition: 0.2s ease all;
-  font-weight: 600;
-}
-
-.floating-label input:focus~label,
-.floating-label input:not(:placeholder-shown)~label {
-  top: -13px;
-  left: 7px;
-  background-color: var(--bgColor);
-}
-
-.floating-label input:focus {
-  outline: none;
-}
-
-.reset-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #aaa;
-  font-size: 14px;
-  display: none;
-}
-
-.floating-label input:not(:placeholder-shown)+label+.reset-icon {
-  display: block;
-}
-
 .error-message {
   color: red;
   font-weight: 600;
@@ -334,6 +301,16 @@ input {
   margin: 15px 0;
 }
 
+.ant-breadcrumb-link {
+  color: #999 !important;
+  a {
+    color: var(--textColor) !important;
+  }
+}
+
+.ant-breadcrumb-separator {
+  color: var(--textColor) !important;
+}
 
 .ant-drawer-header {
   background-color: var(--bgColor) !important;
@@ -348,6 +325,12 @@ input {
   .ant-drawer-title {
     color: var(--textColor) !important;
     margin: 0 !important;
+  }
+
+  .ant-drawer-header-title {
+    button {
+      font-size: 18px;
+    }
   }
 
   .ant-drawer-title {
@@ -417,9 +400,11 @@ input:-webkit-autofill:focus {
 .ant-modal-body {
   padding-top: 0px !important;
 }
+
 .ant-modal-confirm-title {
   margin-top: 20px;
 }
+
 .ant-modal-content {
   background-color: var(--bgColor) !important;
 
@@ -456,6 +441,11 @@ input:-webkit-autofill:focus {
 
 .action-col {
   text-align: right;
+  padding: 0 !important;
+
+  a {
+    padding: 20px;
+  }
 }
 
 .dropdown-menu {
@@ -575,6 +565,7 @@ input[type=number]::-webkit-outer-spin-button {
   word-wrap: break-word;
   overflow-wrap: anywhere;
 }
+
 .detail-header {
   display: flex;
   align-items: center;
@@ -729,13 +720,18 @@ input[type=number]::-webkit-outer-spin-button {
   color: var(--textColor) !important;
 }
 
+.m-0 {
+  margin: 0 !important;
+}
 
 .my-2 {
   margin: 10px 0;
 }
+
 .mb-2 {
   margin-bottom: 20px;
 }
+
 .my-4 {
   margin-top: 20px;
 }
@@ -808,6 +804,7 @@ input[type=number]::-webkit-outer-spin-button {
   text-decoration: underline;
   cursor: pointer;
 }
+
 .ant-scroll-number {
   top: 5px !important;
   right: 10px !important;
@@ -817,6 +814,142 @@ input[type=number]::-webkit-outer-spin-button {
 .no-access-container {
   height: 100vh;
 }
+
 .ant-result-subtitle {
   font-size: 18px !important;
+}
+
+.cards {
+  margin-bottom: 24px;
+
+  .balance-card {
+    flex: 1;
+    background-color: #3880ff;
+    border: none;
+    max-width: 300px;
+
+    ::ng-deep .ant-card-body {
+      padding: 16px;
+    }
+
+    .card-inner {
+      color: white;
+    }
+
+    .card-title {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+
+    .card-content {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+
+      .amount {
+        font-size: 20px;
+        font-weight: 600;
+      }
+
+      .currency {
+        font-size: 13px;
+        opacity: 0.85;
+      }
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      transition: transform 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+  }
+}
+
+// SPLASH ICON ANIMATION
+#splash-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 1s ease-out;
+}
+
+/* Hidden state for smooth fade-out */
+#splash-screen.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Logo animation */
+#splash-screen img {
+  width: 150px;
+  height: auto;
+  animation: pulse 2s infinite;
+}
+
+/* Bounce dots container */
+.bounce-dots {
+  display: flex;
+  gap: 5px;
+  margin-top: 20px;
+}
+
+/* Individual dots */
+.bounce-dots span {
+  width: 10px;
+  height: 10px;
+  background-color: #000;
+  border-radius: 50%;
+  animation: bounce 1.5s infinite ease-in-out;
+}
+
+/* Dots animation delay */
+.bounce-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.bounce-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.bounce-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Keyframes for bounce effect */
+@keyframes bounce {
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Keyframes for pulse effect */
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
 }

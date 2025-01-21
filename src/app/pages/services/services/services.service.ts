@@ -68,11 +68,17 @@ export class ServicesService {
   postDriverServices(data: ServiceModel) {
     return this.http.post(`${this.baseUrl}`, data);
   }
-  pricingService(data) {
-    return this.http.patch(`${this.baseUrl}/${data.id}/price`, data)
+  excelService(data) {
+    return this.http.get(`${this.baseUrl}/excel/file?`+data, {responseType: 'blob'});
   }
   patchServiceStatus(data: any, apiPath: string) {
     return this.http.patch(`${this.baseUrl}${apiPath.replace('{id}', data.id)}`, data);
+  }
+  pricingService(data) {
+    return this.http.patch(`${this.baseUrl}/${data.id}/price`, data)
+  }
+  requestKazJul(data) {
+    return this.http.post(`${this.baseUrl}/kz-paid-way/transactions`, data)
   }
   // SERVICE CHAT
   getChatMessages(id: any, params) {

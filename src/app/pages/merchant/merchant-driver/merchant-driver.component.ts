@@ -159,7 +159,6 @@ export class MerchantDriverComponent implements OnInit {
       });
     }
   }
-
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
@@ -210,5 +209,9 @@ export class MerchantDriverComponent implements OnInit {
         });
       }
     });
+  }
+  filterApply() { 
+    this.pageParams.pageIndex = 1;
+    this.getVerified();
   }
 }

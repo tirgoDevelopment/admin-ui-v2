@@ -1,5 +1,5 @@
 <div *ngIf="perService.hasPermission(Permission.DriversPage)">
-  <div class="container-page" >
+  <div class="container-page">
     <div class="header-page">
       <h2>{{ 'drivers' | translate }}</h2>
       <div class="button-group">
@@ -7,57 +7,49 @@
           <span nz-icon nzType="filter" nzTheme="fill"></span>
           {{ 'filter' | translate }}
         </button>
-        
+
         <!-- <button nz-button class="success-button" (click)="sendNotification()">
           {{ 'send' | translate }}
         </button> -->
-        <button nz-button class="success-button" (click)="topupBalance()" *ngIf="perService.hasPermission(Permission.DriverTopUpBalance)">
+        <button nz-button class="success-button" (click)="topupBalance()"
+          *ngIf="perService.hasPermission(Permission.DriverTopUpBalance)">
           {{ 'top_up_balance' | translate }}
         </button>
-        <button nz-button class="success-button" (click)="handleDrawer('add')" *ngIf="perService.hasPermission(Permission.DriverCreate)">
+        <button nz-button class="success-button" (click)="handleDrawer('add')"
+          *ngIf="perService.hasPermission(Permission.DriverCreate)">
           <span nz-icon nzType="plus" nzTheme="outline"></span>
           {{ 'add' | translate }}
         </button>
       </div>
     </div>
   </div>
-  
+
   <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
     <div>
       <nz-input-group class="input-group">
         <input [(ngModel)]="filter['driverId'] " type="text" nz-input placeholder="ID" />
       </nz-input-group>
     </div>
-  
     <div>
       <nz-input-group class="input-group">
-        <input [(ngModel)]="filter['firstName']" type="text" nz-input placeholder="{{ 'name' | translate }}" />
+        <input [(ngModel)]="filter['transportNumber']" type="text" nz-input
+          placeholder="{{ 'state_number' | translate }}" />
       </nz-input-group>
     </div>
-  
     <div>
       <nz-input-group class="input-group">
         <input [(ngModel)]="filter['phoneNumber']" type="text" nz-input placeholder="{{ 'phone' | translate }}" />
       </nz-input-group>
     </div>
-  
     <div>
-      <nz-input-group class="input-group">
-        <nz-date-picker [(ngModel)]="filter['createdAtFrom']" type="date" nz-input [nzAllowClear]="false"
-          nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
-        </nz-date-picker>
+      <nz-input-group class="input-group w-full">
+        <nz-select style="width: 100%; min-width: 150px;" nzPlaceHolder="{{ 'kzPaidWay' | translate }}"
+          [nzShowArrow]="true" [nzAllowClear]="true" [(ngModel)]="filter['isKzPaidWay']">
+          <nz-option nzLabel="{{'on' | translate}}" [nzValue]="true"></nz-option>
+          <nz-option nzLabel="{{'off' | translate}}" [nzValue]="false"></nz-option>
+        </nz-select>
       </nz-input-group>
     </div>
-  
-    <div>
-      <nz-input-group class="input-group">
-        <nz-date-picker [(ngModel)]="filter['createdAtTo']" type="date" nz-input [nzAllowClear]="false"
-          nzPlaceHolder="{{ 'end_date_reg' | translate }}" class="custom-date-picker">
-        </nz-date-picker>
-      </nz-input-group>
-    </div>
-  
-  
     <div>
       <nz-input-group class="input-group">
         <nz-date-picker [(ngModel)]="filter['lastLoginFrom']" type="date" nz-input [nzAllowClear]="false"
@@ -65,7 +57,7 @@
         </nz-date-picker>
       </nz-input-group>
     </div>
-  
+
     <div>
       <nz-input-group class="input-group">
         <nz-date-picker [(ngModel)]="filter['lastLoginTo']" type="date" nz-input [nzAllowClear]="false"
@@ -73,66 +65,78 @@
         </nz-date-picker>
       </nz-input-group>
     </div>
-  
-  
-    <button nz-button nzType="primary" class="search-button" (click)="getAll()">
+
+
+    <button nz-button nzType="primary" class="search-button" (click)="fiterApply()">
       <span nz-icon nzType="search" nzTheme="outline"></span>
     </button>
     <button nz-button class="reset-button" (click)="resetFilter()">
       <span nz-icon nzType="reload" nzTheme="outline"></span>
     </button>
   </div>
-  
-  <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false" [nzPaginationPosition]="'both'"
-  [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"
-  (nzQueryParams)="onQueryParamsChange($event)">
+
+  <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false"
+    [nzPaginationPosition]="'both'" [nzScroll]="data.length > 0 ? { y: '60vh', x: '100%' } : { y: '' }"
+    [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true"
+    [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
       <tr>
-        <th>No</th>
+        <th nzWidth="70px">No</th>
         <th nzColumnKey="id" [nzSortFn]="true">ID</th>
         <th>{{ 'full_name' | translate }}</th>
         <th>{{ 'phone' | translate }}</th>
+        <th>{{ 'state_number' | translate }}</th>
         <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
         <th>{{ 'status' | translate }}</th>
-        <th></th>
+        <th nzWidth="50px"></th>
       </tr>
     </thead>
-  
+
     <tbody>
       <tr *ngFor="let item of data; let i = index" (click)="handleDrawer('view',item.id)">
-        <td> {{ i+1 }} </td>
+        <td>{{ item.rowIndex }}</td>
         <td> {{ item.id }} </td>
         <td> {{ item.firstName }} {{ item.lastName }} </td>
-        <td> 
-          <span *ngIf="item.phoneNumbers[0]?.code">{{ item.phoneNumbers[0]?.code + item.phoneNumbers[0]?.number | phoneFormat}}</span>
+        <td>
+          <span *ngIf="item.phoneNumbers[0]?.code">{{ item.phoneNumbers[0]?.code + item.phoneNumbers[0]?.number |
+            phoneFormat}}</span>
           <span *ngIf="!item.phoneNumbers[0]?.code">{{ 'no_data' | translate}}</span>
-          </td>
+        </td>
+        <td>
+          <div *ngFor="let tr of item.driverTransports; let i = index">
+            {{tr.transportNumber}}
+          </div>
+        </td>
         <td> {{ item.createdAt | date : 'dd.MM.yyyy' }} </td>
-      
+
         <td>
           <span *ngIf="item?.isBusy" class="delete-icon">{{'busy' | translate}}</span>
           <span *ngIf="!item?.isBusy" class="edit-icon">{{'not_busy' | translate}}</span>
         </td>
-      
-        <td class="action-col" (click)="$event.stopPropagation()" *ngIf="perService.hasAnyPermission([Permission.DriverDetail, Permission.DriverUpdate, Permission.DriverAddTransport, Permission.DriverDelete])">
+
+        <td class="action-col" (click)="$event.stopPropagation()"
+          *ngIf="perService.hasAnyPermission([Permission.DriverDetail, Permission.DriverUpdate, Permission.DriverAddTransport, Permission.DriverDelete])">
           <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
             <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
           </a>
           <nz-dropdown-menu #menu="nzDropdownMenu">
             <ul nz-menu nzSelectable>
-              <li nz-menu-item (click)="handleDrawer('view',item.id)" *ngIf="perService.hasPermission(Permission.DriverDetail)">
+              <li nz-menu-item (click)="handleDrawer('view',item.id)"
+                *ngIf="perService.hasPermission(Permission.DriverDetail)">
                 <div class="dropdown-menu">
                   <span nz-icon nzType="info-circle" nzTheme="outline"></span>
                   <span>{{ 'detail' | translate }}</span>
                 </div>
               </li>
-              <li nz-menu-item (click)="handleDrawer('edit', item.id)" *ngIf="perService.hasPermission(Permission.DriverUpdate)">
+              <li nz-menu-item (click)="handleDrawer('edit', item.id)"
+                *ngIf="perService.hasPermission(Permission.DriverUpdate)">
                 <div class="dropdown-menu">
                   <span nz-icon nzType="edit" nzTheme="outline" class="edit-icon"></span>
                   <span>{{ 'edit' | translate }}</span>
                 </div>
               </li>
-              <li nz-menu-item (click)="addTransport(item.id)" *ngIf="perService.hasPermission(Permission.DriverAddTransport)">
+              <li nz-menu-item (click)="addTransport(item.id)"
+                *ngIf="perService.hasPermission(Permission.DriverAddTransport)">
                 <div class="dropdown-menu">
                   <span nz-icon nzType="plus" nzTheme="outline"></span>
                   <span>{{ 'add_transport' | translate }}</span>

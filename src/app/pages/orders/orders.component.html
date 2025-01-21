@@ -20,9 +20,10 @@
       (filterChange)="filter = $event" (search)="getAll()" (reset)="resetFilter()">
     </app-order-filter>
 
-    <nz-table #sortTable [nzShowSizeChanger]="true" [nzShowPagination]="false" [nzSize]="'middle'" [nzData]="data"
-      [nzLoading]="loader" [nzNoResult]="empty" [nzPaginationPosition]="'both'"
-      (nzQueryParams)="onQueryParamsChange($event)" [nzScroll]="{ x: 'max-content' }">
+    <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty"
+    [nzFrontPagination]="false" [nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize"
+    [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"  [nzScroll]="data.length > 0 ? { y: '60vh', x: 'max-content' } : { x: 'max-content' }"
+    (nzQueryParams)="onQueryParamsChange($event)">
       <thead>
         <tr>
           <th>No</th>

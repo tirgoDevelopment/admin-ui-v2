@@ -30,7 +30,6 @@ import { DriverFormComponent } from '../drivers/components/driver-form/driver-fo
 import { DetailComponent } from '../merchant/merchant-driver/components/detail/detail.component';
 import { ChatComponent } from 'src/app/shared/components/chat/chat.component';
 import { ServiceDetailComponent } from './components/detail/detail.component';
-import { PushService } from 'src/app/shared/services/push.service';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { KazjulTokenComponent } from './components/kazjul-token/kazjul-token.component';
@@ -76,13 +75,17 @@ export class ServicesComponent implements OnInit, OnDestroy {
   Per = Permission;
   showChat: boolean = false;
   selectedServiceId: string | null = null;
-
+  filteredServiceId: string | null = null;
+  tabType = 0
   public data: any[] = [];
   public loader = false;
   public isFilterVisible = false;
-  public filter: Record<string, string> = this.initializeFilter();
+  public filter: Record<any, any> = this.initializeFilter();
   statuses: any[] = [];
   services: any[] = [];
+  uniqueServices: any[] = [];
+  uniqueServices0: any[] = [];
+  uniqueServices1: any[] = [];
   pageParams: PageParams = {
     pageIndex: 1,
     pageSize: 10,
@@ -94,8 +97,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
   currentUser: any;
   searchTms$ = new BehaviorSubject<string>('');
   tms$: Observable<any>;
-
   private sseSubscription: Subscription | null = null;
+   
   constructor(
     private servicesService: ServicesService,
     private modal: NzModalService,
@@ -129,6 +132,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
       )),
     );
   }
+
   find(ev: string) {
     let filter = generateQueryFilter({ companyName: ev });
     this.searchTms$.next(filter);
@@ -236,8 +240,28 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
   getRefServices() {
     this.servicesService.getServiceList().subscribe((res: any) => {
-      this.services = res.data;
+      if (res.data && Array.isArray(res.data)) {
+        this.services = res.data;
+        this.filterServices();
+      }
     });
+  }
+
+  onServiceSelect(filteredServiceId): void {
+    this.filter['servicesIds'] = [];
+    if (!filteredServiceId) {
+      this.filter['servicesIds'] = [];
+      return;
+    }
+    const selectedService = this.services.find(service => service.id === filteredServiceId);
+    
+    if (selectedService) {
+      const duplicateIds = this.services
+        .filter(service => service.name === selectedService.name)
+        .map(service => service.id);
+  
+      this.filter['servicesIds'] = Array.from(new Set([...this.filter['servicesIds'], ...duplicateIds]));
+    }
   }
   private getNextStatus(currentCode: number): { status: string, apiPath: string } | null {
     switch (currentCode) {
@@ -293,27 +317,40 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.isFilterVisible = !this.isFilterVisible;
   }
   public resetFilter(): void {
+    this.filteredServiceId = null;
     this.filter = this.initializeFilter();
+    if (this.tabType) {
+      this.filter['excludedServicesIds'] = [null];
+      this.filter['servicesIds'] = [15, 16];
+    }
+    else {
+      this.filter['excludedServicesIds'] = [15, 16];
+      this.filter['servicesIds'] = [''];
+    }
     this.getAll();
   }
-  private initializeFilter(): Record<string, string> {
+  private initializeFilter(): Record<any, any> {
     return {
-      serviceId: '',
+      servicesIds: [] as number[],
       driverId: '',
-      statusId: '',
+      transportNumber: '',
+      merchantId: '',
+      statusCode: '',
       createdAtFrom: '',
       createdAtTo: '',
-    };
+      excludedServicesIds: [16, 15]
+    }
   }
   calculateSum(amountDetails: any[]): number {
     if (!Array.isArray(amountDetails)) return 0;
-    return amountDetails.reduce(
-      (sum, detail) => sum + parseFloat(detail.amount || 0),
+    const sum = amountDetails.reduce(
+      (sum, detail) => sum + detail.amount || 0,
       0
     );
+    return sum;
   }
   changeStatus(currentStatus: any, item: any): void {
-    if (this.perService.hasPermission(this.Per.ServiceStatusChange)) {
+    if (this.perService.hasPermission(this.Per.ServiceStatusChange) && this.tabType == 0) {
       let restrictedCodes = [];
       this.currentUser.userId == 1 ? restrictedCodes = [6, 7] : restrictedCodes = [5, 6, 7];
       if (this.isRestrictedStatus(currentStatus.code, restrictedCodes)) {
@@ -444,7 +481,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
 
   }
   showChatForService(id) {
-    if (this.perService.hasPermission(this.Per.ServiceCreate)) {
+    if (this.perService.hasPermission(this.Per.ServiceChat) && this.tabType == 0) {
       this.selectedServiceId = id;
       this.showChat = true;
     }
@@ -455,9 +492,60 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
   kazjulToken() {
     const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant('Казжул'),
+      nzTitle: this.translate.instant('kzPaidWay'),
       nzContent: KazjulTokenComponent,
       nzWidth: '400px',
     });
+  }
+  getExcel() {
+    this.filter['excludedServicesIds'] = []
+    const params = {
+      pageIndex: this.pageParams.pageIndex,
+      pageSize: this.pageParams.pageSize,
+      sortBy: this.pageParams.sortBy,
+      sortType: this.pageParams.sortType,
+      ...this.filter,
+    };
+    let query = generateQueryFilter(params)
+
+    this.servicesService.excelService(query).subscribe((res: any) => {
+      const url = window.URL.createObjectURL(res);
+      const a = document.createElement('a');
+      document.body.appendChild(a);
+      a.style.display = 'none';
+      a.href = url;
+      a.download = 'services.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    })
+  }
+  fiterApply() {
+    this.pageParams.pageIndex = 1;
+    this.getAll();
+  }
+  onTabChange(selectedIndex: number): void {
+    this.filteredServiceId = null;
+    this.pageParams.pageIndex = 1;
+    this.tabType = selectedIndex;
+    this.filterServices();
+    if (this.tabType) {
+      this.filter['excludedServicesIds'] = [null];
+      this.filter['servicesIds'] = [15, 16];
+    }
+    else {
+      this.filter['excludedServicesIds'] = [15, 16];
+      this.filter['servicesIds'] = [''];
+    }
+    this.getAll();
+  }
+  filterServices() {
+    this.uniqueServices = Array.from(new Set(this.services.map((service: any) => service.name)))
+      .map((name: any) => this.services.find((service: any) => service.name === name));
+    if (this.tabType === 0) {
+      this.uniqueServices0 = this.uniqueServices.filter((service: any) => service.id !== 15 && service.id !== 16);
+    }
+    else if (this.tabType === 1) {
+      this.uniqueServices1 = this.uniqueServices.filter((service: any) => service.id === 15 || service.id === 16);
+    }
   }
 }

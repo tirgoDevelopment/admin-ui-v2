@@ -1,6 +1,5 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -10,40 +9,32 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { AdminFormComponent } from './components/admin-form/admin-form.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { ResponseContent } from 'src/app/shared/models/res-content.model';
-import { NotificationService } from 'src/app/shared/services/notification.service';
-import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { PermissionService } from 'src/app/shared/services/permission.service';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule, NzIconService } from 'ng-zorro-antd/icon';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { PlusOutline } from '@ant-design/icons-angular/icons';
 
 @Component({
   selector: 'app-admins',
   standalone: true,
-  imports: [CommonModule, NzModules, TranslateModule, FormsModule, IconsProviderModule],
+  imports: [CommonModule, TranslateModule, FormsModule, NzButtonModule, NzIconModule, NzTableModule, NzResultModule, NzPaginationModule, NzSpinModule, NzToolTipModule, NzSelectModule, NzAlertModule],
   providers: [NzModalService],
   templateUrl: './admins.component.html',
-  styleUrls: ['./admins.component.scss'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  animations: [
-    trigger('showHideFilter', [
-      state('show', style({
-        height: '*',
-        opacity: 1,
-        visibility: 'visible'
-      })),
-      state('hide', style({
-        height: '0',
-        opacity: 0,
-        visibility: 'hidden'
-      })),
-      transition('show <=> hide', animate('300ms ease-in-out'))
-    ])
-  ]
+  styleUrls: ['./admins.component.scss']
 })
 export class AdminsComponent implements OnInit {
   Permission = Permission;
 
   confirmModal?: NzModalRef;
-  data: AdminModel[];
+  data: AdminModel[] = [];
   loader: boolean = false;
   isFilterVisible: boolean = false
   filter = { id: '', loadingLocation: '', deliveryLocation: '', statusId: '' };
@@ -57,13 +48,14 @@ export class AdminsComponent implements OnInit {
   };
 
   constructor(
-    private toastr: NotificationService,
-    private modal: NzModalService,
     private adminsService: AdminsService,
     private drawer: NzDrawerService,
     private translate: TranslateService,
     public permissionService: PermissionService,
-  ) { }
+    private iconService: NzIconService
+  ) { 
+    this.iconService.addIcon(PlusOutline)
+  }
 
   ngOnInit(): void {
     this.getAll();
