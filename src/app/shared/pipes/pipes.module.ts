@@ -9,12 +9,13 @@ import { LabelPipe } from './label.pipe';
 import { FileFormatPipe } from './fileType.pipe';
 import { UppercaseValidationDirective } from './uppercase.directive';
 import { CreatedAtPipe } from './createdAt.pipe';
+import { TrimSpacesDirective } from './trimSpaces.pipe';
 
 @NgModule({
-  declarations: [PhoneFormatPipe,FileFetchPipe, DateFormatPipe,PriceFormatPipe,ReferencePointsPipe,LabelPipe,FileFormatPipe,UppercaseValidationDirective,CreatedAtPipe],
+  declarations: [TrimSpacesDirective,PhoneFormatPipe,FileFetchPipe, DateFormatPipe,PriceFormatPipe,ReferencePointsPipe,LabelPipe,FileFormatPipe,UppercaseValidationDirective,CreatedAtPipe],
   imports: [
     CommonModule
   ],
-  exports: [PhoneFormatPipe,FileFetchPipe,DateFormatPipe, PriceFormatPipe,ReferencePointsPipe,LabelPipe,FileFormatPipe,UppercaseValidationDirective,CreatedAtPipe],
+  exports: [TrimSpacesDirective,PhoneFormatPipe,FileFetchPipe,DateFormatPipe, PriceFormatPipe,ReferencePointsPipe,LabelPipe,FileFormatPipe,UppercaseValidationDirective,CreatedAtPipe],
 })
 export class PipeModule { }

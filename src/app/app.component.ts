@@ -26,7 +26,6 @@ export class AppComponent implements OnInit {
     if (token) {
       this.connectToSSE(token);
     } else {
-      console.error('No access token found');
     }
     setTimeout(() => {
       const splashScreen = document.getElementById('splash-screen');
