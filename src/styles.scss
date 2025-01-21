@@ -24,6 +24,7 @@ body.dark-mode {
   @include darken();
 }
 
+
 :root {
   background-color: var(--bgColor);
   color: var(--textColor);
