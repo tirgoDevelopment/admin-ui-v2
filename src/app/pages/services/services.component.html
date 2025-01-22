@@ -25,18 +25,10 @@
     </div>
     <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
       <div>
-        <nz-select
-          style="width: 250px"
-          nzAllowClear="true"
-          [(ngModel)]="filteredServiceId"
-          (ngModelChange)="onServiceSelect($event)"
-          nzPlaceHolder="{{ 'services.title' | translate }}"
-        >
-          <nz-option
-            [nzValue]="item.id"
-            [nzLabel]="item.name"
-            *ngFor="let item of (tabType ? uniqueServices1 : uniqueServices0)"
-          >
+        <nz-select style="width: 250px" nzAllowClear="true" [(ngModel)]="filteredServiceId"
+          (ngModelChange)="onServiceSelect($event)" nzPlaceHolder="{{ 'services.title' | translate }}">
+          <nz-option [nzValue]="item.id" [nzLabel]="item.name"
+            *ngFor="let item of (tabType ? uniqueServices1 : uniqueServices0)">
           </nz-option>
         </nz-select>
       </div>
@@ -63,7 +55,8 @@
         </nz-input-group>
       </div>
       <div>
-        <nz-select nzAllowClear="true" style="width:150px" [(ngModel)]="filter['statusCode']" nzPlaceHolder="{{ 'status' | translate }}">
+        <nz-select nzAllowClear="true" style="width:150px" [(ngModel)]="filter['statusCode']"
+          nzPlaceHolder="{{ 'status' | translate }}">
           <nz-option [nzValue]="status.code" [nzLabel]="status.name.toLowerCase() | translate"
             *ngFor="let status of statuses">
           </nz-option>
@@ -154,13 +147,15 @@
               {{ 'no_data' | translate }}
             </div>
           </td>
-          <td nzRight (click)="$event.stopPropagation()" (click)="changeStatus(item.status, item)">
+          <td nzRight (click)="$event.stopPropagation()" (click)="changeStatus(item.status, item)"
+            (contextmenu)="showComments(item)">
             <span class="status" [ngStyle]="{
                 color: item.status.color,
                 borderColor: item.status.color
               }">
               {{ item.status.name.toLowerCase() | translate }}
             </span>
+            
           </td>
           <td class="action-col" nzRight (click)="$event.stopPropagation()"
             *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])">
@@ -175,7 +170,6 @@
                     <span>{{ "detail" | translate }}</span>
                   </div>
                 </li>
-
                 <li nz-menu-item (click)="showLog(item.id)" *ngIf="perService.hasPermission(Per.ServiceLog)">
                   <div class="dropdown-menu">
                     <span nz-icon nzType="history" nzTheme="outline"></span>
@@ -188,6 +182,7 @@
         </tr>
       </tbody>
     </nz-table>
+
     <ng-template #empty>
       <nz-empty></nz-empty>
     </ng-template>

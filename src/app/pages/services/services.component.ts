@@ -33,6 +33,7 @@ import { ServiceDetailComponent } from './components/detail/detail.component';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { KazjulTokenComponent } from './components/kazjul-token/kazjul-token.component';
+import { ServiceCommentsComponent } from './components/comments/comments.component';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -98,7 +99,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
   searchTms$ = new BehaviorSubject<string>('');
   tms$: Observable<any>;
   private sseSubscription: Subscription | null = null;
-
   constructor(
     private servicesService: ServicesService,
     private modal: NzModalService,
@@ -207,6 +207,16 @@ export class ServicesComponent implements OnInit, OnDestroy {
     if (this.perService.hasPermission(this.Per.ServiceLog)) {
       this.router.navigate(['/services', id, 'log']);
     }
+  }
+  showComments(serviceId) {
+    event.preventDefault();
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('comments'),
+      nzContent: ServiceCommentsComponent,
+      nzPlacement: 'right',
+      nzWidth: '500px',
+      nzContentParams:  {serviceId} ,
+    });
   }
   addService() {
     if (this.perService.hasPermission(this.Per.ServiceCreate)) {

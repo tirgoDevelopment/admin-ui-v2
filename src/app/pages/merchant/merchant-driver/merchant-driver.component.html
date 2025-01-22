@@ -53,16 +53,19 @@
 
   <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty"
     [nzFrontPagination]="false" [nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize"
-    [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"  [nzScroll]="data.length > 0 ? { y: '60vh' } : { y: '' }"
+    [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true" [nzScroll]="data.length > 0 ? { x: '100vh', y: '60vh' } : { y: '' }"
     (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
       <tr>
         <th nzWidth="70px">No</th>
-        <th nzColumnKey="id" [nzSortFn]="true">ID</th>
-        <th> {{ 'company_name' | translate }}</th>
-        <th>{{ 'loads' | translate }}</th>
-        <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
-        <th>{{ 'status' | translate }}</th>
+        <th nzWidth="70px" nzColumnKey="id" [nzSortFn]="true">ID</th>
+        <th nzWidth="160px"> {{ 'company_name' | translate }}</th>
+        <!-- <th nzWidth="100px">{{ 'loads' | translate }}</th> -->
+        <th nzWidth="160px" nzColumnKey="createdAt" [nzSortFn]="true"> {{ 'register_date' | translate }}</th>
+        <th nzWidth="140px">{{'serviceBalance' | translate}}</th>
+        <th nzWidth="140px">{{'tirBalance' | translate}}</th>
+        <th nzWidth="140px">{{'gsmBalance' | translate}}</th>
+        <th nzWidth="160px">{{ 'status' | translate }}</th>
         <th nzWidth="50px" nzRight *ngIf="perService.hasAnyPermission([
         Per.TmsUpdate,
         Per.TmsDetail,
@@ -79,8 +82,11 @@
         <td> {{ i+1 }} </td>
         <td> {{ item.id }} </td>
         <td> {{ item.companyType }} {{ item.companyName }} </td>
-        <td> {{ 0 }} </td>
+        <!-- <td> {{ 0 }} </td> -->
         <td> {{ item.createdAt | date:'dd/MM/yyyy HH:mm'}} </td>
+        <td>{{item.serviceBalance | priceFormat }}</td>
+        <td>{{item.tirgoBalance | priceFormat }}</td>
+        <td>{{item.gsmBalance | priceFormat }}</td>
         <td>
           <span *ngIf="item.blocked" class="delete-icon">{{'inactive' | translate }}</span>
           <span *ngIf="!item.blocked" class="edit-icon">{{'active' | translate }}</span>

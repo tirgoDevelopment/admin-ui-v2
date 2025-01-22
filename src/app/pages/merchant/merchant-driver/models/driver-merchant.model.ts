@@ -42,4 +42,7 @@ export interface DriverMerchantModel extends BaseModel {
     balance:any,
     debtLimit: number
     kzPaidWayCommission: number
+    serviceBalance: number
+    tirgoBalance: number
+    gsmBalance:number
 }
