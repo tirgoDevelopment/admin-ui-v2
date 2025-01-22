@@ -10,11 +10,10 @@
         </button>
       </div>
     </div>
-  
-    <nz-table [nzSize]="'middle'" [nzPaginationPosition]="'bottom'" [nzData]="data" [nzPageSizeOptions]="[10, 20, 30]"
-      [nzShowPagination]="true" [nzShowSizeChanger]="true" [nzLoading]="loader" [nzNoResult]="('no_data' | translate)"
-      (nzPageIndexChange)="onPageIndexChange($event)" (nzPageSizeChange)="onPageSizeChange($event)"
-      [nzScroll]="data.length > 0 ? { y: '60vh' } : { y: '' }">
+
+    <nz-table [nzData]="data" [nzLoading]="loader" [nzFrontPagination]="false"
+      [nzPageSize]="pageParams.pageSize" [nzTotal]="totalItemsCount" [nzPaginationPosition]="'both'"
+      [nzShowSizeChanger]="true" [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
       <thead>
         <tr>
           <th nzWidth="80px"> No </th>

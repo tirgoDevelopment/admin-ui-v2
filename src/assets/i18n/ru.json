@@ -486,6 +486,7 @@
   "confirm-price": "Подтвержденный",
   "tirBalance": "Tirgo баланс",
   "serviceBalance": "Сервис баланс",
+  "gsmBalance": "ГСМ баланс",
   "balance_type": "Тип баланса",
   "tir_rate": "Курс TIR",
   "kzt_rate": "Курс KZT",
@@ -504,6 +505,8 @@
   "update": "Обнавить",
   "invalidTransportNumber": "Неверный транспортный номер",
   "last_update": "Последнее обновление",
+  "comments": "Комментарии",
+  "writeComment": "Написать комментарии",
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",
