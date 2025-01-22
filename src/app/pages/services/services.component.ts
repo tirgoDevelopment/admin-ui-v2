@@ -350,7 +350,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     return sum;
   }
   changeStatus(currentStatus: any, item: any): void {
-    if (this.perService.hasPermission(this.Per.ServiceStatusChange) && this.tabType == 0) {
+    if (this.perService.hasPermission(this.Per.ServiceStatusChange)) {
       let restrictedCodes = [];
       this.currentUser.userId == 1 ? restrictedCodes = [6, 7] : restrictedCodes = [5, 6, 7];
       if (this.isRestrictedStatus(currentStatus.code, restrictedCodes)) {
