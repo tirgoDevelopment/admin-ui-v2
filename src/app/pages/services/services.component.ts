@@ -98,7 +98,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   searchTms$ = new BehaviorSubject<string>('');
   tms$: Observable<any>;
   private sseSubscription: Subscription | null = null;
-   
+
   constructor(
     private servicesService: ServicesService,
     private modal: NzModalService,
@@ -254,12 +254,12 @@ export class ServicesComponent implements OnInit, OnDestroy {
       return;
     }
     const selectedService = this.services.find(service => service.id === filteredServiceId);
-    
+
     if (selectedService) {
       const duplicateIds = this.services
         .filter(service => service.name === selectedService.name)
         .map(service => service.id);
-  
+
       this.filter['servicesIds'] = Array.from(new Set([...this.filter['servicesIds'], ...duplicateIds]));
     }
   }
