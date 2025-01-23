@@ -30,9 +30,9 @@
         [nzTooltipTitle]="isCollapsed ? ('drivers' | translate) : ''" routerLink="/drivers">
         <span class="sidebar-icon" nz-icon>
           <img *ngIf="themeService.colorTheme == 'light-mode'" src="../../../../assets/images/sidebar/drivers.svg"
-            alt="" width="15" />
+            alt="" width="15px" height="15px" />
           <img *ngIf="themeService.colorTheme == 'dark-mode'" src="../../../../assets/images/sidebar/driver-w.svg"
-            alt="" width="15" />
+            alt="" width="15px" height="15px" />
         </span>
         <span>{{ "drivers" | translate }}</span>
       </li>
@@ -62,9 +62,9 @@
         [nzTooltipTitle]="isCollapsed ? ('orders' | translate) : ''" routerLink="/orders">
         <span class="sidebar-icon" nz-icon>
           <img *ngIf="themeService.colorTheme == 'light-mode'" src="../../../../assets/images/sidebar/tracking.svg"
-            alt="" width="15" height="15" />
+            alt="" width="15px" height="15px" />
           <img *ngIf="themeService.colorTheme == 'dark-mode'" src="../../../../assets/images/sidebar/tracking-w.svg"
-            alt="" width="15" height="15" />
+            alt="" width="15px" height="15px" />
         </span>
         <span>{{ "orders" | translate }}</span>
       </li>
@@ -165,24 +165,24 @@
       <div class="app-header">
         <div class="header-right">
           <div nz-dropdown [nzDropdownMenu]="LangMenu" nzTrigger="click" style="cursor: pointer; margin-bottom: 5px">
-            <img [src]="selectedFlag" alt="" width="25" />
+            <img [src]="selectedFlag" alt="" width="25px" height="25px" />
           </div>
 
           <nz-dropdown-menu #LangMenu="nzDropdownMenu">
             <ul nz-menu class="nz-menu">
               <li nz-menu-item style="display: flex; gap: 5px"
                 (click)="changeLanguage('UZ', '../assets/images/flags/UZ.svg')">
-                <img src="../assets/images/flags/UZ.svg" alt="" width="25" />
+                <img src="../assets/images/flags/UZ.svg" alt="" width="25px" height="25px" />
                 <span>O'zbekcha</span>
               </li>
               <li nz-menu-item style="display: flex; gap: 5px"
                 (click)="changeLanguage('RU', '../assets/images/flags/RU.svg')">
-                <img src="../assets/images/flags/RU.svg" alt="" width="25" />
+                <img src="../assets/images/flags/RU.svg" alt="" width="25px" height="25px" />
                 <span>Русский</span>
               </li>
               <li nz-menu-item style="display: flex; gap: 5px"
                 (click)="changeLanguage('US', '../assets/images/flags/US.svg')">
-                <img src="../assets/images/flags/US.svg" alt="" width="25" />
+                <img src="../assets/images/flags/US.svg" alt="" width="25px" height="25px" />
                 <span>English</span>
               </li>
             </ul>
