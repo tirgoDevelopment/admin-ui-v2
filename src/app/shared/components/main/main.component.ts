@@ -1,11 +1,9 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { NzModules } from '../../modules/nz-modules.module';
-import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/pages/auth/services/auth.service';
 import { ThemeService } from '../../services/theme.service';
 import { ChatComponent } from '../chat/chat.component';
-import { CommonModules } from '../../modules/common.module';
 import { SocketService } from '../../services/socket.service';
 import { ServicesService } from 'src/app/pages/services/services/services.service';
 import { jwtDecode } from 'jwt-decode';
@@ -13,11 +11,20 @@ import { PushService } from '../../services/push.service';
 import { PermissionService } from '../../services/permission.service';
 import { Permission } from '../../enum/per.enum';
 import { generateQueryFilter } from '../../pipes/queryFIlter';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [TranslateModule, NzModules, RouterLink, ChatComponent, CommonModules,],
+  imports: [TranslateModule, NzToolTipModule, NzButtonModule, NzLayoutModule, NzIconModule, NzMenuModule, NzDropDownModule, NzAvatarModule, NzBadgeModule, RouterLink, ChatComponent, RouterModule, NgIf],
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
 })

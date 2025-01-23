@@ -10,12 +10,13 @@ import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { MerchantDriverService } from '../../services/merchant-driver.service';
 import { DriverMerchantModel } from '../../models/driver-merchant.model';
 import { Response } from 'src/app/shared/models/reponse';
+import { FileFetchPipe } from 'src/app/shared/pipes/file-fetch.pipe';
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
   standalone: true,
-  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PipeModule],
+  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PipeModule, FileFetchPipe],
 })
 export class DetailComponent implements OnInit {
   confirmModal?: NzModalRef;
