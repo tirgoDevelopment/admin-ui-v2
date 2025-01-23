@@ -96,7 +96,7 @@
     <input formControlName="debtLimit" type="number" nz-input placeholder="{{ 'debtLimit' | translate }}" />
   </nz-input-group>
   <div class="button-wrapper">
-    <button nz-button class="success-button" [nzLoading]="loading" [disabled]="form.invalid" (click)="submit()">{{
+    <button nz-button class="success-button" [nzLoading]="loading"  (click)="submit()">{{
       'save' | translate }}</button>
   </div>
 </form>

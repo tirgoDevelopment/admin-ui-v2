@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Build the Angular application
-RUN npm run build --prod
+RUN npm run build --configuration admin-ui-v2 --output-hashing=none
 
 # Use an Nginx image to serve the app
 FROM nginx:1.23-alpine
