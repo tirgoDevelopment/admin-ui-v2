@@ -185,6 +185,7 @@
   "driver_lisense_card": "Водительское удостоверение водителя",
   "mode": "Режим",
   "hook": "Крюк",
+  "company_type": "Тип компании",
   "loading_method": "Способ погрузки ",
   "company_name": "Название компании",
   "director_name": "Полное имя директора",
