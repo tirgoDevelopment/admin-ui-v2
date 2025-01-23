@@ -36,7 +36,7 @@ export class FormComponent implements OnInit {
     private translate: TranslateService) {
     this.form = this.fb.group({
       id: new FormControl(''),
-      companyType: new FormControl(''),
+      companyType: new FormControl(null),
       companyName: new FormControl(''),
       responsiblePersonLastName: new FormControl(''),
       responsiblePersonFistName: new FormControl(''),
@@ -76,6 +76,7 @@ export class FormComponent implements OnInit {
     })
   }
   patchValue() {
+
     this.form.patchValue({
       ...this.data,
       bankAccounts: this.data.bankAccounts.map(account => ({
@@ -84,6 +85,7 @@ export class FormComponent implements OnInit {
         id: account.id,
       }))
     });
+    console.log(this.form.value);
   }
   submit() {
     this.loading = true;
