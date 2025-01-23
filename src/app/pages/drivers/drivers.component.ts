@@ -144,7 +144,6 @@ export class DriversComponent implements OnInit {
       });
     }
   }
-
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
@@ -157,6 +156,7 @@ export class DriversComponent implements OnInit {
     this.getAll();
   }
 
+ 
   private initializeFilter(): Record<string, string> {
     return { firstName: '', clientId: '', phoneNumber: '', createdAtTo: '', createdAtFrom: '', lastLoginFrom: '', lastLoginTo: '' };
   }

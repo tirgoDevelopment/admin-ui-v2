@@ -13,7 +13,7 @@ import { Permission } from 'src/app/shared/enum/per.enum';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule, NzIconService } from 'ng-zorro-antd/icon';
-import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { NzResultModule } from 'ng-zorro-antd/result';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
@@ -46,14 +46,14 @@ export class AdminsComponent implements OnInit {
     sortBy: 'id',
     sortType: 'desc'
   };
-
+  totalItemsCount = 0;
   constructor(
     private adminsService: AdminsService,
     private drawer: NzDrawerService,
     private translate: TranslateService,
     public permissionService: PermissionService,
     private iconService: NzIconService
-  ) { 
+  ) {
     this.iconService.addIcon(PlusOutline)
   }
 
@@ -65,6 +65,8 @@ export class AdminsComponent implements OnInit {
     this.adminsService.getAll(this.pageParams).subscribe((res: ResponseContent<AdminModel[]>) => {
       if (res && res.success) {
         this.data = res.data.content;
+        this.pageParams.totalPagesCount = res.data.totalPagesCount;
+        this.totalItemsCount = this.pageParams.pageSize * this.pageParams.totalPagesCount;
         this.loader = false;
       }
     }, err => {
@@ -101,14 +103,21 @@ export class AdminsComponent implements OnInit {
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
-  onPageIndexChange(pageIndex: number): void {
-    this.pageParams.pageIndex = pageIndex;
-    this.getAll();
-  }
-  onPageSizeChange(pageSize: number): void {
-    this.pageParams.pageSize = pageSize;
-    this.pageParams.pageIndex = 1;
-    this.getAll();
-  }
 
+  public onQueryParamsChange(params: NzTableQueryParams): void {
+    this.pageParams.pageIndex = params.pageIndex;
+    this.pageParams.pageSize = params.pageSize;
+    let { sort } = params;
+    let currentSort = sort.find((item) => item.value !== null);
+    let sortField = (currentSort && currentSort.key) || null;
+    let sortOrder = (currentSort && currentSort.value) || null;
+    sortOrder === 'ascend'
+      ? (sortOrder = 'asc')
+      : sortOrder === 'descend'
+        ? (sortOrder = 'desc')
+        : (sortOrder = '');
+    this.pageParams.sortBy = sortField;
+    this.pageParams.sortType = sortOrder;
+    this.getAll();
+  }
 }

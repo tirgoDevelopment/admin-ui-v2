@@ -3,6 +3,7 @@ import { MainComponent } from "./shared/components/main/main.component";
 import { AuthComponent } from "./pages/auth/auth.component";
 import { NoAuthGuard } from "./shared/guards/noAuth.guard";
 import { AuthGuard } from "./shared/guards/auth.guard";
+import { NotFoundComponent } from "./shared/components/not-found/not-found.component";
 
 export const appRoutes: Route[] = [
   {
@@ -47,5 +48,6 @@ export const appRoutes: Route[] = [
       { path: 'sign-in', loadChildren: () => import('./pages/auth/components/sign-in/sign-in.routes').then(m => m.default) },
       { path: 'sign-up', loadChildren: () => import('./pages/auth/components/sign-up/sign-up.routes').then(m => m.default) },
     ]
-  }
+  },
+  { path: '**', component: NotFoundComponent }
 ]

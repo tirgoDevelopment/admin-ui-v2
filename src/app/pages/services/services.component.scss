@@ -1,0 +1,14 @@
+.comment-input {
+    width: 50%;
+    position: absolute;
+    z-index: 1000; 
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    background-color: #fff;
+  
+    &:focus {
+      border-color: #3880ff;
+    }
+  }

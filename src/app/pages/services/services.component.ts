@@ -33,6 +33,7 @@ import { ServiceDetailComponent } from './components/detail/detail.component';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { KazjulTokenComponent } from './components/kazjul-token/kazjul-token.component';
+import { ServiceCommentsComponent } from './components/comments/comments.component';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -98,7 +99,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
   searchTms$ = new BehaviorSubject<string>('');
   tms$: Observable<any>;
   private sseSubscription: Subscription | null = null;
-   
   constructor(
     private servicesService: ServicesService,
     private modal: NzModalService,
@@ -208,6 +208,16 @@ export class ServicesComponent implements OnInit, OnDestroy {
       this.router.navigate(['/services', id, 'log']);
     }
   }
+  showComments(serviceId) {
+    event.preventDefault();
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('comments'),
+      nzContent: ServiceCommentsComponent,
+      nzPlacement: 'right',
+      nzWidth: '500px',
+      nzContentParams:  {serviceId} ,
+    });
+  }
   addService() {
     if (this.perService.hasPermission(this.Per.ServiceCreate)) {
       const drawerRef: any = this.drawer.create({
@@ -254,12 +264,12 @@ export class ServicesComponent implements OnInit, OnDestroy {
       return;
     }
     const selectedService = this.services.find(service => service.id === filteredServiceId);
-    
+
     if (selectedService) {
       const duplicateIds = this.services
         .filter(service => service.name === selectedService.name)
         .map(service => service.id);
-  
+
       this.filter['servicesIds'] = Array.from(new Set([...this.filter['servicesIds'], ...duplicateIds]));
     }
   }
@@ -350,7 +360,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     return sum;
   }
   changeStatus(currentStatus: any, item: any): void {
-    if (this.perService.hasPermission(this.Per.ServiceStatusChange) && this.tabType == 0) {
+    if (this.perService.hasPermission(this.Per.ServiceStatusChange)) {
       let restrictedCodes = [];
       this.currentUser.userId == 1 ? restrictedCodes = [6, 7] : restrictedCodes = [5, 6, 7];
       if (this.isRestrictedStatus(currentStatus.code, restrictedCodes)) {

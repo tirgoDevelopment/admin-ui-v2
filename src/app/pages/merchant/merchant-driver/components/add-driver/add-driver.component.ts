@@ -56,7 +56,11 @@ export class AddDriverComponent implements OnInit {
 
   onSave() {
     this.loading = true;
-    this.merchantService.appendDriver(this.form.value).subscribe((res:any) => {
+    let data = {
+      tmsId: this.merchantId,
+      driverIds: [this.form.value.driverId.toString()]
+    }
+    this.merchantService.appendDriver(data).subscribe((res:any) => {
       this.loading = false;
       this.toastr.success(this.translate.instant('successfullCreated'));
       this.drawer.close({success:true});

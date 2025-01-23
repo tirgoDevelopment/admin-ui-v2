@@ -61,10 +61,10 @@ export class MerchantDriverService {
     return this.http.post(env.apiUrl+`/users/driver-merchants/${data.tmsId}/balance-income`,data)
   }
   appendDriver(data:any) {
-    return this.http.post(env.apiUrl+`/users/driver-merchants/append-driver`,data)
+    return this.http.post(env.apiUrl+`/users/drivers/tmses/${data.tmsId}/assign`,data)
   }
-  unassignDriver(id:number|string) {
-    return this.http.post(env.apiUrl+`/users/driver-merchants/unassign-driver/${id}`,{})
+  unassignDriver(data:any) {
+    return this.http.post(env.apiUrl+`/users/drivers/tmses/${data.tmsId}/drivers/${data.driverId}/unassign`,{})
   }
   findTms(searchTerm: string, searchAs: string) {
     const filter = generateQueryFilter({ [searchAs]: searchTerm });
