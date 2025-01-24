@@ -150,8 +150,7 @@
           <td nzRight (click)="$event.stopPropagation()" (click)="changeStatus(item.status, item)"
             (contextmenu)="showComments(item)">
             <span class="status" [ngStyle]="{
-                color: item.status.color,
-                borderColor: item.status.color
+                background: item.status.color,
               }">
               {{ item.status.name.toLowerCase() | translate }}
             </span>
