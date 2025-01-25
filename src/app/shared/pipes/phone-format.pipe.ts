@@ -4,15 +4,16 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'phoneFormat'
 })
 export class PhoneFormatPipe implements PipeTransform {
-  transform(phoneValue: string | number): string {
-    if (typeof phoneValue === 'number') {
-      phoneValue = phoneValue.toString();
+  transform(phoneNumber: string): string {
+    if (!phoneNumber) return 'Invalid phone number';
+    const cleanedPhone = phoneNumber.replace(/\D/g, '');
+    const countryCodes = ['998', '7', '992', '996'];
+    const countryCode = countryCodes.find(code => cleanedPhone.startsWith(code));
+
+    if (countryCode) {
+      const remainingNumber = cleanedPhone.slice(countryCode.length);
+      return `+${countryCode} ${remainingNumber}`;
     }
-    const cleaned = phoneValue.replace(/\D/g, '');
-    const match = cleaned.match(/^(\d{3})(\d{2})(\d{3})(\d{2})(\d{2})$/);
-    if (match) {
-      return `+${match[1]} ${match[2]} ${match[3]} ${match[4]} ${match[5]}`;
-    }
-    return cleaned;
+    return phoneNumber;
   }
 }
