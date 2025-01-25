@@ -51,10 +51,10 @@
 
   </div>
 
-  <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty"
-    [nzFrontPagination]="false" [nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize"
-    [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true" [nzShowPagination]="true" [nzScroll]="data.length > 0 ? { x: '100vh', y: '60vh' } : { y: '' }"
-    (nzQueryParams)="onQueryParamsChange($event)">
+  <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false"
+    [nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount"
+    [nzShowSizeChanger]="true" [nzShowPagination]="true"
+    [nzScroll]="data.length > 0 ? { x: '100vh', y: '60vh' } : { y: '' }" (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
       <tr>
         <th nzWidth="70px">No</th>
@@ -136,13 +136,12 @@
                   <span>{{ 'top_up_balance' | translate }}</span>
                 </div>
               </li>
-              <li nz-menu-item (click)="deleted(item.id)"
-              *ngIf="perService.hasPermission(Per.TmsBlock)">
-              <div class="dropdown-menu">
-                <span nz-icon nzType="delete" nzTheme="outline" class="delete-icon"></span>
-                <span class="delete-icon">{{ 'remove' | translate }}</span>
-              </div>
-            </li>
+              <li nz-menu-item (click)="deleted(item.id)" *ngIf="perService.hasPermission(Per.TmsBlock)">
+                <div class="dropdown-menu">
+                  <span nz-icon nzType="delete" nzTheme="outline" class="delete-icon"></span>
+                  <span class="delete-icon">{{ 'remove' | translate }}</span>
+                </div>
+              </li>
               <li nz-menu-item (click)="onBlock(item)" [ngStyle]="{color: item.blocked ? 'green'  : 'red' }"
                 *ngIf="perService.hasPermission(Per.TmsBlock)">
                 <div class="dropdown-menu">
