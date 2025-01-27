@@ -20,13 +20,14 @@ import { AssignTmcComponent } from './components/assign-tmc/assign-tmc.component
 import { TopupBalanceDriverComponent } from './components/topup-balance-driver/topup-balance-driver.component';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { PermissionService } from 'src/app/shared/services/permission.service';
+import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
 
 @Component({
   selector: 'app-drivers',
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PhoneFormatPipe],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -36,6 +37,7 @@ import { PermissionService } from 'src/app/shared/services/permission.service';
     ])
   ]
 })
+
 export class DriversComponent implements OnInit {
   Permission = Permission;
   confirmModal?: NzModalRef;

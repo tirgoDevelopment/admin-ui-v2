@@ -25,13 +25,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ClientsFormComponent } from '../clients/components/clients-form/clients-form.component';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { PermissionService } from 'src/app/shared/services/permission.service';
+import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule, OrderFilterComponent]
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PriceFormatPipe, OrderFilterComponent]
 })
 export class OrdersComponent implements OnInit {
   public readonly CargoStatusCodes = CargoStatusCodes;

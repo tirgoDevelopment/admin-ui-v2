@@ -13,13 +13,14 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { PermissionService } from 'src/app/shared/services/permission.service';
+import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 
 @Component({
   selector: 'app-services',
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PriceFormatPipe],
   providers: [NzModalService]
 })
 export class ServicesComponent implements OnInit {
