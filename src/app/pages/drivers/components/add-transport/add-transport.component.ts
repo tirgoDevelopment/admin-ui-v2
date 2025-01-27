@@ -23,12 +23,13 @@ import { DriversService } from '../../services/drivers.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { TransportModel } from 'src/app/pages/references/transport-types/models/transport.model';
 import { Response } from 'src/app/shared/models/reponse';
+import { FileFetchPipe } from 'src/app/shared/pipes/file-fetch.pipe';
 @Component({
   selector: 'app-add-transport',
   templateUrl: './add-transport.component.html',
   styleUrls: ['./add-transport.component.scss'],
   standalone: true,
-  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PipeModule, NgxMaskDirective]
+  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PipeModule, NgxMaskDirective, FileFetchPipe]
 
 })
 export class AddTransportComponent implements OnInit {

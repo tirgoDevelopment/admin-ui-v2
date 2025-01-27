@@ -104,7 +104,7 @@
           <th>{{ "services.processingTime" | translate }}</th>
           <th>{{ "services.processingTimeEnd" | translate }}</th>
           <th>{{ "total" | translate }} (TIR)</th>
-          <th nzWidth="170px" nzRight>{{ "status" | translate }} </th>
+          <th nzWidth="200px" nzRight>{{ "status" | translate }} </th>
           <th nzWidth="50px" nzRight *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
         </tr>
       </thead>
@@ -150,8 +150,7 @@
           <td nzRight (click)="$event.stopPropagation()" (click)="changeStatus(item.status, item)"
             (contextmenu)="showComments(item)">
             <span class="status" [ngStyle]="{
-                color: item.status.color,
-                borderColor: item.status.color
+                background: item.status.color,
               }">
               {{ item.status.name.toLowerCase() | translate }}
             </span>

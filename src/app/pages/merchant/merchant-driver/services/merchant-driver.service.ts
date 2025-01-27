@@ -36,6 +36,9 @@ export class MerchantDriverService {
   update(data: DriverMerchantModel) {
     return this.http.put<Response<DriverMerchantModel>>(`${env.apiUrl}/users/driver-merchants/update-driver-merchant`, data)
   }
+  delete(id) {
+    return this.http.delete(`${env.apiUrl}/users/driver-merchants?id=${id}`)
+  }
   block(id: number | string) {
     return this.http.patch<Response<DriverMerchantModel>>(`${env.apiUrl}/users/driver-merchants/block-driver-merchant?id=${id}`, {})
   }

@@ -18,13 +18,16 @@ import { TransportModel } from 'src/app/pages/references/transport-types/models/
 import { Router } from '@angular/router';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { PermissionService } from 'src/app/shared/services/permission.service';
+import { FileFetchPipe } from 'src/app/shared/pipes/file-fetch.pipe';
+import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
+import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
 
 @Component({
   selector: 'app-driver-form',
   templateUrl: './driver-form.component.html',
   styleUrls: ['./driver-form.component.scss'],
   standalone: true,
-  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PipeModule, NgxMaskDirective]
+  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PhoneFormatPipe, PriceFormatPipe, NgxMaskDirective, FileFetchPipe]
 })
 export class DriverFormComponent implements OnInit {
   Permission = Permission;

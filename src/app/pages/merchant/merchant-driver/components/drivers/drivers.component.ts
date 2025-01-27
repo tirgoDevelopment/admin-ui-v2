@@ -17,13 +17,14 @@ import { DriverFormComponent } from 'src/app/pages/drivers/components/driver-for
 import { AddTransportComponent } from 'src/app/pages/drivers/components/add-transport/add-transport.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { AddDriverComponent } from '../add-driver/add-driver.component';
+import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
 
 @Component({
   selector: 'app-drivers',
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule, RouterModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PhoneFormatPipe, RouterModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [

@@ -14,13 +14,14 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { MerchantDriverService } from '../../services/merchant-driver.service';
 import { TopupBalanceTmsComponent } from '../topup-balance-tms/topup-balance-tms.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 
 @Component({
   selector: 'app-history-transaction',
   templateUrl: './history-transaction.component.html',
   styleUrls: ['./history-transaction.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule, RouterModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PriceFormatPipe, RouterModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [

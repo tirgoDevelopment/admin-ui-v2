@@ -1,8 +1,7 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AdminsService } from './services/admins.service';
 import { AdminModel } from './models/admin.model';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
@@ -26,7 +25,7 @@ import { PlusOutline } from '@ant-design/icons-angular/icons';
   selector: 'app-admins',
   standalone: true,
   imports: [CommonModule, TranslateModule, FormsModule, NzButtonModule, NzIconModule, NzTableModule, NzResultModule, NzPaginationModule, NzSpinModule, NzToolTipModule, NzSelectModule, NzAlertModule],
-  providers: [NzModalService],
+  providers: [NzModalService,NzDrawerService],
   templateUrl: './admins.component.html',
   styleUrls: ['./admins.component.scss']
 })

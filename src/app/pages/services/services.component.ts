@@ -34,6 +34,8 @@ import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { KazjulTokenComponent } from './components/kazjul-token/kazjul-token.component';
 import { ServiceCommentsComponent } from './components/comments/comments.component';
+import { CreatedAtPipe } from 'src/app/shared/pipes/createdAt.pipe';
+import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -62,7 +64,7 @@ export enum SseEventNames {
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule, ChatComponent],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, ChatComponent, CreatedAtPipe, PriceFormatPipe],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -190,7 +192,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-
   private handleError(): Observable<never> {
     this.data = [];
     return throwError(new Error('Error fetching orders'));
@@ -256,7 +257,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
       }
     });
   }
-
   onServiceSelect(filteredServiceId): void {
     this.filter['servicesIds'] = [];
     if (!filteredServiceId) {
