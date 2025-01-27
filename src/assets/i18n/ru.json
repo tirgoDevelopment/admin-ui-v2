@@ -511,6 +511,7 @@
   "last_update": "Последнее обновление",
   "comments": "Комментарии",
   "writeComment": "Написать комментарии",
+  "cancelReason": "Причина отмены",
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",

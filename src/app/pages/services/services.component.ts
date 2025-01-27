@@ -36,6 +36,7 @@ import { KazjulTokenComponent } from './components/kazjul-token/kazjul-token.com
 import { ServiceCommentsComponent } from './components/comments/comments.component';
 import { CreatedAtPipe } from 'src/app/shared/pipes/createdAt.pipe';
 import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
+import { ReasonComponent } from './components/reason/reason.component';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -443,22 +444,33 @@ export class ServicesComponent implements OnInit, OnDestroy {
     }
   }
   cancelService(selectedService: any): void {
-    this.modal.confirm({
-      nzTitle: this.translate.instant('are_you_sure'),
-      nzOkText: this.translate.instant('confirm'),
-      nzCancelText: this.translate.instant('cancel'),
-      nzKeyboard: true,
-      nzOnOk: () => {
-        this.servicesService
-          .patchServiceStatus({ id: selectedService.id, status: 'cancel' }, '/{id}/cancel')
-          .subscribe((res: any) => {
-            if (res && res.success) {
-              this.getAll();
-              this.toastr.success(this.translate.instant('successfullyCanceled'), '');
-            }
-          });
-      },
+    const modal = this.modal.create({
+      nzComponentParams: { service: selectedService },
+      nzTitle: this.translate.instant('services.cancelService'),
+      nzContent: ReasonComponent,
+      nzMaskClosable: false,
+      nzFooter: null,
     });
+
+    modal.afterClose.subscribe((result) => {
+      this.getAll();
+    })
+    // this.modal.confirm({
+    //   nzTitle: this.translate.instant('are_you_sure'),
+    //   nzOkText: this.translate.instant('confirm'),
+    //   nzCancelText: this.translate.instant('cancel'),
+    //   nzKeyboard: true,
+    //   nzOnOk: () => {
+    //     this.servicesService
+    //       .patchServiceStatus({ id: selectedService.id, status: 'cancel' }, '/{id}/cancel')
+    //       .subscribe((res: any) => {
+    //         if (res && res.success) {
+    //           this.getAll();
+    //           this.toastr.success(this.translate.instant('successfullyCanceled'), '');
+    //         }
+    //       });
+    //   },
+    // });
   }
   showDriver(id) {
     if (this.perService.hasPermission(this.Per.DriverDetail)) {

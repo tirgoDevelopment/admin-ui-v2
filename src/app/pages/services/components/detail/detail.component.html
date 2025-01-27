@@ -1,4 +1,4 @@
-<div class="detail" *ngIf="item && !loadingPage && perService.hasPermission(Per.ServiceDetail)"> 
+<div class="detail" *ngIf="item && !loadingPage && perService.hasPermission(Per.ServiceDetail)">
   <div class="detail-row">
     <div class="detail-item">
       <div class="detail-label">{{ "ID" | translate }}</div>
@@ -46,12 +46,14 @@
     <div class="detail-item">
       <div class="detail-label">{{ "named" | translate }}</div>
       <div class="detail-value">
-        <div *ngFor="let service of item.amountDetails; let i = index">{{i+1 +')'}}{{ service.driverService.name }}</div>
+        <div *ngFor="let service of item.amountDetails; let i = index">{{i+1 +')'}}{{ service.driverService.name }}
+        </div>
       </div>
     </div>
     <div class="detail-item">
       <div class="detail-label">{{ "price" | translate }}</div>
-      <div class="detail-value" *ngFor="let service of item.amountDetails; let i = index">{{i+1 +')'}} {{ service.amount }} TIR</div>
+      <div class="detail-value" *ngFor="let service of item.amountDetails; let i = index">{{i+1 +')'}} {{ service.amount
+        }} TIR</div>
     </div>
   </div>
   <div class="detail-row">
@@ -67,7 +69,16 @@
     </div>
     <div class="detail-item">
       <div class="detail-label">{{ "services.processingTimeEnd" | translate }}</div>
-      <div class="detail-value">{{item.statusesHistory | createdAt : 5 | date : "dd.MM.yyyy HH:mm"}}</div>
+      <div class="detail-value">{{item.statusesHistory | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</div>
+    </div>
+  </div>
+
+  <hr class="mb-2">
+
+  <div class="detail-row">
+    <div class="detail-item">
+      <div class="detail-label">{{ "cancelReason" | translate }}</div>
+      <div class="detail-value">{{ item.cancelReason }}</div>
     </div>
   </div>
 
@@ -79,6 +90,6 @@
 </div>
 
 
-<div *ngIf="loadingPage" class="loader-container" >
+<div *ngIf="loadingPage" class="loader-container">
   <span nz-icon nzType="loading" nzTheme="outline" style="font-size: 25px"></span>
 </div>
