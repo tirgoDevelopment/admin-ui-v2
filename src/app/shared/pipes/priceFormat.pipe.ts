@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'priceFormat'
+  name: 'priceFormat',
+  standalone: true
 })
 export class PriceFormatPipe implements PipeTransform {
 

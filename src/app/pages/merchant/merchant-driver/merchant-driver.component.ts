@@ -20,13 +20,14 @@ import { FormComponent } from './components/form/form.component';
 import { TopupBalanceTmsComponent } from './components/topup-balance-tms/topup-balance-tms.component';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
+import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 
 @Component({
   selector: 'app-merchant-driver',
   templateUrl: './merchant-driver.component.html',
   styleUrls: ['./merchant-driver.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule, RouterModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PriceFormatPipe, RouterModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [

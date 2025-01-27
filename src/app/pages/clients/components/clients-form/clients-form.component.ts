@@ -15,13 +15,14 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { removeDuplicateKeys } from 'src/app/shared/pipes/remove-dublicates-formData';
 import { Router } from '@angular/router';
 import { FileFetchPipe } from 'src/app/shared/pipes/file-fetch.pipe';
+import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
 
 @Component({
   selector: 'app-clients-form',
   templateUrl: './clients-form.component.html',
   styleUrls: ['./clients-form.component.scss'],
   standalone: true,
-  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PipeModule, NgxMaskDirective, FileFetchPipe],
+  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PhoneFormatPipe, NgxMaskDirective, FileFetchPipe],
 })
 export class ClientsFormComponent implements OnInit {
   confirmModal?: NzModalRef;

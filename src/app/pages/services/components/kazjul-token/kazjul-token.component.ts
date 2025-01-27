@@ -6,14 +6,14 @@ import { ServicesService } from '../../services/services.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { PipeModule } from 'src/app/shared/pipes/pipes.module';
+import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 
 @Component({
   selector: 'app-kazjul-token',
   templateUrl: './kazjul-token.component.html',
   styleUrls: ['./kazjul-token.component.scss'],
   standalone: true,
-  imports: [NzModules, CommonModules, TranslateModule, PipeModule],
+  imports: [NzModules, CommonModules, TranslateModule, PriceFormatPipe],
 })
 export class KazjulTokenComponent {
   form: FormGroup;

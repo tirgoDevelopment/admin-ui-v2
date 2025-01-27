@@ -22,13 +22,14 @@ import { SocketService } from 'src/app/shared/services/socket.service';
 import { PushService } from 'src/app/shared/services/push.service';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
+import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 
 @Component({
   selector: 'app-gsm',
   templateUrl: './gsm.component.html',
   styleUrls: ['./gsm.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule,],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PriceFormatPipe],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
