@@ -94,16 +94,17 @@
       <thead>
         <tr>
           <th nzWidth="70px">No</th>
-          <th nzLeft>{{ "services.serviceId" | translate }}</th>
-          <th class="ellipsis" nzLeft>{{ "services.serviceName" | translate }}</th>
-          <th>{{'merchant_driver' | translate}}</th>
+          <th nzWidth="150px" nzLeft>{{ "services.serviceId" | translate }}</th>
+          <th nzWidth="200px" class="ellipsis" nzLeft>{{
+            "services.serviceName" | translate }}</th>
+          <th nzWidth="200px" class="ellipsis">{{'merchant_driver' | translate}}</th>
           <th>{{ "services.driverId" | translate }}</th>
           <th>{{ "state_number_truck" | translate }}</th>
-          <th>{{ "date_creation" | translate }}</th>
+          <th nzWidth="200px">{{ "date_creation" | translate }}</th>
           <th *ngIf="tabType == 1">{{ "date_debit" | translate }}</th>
-          <th>{{ "services.processingTime" | translate }}</th>
-          <th>{{ "services.processingTimeEnd" | translate }}</th>
-          <th>{{ "total" | translate }} (TIR)</th>
+          <th nzWidth="200px">{{ "services.processingTime" | translate }}</th>
+          <th nzWidth="200px">{{ "services.processingTimeEnd" | translate }}</th>
+          <th nzWidth="130px">{{ "total" | translate }} (TIR)</th>
           <th nzWidth="200px" nzRight>{{ "status" | translate }} </th>
           <th nzWidth="50px" nzRight *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
         </tr>
@@ -114,10 +115,13 @@
           <td>{{ item.rowIndex }}</td>
           <td nzLeft>{{ item.id}} / {{ item.services[0].code}}</td>
           <td nzLeft class="ellipsis">
-            <div *ngFor="let service of item.services">{{ service.name }}</div>
+            <div *ngFor="let service of item.services" nz-tooltip [nzTooltipTitle]="service.name">{{ service.name }}
+            </div>
           </td>
-          <td (click)="$event.stopPropagation()" (click)="showTms(item.driver?.driverMerchant?.id)">
-            <div [ngClass]="perService.hasPermission(Per.TmsDetail) ? 'link' : ''" *ngIf="item.driver.driverMerchant">
+          <td class="ellipsis" (click)="$event.stopPropagation()" (click)="showTms(item.driver?.driverMerchant?.id)">
+            <div nz-tooltip [nzTooltipTitle]="item.driver.driverMerchant?.companyType + ' ' +
+            item.driver.driverMerchant?.companyName" [ngClass]="perService.hasPermission(Per.TmsDetail) ? 'link' : ''"
+              *ngIf="item.driver.driverMerchant">
               {{item.driver.driverMerchant?.companyType + ' ' +
               item.driver.driverMerchant?.companyName}}</div>
             <div *ngIf="!item.driver.driverMerchant">{{'no' | translate}}</div>
@@ -154,7 +158,7 @@
               }">
               {{ item.status.name.toLowerCase() | translate }}
             </span>
-            
+
           </td>
           <td class="action-col" nzRight (click)="$event.stopPropagation()"
             *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])">
