@@ -94,17 +94,17 @@
       <thead>
         <tr>
           <th nzWidth="70px">No</th>
-          <th nzWidth="150px" nzLeft>{{ "services.serviceId" | translate }}</th>
-          <th nzWidth="200px" class="ellipsis" nzLeft>{{
+          <th nzLeft>{{ "services.serviceId" | translate }}</th>
+          <th class="ellipsis" nzLeft>{{
             "services.serviceName" | translate }}</th>
-          <th nzWidth="200px" class="ellipsis">{{'merchant_driver' | translate}}</th>
+          <th class="ellipsis">{{'merchant_driver' | translate}}</th>
           <th>{{ "services.driverId" | translate }}</th>
           <th>{{ "state_number_truck" | translate }}</th>
-          <th nzWidth="200px">{{ "date_creation" | translate }}</th>
+          <th>{{ "date_creation" | translate }}</th>
           <th *ngIf="tabType == 1">{{ "date_debit" | translate }}</th>
-          <th nzWidth="200px">{{ "services.processingTime" | translate }}</th>
-          <th nzWidth="200px">{{ "services.processingTimeEnd" | translate }}</th>
-          <th nzWidth="130px">{{ "total" | translate }} (TIR)</th>
+          <th>{{ "services.processingTime" | translate }}</th>
+          <th>{{ "services.processingTimeEnd" | translate }}</th>
+          <th>{{ "total" | translate }} (TIR)</th>
           <th nzWidth="200px" nzRight>{{ "status" | translate }} </th>
           <th nzWidth="50px" nzRight *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
         </tr>
