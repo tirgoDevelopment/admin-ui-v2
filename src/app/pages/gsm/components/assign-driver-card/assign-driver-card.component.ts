@@ -9,13 +9,14 @@ import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { GSMService } from '../../services/gsm.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NotificationService } from 'src/app/shared/services/notification.service';
+import { LabelPipe } from 'src/app/shared/pipes/label.pipe';
 
 @Component({
   selector: 'app-assign-driver-card',
   templateUrl: './assign-driver-card.component.html',
   styleUrls: ['./assign-driver-card.component.scss'],
   standalone: true,
-  imports: [NzModules, TranslateModule, CommonModules, PipeModule],
+  imports: [NzModules, TranslateModule, CommonModules, PipeModule, LabelPipe],
 })
 
 export class AssignDriverCardComponent implements OnInit {
