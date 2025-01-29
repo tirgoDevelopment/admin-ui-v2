@@ -8,10 +8,10 @@ import { UppercaseValidationDirective } from './uppercase.directive';
 import { TrimSpacesDirective } from './trimSpaces.pipe';
 
 @NgModule({
-  declarations: [TrimSpacesDirective,LabelPipe,UppercaseValidationDirective],
+  declarations: [TrimSpacesDirective,UppercaseValidationDirective],
   imports: [
     CommonModule
   ],
-  exports: [TrimSpacesDirective, LabelPipe,UppercaseValidationDirective],
+  exports: [TrimSpacesDirective, UppercaseValidationDirective],
 })
 export class PipeModule { }

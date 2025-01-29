@@ -123,7 +123,7 @@ export class DriverFormComponent implements OnInit {
           mainPhoneNumber.number = mainPhoneNumber.number.substring(1);
         }
       }
-      const matchedCountry = this.countries.find(country => country.code === '+' + mainPhoneNumber.code);
+      const matchedCountry = this.countries.find(country => country.code === '+' + mainPhoneNumber ? mainPhoneNumber.code : '998');  
       this.selectCountry(matchedCountry);
       const formattedPhoneNumber = mainPhoneNumber ? `+${mainPhoneNumber.code}${mainPhoneNumber.number}` : '';
       this.form.patchValue(this.data)

@@ -13,13 +13,14 @@ import { Response } from 'src/app/shared/models/reponse';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { PermissionService } from 'src/app/shared/services/permission.service';
+import { LabelPipe } from 'src/app/shared/pipes/label.pipe';
 
 @Component({
   selector: 'app-service-form',
   templateUrl: './service-form.component.html',
   styleUrls: ['./service-form.component.scss'],
   standalone: true,
-  imports: [NzModules, TranslateModule, CommonModules, PipeModule],
+  imports: [NzModules, TranslateModule, CommonModules, PipeModule, LabelPipe],
 })
 export class ServiceFormComponent implements OnInit {
   Per = Permission;
