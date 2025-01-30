@@ -1,14 +1,4 @@
 <form [formGroup]="form">
-  <!-- <nz-input-group class="input-group w-full">
-    <nz-form-label nzRequired>{{ 'services.driverId' | translate }}</nz-form-label>
-    <nz-select formControlName="driverId" style="width: 100%;" nzShowSearch nzServerSearch
-      nzPlaceHolder="{{ 'services.driverId' | translate }}" [nzShowArrow]="false" (nzOnSearch)="findDriver($event)">
-      <nz-option *ngFor="let o of (drivers$ | async)?.data.content"
-        [nzLabel]="o.id + ' ' + '(' + o.firstName + ' ' + o.lastName.slice(0,1) + ')'" [nzValue]="o.id">
-      </nz-option>
-    </nz-select>
-  </nz-input-group> -->
-
   <nz-input-group class="input-group w-full">
     <nz-form-label>{{ 'searchAs' | translate }}</nz-form-label>
     <nz-select style="width: 100%;" nzPlaceHolder="{{ 'searchAs' | translate }}" formControlName="searchAs">

@@ -6,6 +6,7 @@
 //   merchantUrl: 'https://test-api.tirgo.io/api/v2',
 //   orderApiUrl: 'https://test-api.tirgo.io/api/v2',
 // };
+
 export const env = {
   production: false,
   apiUrl: 'https://api.tirgo.io/api/v2',

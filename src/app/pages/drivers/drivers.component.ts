@@ -13,7 +13,6 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
-import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { AddTransportComponent } from './components/add-transport/add-transport.component';
 import { SendPushComponent } from './components/send-push/send-push.component';
 import { AssignTmcComponent } from './components/assign-tmc/assign-tmc.component';
