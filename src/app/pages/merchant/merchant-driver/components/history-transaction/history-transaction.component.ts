@@ -11,10 +11,10 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
-import { MerchantDriverService } from '../../services/merchant-driver.service';
 import { TopupBalanceTmsComponent } from '../topup-balance-tms/topup-balance-tms.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
+import { TmsService } from '../../services/tms.service';
 
 @Component({
   selector: 'app-history-transaction',
@@ -51,8 +51,7 @@ export class HistoryTransactionComponent {
 
   constructor(
     private drawer: NzDrawerService,
-    private toastr: NotificationService,
-    private merchantApi: MerchantDriverService,
+    private tmsService: TmsService,
     private translate: TranslateService,
     private route: ActivatedRoute) {
     this.merchantId = this.route.snapshot.params['id'];
@@ -64,7 +63,7 @@ export class HistoryTransactionComponent {
   getAll(): void {
     this.loader = true;
     const queryString = generateQueryFilter(this.filter);
-    this.merchantApi.balanceTransactions(this.merchantId, this.pageParams, queryString).pipe(
+    this.tmsService.balanceTransactions(this.merchantId, this.pageParams, queryString).pipe(
       tap((res: any) => {
         this.data = res?.success ? res.data.content : [];
         this.pageParams.totalPagesCount = res.data.pageSize * res?.data?.totalPagesCount;
@@ -79,7 +78,7 @@ export class HistoryTransactionComponent {
     ).subscribe();
   }
   getBalance() {
-    this.merchantApi.tmsBalance(this.merchantId).subscribe((res: any) => {
+    this.tmsService.tmsBalance(this.merchantId).subscribe((res: any) => {
       if (res && res.success) {
         this.tirBalance = res.data.tirgoBalance;
         this.serviceBalance = res.data.serviceBalance;

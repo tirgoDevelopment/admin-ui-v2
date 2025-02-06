@@ -42,29 +42,14 @@ export class ServicePricingComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.populateServices();
   }
   initForm() {
     this.form = this.fb.group({
       id: null,
-      details : this.fb.array([]),
+      tirAmount : [null, Validators.required],
     });
   }
-  get pricingFormArray(): FormArray {
-    return this.form.get('details') as FormArray;
-  }
-  populateServices() {
-    if (Array.isArray(this.service.services)) {
-      this.service.services.forEach((srv: any) => {
-        this.pricingFormArray.push(
-          this.fb.group({
-            amount: [null, Validators.required],
-            serviceId: [srv.id],
-          })
-        );
-      });
-    }
-  }
+
   onSubmit() {
     this.form.patchValue({ id: this.service.id });
     this.loading = true;
@@ -107,6 +92,5 @@ export class ServicePricingComponent implements OnInit {
       }
     });
   }
-
 
 }

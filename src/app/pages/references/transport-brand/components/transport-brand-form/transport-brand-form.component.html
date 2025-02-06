@@ -1,0 +1,53 @@
+<nz-tabset>
+    <nz-tab nzTitle="{{ 'brandTransport' | translate }}" *ngIf="!data || (data && data.brands)">
+        <form [formGroup]="formGroup">
+            <nz-input-group class="input-group">
+                <nz-form-label nzRequired>{{ 'brandTransport' | translate }}</nz-form-label>
+                <input formControlName="name" type="text" nz-input placeholder="{{ 'brandTransport' | translate }}" required />
+                <div *ngIf="formGroup.get('name').touched && formGroup.get('name').hasError('required')"
+                    class="error-message">
+                    {{ 'is_empty' | translate }}
+                </div>
+            </nz-input-group>
+            <div class="button-wrapper">
+                <button nz-button class="danger-button" (click)="remove()">
+                    {{ 'remove' | translate }}
+                </button>
+                <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmitBrand()"
+                    [disabled]="formGroup.invalid || loading">
+                    {{ 'save' | translate }}
+                </button>
+            </div>
+        </form>
+    </nz-tab>
+
+    <nz-tab nzTitle="{{ 'modelTransport' | translate }}" *ngIf="!data || (data && !data.brands)">
+        <form [formGroup]="form">
+            <nz-input-group class="input-group">
+                <nz-form-label nzRequired>{{ 'brandTransport' | translate }}</nz-form-label>
+                <nz-select nzPlaceHolder="{{ 'brandTransport' | translate }}" formControlName="groupId"
+                    style="width: 100% !important;">
+                    <nz-option *ngFor="let group of brandGroups" [nzLabel]="group.name"
+                        [nzValue]="group.id"></nz-option>
+                </nz-select>
+            </nz-input-group>
+            <nz-input-group class="input-group">
+                <nz-form-label nzRequired>{{ 'modelTransport' | translate }}</nz-form-label>
+                <input formControlName="name" type="text" nz-input placeholder="{{ 'named' | translate }}" required />
+                <div *ngIf="form.get('name').touched && form.get('name').hasError('required')"
+                    class="error-message">
+                    {{ 'is_empty' | translate }}
+                </div>
+            </nz-input-group>
+            <div class="button-wrapper">
+                <button nz-button class="danger-button" (click)="remove()">
+                    {{ 'remove' | translate }}
+                </button>
+                <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmitModel()"
+                    [disabled]="form.invalid || loading">
+                    {{ 'save' | translate }}
+                </button>
+            </div>
+        </form>
+    </nz-tab>
+</nz-tabset>

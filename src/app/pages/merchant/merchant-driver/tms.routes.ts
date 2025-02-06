@@ -1,10 +1,10 @@
 import { Route } from '@angular/router';
-import { MerchantDriverComponent } from './merchant-driver.component';
+import { TmsComponent } from './tms.component';
 
 const routes: Route[] = [
   {
     path: '',
-    component: MerchantDriverComponent,
+    component: TmsComponent,
   },
 ];
 

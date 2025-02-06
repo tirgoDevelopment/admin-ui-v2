@@ -9,11 +9,11 @@
     <div class="info">
         <div> <b> {{ "services.serviceId" | translate }}:</b>  {{serviceId}}</div>
         <div> <b>{{ "driver" | translate }}:</b>  {{data?.driver.firstName}} {{data?.driver.lastName.slice(0,1)}}. ({{ data?.driver.id }}) </div>
-        <div><b>{{ "driver_merchant" | translate }}:</b> {{data?.driver?.driverMerchant ? data.driver?.driverMerchant?.companyName : ('no' | translate)}}</div>
+        <div><b>{{ "driver_merchant" | translate }}:</b> {{data?.driver?.tms ? data.driver?.tms?.companyType + ' ' + data.driver?.tms?.companyName : ('no' | translate)}}</div>
     </div>
 </div>
 
-<nz-table #sortTable [nzData]="data?.statusesHistory" [nzLoading]="loading" [nzShowPagination]="false">
+<nz-table #sortTable [nzData]="data?.histories" [nzLoading]="loading" [nzShowPagination]="false">
     <thead>
         <tr>
             <th>{{ "date" | translate }}</th>
@@ -24,7 +24,7 @@
 
     <tbody>
         <ng-container *ngIf="data">
-            <tr *ngFor="let item of data?.statusesHistory; let i = index">
+            <tr *ngFor="let item of data?.histories; let i = index">
                 <td>{{ item.createdAt | date : "dd.MM.yyyy HH:mm" }}</td>
                 <td>
                     <span class="status" [ngStyle]="{

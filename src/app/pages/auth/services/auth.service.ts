@@ -9,6 +9,7 @@ import { jwtDecode } from 'jwt-decode';
 @Injectable({
   providedIn: 'root',
 })
+
 export class AuthService {
   private _accessTokenSubject = new BehaviorSubject<string | null>(null);
   public accessToken$ = this._accessTokenSubject.asObservable();
@@ -47,9 +48,9 @@ export class AuthService {
     if (this.isAuthenticated) {
       return throwError('User is already logged in.');
     }
-    return this.http.post(`${env.apiUrl}/users/login`, credentials).pipe(
+    return this.http.post(`${env.authUrl}/login`, credentials).pipe(
       switchMap((response: any) => {
-        this.accessToken = response.data.token;
+        this.accessToken = response.data.accessToken;
         const user: any = this.accessToken ? jwtDecode(this.accessToken) : null;
         const allPermission = user?.role?.permission
           ? this.checkPermissions(user.role.permission)

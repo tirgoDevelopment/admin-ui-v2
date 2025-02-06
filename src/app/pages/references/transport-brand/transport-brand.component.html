@@ -1,0 +1,38 @@
+<div class="container-page">
+  <div class="header-page">
+    <h2>{{ 'brandTransport' | translate }}</h2>
+    <div class="button-group">
+      <button nz-button class="success-button" (click)="add(null)">
+        <span nz-icon nzType="plus" nzTheme="outline"></span>
+        {{ 'add' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<nz-table #expandTable [nzData]="brandGroups" nzTableLayout="fixed">
+  <thead>
+    <tr>
+      <th>{{'named' | translate}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let group of expandTable.data">
+      <tr>
+        <td [nzShowExpand]="group.brands && group.brands.length > 0" [nzIndentSize]="0" [(nzExpand)]="group.expand"
+          (nzExpandChange)="collapse(group, $event)">
+          <div (click)="add(group)" style="cursor: pointer; width: 100%;">{{ group.name }}</div>
+        </td>
+      </tr>
+      <ng-container *ngIf="group.expand">
+        <ng-container *ngFor="let item of group.brands">
+          <tr>
+            <td (click)="add(item)" style="cursor: pointer;">
+              <div style="padding-left: 50px;"> {{ item.name }}</div>
+            </td>
+          </tr>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </tbody>
+</nz-table>

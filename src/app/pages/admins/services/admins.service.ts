@@ -13,22 +13,17 @@ export class AdminsService {
   constructor(private http: HttpClient) { }
 
   getAll(params: any): Observable<ResponseContent<AdminModel[]>> {
-    return this.http.get<ResponseContent<AdminModel[]>>(env.apiUrl + `/users/staffs/all-staffs?pageIndex=${params.pageIndex}&pageSize=${params.pageSize}&totalPagesCount=${params.totalPagesCount}&sortBy=${params.sortBy}&sortType=${params.sortType}`);
+    return this.http.get<ResponseContent<AdminModel[]>>(env.apiUrl + `/accounts?pageIndex=${params.pageIndex}&pageSize=${params.pageSize}&totalPagesCount=${params.totalPagesCount}&sortBy=${params.sortBy}&sortType=${params.sortType}`);
   }
-
-  getAllByStaff() {
-    return this.http.get(env.apiUrl + '/users/staffs/staff-by');
-  }
-
   create(data: AdminModel) {
-    return this.http.post(env.apiUrl + '/users/staffs/create-staff', data);
+    return this.http.post(env.apiUrl + `/accounts`, data);
   }
 
   update(data: AdminModel) {
-    return this.http.put(env.apiUrl + '/users/staffs/update-staff', data);
+    return this.http.put(env.apiUrl + `/accounts`, data);
   }
 
   delete(id: number | string) {
-    return this.http.delete(env.apiUrl + `/users/staffs?id=${id}`);
+    return this.http.delete(env.apiUrl + `/accounts/admins?id=${id}`);
   }
 }

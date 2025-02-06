@@ -13,7 +13,7 @@ export class TransportTypesService {
   constructor(private http: HttpClient) { }
 
   getAll() {
-    return this.http.get<Response<TransportModel[]>>(env.references + '/references/transport-types/all')
+    return this.http.get<Response<TransportModel[]>>(env.references + '/references/transport-types')
   }
   create(data: SubscriptionModel) {
     return this.http.post<Response<TransportModel[]>>(env.references + '/references/transport-types', data)

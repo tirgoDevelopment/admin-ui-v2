@@ -8,7 +8,6 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
-import { MerchantDriverService } from '../../services/merchant-driver.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { DriversService } from 'src/app/pages/drivers/services/drivers.service';
@@ -18,6 +17,7 @@ import { AddTransportComponent } from 'src/app/pages/drivers/components/add-tran
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { AddDriverComponent } from '../add-driver/add-driver.component';
 import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
+import { TmsService } from '../../services/tms.service';
 
 @Component({
   selector: 'app-drivers',
@@ -53,7 +53,7 @@ export class DriversComponent implements OnInit {
   };
   constructor(private toastr: NotificationService,
     private driverApi: DriversService,
-    private merchantApi: MerchantDriverService,
+    private tmsService: TmsService,
     private translate: TranslateService,
     private route: ActivatedRoute,
     private modal: NzModalService,
@@ -66,7 +66,7 @@ export class DriversComponent implements OnInit {
     
   }
   getMerchant() {
-    this.merchantApi.getById(this.merchantId).subscribe((res: any) => {
+    this.tmsService.getById(this.merchantId).subscribe((res: any) => {
       if (res && res.success) {
         this.merchantName = res.data.companyName + ' ' + res.data.companyType;
       }
@@ -75,7 +75,7 @@ export class DriversComponent implements OnInit {
   getAll() {
     this.loader = true;
     if (this.merchantId) {
-      this.filter['merchantId'] = this.merchantId;
+      this.filter['tmsId'] = this.merchantId;
       this.driverApi.getAll(this.pageParams, generateQueryFilter(this.filter)).subscribe((res: any) => {
         if (res && res.success) {
           this.data = res.data.content;
@@ -177,7 +177,7 @@ export class DriversComponent implements OnInit {
       tmsId: this.merchantId,
       driverId: id
     }
-    this.merchantApi.unassignDriver(data).subscribe((res:any) => {
+    this.tmsService.unassignDriver(data).subscribe((res:any) => {
       if(res && res.success){
         this.toastr.success(this.translate.instant('successfullUpdated'),'');
         this.getAll();

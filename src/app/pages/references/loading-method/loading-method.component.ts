@@ -97,7 +97,7 @@ export class LoadingMethodComponent implements OnInit {
       nzOkDanger: true,
       nzOnOk: () =>
         this.loadingMethodService.delete(id).subscribe((res: any) => {
-          if (res && res.success) {
+          if (res) {
             this.toastr.success(this.translate.instant('successfullDeleted'),'');
             this.getAll();
           }

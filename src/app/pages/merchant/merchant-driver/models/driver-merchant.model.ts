@@ -24,8 +24,8 @@ export interface DriverMerchantModel extends BaseModel {
     bankName: string,
     taxPayerCode: string,
     responsbilePersonPhoneNumber: string,
-    verified: boolean,
-    rejected: boolean,
+    isVerified: boolean,
+    isRejected: boolean,
     rejectedAt: string,
     verifiedBy: string,
     verifiedAt: Date,
@@ -38,7 +38,7 @@ export interface DriverMerchantModel extends BaseModel {
     garageAddress?: string,
     postalCode?: string,
     internationalCargoLisensePath?: string,
-    blocked: boolean,
+    isBlocked: boolean,
     balance:any,
     debtLimit: number
     kzPaidWayCommission: number

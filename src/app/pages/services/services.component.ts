@@ -3,7 +3,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
-import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { PageParams } from '../orders/models/page-params.interface';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import {
@@ -24,7 +23,6 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { jwtDecode } from 'jwt-decode';
 import { NzButtonType } from 'ng-zorro-antd/button';
-import { MerchantDriverService } from '../merchant/merchant-driver/services/merchant-driver.service';
 import { Router } from '@angular/router';
 import { DriverFormComponent } from '../drivers/components/driver-form/driver-form.component';
 import { DetailComponent } from '../merchant/merchant-driver/components/detail/detail.component';
@@ -37,6 +35,7 @@ import { ServiceCommentsComponent } from './components/comments/comments.compone
 import { CreatedAtPipe } from 'src/app/shared/pipes/createdAt.pipe';
 import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 import { ReasonComponent } from './components/reason/reason.component';
+import { TmsService } from '../merchant/merchant-driver/services/tms.service';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -110,7 +109,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     private socketService: SocketService,
     private toastr: NotificationService,
     private cdr: ChangeDetectorRef,
-    private merchantApi: MerchantDriverService,
+    private tmsService: TmsService,
     private router: Router,
     public perService: PermissionService
   ) { }
@@ -128,7 +127,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.tms$ = this.searchTms$.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap((searchTerm: string) => this.merchantApi.getVerified({}, searchTerm).pipe(
+      switchMap((searchTerm: string) => this.tmsService.getVerified(searchTerm).pipe(
         catchError((err) => {
           return of({ data: { content: [] } });
         })
@@ -210,14 +209,14 @@ export class ServicesComponent implements OnInit, OnDestroy {
       this.router.navigate(['/services', id, 'log']);
     }
   }
-  showComments(serviceId) {
+  showComments(service) {
     event.preventDefault();
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant('comments'),
       nzContent: ServiceCommentsComponent,
       nzPlacement: 'right',
       nzWidth: '500px',
-      nzContentParams:  {serviceId} ,
+      nzContentParams: { service },
     });
   }
   addService() {
@@ -342,14 +341,12 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
   private initializeFilter(): Record<any, any> {
     return {
-      servicesIds: [] as number[],
       driverId: '',
       transportNumber: '',
       merchantId: '',
       statusCode: '',
       createdAtFrom: '',
       createdAtTo: '',
-      excludedServicesIds: [16, 15]
     }
   }
   calculateSum(amountDetails: any[]): number {

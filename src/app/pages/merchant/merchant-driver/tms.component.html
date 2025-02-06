@@ -13,6 +13,12 @@
           {{ 'requests' | translate }}
         </button>
       </nz-badge>
+
+      <button nz-button class="success-button" (click)="handleDrawer('add')">
+        <span nz-icon nzType="plus" nzTheme="outline"></span>
+        {{ 'add' | translate }}
+      </button>
+
     </div>
   </div>
 
@@ -88,8 +94,8 @@
         <td>{{item.tirgoBalance | priceFormat }}</td>
         <td>{{item.gsmBalance | priceFormat }}</td>
         <td>
-          <span *ngIf="item.blocked" class="delete-icon">{{'inactive' | translate }}</span>
-          <span *ngIf="!item.blocked" class="edit-icon">{{'active' | translate }}</span>
+          <span *ngIf="item.isBlocked" class="delete-icon">{{'inactive' | translate }}</span>
+          <span *ngIf="!item.isBlocked" class="edit-icon">{{'active' | translate }}</span>
         </td>
         <td nzRight class="action-col" (click)="$event.stopPropagation()" *ngIf="perService.hasAnyPermission([
             Per.TmsUpdate,
@@ -142,12 +148,12 @@
                   <span class="delete-icon">{{ 'remove' | translate }}</span>
                 </div>
               </li>
-              <li nz-menu-item (click)="onBlock(item)" [ngStyle]="{color: item.blocked ? 'green'  : 'red' }"
+              <li nz-menu-item (click)="onBlock(item)" [ngStyle]="{color: item.isBlocked ? 'green'  : 'red' }"
                 *ngIf="perService.hasPermission(Per.TmsBlock)">
                 <div class="dropdown-menu">
-                  <span *ngIf="!item.blocked" nz-icon nzType="lock" nzTheme="outline" class="delete-icon"></span>
-                  <span *ngIf="item.blocked" nz-icon nzType="unlock" nzTheme="outline" class="edit-icon"></span>
-                  <span>{{ item.blocked ? ('unblock' | translate) : ('block' | translate) }}</span>
+                  <span *ngIf="!item.isBlocked" nz-icon nzType="lock" nzTheme="outline" class="delete-icon"></span>
+                  <span *ngIf="item.isBlocked" nz-icon nzType="unlock" nzTheme="outline" class="edit-icon"></span>
+                  <span>{{ item.isBlocked ? ('unblock' | translate) : ('block' | translate) }}</span>
                 </div>
               </li>
             </ul>
