@@ -13,7 +13,7 @@ export class RolesService {
   constructor(private http: HttpClient) { }
 
   getAll() {
-    return this.http.get<Response<RoleModel[]>>(env.references + '/references/roles/all-roles')
+    return this.http.get<Response<RoleModel[]>>(env.references + '/references/roles')
   }
   create(data: RoleModel) {
     return this.http.post<Response<RoleModel[]>>(env.references + '/references/roles', data)

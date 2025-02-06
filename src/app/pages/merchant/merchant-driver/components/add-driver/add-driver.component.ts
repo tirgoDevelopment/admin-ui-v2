@@ -10,7 +10,7 @@ import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.modul
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { MerchantDriverService } from '../../services/merchant-driver.service';
+import { TmsService } from '../../services/tms.service';
 import { LabelPipe } from 'src/app/shared/pipes/label.pipe';
 
 @Component({
@@ -31,7 +31,7 @@ export class AddDriverComponent implements OnInit {
   constructor(
     private translate: TranslateService,
     private driversService: DriversService,
-    private merchantService: MerchantDriverService,
+    private tmsService: TmsService,
     private toastr: NotificationService,
     private drawer: NzDrawerRef) {
     
@@ -59,7 +59,7 @@ export class AddDriverComponent implements OnInit {
       tmsId: this.merchantId,
       driverIds: [this.form.value.driverId.toString()]
     }
-    this.merchantService.appendDriver(data).subscribe((res:any) => {
+    this.tmsService.appendDriver(data).subscribe((res:any) => {
       this.loading = false;
       this.toastr.success(this.translate.instant('successfullCreated'));
       this.drawer.close({success:true});

@@ -6,8 +6,6 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
-import { PipeModule } from 'src/app/shared/pipes/pipes.module';
-import { MerchantDriverService } from './services/merchant-driver.service';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
@@ -21,11 +19,12 @@ import { TopupBalanceTmsComponent } from './components/topup-balance-tms/topup-b
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
+import { TmsService } from './services/tms.service';
 
 @Component({
-  selector: 'app-merchant-driver',
-  templateUrl: './merchant-driver.component.html',
-  styleUrls: ['./merchant-driver.component.scss'],
+  selector: 'app-tms',
+  templateUrl: './tms.component.html',
+  styleUrls: ['./tms.component.scss'],
   standalone: true,
   imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PriceFormatPipe, RouterModule],
   providers: [NzModalService],
@@ -37,7 +36,7 @@ import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
     ])
   ]
 })
-export class MerchantDriverComponent implements OnInit {
+export class TmsComponent implements OnInit {
   Per = Permission;
   confirmModal?: NzModalRef;
   data: DriverMerchantModel[] = [];
@@ -56,14 +55,13 @@ export class MerchantDriverComponent implements OnInit {
     private toastr: NotificationService,
     private router: Router,
     private modal: NzModalService,
-    private merchantApi: MerchantDriverService,
+    private tmsService: TmsService,
     private drawer: NzDrawerService,
     private translate: TranslateService,
     public perService: PermissionService
   ) { }
   ngOnInit(): void {
-    this.getVerified();
-    this.getUnverified();
+    this.getUnverified()
   }
   requests(): void {
     if (this.perService.hasPermission(this.Per.TmsRequstsList)) {
@@ -82,8 +80,16 @@ export class MerchantDriverComponent implements OnInit {
   }
   getVerified(): void {
     this.loader = true;
-    const queryString = generateQueryFilter(this.filter);
-    this.merchantApi.getVerified(this.pageParams, queryString).pipe(
+    this.filter['state'] = 'verified';
+     const params = {
+      pageIndex: this.pageParams.pageIndex,
+      pageSize: this.pageParams.pageSize,
+      sortBy: this.pageParams.sortBy,
+      sortType: this.pageParams.sortType,
+      ...this.filter
+    };
+    const queryString = generateQueryFilter(params);
+    this.tmsService.getVerified(queryString).pipe(
       tap((res: any) => {
         this.data = res?.success ? res.data.content : [];
         this.pageParams.totalPagesCount = res.data.pageSize * res?.data?.totalPagesCount;
@@ -96,7 +102,16 @@ export class MerchantDriverComponent implements OnInit {
     ).subscribe();
   }
   getUnverified() {
-    this.merchantApi.getUnverified().subscribe((res: any) => {
+    this.filter['state'] = 'unverified';
+    const params = {
+      pageIndex: this.pageParams.pageIndex,
+      pageSize: this.pageParams.pageSize,
+      sortBy: this.pageParams.sortBy,
+      sortType: this.pageParams.sortType,
+      ...this.filter,
+    };
+    const queryString = generateQueryFilter(params);
+    this.tmsService.getVerified(queryString).subscribe((res: any) => {
       if (res && res.success) {
         this.requestsCount = res.data.content.length;
       }
@@ -164,7 +179,7 @@ export class MerchantDriverComponent implements OnInit {
     this.isFilterVisible = !this.isFilterVisible;
   }
   private initializeFilter(): Record<string, string> {
-    return { companyName: '', merchantId: '', createdAtFrom: '', createdAtTo: '' };
+    return { companyName: '', merchantId: '', createdAtFrom: '', createdAtTo: '', state:'' };
   }
   onQueryParamsChange(params: NzTableQueryParams): void {
     const { pageIndex, pageSize, sort } = params;
@@ -189,7 +204,7 @@ export class MerchantDriverComponent implements OnInit {
       nzCancelText: this.translate.instant('cancel'),
       nzOkDanger: true,
       nzOnOk: () => {
-        this.merchantApi.delete(id).subscribe((res: any) => {
+        this.tmsService.delete(id).subscribe((res: any) => {
           if(res) {
             this.toastr.success(this.translate.instant('successfullDeleted'), '');
             this.getUnverified();
@@ -200,8 +215,8 @@ export class MerchantDriverComponent implements OnInit {
     });
   }
   onBlock(item: DriverMerchantModel) {
-    if (item.blocked) {
-      this.merchantApi.activate(item.id).subscribe((res) => {
+    if (item.isBlocked) {
+      this.tmsService.activate(item.id).subscribe((res) => {
         this.toastr.success(this.translate.instant('successfullyActivated'), '');
         this.getUnverified();
         this.getVerified();
@@ -219,7 +234,7 @@ export class MerchantDriverComponent implements OnInit {
       nzCancelText: this.translate.instant('cancel'),
       nzOkDanger: true,
       nzOnOk: () => {
-        this.merchantApi.block(item.id).subscribe((res: any) => {
+        this.tmsService.block(item.id).subscribe((res: any) => {
           if (res?.success) {
             this.toastr.success(this.translate.instant('successfullBlocked'), '');
             this.getUnverified();

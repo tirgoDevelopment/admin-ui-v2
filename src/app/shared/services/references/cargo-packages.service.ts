@@ -13,7 +13,7 @@ export class CargoPackagesService {
   constructor(private http: HttpClient) { }
 
   getAll(params?: any): Observable<Response<CargoPackagesModel[]>> {
-    return this.http.get<Response<CargoPackagesModel[]>>(env.references + `/references/cargo-packages/all?pageIndex=${params?.pageIndex}&pageSize=${params?.pageSize}&totalPagesCount=${params?.totalPagesCount}&sortBy=${params?.sortBy}&sortType=${params?.sortType}`)
+    return this.http.get<Response<CargoPackagesModel[]>>(env.references + `/references/cargo-packages`)
   }
   create(data: CargoPackagesModel) {
     return this.http.post<Response<CargoPackagesModel[]>>(env.references + '/references/cargo-packages', data)
@@ -22,6 +22,6 @@ export class CargoPackagesService {
     return this.http.put<Response<CargoPackagesModel[]>>(env.references + '/references/cargo-packages', data)
   }
   delete(id: number | string) { 
-    return this.http.delete(env.references + `/references/cargo-packages?id=${id}`)
+    return this.http.delete(env.references + `/references/cargo-packages/${id}`)
   }
 }

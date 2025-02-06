@@ -8,9 +8,10 @@ import { NgxMaskDirective } from 'ngx-mask';
 import { CurrenciesService } from 'src/app/shared/services/references/currencies.service';
 import { CurrencyModel } from 'src/app/pages/references/currencies/models/currency.model';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { MerchantDriverService } from '../../services/merchant-driver.service';
+import { TmsService } from '../../services/tms.service';
 import { DriverMerchantModel } from '../../models/driver-merchant.model';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { CompanyTypesService } from 'src/app/shared/services/references/company-types.service';
 
 @Component({
   selector: 'app-form',
@@ -26,22 +27,24 @@ export class FormComponent implements OnInit {
   loading: boolean = false;
   form: FormGroup;
   currencies: CurrencyModel[] = [];
+  companyTypes = [];
 
   constructor(
-    private MerchantApi: MerchantDriverService,
+    private tmsService: TmsService,
     private fb: FormBuilder,
     private drawerRef: NzDrawerRef,
     private toastr: NotificationService,
     private currenciesApi: CurrenciesService,
+    private companyTypeApi: CompanyTypesService,
     private translate: TranslateService) {
     this.form = this.fb.group({
       id: new FormControl(''),
-      companyType: new FormControl(null),
-      companyName: new FormControl(''),
+      companyType: new FormControl('', Validators.required),
+      companyName: new FormControl('', Validators.required),
       responsiblePersonLastName: new FormControl(''),
       responsiblePersonFistName: new FormControl(''),
-      email: new FormControl(''),
-      phoneNumber: new FormControl(''),
+      email: new FormControl('', Validators.required),
+      phoneNumber: new FormControl('', Validators.required),
       factAddress: new FormControl(''),
       legalAddress: new FormControl(''),
       bankName: new FormControl(''),
@@ -57,11 +60,14 @@ export class FormComponent implements OnInit {
       taxPayerCode: new FormControl(''),
       responsbilePersonPhoneNumber: new FormControl(''),
       kzPaidWayCommission: new FormControl(''),
-      debtLimit: new FormControl('')
+      debtLimit: new FormControl(''),
+      password: new FormControl(''),
+      isCompleted: new FormControl(true),
     });
   }
 
   ngOnInit() {
+    this.getCompanyType();
     this.getCurrency();
     if (this.mode === 'edit') {
       this.loadBankAccounts(this.data.bankAccounts);
@@ -75,8 +81,18 @@ export class FormComponent implements OnInit {
       }
     })
   }
+  getCompanyType() {
+    this.companyTypeApi.getAll().subscribe((res: any) => {
+      if (res) {
+        this.companyTypes = res.data;
+        if (this.mode === 'add') {
+          this.form.get('companyType').setValue(this.companyTypes[0].name);
+        }
+      }
+    })
+  }
   patchValue() {
-
+    this.form.value.password
     this.form.patchValue({
       ...this.data,
       bankAccounts: this.data.bankAccounts.map(account => ({
@@ -85,17 +101,31 @@ export class FormComponent implements OnInit {
         id: account.id,
       }))
     });
-    console.log(this.form.value);
+    this.updatePasswordValidation();
+  }
+  updatePasswordValidation() {
+    const passwordControl = this.form.get('password');
+    if (!this.data && !this.data.id) {
+      passwordControl.setValidators(Validators.required);
+    } else {
+      passwordControl.clearValidators();
+    }
+    passwordControl.updateValueAndValidity();
   }
   submit() {
     this.loading = true;
     this.form.value.bankAccounts = this.setId(this.form.value.bankAccounts);
-    this.MerchantApi.update(this.form.value).subscribe((res: any) => {
+    const submitObservable = this.data
+      ? this.tmsService.update(this.form.value)
+      : this.tmsService.post(this.form.value);
+
+    submitObservable.subscribe((res: any) => {
       if (res && res.success) {
         this.loading = false;
         this.drawerRef.close({ success: true });
-        this.MerchantApi.emitCloseEvent({ success: true });
-        this.toastr.success(this.translate.instant('successfullUpdated'), '');
+        this.tmsService.emitCloseEvent({ success: true });
+        const messageKey = this.data ? 'successfullUpdated' : 'successfullCreated';
+        this.toastr.success(this.translate.instant(messageKey), '');
       }
     }, err => {
       this.loading = false;

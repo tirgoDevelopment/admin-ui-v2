@@ -3,13 +3,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxMaskDirective } from 'ngx-mask';
 import { of } from 'rxjs';
-import { MerchantDriverService } from 'src/app/pages/merchant/merchant-driver/services/merchant-driver.service';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { GSMService } from '../../services/gsm.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { TmsService } from 'src/app/pages/merchant/merchant-driver/services/tms.service';
 
 @Component({
   selector: 'app-top-up-gsm-balance',
@@ -24,7 +24,7 @@ export class TopUpGsmBalanceComponent implements OnInit {
   loading: boolean = false;
   tms$
   constructor(
-    private tmsService: MerchantDriverService,
+    private tmsService: TmsService,
     private gsmService: GSMService,
     private toastr: NotificationService,
     private drawerRef: NzDrawerRef,

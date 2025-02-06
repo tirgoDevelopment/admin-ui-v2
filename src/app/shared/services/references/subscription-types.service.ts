@@ -14,7 +14,7 @@ export class SubscriptionTypesService {
   constructor(private http: HttpClient) { }
 
   getAll() {
-    return this.http.get<Response<SubscriptionModel[]>>(env.references + '/references/subscriptions/all')
+    return this.http.get<Response<SubscriptionModel[]>>(env.references + '/references/subscriptions')
   }
   create(data: SubscriptionModel) {
     return this.http.post<Response<SubscriptionModel[]>>(env.references + '/references/subscriptions', data)
@@ -23,6 +23,6 @@ export class SubscriptionTypesService {
     return this.http.put<Response<SubscriptionModel[]>>(env.references + '/references/subscriptions', data)
   }
   delete(id: number | string) { 
-    return this.http.delete(env.references + `/references/subscriptions?id=${id}`)
+    return this.http.delete(env.references + `/references/subscriptions/${id}`)
   }
 }

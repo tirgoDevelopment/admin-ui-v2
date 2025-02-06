@@ -13,7 +13,7 @@ export class CurrenciesService {
     constructor(private http: HttpClient) { }
 
     getAll(params?: any): Observable<Response<CurrencyModel[]>> {
-        return this.http.get<Response<CurrencyModel[]>>(env.references + `/references/currencies/all?pageIndex=${params?.pageIndex}&pageSize=${params?.pageSize}&totalPagesCount=${params?.totalPagesCount}&sortBy=${params?.sortBy}&sortType=${params?.sortType}`)
+        return this.http.get<Response<CurrencyModel[]>>(env.references + `/references/currencies`)
     }
     create(data: CurrencyModel) {
         return this.http.post<Response<CurrencyModel[]>>(env.references + '/references/currencies', data)
@@ -22,7 +22,7 @@ export class CurrenciesService {
         return this.http.put<Response<CurrencyModel[]>>(env.references + '/references/currencies', data)
     }
     delete(id: number | string) {
-        return this.http.delete(env.references + `/references/currencies?id=${id}`)
+        return this.http.delete(env.references + `/references/currencies/${id}`)
     }
 
 } 

@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
     this.translate.setDefaultLang('ru');
     const token = localStorage.getItem('accessToken') || '';
     if (token) {
-      this.connectToSSE(token);
+      // this.connectToSSE(token);
     } else {
     }
     setTimeout(() => {

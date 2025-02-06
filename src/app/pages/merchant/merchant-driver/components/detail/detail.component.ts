@@ -7,11 +7,11 @@ import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { FormGroup } from '@angular/forms';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
-import { MerchantDriverService } from '../../services/merchant-driver.service';
 import { DriverMerchantModel } from '../../models/driver-merchant.model';
 import { Response } from 'src/app/shared/models/reponse';
 import { FileFetchPipe } from 'src/app/shared/pipes/file-fetch.pipe';
 import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
+import { TmsService } from '../../services/tms.service';
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
@@ -30,7 +30,7 @@ export class DetailComponent implements OnInit {
 
   constructor(
     private toastr: NotificationService,
-    private merchantApi: MerchantDriverService,
+    private tmsService: TmsService,
     private translate: TranslateService,
     private drawerRef: NzDrawerRef,
     private modal: NzModalService
@@ -40,7 +40,7 @@ export class DetailComponent implements OnInit {
   }
   getTms() {
     this.loadingPage = true;
-    this.merchantApi.getById(this.id).subscribe((res:any) => {
+    this.tmsService.getById(this.id).subscribe((res:any) => {
       if(res) {
         this.data = res.data;
         this.loadingPage = false;
@@ -49,29 +49,33 @@ export class DetailComponent implements OnInit {
   }
   onApprove() {
     this.loading = true;
-    this.merchantApi.verify(this.data.id).subscribe((res: any) => {
+    this.tmsService.verify(this.data.id).subscribe((res: any) => {
       if(res && res.success) {
         this.loading = false;
         this.drawerRef.close();
-        // this.merchantApi.emitCloseEvent({success: true});
+        // this.tmsService.emitCloseEvent({success: true});
         this.toastr.success(this.translate.instant('successfullUpdated'),'');
       }
+    }, err => {
+      this.loading =false;
     })
   }
   onReject() {
     this.loading = true;
-    this.merchantApi.reject(this.data.id).subscribe((res: any) => {
+    this.tmsService.reject(this.data.id).subscribe((res: any) => {
       if(res && res.success) {
-        // this.merchantApi.emitCloseEvent({success: true});
+        // this.tmsService.emitCloseEvent({success: true});
         this.loading = false;
         this.drawerRef.close();
         this.toastr.success(this.translate.instant('successfullUpdated'),'');
       }
+    }, err => {
+      this.loading =false;
     })
   }
   onBlock() {
-    if (this.data.blocked) {
-      this.merchantApi.activate(this.data.id).subscribe((res: Response<DriverMerchantModel>) => {
+    if (this.data.isBlocked) {
+      this.tmsService.activate(this.data.id).subscribe((res: Response<DriverMerchantModel>) => {
         this.toastr.success(this.translate.instant('successfullyActivated'), '');
         this.drawerRef.close({ success: true });
       });
@@ -88,7 +92,7 @@ export class DetailComponent implements OnInit {
       nzCancelText: this.translate.instant('cancel'),
       nzOkDanger: true,
       nzOnOk: () => {
-        this.merchantApi.block(this.data.id).subscribe((res: any) => {
+        this.tmsService.block(this.data.id).subscribe((res: any) => {
           if (res?.success) {
             this.toastr.success(this.translate.instant('successfullBlocked'), '');
             this.drawerRef.close({ success: true });

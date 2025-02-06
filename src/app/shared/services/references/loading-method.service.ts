@@ -13,15 +13,15 @@ export class LoadingMethodService {
   constructor(private http: HttpClient) { }
 
   getAll(params?: any): Observable<Response<LoadingMethodModel[]>> {
-    return this.http.get<Response<LoadingMethodModel[]>>(env.references + `/references/cargo-loading-method/all?pageIndex=${params?.pageIndex}&pageSize=${params?.pageSize}&totalPagesCount=${params?.totalPagesCount}&sortBy=${params?.sortBy}&sortType=${params?.sortType}`)
+    return this.http.get<Response<LoadingMethodModel[]>>(env.references + `/references/cargo-loading-methodes`)
   }
   create(data: LoadingMethodModel) {
-    return this.http.post<Response<LoadingMethodModel[]>>(env.references + '/references/cargo-loading-method', data)
+    return this.http.post<Response<LoadingMethodModel[]>>(env.references + '/references/cargo-loading-methodes', data)
   }
   update(data: LoadingMethodModel) {
-    return this.http.put<Response<LoadingMethodModel[]>>(env.references + '/references/cargo-loading-method', data)
+    return this.http.put<Response<LoadingMethodModel[]>>(env.references + '/references/cargo-loading-methodes', data)
   }
   delete(id: number | string) { 
-    return this.http.delete(env.references + `/references/cargo-loading-method?id=${id}`)
+    return this.http.delete(env.references + `/references/cargo-loading-methodes/${id}`)
   }
 }

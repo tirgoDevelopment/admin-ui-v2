@@ -129,7 +129,7 @@ export class ChatComponent implements OnInit {
     this.pageParams.pageIndex = 1;
     this.noMoreChats = false;
     let query = generateQueryFilter(this.pageParams);
-    this.serviceApi.getDriverServices(query).subscribe({
+    this.serviceApi.getChatRooms(query).subscribe({
       next: (res: any) => {
         this.chats = res.data.content;
         this.pageParams.totalPagesCount = res.data.totalPagesCount || 1;
@@ -171,6 +171,8 @@ export class ChatComponent implements OnInit {
     if (!chat) return;
     this.chat = chat;
     this.selectedChat = chat;
+    console.log(this.selectedChat);
+    
     this.getChatMessages();
     if (chat.unreadMessagesCount) {
       this.patchUnreadCount();
@@ -192,7 +194,7 @@ export class ChatComponent implements OnInit {
   sendMessage() {
     if (this.newMessage.trim() && this.selectedChat) {
       const message: any = {
-        senderUserType: "staff",
+        senderUserType: "admin",
         createdAt: new Date(),
         message: this.newMessage,
         messageType: 'text',
@@ -318,7 +320,7 @@ export class ChatComponent implements OnInit {
     reader.onload = (e: any) => {
       const message: any = {
         text: '',
-        senderUserType: 'staff',
+        senderUserType: 'admin',
         createdAt: new Date(),
         file: {
           name: file.name,
@@ -338,7 +340,7 @@ export class ChatComponent implements OnInit {
     reader.onload = (e: any) => {
       const message: any = {
         text: '',
-        senderUserType: 'staff',
+        senderUserType: 'admin',
         createdAt: new Date(),
         file: {
           name: file.name,

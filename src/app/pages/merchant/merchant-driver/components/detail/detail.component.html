@@ -25,15 +25,15 @@
   <div class="detail-info">
     <div>
       <div class="info-label">{{ 'tirBalance' | translate }}</div>
-      <div class="info-value">{{data.balance.tirgoBalance ? (data.balance.tirgoBalance | priceFormat) : 0 }}</div>
+      <div class="info-value">{{data.tirgoBalance ? (data.tirgoBalance | priceFormat) : 0 }}</div>
     </div>
     <div>
       <div class="info-label">{{ 'serviceBalance' | translate }}</div>
-      <div class="info-value">{{data.balance.serviceBalance ? (data.balance.serviceBalance | priceFormat) : 0 }}</div>
+      <div class="info-value">{{data.serviceBalance ? (data.serviceBalance | priceFormat) : 0 }}</div>
     </div>
     <div>
       <div class="info-label">{{ 'gsm.balance' | translate }}</div>
-      <div class="info-value">{{data.balance.gsmBalance ? (data.balance.gsmBalance | priceFormat) : 0 }}</div>
+      <div class="info-value">{{data.gsmBalance ? (data.gsmBalance | priceFormat) : 0 }}</div>
     </div>
     <div>
       <div class="info-label">{{ 'debtLimit' | translate }}</div>
@@ -156,16 +156,16 @@
   </div>
 
   <div class="button-wrapper">
-    <button *ngIf="!data.rejected && !data.verified" [nzLoading]="loading" nz-popconfirm
+    <button *ngIf="!data.isRejected && !data.isVerified" [nzLoading]="loading" nz-popconfirm
       nzPopconfirmTitle="{{'are_you_sure' | translate}}" (nzOnConfirm)="onApprove()" class="success-button" nz-button>
       {{ 'approve' | translate }}
     </button>
-    <button *ngIf="!data.rejected && !data.verified" [nzLoading]="loading" nz-popconfirm
+    <button *ngIf="!data.isRejected && !data.isVerified" [nzLoading]="loading" nz-popconfirm
       nzPopconfirmTitle="{{'are_you_sure' | translate}}" (nzOnConfirm)="onReject()" class="danger-button" nz-button>
       {{ 'reject' | translate }}
     </button>
-    <button *ngIf="!data.rejected && data.verified" nz-button class="secondary-button" (click)="onBlock()">
-      {{ data.blocked ? ('unblock' | translate) : ('block' | translate) }}
+    <button *ngIf="!data.isRejected && data.isVerified" nz-button class="secondary-button" (click)="onBlock()">
+      {{ data.isBlocked ? ('unblock' | translate) : ('block' | translate) }}
     </button>
   </div>
 </div>

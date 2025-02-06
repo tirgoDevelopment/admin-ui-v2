@@ -11,7 +11,7 @@ export function generateQueryFilter(filter: any): string {
       }
     });
   
-    return queryParts.length ? `${queryParts.join('&')}` : '';
+    return queryParts.length ? '?' +`${queryParts.join('&')}` : '';
   }
   
   function formatDate(date: string | Date): string {

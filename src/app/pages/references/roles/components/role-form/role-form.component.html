@@ -18,9 +18,9 @@
 
 
   <div class="button-wrapper">
-    <button nz-button class="danger-button" (click)="onDelete()">
+    <!-- <button nz-button class="danger-button" (click)="onDelete()">
       {{ 'remove' | translate }}
-    </button>
+    </button> -->
     <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
       [disabled]="form.invalid || loading">
       {{ 'save' | translate }}

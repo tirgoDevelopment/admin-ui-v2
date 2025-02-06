@@ -173,7 +173,8 @@ export class DriverFormComponent implements OnInit {
           this.loading = false;
           const messageKey = this.data ? 'successfullUpdated' : 'successfullCreated';
           this.toastr.success(this.translate.instant(messageKey), '');
-          this.drawerRef.close({ success: true, mode: this.data ? 'edit' : 'add', driverId: res.data?.id });
+          // this.drawerRef.close({ success: true, mode: this.data ? 'edit' : 'add', driverId: res.data?.id });
+          this.drawerRef.close({ success: true });
           this.form.reset();
         }
       },
