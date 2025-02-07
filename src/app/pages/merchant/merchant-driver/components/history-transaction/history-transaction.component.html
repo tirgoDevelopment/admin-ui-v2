@@ -87,7 +87,7 @@
     <tr *ngFor="let item of data; let i = index">
       <td> {{ i+1 }} </td>
       <td> {{ item.id }} </td>
-      <td> {{ item.createdBy?.staff?.username }}</td>
+      <td> {{ item.createdBy?.admin?.username }}</td>
       <td> {{ item?.tirAmount | priceFormat }} </td>
       <td> {{ item.createdAt | date:'dd.MM.yyyy HH:mm'}} </td>
       <td> {{item.balanceType == 'tirgo' ? ('tirBalance' | translate) : ('serviceBalance' | translate)}}</td>

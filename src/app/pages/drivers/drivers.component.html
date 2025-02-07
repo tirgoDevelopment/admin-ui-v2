@@ -141,13 +141,13 @@
                   <span>{{ 'edit' | translate }}</span>
                 </div>
               </li>
-              <li nz-menu-item (click)="addTransport(item.id)"
+              <!-- <li nz-menu-item (click)="addTransport(item.id)"
                 *ngIf="perService.hasPermission(Permission.DriverAddTransport)">
                 <div class="dropdown-menu">
                   <span nz-icon nzType="plus" nzTheme="outline"></span>
                   <span>{{ 'add_transport' | translate }}</span>
                 </div>
-              </li>
+              </li> -->
               <li nz-menu-item (click)="remove(item.id)" *ngIf="perService.hasPermission(Permission.DriverDelete)">
                 <div class="dropdown-menu">
                   <span nz-icon nzType="delete" nzTheme="outline" class="delete-icon"></span>

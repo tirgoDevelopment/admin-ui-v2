@@ -107,7 +107,12 @@ export class TransportsComponent implements OnInit {
       nzTitle: this.translate.instant('transportManagment'),
       nzContent: TransportManageComponent,
       nzPlacement: 'right',
-    });
+    })
+    drawerRef.afterClose.subscribe((res: any) => {
+      if(res && res.success) {
+        this.getAll();
+      }
+    })
   }
   histroyTransport(id) {
     this.route.navigate([`transports/${id}/history`]);

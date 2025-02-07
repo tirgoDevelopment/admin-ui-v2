@@ -35,8 +35,8 @@
                     </span>
                 </td>
                 <td>
-                    <div *ngIf="item.createdBy.staff">{{item?.createdBy?.staff?.fullName}}</div>
-                    <div *ngIf="!item.createdBy.staff">{{ item.createdBy.userType == 'driver' ? ('driver' | translate) : ('driver_merchant' | translate)}}</div>
+                    <div *ngIf="item.createdBy.admin">{{item?.createdBy?.admin?.fullName}}</div>
+                    <div *ngIf="!item.createdBy.admin">{{ item.createdBy.userType == 'driver' ? ('driver' | translate) : ('driver_merchant' | translate)}}</div>
                      </td>
             </tr>
         </ng-container>

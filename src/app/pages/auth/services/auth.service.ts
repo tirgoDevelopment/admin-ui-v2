@@ -13,6 +13,9 @@ import { jwtDecode } from 'jwt-decode';
 export class AuthService {
   private _accessTokenSubject = new BehaviorSubject<string | null>(null);
   public accessToken$ = this._accessTokenSubject.asObservable();
+  private refreshToken: string | null = null;
+  private refreshInProgress = false;
+  private refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
   isAuthenticated = false;
 
@@ -51,6 +54,9 @@ export class AuthService {
     return this.http.post(`${env.authUrl}/login`, credentials).pipe(
       switchMap((response: any) => {
         this.accessToken = response.data.accessToken;
+        this.refreshToken = response.data.refreshToken;
+        localStorage.setItem('accessToken', this.accessToken);
+        localStorage.setItem('refreshToken', this.refreshToken);
         const user: any = this.accessToken ? jwtDecode(this.accessToken) : null;
         const allPermission = user?.role?.permission
           ? this.checkPermissions(user.role.permission)
@@ -63,7 +69,9 @@ export class AuthService {
 
   logout(): void {
     this.accessToken = null;
+    this.refreshToken = null;
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     this.isAuthenticated = false;
     this.router.navigate(['/auth/sign-up']);
   }

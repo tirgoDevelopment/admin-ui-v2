@@ -52,6 +52,7 @@
     <thead>
       <tr>
         <th>ID</th>
+        <th>{{ 'driver' | translate }}</th>
         <th>{{ 'state_number' | translate }}</th>
         <th>{{ 'register_date' | translate }}</th>
         <th nzWidth="50px"></th>
@@ -61,6 +62,7 @@
     <tbody>
       <tr *ngFor="let item of data; let i = index">
         <td> {{ item.id }} </td>
+        <td> {{item.driver ? (item.driver?.id + '. ' + item.driver?.firstName + ' ' + item.driver?.lastName) : ('no_data' | translate) }} </td>
         <td>{{item.transportNumber}}</td>
         <td>{{item.createdAt | date:'dd.MM.yyyy'}}</td>
         <td class="action-col" (click)="$event.stopPropagation()">

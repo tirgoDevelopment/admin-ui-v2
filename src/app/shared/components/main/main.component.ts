@@ -73,7 +73,7 @@ export class MainComponent {
     });
     this.getChats();
     this.subscription = this.socketService.getSSEEvents().subscribe((event) => {
-      if ((event.event === 'newMessage' && event.data.userType != 'staff') && ((this.chat && this.chat.id) !== event.data.requestId)) {
+      if ((event.event === 'newMessage' && event.data.userType != 'admin') && ((this.chat && this.chat.id) !== event.data.requestId)) {
         this.newMessageCount = this.newMessageCount + 1;
         this.cdr.detectChanges();
         this.pushService.showPushNotification(`Новое сообщение поступило на услугу в id ${event.data.requestId}`, event.data.message.message, 'service');

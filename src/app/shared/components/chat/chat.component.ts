@@ -48,10 +48,10 @@ export class ChatComponent implements OnInit {
   @Output() newMessageCountChange = new EventEmitter<number>();
   @Input() outputServiceId: string;
 
-  chatIconPosition = {
-    x: window.innerWidth - 400,
-    y: window.innerHeight - window.innerHeight * 0.9,
-  };
+  chatIconPosition = { x: 50, y: 50 };
+  chatSize = { width: 400, height: 500 };
+  observer: MutationObserver | null = null;
+
   private isDragging = false;
   private dragOffset = { x: 0, y: 0 };
   private dragSpeedFactor = 1;
@@ -95,13 +95,34 @@ export class ChatComponent implements OnInit {
     private serviceApi: ServicesService,
     private translate: TranslateService,
     private socketService: SocketService,
-    private pushService: PushService
+    private pushService: PushService,
+    private el: ElementRef
   ) {
     const currentLang = localStorage.getItem('lang') || 'us';
     this.translate.use(currentLang.toLowerCase());
   }
 
+  ngAfterViewInit() {
+    const chatCard = this.el.nativeElement.querySelector('.chat-card') as HTMLElement;
+    const savedSize = localStorage.getItem('chatSize');
+    if (savedSize) {
+      this.chatSize = JSON.parse(savedSize);
+      chatCard.style.width = `${this.chatSize.width}px`;
+      chatCard.style.height = `${this.chatSize.height}px`;
+    }
+    this.observer = new MutationObserver(() => {
+      this.chatSize.width = chatCard.clientWidth;
+      this.chatSize.height = chatCard.clientHeight;
+      localStorage.setItem('chatSize', JSON.stringify(this.chatSize));
+    });
+    this.observer.observe(chatCard, { attributes: true, attributeFilter: ['style'] });
+  }
+
   ngOnInit() {
+    const savedPosition = localStorage.getItem('chatPosition');
+    if (savedPosition) {
+      this.chatIconPosition = JSON.parse(savedPosition);
+    }
     if (this.outputServiceId) {
       this.showChatList = false;
       this.loading = true;
@@ -171,8 +192,6 @@ export class ChatComponent implements OnInit {
     if (!chat) return;
     this.chat = chat;
     this.selectedChat = chat;
-    console.log(this.selectedChat);
-    
     this.getChatMessages();
     if (chat.unreadMessagesCount) {
       this.patchUnreadCount();
@@ -247,26 +266,6 @@ export class ChatComponent implements OnInit {
   cancelEdit() {
     this.editingMessage = null;
     this.newMessage = '';
-  }
-  deleteMessage(messageToDelete: any) {
-    this.selectedChat.messages = this.selectedChat.messages.filter(
-      (message) => message.id !== messageToDelete.id
-    );
-    this.selectedChat.messages = this.selectedChat.messages.map((message) => {
-      if (message.replyTo?.id === messageToDelete.id) {
-        const { replyTo, ...messageWithoutReply } = message;
-        return messageWithoutReply;
-      }
-      return message;
-    });
-    this.messages = this.selectedChat.messages;
-  }
-  deleteSelectedMessages() {
-    const count = this.selectedMessages.size;
-    this.selectedChat.messages = this.selectedChat.messages.filter(
-      (message) => !this.selectedMessages.has(message.id)
-    );
-    this.exitSelectionMode();
   }
   toggleMessageSelection(message: any) {
     if (this.isSelectionMode) {
@@ -354,8 +353,6 @@ export class ChatComponent implements OnInit {
     };
     reader.readAsDataURL(file);
   }
-
-
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -404,28 +401,6 @@ export class ChatComponent implements OnInit {
     this.dragOffset.x = event.clientX - this.chatIconPosition.x;
     this.dragOffset.y = event.clientY - this.chatIconPosition.y;
   }
-  @HostListener('document:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent) {
-    if (this.isDragging) {
-      const deltaX =
-        (event.clientX - this.dragOffset.x - this.chatIconPosition.x) *
-        this.dragSpeedFactor;
-      const deltaY =
-        (event.clientY - this.dragOffset.y - this.chatIconPosition.y) *
-        this.dragSpeedFactor;
-
-      this.chatIconPosition.x += deltaX;
-      this.chatIconPosition.y += deltaY;
-    }
-  }
-  @HostListener('document:mouseup')
-  onMouseUp() {
-    this.isDragging = false;
-  }
-  @HostListener('window:keydown.escape')
-  onEscapePress() {
-    this.closeChat();
-  }
   formatMessageDate(date: Date): string {
     const today = new Date();
     const messageDate = new Date(date);
@@ -470,7 +445,6 @@ export class ChatComponent implements OnInit {
       date1.getDate() === date2.getDate()
     );
   }
-
   onChatListScroll(event: any) {
     const element = event.target;
     const scrollPosition = Math.ceil(element.scrollTop + element.clientHeight);
@@ -508,7 +482,6 @@ export class ChatComponent implements OnInit {
       }
     });
   }
-
   loadMoreMessages() {
     if (this.loadingMore) return;
     this.loadingMore = true;
@@ -566,5 +539,27 @@ export class ChatComponent implements OnInit {
   }
   getDateKeys(): string[] {
     return Object.keys(this.groupedMessages);
+  }
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent) {
+    if (this.isDragging) {
+      const deltaX =
+        (event.clientX - this.dragOffset.x - this.chatIconPosition.x) *
+        this.dragSpeedFactor;
+      const deltaY =
+        (event.clientY - this.dragOffset.y - this.chatIconPosition.y) *
+        this.dragSpeedFactor;
+      this.chatIconPosition.x += deltaX;
+      this.chatIconPosition.y += deltaY;
+      localStorage.setItem('chatPosition', JSON.stringify(this.chatIconPosition));
+    }
+  }
+  @HostListener('document:mouseup')
+  onMouseUp() {
+    this.isDragging = false;
+  }
+  @HostListener('window:keydown.escape')
+  onEscapePress() {
+    this.closeChat();
   }
 }
