@@ -2,13 +2,11 @@
   position: fixed;
   z-index: 1000;
   display: flex;
+  align-items: flex-start;
   justify-content: center;
-  align-items: center;
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-  // height: 600px; 
-  width: 380px;
   overflow: hidden;
   transition: all 0.3s ease;
 
@@ -18,12 +16,15 @@
 }
 
 .chat-card {
-  width: 100%;
   height: 500px;
+  min-width: 380px;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   background: #fff;
   position: relative;
+  resize: both;
+  overflow: auto;
 }
 
 .chat-header {
@@ -571,33 +572,6 @@
   }
 }
 
-.emoji-picker-container {
-  position: absolute;
-  bottom: 100%;
-  left: 0;
-  z-index: 1000;
-  margin-bottom: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  border-radius: 8px;
-  overflow: hidden;
-  
-  emoji-mart {
-    ::ng-deep {
-      .emoji-mart {
-        border: none;
-        
-        .emoji-mart-category-label {
-          top: 0;
-          background: white;
-          span { 
-            background: white;
-            padding: 8px;
-          }
-        }
-      }
-    }
-  }
-}
 
 .quick-replies {
   padding: 10px;
@@ -707,10 +681,6 @@
 }
 
 .chat-list {
-  // height: 100%;
-  // overflow-y: auto;
-  // background: white;
-
   .chat-item {
     display: flex;
     align-items: center;
