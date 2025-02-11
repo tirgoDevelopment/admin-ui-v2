@@ -1,6 +1,7 @@
 import { BaseModel } from "src/app/shared/models/base-model";
 
 export interface DriverMerchantModel extends BaseModel {
+    rowIndex: number
     email: string,
     phoneNumber: string,
     companyName: string,

@@ -88,14 +88,12 @@ export class GSMComponent implements OnInit {
     this.handleEvent();
   }
   handleEvent() {
-    this.sseSubscription = this.socketService.getSSEEvents().subscribe((event) => {
-      if (event.event === 'tmsGsmBalanceTopup') {
-        this.getAll();
-      }
-    });
+    this.socketService.listen('tmsGsmBalanceTopup').subscribe((event) => {
+      this.getAll();
+    })
   }
   find(ev: string) {
-    if(ev !== '' && ev !== null) {
+    if (ev !== '' && ev !== null) {
       let filter = generateQueryFilter({ companyName: ev });
       this.searchTms$.next(filter);
     }
@@ -114,7 +112,7 @@ export class GSMComponent implements OnInit {
           this.data = res.data?.content || [];
           this.pageParams.totalPagesCount = res.data.totalPagesCount;
           this.totalItemsCount = this.pageParams.pageSize * this.pageParams.totalPagesCount;
-      }
+        }
         this.loader = false;
       },
       () => {

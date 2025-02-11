@@ -81,8 +81,6 @@ export class ServicesService {
   getChatRooms( params) {
     return this.http.get(`${this.chatUrl}/chat/rooms${params}`);
   }
-
-
   getChatMessages(id: any, params?) {
     return this.http.get(`${this.chatUrl}/chat/${id}/messages${params}`);
   }

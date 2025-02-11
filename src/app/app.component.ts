@@ -14,9 +14,8 @@ export class AppComponent implements OnInit {
   sseSubscription
   constructor(
     private translate: TranslateService,
-    private socketService: SocketService,
-    
-  ) {}
+    private socketService: SocketService
+  ) { }
   ngOnInit(): void {
     if (localStorage.getItem('lang') == null) {
       localStorage.setItem('lang', 'RU');
@@ -24,19 +23,16 @@ export class AppComponent implements OnInit {
     this.translate.setDefaultLang('ru');
     const token = localStorage.getItem('accessToken') || '';
     if (token) {
-      // this.connectToSSE(token);
-    } else {
+      this.socketService.connect();
     }
+
     setTimeout(() => {
       const splashScreen = document.getElementById('splash-screen');
       if (splashScreen) {
         splashScreen.style.display = 'none';
-      }  
-    },100)
-    
+      }
+    }, 100)
+
   }
 
-  private connectToSSE(token: string) {
-    this.socketService.connectToSSE(token);
-  }
 }

@@ -34,6 +34,13 @@
       </div>
       <div>
         <nz-input-group class="input-group">
+            <input [(ngModel)]="filter['id']" type="text" nz-input
+                placeholder="{{ 'services.serviceId' | translate }}" />
+        </nz-input-group>
+    </div>
+
+      <div>
+        <nz-input-group class="input-group">
           <input [(ngModel)]="filter['driverId']" type="text" nz-input
             placeholder="{{ 'services.driverId' | translate }}" />
         </nz-input-group>
@@ -111,7 +118,7 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let item of data; let i = index" (click)="showChatForService(item.id)">
+        <tr *ngFor="let item of data; let i = index" (click)="showChatForService(item.chat.id)">
           <td>{{ item.rowIndex }}</td>
           <td nzLeft>{{ item.id}} / {{ item.service.code}}</td>
           <td nzLeft class="ellipsis">

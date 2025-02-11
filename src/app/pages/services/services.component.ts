@@ -117,13 +117,12 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.getStatuses();
     this.getRefServices();
     this.currentUser = jwtDecode(localStorage.getItem('accessToken') || '');
-    this.sseSubscription = this.socketService.getSSEEvents().subscribe((event) => {
-      this.handleSocketEvent(event);
-      if (event.event === 'newServiceRequest') {
-        // this.pushService.showPushNotification('Заявка за новую услугу', '')
-        this.getAll();
-      }
-    });
+    // this.sseSubscription = this.socketService.getSSEEvents().subscribe((event) => {
+    //   this.handleSocketEvent(event);
+    //   if (event.event === 'newServiceRequest') {
+    //     this.getAll();
+    //   }
+    // });
     this.tms$ = this.searchTms$.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -161,7 +160,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     if (this.sseSubscription) {
       this.sseSubscription.unsubscribe();
     }
-    this.socketService.disconnectSSE();
+    this.socketService.disconnect();
   }
   public getAll(): void {
     this.loader = true;
@@ -172,18 +171,20 @@ export class ServicesComponent implements OnInit, OnDestroy {
       sortType: this.pageParams.sortType,
       ...this.filter,
     };
-    let query = generateQueryFilter(params)
+    let query = generateQueryFilter(params);
     this.servicesService
       .getDriverServices(query)
       .pipe(
         tap((res: any) => {
           if (res && res?.success) {
+            this.loader = false;
             this.data = res.data.content;
             this.pageParams.totalPagesCount = res.data.totalPagesCount;
             this.totalItemsCount = this.pageParams.pageSize * this.pageParams.totalPagesCount;
           }
           else {
             this.data = [];
+            this.loader = false;
           }
         }),
         catchError(this.handleError.bind(this)),
@@ -347,6 +348,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
       statusCode: '',
       createdAtFrom: '',
       createdAtTo: '',
+      excludedServicesIds: [16, 15],
+      servicesIds: ['']
     }
   }
   calculateSum(amountDetails: any[]): number {

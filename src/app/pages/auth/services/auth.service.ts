@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, of, switchMap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, of, switchMap, throwError } from 'rxjs';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { env } from 'src/environmens/environment';
 import { jwtDecode } from 'jwt-decode';
@@ -83,4 +83,34 @@ export class AuthService {
   private checkPermissions(permissionObj: any): string[] {
     return Object.keys(permissionObj).filter((key) => permissionObj[key]);
   }
+
+  refreshTokenRequest(): Observable<any> {
+    if (this.refreshInProgress) {
+      return this.refreshTokenSubject.asObservable();
+    }
+  
+    this.refreshInProgress = true;
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) {
+      this.logout();
+      return throwError(() => new Error('Refresh token is missing'));
+    }
+  
+    return this.http.post(`${env.authUrl}/refresh-token`, { refreshToken }).pipe(
+      switchMap((response: any) => {
+        this.accessToken = response.data.accessToken;
+        this.refreshToken = response.data.refreshToken;
+        localStorage.setItem('accessToken', this.accessToken);
+        localStorage.setItem('refreshToken', this.refreshToken);
+        this.refreshInProgress = false;
+        this.refreshTokenSubject.next(response.data.accessToken);
+        return of(response);
+      }),
+      catchError((error) => {
+        this.logout();
+        return throwError(() => new Error('Failed to refresh token'));
+      })
+    );
+  }
+  
 }
