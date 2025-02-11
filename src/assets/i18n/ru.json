@@ -18,6 +18,7 @@
   "cargo_group_type": "Тип группы груза",
   "codeTNVED": "Код ТНВЭД",
   "driverHasNotGsmCard": "У водителя нету карты",
+  "gsmCardAlreadyAssigned": "У водителя уже есть карты",
   "chat": "Чат",
   "excel": "Excel",
   "activity": "Активность",
@@ -537,7 +538,8 @@
     "individual": "Индивидуальная",
     "cancelService": "Отменить услугу",
     "log": "Журнал услуга",
-    "operator": "Оператор"
+    "operator": "Оператор",
+    "isMobile": "Показывать в мобильном"
   },
   "chat": {
     "title": "Чаты",

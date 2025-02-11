@@ -13,7 +13,7 @@ import { removeDuplicateKeys } from 'src/app/shared/pipes/remove-dublicates-form
 import { DriverModel } from '../../models/driver.model';
 import { DriversService } from '../../services/drivers.service';
 import { jwtDecode } from 'jwt-decode';
-import { AddTransportComponent } from '../add-transport/add-transport.component';
+import { AddTransportComponent } from '../../../transports/add-transport/add-transport.component';
 import { TransportModel } from 'src/app/pages/references/transport-types/models/transport.model';
 import { Router } from '@angular/router';
 import { Permission } from 'src/app/shared/enum/per.enum';

@@ -42,9 +42,9 @@ export class AssignDriverCardComponent implements OnInit {
   }
   initForm() {
     this.form = new FormGroup({
-      id: new FormControl(null, [Validators.required]),
+      driverId: new FormControl(null, [Validators.required]),
       searchAs: new FormControl('driverId'),
-      gsmCardNumber: new FormControl(null, this.type == 'assign' ? Validators.required : null)
+      gcmCardNumber: new FormControl(null, this.type == 'assign' ? Validators.required : null)
     })
     this.updateGsmCardValidation();
 
@@ -86,7 +86,7 @@ export class AssignDriverCardComponent implements OnInit {
     this.updateGsmCardValidation();
   } 
   private updateGsmCardValidation() {
-    const gsmCardControl = this.form.get('gsmCardNumber');
+    const gsmCardControl = this.form.get('gcmCardNumber');
     if (this.type === 'assign') {
       gsmCardControl.setValidators([Validators.required]);
     } else {

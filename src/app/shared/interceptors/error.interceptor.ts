@@ -28,6 +28,7 @@ export const errorInterceptor: HttpInterceptorFn = (
 
       const errorMessage = translate.instant(error.error?.message || '');
       if (error.error?.message === 'tokenExpired') {
+        authService.refreshTokenRequest();
         authService.logout();
       }
 

@@ -13,7 +13,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { DriversService } from 'src/app/pages/drivers/services/drivers.service';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { DriverFormComponent } from 'src/app/pages/drivers/components/driver-form/driver-form.component';
-import { AddTransportComponent } from 'src/app/pages/drivers/components/add-transport/add-transport.component';
+import { AddTransportComponent } from 'src/app/pages/transports/add-transport/add-transport.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { AddDriverComponent } from '../add-driver/add-driver.component';
 import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';

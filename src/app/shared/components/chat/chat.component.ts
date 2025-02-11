@@ -84,6 +84,7 @@ export class ChatComponent implements OnInit {
     sortBy: '',
     sortType: '',
     servicesIds: [],
+    chatId: null,
     excludedServicesIds: [15, 16],
     serviceId: this.serviceId,
   };
@@ -91,6 +92,8 @@ export class ChatComponent implements OnInit {
     pageIndex: 1,
     pageSize: 10,
   }
+  
+
   constructor(
     private serviceApi: ServicesService,
     private translate: TranslateService,
@@ -100,6 +103,9 @@ export class ChatComponent implements OnInit {
   ) {
     const currentLang = localStorage.getItem('lang') || 'us';
     this.translate.use(currentLang.toLowerCase());
+
+   
+
   }
 
   ngAfterViewInit() {
@@ -133,7 +139,7 @@ export class ChatComponent implements OnInit {
     this.searchControl.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((searchTerm) => {
-        this.pageParams.serviceId = searchTerm;
+        this.pageParams.chatId = Number(searchTerm) ;
         this.getChats();
       });
     this.getChats();
@@ -143,7 +149,7 @@ export class ChatComponent implements OnInit {
     if (this.sseSubscription) {
       this.sseSubscription.unsubscribe();
     }
-    this.socketService.disconnectSSE();
+    this.socketService.disconnect();
   }
   getChats() {
     this.loading = true;

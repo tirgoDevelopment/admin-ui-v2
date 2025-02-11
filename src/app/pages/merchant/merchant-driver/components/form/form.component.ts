@@ -28,7 +28,7 @@ export class FormComponent implements OnInit {
   form: FormGroup;
   currencies: CurrencyModel[] = [];
   companyTypes = [];
-
+  
   constructor(
     private tmsService: TmsService,
     private fb: FormBuilder,
@@ -38,31 +38,31 @@ export class FormComponent implements OnInit {
     private companyTypeApi: CompanyTypesService,
     private translate: TranslateService) {
     this.form = this.fb.group({
-      id: new FormControl(''),
-      companyType: new FormControl('', Validators.required),
-      companyName: new FormControl('', Validators.required),
-      responsiblePersonLastName: new FormControl(''),
-      responsiblePersonFistName: new FormControl(''),
-      email: new FormControl('', Validators.required),
-      phoneNumber: new FormControl('', Validators.required),
-      factAddress: new FormControl(''),
-      legalAddress: new FormControl(''),
-      bankName: new FormControl(''),
+      id: new FormControl(null),
+      companyType: new FormControl(null, Validators.required),
+      companyName: new FormControl(null, Validators.required),
+      responsiblePersonLastName: new FormControl(null),
+      responsiblePersonFistName: new FormControl(null),
+      email: new FormControl(null, Validators.required),
+      phoneNumber: new FormControl(null, Validators.required),
+      factAddress: new FormControl(null),
+      legalAddress: new FormControl(null),
+      bankName: new FormControl(null),
       bankAccounts: this.fb.array([]),
-      notes: new FormControl(''),
-      mfo: new FormControl(''),
-      inn: new FormControl(''),
-      oked: new FormControl(''),
-      dunsNumber: new FormControl(''),
-      ibanNumber: new FormControl(''),
-      supervisorFirstName: new FormControl(''),
-      supervisorLastName: new FormControl(''),
-      taxPayerCode: new FormControl(''),
-      responsbilePersonPhoneNumber: new FormControl(''),
-      kzPaidWayCommission: new FormControl(''),
-      debtLimit: new FormControl(''),
-      password: new FormControl(''),
-      isCompleted: new FormControl(true),
+      notes: new FormControl(null),
+      mfo: new FormControl(null),
+      inn: new FormControl(null),
+      oked: new FormControl(null),
+      dunsNumber: new FormControl(null),
+      ibanNumber: new FormControl(null),
+      supervisorFirstName: new FormControl(null),
+      supervisorLastName: new FormControl(null),
+      taxPayerCode: new FormControl(null),
+      responsbilePersonPhoneNumber: new FormControl(null),
+      kzPaidWayCommission: new FormControl('5'),
+      debtLimit: new FormControl(null),
+      password: new FormControl(null),
+      isCompleted: new FormControl(true)
     });
   }
 

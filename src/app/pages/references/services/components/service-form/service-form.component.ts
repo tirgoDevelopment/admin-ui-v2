@@ -35,6 +35,7 @@ export class ServiceFormComponent implements OnInit {
     withoutSubscription: new FormControl(false, [Validators.required]),
     isLegalEntity: new FormControl(false, [Validators.required]),
     description: new FormControl(null, [Validators.required]),
+    isMobile: new FormControl(false)
   });
 
   constructor(
