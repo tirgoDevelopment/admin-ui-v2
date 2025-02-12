@@ -101,6 +101,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   searchTms$ = new BehaviorSubject<string>('');
   completedServicesTotalTirAmount = 0;
   tms$: Observable<any>;
+  
   private sseSubscription: Subscription | null = null;
   constructor(
     private servicesService: ServicesService,
@@ -134,7 +135,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
       )),
     );
   }
-
   find(ev: string) {
     let filter = generateQueryFilter({ companyName: ev });
     this.searchTms$.next(filter);
@@ -164,6 +164,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.socketService.disconnect();
   }
   public getAll(): void {
+    this.completedServicesTotalTirAmount = 0
     this.loader = true;
     const params = {
       pageIndex: this.pageParams.pageIndex,
@@ -572,4 +573,5 @@ export class ServicesComponent implements OnInit, OnDestroy {
       this.uniqueServices1 = this.uniqueServices.filter((service: any) => service.id === 15 || service.id === 16);
     }
   }
+  
 }

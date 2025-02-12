@@ -515,6 +515,7 @@
   "invalidTransportNumber": "Неверный транспортный номер",
   "last_update": "Последнее обновление",
   "comments": "Комментарии",
+  "no_comments": "Нет комментарии",
   "writeComment": "Написать комментарии",
   "cancelReason": "Причина отмены",
   "transportManagment": "Управление транспортом",
