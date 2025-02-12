@@ -24,7 +24,10 @@
             <td>{{item.type | translate}}</td>
             <td>{{ item.createdAt | date : "dd.MM.yyyy" }}</td>
             <td>{{item.transport.transportNumber}}</td>
-            <td>({{item.driver?.id}}) {{item.driver?.firstName}} {{item.driver?.lastName.slice(0,1)}}.</td>
+            <td> 
+                <span *ngIf="item.driver"> ({{item.driver?.id}}) {{item.driver?.firstName}} {{item.driver?.lastName.slice(0,1)}}.</span>
+                <span *ngIf="!item.driver"> {{'no_data' | translate}} </span>
+            </td>
         </tr>
     </tbody>
 </nz-table>

@@ -35,4 +35,5 @@ export interface TransportModel extends BaseModel {
     isRefrigerator:any;
     isMain:boolean;
     cargoLoadMethods:any;
+    isKzPaidWay: boolean;
 }
