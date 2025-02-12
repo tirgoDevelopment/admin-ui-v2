@@ -27,10 +27,9 @@ export const errorInterceptor: HttpInterceptorFn = (
       }
 
       const errorMessage = translate.instant(error.error?.message || '');
-      if (error.error?.message === 'tokenExpired') {
-        authService.refreshTokenRequest();
-        authService.logout();
-      }
+      // if (error.error?.message === 'tokenExpired') {
+      //   authService.onRefreshToken();
+      // }
 
       const finalMessage = errorMessage || 'Извините, произошла ошибка';
       toastr.error(finalMessage, errorMessage ? '' : 'Попробуйте позже');

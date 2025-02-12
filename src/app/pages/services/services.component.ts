@@ -80,7 +80,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   selectedServiceId: string | null = null;
   filteredServiceId: string | null = null;
   tabType = 0
-  public data: any[] = [];
+  public data: any;
   public loader = false;
   public isFilterVisible = false;
   public filter: Record<any, any> = this.initializeFilter();
@@ -99,6 +99,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   totalItemsCount
   currentUser: any;
   searchTms$ = new BehaviorSubject<string>('');
+  completedServicesTotalTirAmount = 0;
   tms$: Observable<any>;
   private sseSubscription: Subscription | null = null;
   constructor(
@@ -178,6 +179,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
         tap((res: any) => {
           if (res && res?.success) {
             this.loader = false;
+            this.completedServicesTotalTirAmount = res.data.completedServicesTotalTirAmount;
             this.data = res.data.content;
             this.pageParams.totalPagesCount = res.data.totalPagesCount;
             this.totalItemsCount = this.pageParams.pageSize * this.pageParams.totalPagesCount;

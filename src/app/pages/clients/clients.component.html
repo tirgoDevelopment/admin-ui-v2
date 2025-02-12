@@ -98,7 +98,7 @@
         <td> {{ i+1 }} </td>
         <td> {{ item.id }} </td>
         <td> {{ item.firstName.toUpperCase() }} {{ item.lastName.toUpperCase() }} </td>
-        <td> {{ item.phoneNumbers[0].code + item.phoneNumbers[0].number | phoneFormat}} </td>
+        <td> {{ item.phoneNumbers.length ? (item.phoneNumbers[0].code + item.phoneNumbers[0].number | phoneFormat) : ('no_data' | translate)}} </td>
         <td> {{ item.createdAt | date : 'dd.MM.yyyy' }} </td>
         <td>
           <span *ngIf="item?.user.lastLogin">{{ item.user.lastLogin | date : 'dd.MM.yyyy' }}</span>

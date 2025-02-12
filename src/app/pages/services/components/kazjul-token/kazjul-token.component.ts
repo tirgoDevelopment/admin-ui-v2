@@ -42,11 +42,17 @@ export class KazjulTokenComponent {
   getData() {
     this.loadingPage = true;
     this.serviceApi.kzPaidWayAccount().subscribe((res: any) => {
-      if (res && res.success)
+      if (res && res.data) {
         this.form.patchValue(res.data);
         this.kazJulBalance = res.data.balance;
         this.last_update = res.data.transactionsLastUpdatedate;
         this.loadingPage = false;
+      }
+      else {
+        this.loadingPage = false;
+      }
+    }, err => {
+      this.loadingPage = false;
     })
   }
   onSubmit() {
@@ -60,7 +66,7 @@ export class KazjulTokenComponent {
   }
   onRequst() {
     this.loading = true;
-    this.serviceApi.requestKazJul({}).subscribe((res:any) => {
+    this.serviceApi.requestKazJul({}).subscribe((res: any) => {
       if (res) {
         this.loading = false;
         this.toastr.success(this.translate.instant('successfullUpdated'), '');

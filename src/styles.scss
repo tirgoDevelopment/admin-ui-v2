@@ -737,7 +737,9 @@ input[type=number]::-webkit-outer-spin-button {
 .my-4 {
   margin-top: 20px;
 }
-
+.p-0 {
+  padding: 0 !important;
+}
 .gap {
   gap: 10px;
 }
