@@ -523,6 +523,7 @@
   "assign_transport": "Прикрепил траснпорт",
   "unassign_transport": "Открепил транспорт",
   "companyType": "Тип компании",
+  "amountService": "Сумма выполненных услуг",
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",

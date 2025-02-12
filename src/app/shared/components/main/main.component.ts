@@ -74,13 +74,17 @@ export class MainComponent {
     });
     this.getChats();
     this.socketService.listen('newMessage').subscribe((event) => {
-      if ((event.event === 'newMessage' && event.data.userType != 'admin') && ((this.chat && this.chat.id) !== event.data.chatId)) {
+      console.log('ok');
+      
+      console.log(event);
+      if ((event.data.userType != 'admin') && ((this.chat && this.chat.id) !== event.data.chatId)) {
         this.newMessageCount = this.newMessageCount + 1;
         this.cdr.detectChanges();
-        this.pushService.showPushNotification(`Новое сообщение поступило на услугу в id ${event.data.chatId}`, '', 'service');
+        this.pushService.showPushNotification(`Новое сообщение поступило на услугу в ID ${event.data.chatId}`, '', 'service');
       }
     })
     this.socketService.listen('tmsGsmBalanceTopup').subscribe((event) => {
+      console.log(event);
       this.pushService.showPushNotification('Поступил запрос на пополнение ГСМ баланса', 'от компании ' + event.data?.tms.companyType + event.data?.tms.companyName, 'gsm')
     })
     this.socketService.listen('newServiceRequest').subscribe((event) => {

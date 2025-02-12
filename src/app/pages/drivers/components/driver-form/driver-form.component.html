@@ -327,8 +327,8 @@
     <div>
       <div class="user-name">{{ data?.firstName }} {{ data?.lastName }}</div>
       <div class="user-id">ID: {{ data?.id }}</div>
-      <div class="user-id" *ngIf="data.driverMerchant">{{'driver_merchant' | translate}}:
-        {{data?.driverMerchant?.companyType}} {{data?.driverMerchant?.companyName}} </div>
+      <div class="user-id" *ngIf="data.tms">{{'driver_merchant' | translate}}:
+        {{data?.tms?.companyType}} {{data?.tms?.companyName}} </div>
     </div>
     <div class="rating">
       <i nz-icon nzType="star" nzTheme="fill"></i>

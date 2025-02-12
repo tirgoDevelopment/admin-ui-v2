@@ -44,5 +44,6 @@ export interface DriverModel extends BaseModel {
         id: number;
         lastLogin: Date;
     }
-    driverMerchant?:MerchantModel;
+    // driverMerchant?:MerchantModel;
+    tms: MerchantModel
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, LOCALE_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, catchError, of, switchMap, throwError } from 'rxjs';
@@ -13,7 +13,7 @@ import { jwtDecode } from 'jwt-decode';
 export class AuthService {
   private _accessTokenSubject = new BehaviorSubject<string | null>(null);
   public accessToken$ = this._accessTokenSubject.asObservable();
-  private refreshToken: string | null = null;
+   refreshToken: string | null = null;
   private refreshInProgress = false;
   private refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
@@ -57,11 +57,22 @@ export class AuthService {
         this.refreshToken = response.data.refreshToken;
         localStorage.setItem('accessToken', this.accessToken);
         localStorage.setItem('refreshToken', this.refreshToken);
-        const user: any = this.accessToken ? jwtDecode(this.accessToken) : null;
-        const allPermission = user?.role?.permission
-          ? this.checkPermissions(user.role.permission)
-          : [];
-        this.permissionService.loadPermissions(allPermission);
+        return of(response);
+      })
+    );
+  }
+  onRefreshToken() {
+    return this.http.post(`${env.authUrl}/refresh-token`, {refreshToken: localStorage.getItem('refreshToken')}).pipe(
+      switchMap((response: any) => {
+        if(response && response.success) {
+          this.accessToken = response.data.accessToken;
+          this.refreshToken = response.data.refreshToken;
+          localStorage.setItem('accessToken', this.accessToken);
+          localStorage.setItem('refreshToken', this.refreshToken);
+          }
+        else {
+          this.logout();
+        }
         return of(response);
       })
     );
@@ -84,33 +95,4 @@ export class AuthService {
     return Object.keys(permissionObj).filter((key) => permissionObj[key]);
   }
 
-  refreshTokenRequest(): Observable<any> {
-    if (this.refreshInProgress) {
-      return this.refreshTokenSubject.asObservable();
-    }
-  
-    this.refreshInProgress = true;
-    const refreshToken = localStorage.getItem('refreshToken');
-    if (!refreshToken) {
-      this.logout();
-      return throwError(() => new Error('Refresh token is missing'));
-    }
-  
-    return this.http.post(`${env.authUrl}/refresh-token`, { refreshToken }).pipe(
-      switchMap((response: any) => {
-        this.accessToken = response.data.accessToken;
-        this.refreshToken = response.data.refreshToken;
-        localStorage.setItem('accessToken', this.accessToken);
-        localStorage.setItem('refreshToken', this.refreshToken);
-        this.refreshInProgress = false;
-        this.refreshTokenSubject.next(response.data.accessToken);
-        return of(response);
-      }),
-      catchError((error) => {
-        this.logout();
-        return throwError(() => new Error('Failed to refresh token'));
-      })
-    );
-  }
-  
 }

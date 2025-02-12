@@ -84,7 +84,7 @@
             <div [id]="message.id" [ngClass]="{
                 'message': true,
                 'sent': message.senderUserType === 'admin',
-                'received': message.senderUserType === 'driver' || message.senderUserType === 'tms_user1',
+                'received': message.senderUserType === 'driver' || message.senderUserType === 'tms_user',
                 'selected': selectedMessages.has(message.id),
                 'highlighted': highlightedMessageId === message.id
               }">

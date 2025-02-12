@@ -27,7 +27,6 @@ export class SocketService {
     });
   }
 
-
   listen(eventName: string): Observable<any> {
     if (!this.eventSubjects[eventName]) {
       this.eventSubjects[eventName] = new Subject<any>();
