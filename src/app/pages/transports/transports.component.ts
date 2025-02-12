@@ -86,6 +86,11 @@ export class TransportsComponent implements OnInit {
         mode: 'add'
       }
     });
+    drawerRef.afterClose.subscribe((res: any) => {
+      if(res && res.success){
+        this.getAll()
+      }
+    });
   }
   editTransport(item) {
     const drawerRef: any = this.drawer.create({
@@ -99,7 +104,9 @@ export class TransportsComponent implements OnInit {
       }
     });
     drawerRef.afterClose.subscribe((res: any) => {
-      this.getAll()
+      if(res && res.success){
+        this.getAll()
+      }
     });
   }
   transportManagment() {

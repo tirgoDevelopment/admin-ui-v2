@@ -104,7 +104,8 @@ export class AddTransportComponent implements OnInit {
       isAdr: new FormControl(false),
       isHighCube: new FormControl(false),
       volume: new FormControl(''),
-      isMain: new FormControl(false)
+      isMain: new FormControl(false),
+      isKzPaidWay: new FormControl(false)
     })
   }
 
@@ -162,7 +163,8 @@ export class AddTransportComponent implements OnInit {
       isHook: this.data.isHook,
       isAdr: this.data.isAdr,
       heightCubature: this.data.heightCubature,
-      isMain: this.data.isMain
+      isMain: this.data.isMain,
+      isKzPaidWay: this.data.isKzPaidWay
     });
   }
   getTransportBrands() {
