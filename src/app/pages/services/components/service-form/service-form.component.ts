@@ -51,7 +51,6 @@ export class ServiceFormComponent implements OnInit {
 
   findDriver(ev: string) {
     let searchAs = this.form.get('searchAs')?.value;
-
     let filter = generateQueryFilter({ [searchAs]: ev });
     this.searchDriver$.next(filter);
   }

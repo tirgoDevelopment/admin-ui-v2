@@ -1,6 +1,7 @@
 <div class="comment-container" *ngIf="!loadingPage">
   <!-- Comment List -->
-  <nz-list *ngIf="data.length" [nzDataSource]="data" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
+  <nz-list [nzDataSource]="data" [nzRenderItem]="item" [nzItemLayout]="'horizontal'"
+    [nzNoResult]="'no_comments' | translate">
     <ng-template #item let-item>
       <nz-comment [nzAuthor]="item.createdBy.admin.fullName" [nzDatetime]="item.createdAt | date : 'dd.MM.yyyy HH:mm'">
         <nz-avatar nz-comment-avatar nzIcon="user" [nzSrc]="item.avatar"></nz-avatar>
@@ -17,15 +18,12 @@
     <nz-comment>
       <nz-comment-content>
         <nz-form-item>
-          <textarea [(ngModel)]="inputValue" nz-input rows="4" placeholder="{{ 'writeComment' | translate }}"></textarea>
+          <textarea [(ngModel)]="inputValue" nz-input rows="4"
+            placeholder="{{ 'writeComment' | translate }}"></textarea>
         </nz-form-item>
         <div class="button-wrapper m-0">
-          <button 
-            nz-button 
-            class="success-button"
-            (click)="onSubmit()"
-            [nzLoading]="loading" 
-            [disabled]="!inputValue || loading" >
+          <button nz-button class="success-button" (click)="onSubmit()" [nzLoading]="loading"
+            [disabled]="!inputValue || loading">
             {{ 'send' | translate }}
           </button>
         </div>

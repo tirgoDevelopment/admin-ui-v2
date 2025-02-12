@@ -49,6 +49,14 @@
     </div>
     <div>
       <nz-input-group class="input-group w-full">
+        <nz-select style="width: 100%; min-width: 150px;" nzPlaceHolder="{{ 'driver_merchant' | translate }}" nzShowSearch nzServerSearch (nzOnSearch)="findTms($event)"
+          [nzShowArrow]="true" [nzAllowClear]="true" [(ngModel)]="filter['tmsId']">
+          <nz-option [nzLabel]="item.companyType + ' ' + item.companyName" [nzValue]="item.id" *ngFor="let item of tms$ | async"></nz-option>
+        </nz-select>
+      </nz-input-group>
+    </div>
+    <div>
+      <nz-input-group class="input-group w-full">
         <nz-select style="width: 100%; min-width: 150px;" nzPlaceHolder="{{ 'kzPaidWay' | translate }}"
           [nzShowArrow]="true" [nzAllowClear]="true" [(ngModel)]="filter['isKzPaidWay']">
           <nz-option nzLabel="{{'on' | translate}}" [nzValue]="true"></nz-option>
