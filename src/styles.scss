@@ -75,8 +75,32 @@ body {
         }
       }
     }
+    tfoot {
+      tr {
+        td {
+          background-color: var(--bgColor) !important;
+          color: var(--textColor) !important;
+        }
+      }
+    }
   }
 }
+
+.resize-trigger {
+  width: 1px !important;
+  height: 30px !important;
+  margin: 12px 5px !important;
+  background: #e8e8e8 !important;
+}
+.nz-resizable-preview {
+  border-width: 0 !important;
+  border-right-width: 1px !important;
+}
+.pointer-events-none {
+  pointer-events: none !important;
+}
+
+
 
 .ant-layout-header {
   z-index: 999 !important;

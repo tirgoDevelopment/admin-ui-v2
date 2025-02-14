@@ -16,17 +16,25 @@
             <th>{{ "date" | translate }}</th>
             <th>{{'state_number' | translate}}</th>
             <th>{{'driver' | translate}}</th>
+            <th>{{'services.operator' | translate}}</th>
         </tr>
     </thead>
 
     <tbody>
         <tr *ngFor="let item of data; let i = index">
             <td>{{item.type | translate}}</td>
-            <td>{{ item.createdAt | date : "dd.MM.yyyy" }}</td>
+            <td>{{ item.createdAt | date : "dd.MM.yyyy HH:mm" }}</td>
             <td>{{item.transport.transportNumber}}</td>
-            <td> 
-                <span *ngIf="item.driver"> ({{item.driver?.id}}) {{item.driver?.firstName}} {{item.driver?.lastName.slice(0,1)}}.</span>
+            <td>
+                <span *ngIf="item.driver"> ({{item.driver?.id}}) {{item.driver?.firstName}}
+                    {{item.driver?.lastName.slice(0,1)}}.</span>
                 <span *ngIf="!item.driver"> {{'no_data' | translate}} </span>
+            </td>
+            <td>
+                {{ item.createdBy.userType === 'admin'
+                ? ('admin' | translate)
+                : ('driver_merchant' | translate)
+                }}
             </td>
         </tr>
     </tbody>

@@ -21,15 +21,10 @@ export const errorInterceptor: HttpInterceptorFn = (
         return throwError(() => new Error('Интернет-связь отсутствует'));
       }
 
-      if (error.error?.error === 'Not Found') {
-        toastr.error('Not found', '');
-        return throwError(() => new Error('Not found'));
-      }
-
       const errorMessage = translate.instant(error.error?.message || '');
-      // if (error.error?.message === 'tokenExpired') {
-      //   authService.onRefreshToken();
-      // }
+      if (error.error.error === 'Token verification failed') {
+        authService.logout();
+      }
 
       const finalMessage = errorMessage || 'Извините, произошла ошибка';
       toastr.error(finalMessage, errorMessage ? '' : 'Попробуйте позже');

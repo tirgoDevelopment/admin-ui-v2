@@ -6,6 +6,10 @@
         <nz-breadcrumb-item>{{ 'drivers' | translate }} {{merchantName}}</nz-breadcrumb-item>
     </nz-breadcrumb>
     <div class="button-group">
+        <button nz-button class="success-button" (click)="historyTransaction()"  *ngIf="perService.hasPermission(Per.TmsTransactionsHistory)">
+            <span nz-icon nzType="history" nzTheme="outline"></span>
+            {{ 'history_transaction' | translate }}
+        </button>
         <button nz-button class="secondary-button" (click)="toggleFilter()">
             <span nz-icon nzType="filter" nzTheme="fill"></span>
             {{ 'filter' | translate }}

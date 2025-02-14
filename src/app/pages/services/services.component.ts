@@ -36,6 +36,7 @@ import { CreatedAtPipe } from 'src/app/shared/pipes/createdAt.pipe';
 import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 import { ReasonComponent } from './components/reason/reason.component';
 import { TmsService } from '../merchant/merchant-driver/services/tms.service';
+import { NzResizableModule, NzResizableService } from 'ng-zorro-antd/resizable';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -64,8 +65,8 @@ export enum SseEventNames {
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, ChatComponent, CreatedAtPipe, PriceFormatPipe],
-  providers: [NzModalService],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, ChatComponent, CreatedAtPipe, PriceFormatPipe, NzResizableModule],
+  providers: [NzModalService, NzResizableService],
   animations: [
     trigger('showHideFilter', [
       state('show', style({ height: '*', opacity: 1, visibility: 'visible' })),
@@ -101,7 +102,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
   searchTms$ = new BehaviorSubject<string>('');
   completedServicesTotalTirAmount = 0;
   tms$: Observable<any>;
-  
   private sseSubscription: Subscription | null = null;
   constructor(
     private servicesService: ServicesService,
@@ -114,17 +114,12 @@ export class ServicesComponent implements OnInit, OnDestroy {
     private tmsService: TmsService,
     private router: Router,
     public perService: PermissionService
-  ) { }
+  ) {
+  }
   ngOnInit(): void {
     this.getStatuses();
     this.getRefServices();
     this.currentUser = jwtDecode(localStorage.getItem('accessToken') || '');
-    // this.sseSubscription = this.socketService.getSSEEvents().subscribe((event) => {
-    //   this.handleSocketEvent(event);
-    //   if (event.event === 'newServiceRequest') {
-    //     this.getAll();
-    //   }
-    // });
     this.tms$ = this.searchTms$.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -135,6 +130,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
       )),
     );
   }
+
   find(ev: string) {
     let filter = generateQueryFilter({ companyName: ev });
     this.searchTms$.next(filter);
@@ -573,5 +569,5 @@ export class ServicesComponent implements OnInit, OnDestroy {
       this.uniqueServices1 = this.uniqueServices.filter((service: any) => service.id === 15 || service.id === 16);
     }
   }
-  
+
 }
