@@ -39,7 +39,13 @@ export const authInterceptor = (
                                         headers: req.headers.set('Authorization', 'Bearer ' + authService.accessToken),
                                     })
                                 );
-                            } else {
+                            }
+                            if(response.error == "Token verification failed") {
+                                console.log(response);
+                                authService.logout();
+                                return null;
+                              } 
+                            else {
                                 authService.logout();
                                 return throwError(() => new Error('Failed to refresh token'));
                             }

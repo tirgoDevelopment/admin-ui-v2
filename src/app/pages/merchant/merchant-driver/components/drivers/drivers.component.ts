@@ -1,6 +1,6 @@
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NgxMaskDirective } from 'ngx-mask';
@@ -18,6 +18,8 @@ import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { AddDriverComponent } from '../add-driver/add-driver.component';
 import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
 import { TmsService } from '../../services/tms.service';
+import { PermissionService } from 'src/app/shared/services/permission.service';
+import { Permission } from 'src/app/shared/enum/per.enum';
 
 @Component({
   selector: 'app-drivers',
@@ -36,7 +38,7 @@ import { TmsService } from '../../services/tms.service';
 })
 export class DriversComponent implements OnInit {
   confirmModal?: NzModalRef;
-
+  Per = Permission
   data: any[] = [];
   merchantId;
   merchantName: string;
@@ -58,7 +60,9 @@ export class DriversComponent implements OnInit {
     private route: ActivatedRoute,
     private modal: NzModalService,
     private driversService: DriversService,
-    private drawer: NzDrawerService,) {
+    private router: Router,
+    private drawer: NzDrawerService,
+    public perService: PermissionService) {
     this.merchantId = this.route.snapshot.params['id'];
   }
   ngOnInit(): void {
@@ -187,5 +191,9 @@ export class DriversComponent implements OnInit {
   filterApply() { 
     this.pageParams.pageIndex = 1;
     this.getAll();
+  }
+  historyTransaction() {
+      if (!this.perService.hasPermission(this.Per.TmsTransactionsHistory)) return
+      this.router.navigate([`/merchant-driver/transactions/${this.merchantId}/${this.merchantName}`]);
   }
 }

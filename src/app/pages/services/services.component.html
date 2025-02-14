@@ -55,7 +55,8 @@
           <nz-select style="width: 100%; min-width: 150px;" nzShowSearch nzServerSearch
             nzPlaceHolder="{{ 'merchant_driver' | translate }}" [nzShowArrow]="false" [(ngModel)]="filter['merchantId']"
             (nzOnSearch)="find($event)">
-            <nz-option *ngFor="let o of (tms$ | async)?.data?.content" [nzLabel]="o.companyType + ' ' + o.companyName" [nzValue]="o.id">
+            <nz-option *ngFor="let o of (tms$ | async)?.data?.content" [nzLabel]="o.companyType + ' ' + o.companyName"
+              [nzValue]="o.id">
             </nz-option>
           </nz-select>
         </nz-input-group>
@@ -99,20 +100,19 @@
       (nzQueryParams)="onQueryParamsChange($event)">
       <thead>
         <tr>
-          <th nzWidth="70px">No</th>
-          <th nzLeft nzResizable>{{ "services.serviceId" | translate }}</th>
-          <th class="ellipsis" nzLeft>{{
-            "services.serviceName" | translate }}</th>
-          <th class="ellipsis">{{'merchant_driver' | translate}}</th>
-          <th>{{ "services.driverId" | translate }}</th>
-          <th>{{ "state_number_truck" | translate }}</th>
-          <th>{{ "date_creation" | translate }}</th>
-          <th *ngIf="tabType == 1">{{ "date_debit" | translate }}</th>
-          <th>{{ "services.processingTime" | translate }}</th>
-          <th>{{ "services.processingTimeEnd" | translate }}</th>
-          <th>{{ "total" | translate }} (TIR)</th>
-          <th nzWidth="200px" nzRight>{{ "status" | translate }} </th>
-          <th nzWidth="50px" nzRight *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
+          <th nzWidth="70px" nzResizable> No </th>
+          <th nzWidth="150px" nzResizable nzLeft>{{ "services.serviceId" | translate }}</th>
+          <th nzWidth="200px" nzResizable class="ellipsis" nzLeft>{{ "services.serviceName" | translate }}</th>
+          <th nzWidth="120px" nzResizable>{{ "total" | translate }} (TIR)</th>
+          <th nzWidth="200px" nzResizable class="ellipsis">{{ 'merchant_driver' | translate }}</th>
+          <th nzWidth="150px" nzResizable>{{ "services.driverId" | translate }}</th>
+          <th nzWidth="180px" nzResizable>{{ "state_number_truck" | translate }}</th>
+          <th nzWidth="180px" nzResizable>{{ "date_creation" | translate }}</th>
+          <th *ngIf="tabType == 1" nzWidth="180px" nzResizable>{{ "date_debit" | translate }}</th>
+          <th nzWidth="180px" nzResizable>{{ "services.processingTime" | translate }}</th>
+          <th nzWidth="180px" nzResizable>{{ "services.processingTimeEnd" | translate }}</th>
+          <th nzWidth="200px" nzResizable nzRight>{{ "status" | translate }}</th>
+          <th nzWidth="50px" nzResizable nzRight *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
         </tr>
       </thead>
       <tbody>
@@ -123,6 +123,7 @@
             <div nz-tooltip [nzTooltipTitle]="item.service.name">{{ item.service.name }}
             </div>
           </td>
+          <td> {{item.tirAmount ? item.tirAmount : 0}}</td>
           <td class="ellipsis" (click)="$event.stopPropagation()" (click)="showTms(item.driver?.tms?.id)">
             <div nz-tooltip [nzTooltipTitle]="item.driver.tms?.companyType + ' ' +
             item.driver.tms?.companyName" [ngClass]="perService.hasPermission(Per.TmsDetail) ? 'link' : ''"
@@ -148,14 +149,7 @@
           <td *ngIf="tabType == 1">{{ item.kzPaidWayTransactionIssuedDate | date : "dd.MM.yyyy HH:mm" : '+0' }}</td>
           <td>{{ item.statusesHistory | createdAt : 3 | date : "dd.MM.yyyy HH:mm" }}</td>
           <td>{{ item.statusesHistory | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</td>
-          <td>
-            <div *ngIf="item.amountDetails && item.amountDetails.length > 0">
-              {{ calculateSum(item.amountDetails) | priceFormat }}
-            </div>
-            <div *ngIf="!item.amountDetails || item.amountDetails.length === 0">
-              {{ 'no_data' | translate }}
-            </div>
-          </td>
+
           <td nzRight (click)="$event.stopPropagation()" (click)="changeStatus(item.status, item)"
             (contextmenu)="showComments(item)">
             <span class="status" [ngStyle]="{
@@ -189,10 +183,10 @@
           </td>
         </tr>
       </tbody>
-      <tfoot nzSummary style="position: absolute; top:-50px" *ngIf="data && data.length">
+      <tfoot nzSummary style="position: absolute; top:-55px" *ngIf="data && data.length">
         <tr>
-          <td class="p-0"> <b> {{'amountService' | translate}} :</b></td>
-          <td>{{completedServicesTotalTirAmount | priceFormat}} TIR</td>
+          <td class="p-0"> <b>{{'amountService' | translate}} :</b> </td>
+          <td colspan="7">{{completedServicesTotalTirAmount | priceFormat}} TIR</td>
         </tr>
       </tfoot>
     </nz-table>

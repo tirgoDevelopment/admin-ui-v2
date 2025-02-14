@@ -13,7 +13,7 @@ import { jwtDecode } from 'jwt-decode';
 export class AuthService {
   private _accessTokenSubject = new BehaviorSubject<string | null>(null);
   public accessToken$ = this._accessTokenSubject.asObservable();
-   refreshToken: string | null = null;
+  refreshToken: string | null = null;
   private refreshInProgress = false;
   private refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
@@ -62,14 +62,14 @@ export class AuthService {
     );
   }
   onRefreshToken() {
-    return this.http.post(`${env.authUrl}/refresh-token`, {refreshToken: localStorage.getItem('refreshToken')}).pipe(
+    return this.http.post(`${env.authUrl}/refresh-token`, { refreshToken: localStorage.getItem('refreshToken') }).pipe(
       switchMap((response: any) => {
-        if(response && response.success) {
+        if (response && response.success) {
           this.accessToken = response.data.accessToken;
           this.refreshToken = response.data.refreshToken;
           localStorage.setItem('accessToken', this.accessToken);
           localStorage.setItem('refreshToken', this.refreshToken);
-          }
+        }
         else {
           this.logout();
         }
