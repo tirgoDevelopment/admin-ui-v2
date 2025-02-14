@@ -8,13 +8,14 @@ import { BehaviorSubject, map, of, take } from 'rxjs';
 import { DriversService } from 'src/app/pages/drivers/services/drivers.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
+import { LabelPipe } from 'src/app/shared/pipes/label.pipe';
 
 @Component({
   selector: 'app-transport-manage',
   templateUrl: './transport-manage.component.html',
   styleUrls: ['./transport-manage.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule]
+  imports: [CommonModules, NzModules, TranslateModule, LabelPipe]
 })
 export class TransportManageComponent implements OnInit {
   form
@@ -31,6 +32,7 @@ export class TransportManageComponent implements OnInit {
   ) { }
   ngOnInit(): void {
     this.form = new FormGroup({
+      searchAs: new FormControl('driverId'),
       driverId: new FormControl(null),
       transportId: new FormControl(null, Validators.required),
     })
@@ -67,7 +69,7 @@ export class TransportManageComponent implements OnInit {
   }
   findDriver(searchTerm: string) {
     if (searchTerm) {
-      this.driverService.findDrivers(searchTerm, 'driverId').subscribe((response: any) => {
+      this.driverService.findDrivers(searchTerm, this.form.value.searchAs).subscribe((response: any) => {
         this.drivers = response.data.content;
       });
     }

@@ -13,7 +13,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
-import { AddTransportComponent } from '../transports/add-transport/add-transport.component';
+import { AddTransportComponent } from '../transports/components/add-transport/add-transport.component';
 import { SendPushComponent } from './components/send-push/send-push.component';
 import { AssignTmcComponent } from './components/assign-tmc/assign-tmc.component';
 import { TopupBalanceDriverComponent } from './components/topup-balance-driver/topup-balance-driver.component';

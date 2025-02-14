@@ -19,7 +19,7 @@ import { CurrenciesService } from 'src/app/shared/services/references/currencies
 import { LoadingMethodService } from 'src/app/shared/services/references/loading-method.service';
 import { TransportKindsService } from 'src/app/shared/services/references/transport-kinds.service';
 import { TransportTypesService } from 'src/app/shared/services/references/transport-type.service';
-import { DriversService } from '../../drivers/services/drivers.service';
+import { DriversService } from '../../../drivers/services/drivers.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { TransportModel } from 'src/app/pages/references/transport-types/models/transport.model';
 import { Response } from 'src/app/shared/models/reponse';

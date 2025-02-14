@@ -12,7 +12,7 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { TransportsService } from './services/transports.service';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { TransportBrandService } from '../references/transport-brand/services/transport-brand.service';
-import { AddTransportComponent } from './add-transport/add-transport.component';
+import { AddTransportComponent } from './components/add-transport/add-transport.component';
 import { catchError, of, tap } from 'rxjs';
 import { TransportManageComponent } from './components/transport-manage/transport-manage.component';
 import { Router } from '@angular/router';
