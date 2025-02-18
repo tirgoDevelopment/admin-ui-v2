@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NotificationService } from 'src/app/shared/services/notification.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { catchError, finalize, of, tap } from 'rxjs';
@@ -9,7 +8,6 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
-import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { TopupBalanceTmsComponent } from '../topup-balance-tms/topup-balance-tms.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
@@ -63,6 +61,8 @@ export class HistoryTransactionComponent {
   getAll(): void {
     this.loader = true;
     const queryString = generateQueryFilter(this.filter);
+    console.log(queryString);
+    
     this.tmsService.balanceTransactions(this.merchantId, this.pageParams, queryString).pipe(
       tap((res: any) => {
         this.data = res?.success ? res.data.content : [];

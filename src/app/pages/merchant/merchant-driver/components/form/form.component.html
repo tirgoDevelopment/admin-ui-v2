@@ -31,6 +31,7 @@
   <nz-input-group class="input-group">
     <nz-form-label nzRequired>{{ 'email' | translate }}</nz-form-label>
     <input formControlName="email" type="text" nz-input placeholder="{{ 'email' | translate }}" required />
+    <span class="error-message">Этот Email будет использоваться как ваш логин для входа в систему</span>
   </nz-input-group>
   <nz-input-group class="input-group">
     <nz-form-label nzRequired>{{ 'phone' | translate }}</nz-form-label>
@@ -93,6 +94,9 @@
   <nz-input-group class="input-group" *ngIf="mode == 'add'">
     <nz-form-label nzRequired>{{ 'password' | translate }}</nz-form-label>
     <input formControlName="password" type="text" nz-input placeholder="{{ 'password' | translate }}" />
+    <span class="error-message" *ngIf="form.get('password')?.invalid && form.get('password')?.touched" >
+      Пароль должен содержать не менее 8 символов и букв
+    </span>
   </nz-input-group>
 
   <nz-input-group class="input-group">

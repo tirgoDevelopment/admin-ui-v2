@@ -7,6 +7,7 @@ import {
   Output,
   ViewChild,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -24,6 +25,9 @@ import { FileFormatPipe } from '../../pipes/fileType.pipe';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { FilePreviewPipe } from '../../pipes/file-preview.pipe';
+import { NgxDocViewerComponent, NgxDocViewerModule } from 'ngx-doc-viewer';
 
 @Component({
   selector: 'app-chat',
@@ -32,11 +36,11 @@ import { NzInputModule } from 'ng-zorro-antd/input';
   standalone: true,
   imports: [
     NgStyle, NgClass, CommonModule,
-    DatePipe, FileFetchPipe, FileFormatPipe,
-    NzIconModule, NzSpinModule, NzInputModule, NzImageModule, NzSpaceModule, NzPopconfirmModule,
+    DatePipe, FileFetchPipe, FileFormatPipe, NgxDocViewerModule,
+    NzIconModule, NzSpinModule, NzInputModule, NzImageModule, NzSpaceModule, NzPopconfirmModule, NzModalModule,
     TranslateModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
 })
 export class ChatComponent implements OnInit {
@@ -47,12 +51,15 @@ export class ChatComponent implements OnInit {
   @Output() closeChatEvent = new EventEmitter<void>();
   @Output() newMessageCountChange = new EventEmitter<number>();
   @Input() outputServiceId: string;
-
+  isPreviewModalOpen = false;
   chatIconPosition = { x: 50, y: 50 };
   chatSize = { width: 400, height: 500 };
   observer: MutationObserver | null = null;
+  isDragging = false;
+  droppedFile: File | null = null;
+  isFileDragging = false;
+  droppedFileUrl: string | null = null;
 
-  private isDragging = false;
   private dragOffset = { x: 0, y: 0 };
   private dragSpeedFactor = 1;
   messages: any[] = [];
@@ -92,22 +99,57 @@ export class ChatComponent implements OnInit {
     pageIndex: 1,
     pageSize: 10,
   }
-  
+
 
   constructor(
     private serviceApi: ServicesService,
     private translate: TranslateService,
     private socketService: SocketService,
     private pushService: PushService,
-    private el: ElementRef
+    private el: ElementRef,
+    private cdr: ChangeDetectorRef
   ) {
     const currentLang = localStorage.getItem('lang') || 'us';
     this.translate.use(currentLang.toLowerCase());
-
-   
-
+  }
+  onFileDrop(event: DragEvent) {
+    event.preventDefault();
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      this.droppedFile = file;
+      // this.errorMessage = '';
+      if (file.type.startsWith("image/")) {
+        this.droppedFileUrl = URL.createObjectURL(file);
+      } else if (file.type === "application/pdf") {
+        this.droppedFileUrl = URL.createObjectURL(file);
+      } else {
+        this.droppedFileUrl = null;
+        // this.errorMessage = "Faqat rasm yoki PDF fayllarni yuklashingiz mumkin!";
+      }
+  
+      this.showPreviewModal();
+    }
   }
 
+  onFileDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.isFileDragging = true;
+  }
+  onFileDragLeave() {
+    this.isFileDragging = false;
+  }
+  showPreviewModal() {
+    this.isPreviewModalOpen = true;
+  }
+
+  closePreviewModal() {
+    this.isPreviewModalOpen = false;
+    if (this.droppedFileUrl) {
+      URL.revokeObjectURL(this.droppedFileUrl);
+      this.droppedFileUrl = null;
+    }
+  }
   ngAfterViewInit() {
     const chatCard = this.el.nativeElement.querySelector('.chat-card') as HTMLElement;
     const savedSize = localStorage.getItem('chatSize');
@@ -139,7 +181,7 @@ export class ChatComponent implements OnInit {
     this.searchControl.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((searchTerm) => {
-        this.pageParams.chatId = Number(searchTerm) ;
+        this.pageParams.chatId = Number(searchTerm);
         this.getChats();
       });
     this.getChats();

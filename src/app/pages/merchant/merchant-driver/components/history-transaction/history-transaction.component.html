@@ -20,20 +20,22 @@
 <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
   <div>
     <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['transactionType'] " type="text" nz-input
-        placeholder="{{ 'transactionType' | translate }}" />
+      <nz-select [(ngModel)]="filter['balanceType']" nzPlaceHolder="{{ 'transactionType' | translate }}" style="width: 200px">
+        <nz-option [nzValue]="'tirgo'" [nzLabel]="'tirBalance' | translate"></nz-option>
+        <nz-option [nzValue]="'tirgo_service'" [nzLabel]="'serviceBalance' | translate"></nz-option>
+      </nz-select>
     </nz-input-group>
   </div>
   <div>
     <nz-input-group class="input-group">
-      <nz-date-picker [(ngModel)]="filter['fromDate']" type="date" nz-input [nzAllowClear]="false"
+      <nz-date-picker [(ngModel)]="filter['createdAtFrom']" type="date" nz-input [nzAllowClear]="false"
         nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
       </nz-date-picker>
     </nz-input-group>
   </div>
   <div>
     <nz-input-group class="input-group">
-      <nz-date-picker [(ngModel)]="filter['toDate']" type="date" nz-input [nzAllowClear]="false"
+      <nz-date-picker [(ngModel)]="filter['createdAtTo']" type="date" nz-input [nzAllowClear]="false"
         nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
       </nz-date-picker>
     </nz-input-group>
@@ -53,7 +55,7 @@
       <div class="card-title">{{ 'tirBalance' | translate }}</div>
       <div class="card-content">
         <span class="amount">{{tirBalance | priceFormat}}</span>
-        <span class="currency">Tir</span>
+        <span class="currency">TIR</span>
       </div>
     </div>
   </nz-card>
@@ -62,7 +64,7 @@
       <div class="card-title">{{ 'serviceBalance' | translate }}</div>
       <div class="card-content">
         <span class="amount">{{serviceBalance | priceFormat}}</span>
-        <span class="currency">Tir</span>
+        <span class="currency">TIR</span>
       </div>
     </div>
   </nz-card>
@@ -76,7 +78,7 @@
       <th>No</th>
       <th nzColumnKey="id" [nzSortFn]="true">ID</th>
       <th>{{ 'full_name' | translate }}</th>
-      <th> {{ 'sum' | translate }} (Tir)</th>
+      <th> {{ 'sum' | translate }} (TIR)</th>
       <th>{{ 'date' | translate }}</th>
       <th>{{ 'type' | translate }}</th>
       <th nzEllipsis>{{'description' | translate}} </th>

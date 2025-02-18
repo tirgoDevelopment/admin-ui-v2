@@ -46,7 +46,7 @@ export class TmsService {
     return this.http.patch<Response<DriverMerchantModel>>(`${env.apiUrl}/tmses/${id}/unblock`, {})
   }
   balanceTransactions(tmsId: any, params?: any, filter?: any) {
-    return this.http.get<Response<DriverMerchantModel>>(`${env.apiUrl}/tmses/${tmsId}/balances/transactions`)
+    return this.http.get<Response<DriverMerchantModel>>(`${env.apiUrl}/tmses/${tmsId}/balances/transactions${filter}`,params)
   }
   tmsBalance(tmsId: any) {
     return this.http.get<Response<DriverMerchantModel>>(`${env.apiUrl}/tmses/${tmsId}/balances`)

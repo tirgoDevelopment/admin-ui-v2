@@ -15,7 +15,8 @@
             <h2 *ngIf="selectedChat && selectedChat.serviceRequests" class="ellipsis">{{ selectedChat.id }}. <span
                 *ngFor="let service of selectedChat.serviceRequests">{{
                 service.service.name }} </span> </h2>
-            <span *ngIf="selectedChat && !selectedChat.serviceRequests">{{ selectedChat.id }}.{{selectedChat.service.name}}</span>
+            <span *ngIf="selectedChat && !selectedChat.serviceRequests">{{ selectedChat.id
+              }}.{{selectedChat.service.name}}</span>
           </div>
         </div>
         <div class="header-actions">
@@ -64,7 +65,8 @@
     </div>
 
     <!-- Chat Messages -->
-    <div class="chat-content" *ngIf="!showChatList && !loading">
+    <div class="chat-content" *ngIf="!showChatList && !loading" (drop)="onFileDrop($event)"
+      (dragover)="onFileDragOver($event)">
       <!-- Messages Container -->
       <div class="chat-messages" #scrollContainer (scroll)="onScrollMessages($event)">
         <!-- Loading More Spinner -->
@@ -113,12 +115,14 @@
                           [nzSrc]="message.message | fileFetch:'drivers/services-requests' | async" />
                       </nz-image-group>
                     </div>
-
-                    <!-- PDF Preview -->
-                    <div *ngIf="(message.message | fileFormat) === 'pdf'" class="pdf-preview" nz-space-item>
-                      <i nz-icon nzType="file-pdf" nzTheme="outline" style="font-size: 24px;"></i>
-                    </div>
                   </nz-space>
+                  <!-- PDF Preview -->
+                  <div *ngIf="(message.message | fileFormat) === 'pdf'" class="pdf-preview" nz-space-item>
+                    <a [href]="message.message | fileFetch:message.file.bucket | async" target="_blank"
+                      rel="noopener noreferrer">
+                      <i nz-icon nzType="file-pdf" nzTheme="outline" style="font-size: 24px; cursor: pointer;"></i>
+                    </a>
+                  </div>
                 </div>
 
                 <!-- Message Footer -->
@@ -130,7 +134,8 @@
                     <!-- Placeholder for message status -->
                   </div>
                   <div class="message-time">
-                    {{ message.senderUserType === 'driver' ? ('driver' | translate) : message.senderUserType === 'tms_user' ?
+                    {{ message.senderUserType === 'driver' ? ('driver' | translate) : message.senderUserType ===
+                    'tms_user' ?
                     'TMS' : '' }}
                   </div>
                 </div>
@@ -159,6 +164,22 @@
           </div>
         </ng-template>
       </div>
+      <nz-modal [(nzVisible)]="isPreviewModalOpen" (nzOnCancel)="closePreviewModal()"
+        [nzTitle]="'chat.send_file' | translate">
+        <ng-container *nzModalContent>
+          <div class="dragged-file-preview">
+            <img nz-image *ngIf="droppedFileUrl && droppedFile?.type.startsWith('image/')" [nzSrc]="droppedFileUrl"
+              alt="Preview" class="preview-image" />
+            <div *ngIf="droppedFile && droppedFile.type === 'application/pdf'" class="pdf-preview">
+              <i nz-icon nzType="file-pdf" nzTheme="outline" class="pdf-icon"></i>
+            </div>
+            <div class="text-center p-1">
+              <h4>{{ droppedFile?.name }}</h4>
+              <p>{{ (droppedFile?.size / 1024).toFixed(2) }} KB</p>
+            </div>
+          </div>
+        </ng-container>
+      </nz-modal>
 
       <!-- Reply Bar -->
       <div *ngIf="replyingTo" class="reply-bar">
