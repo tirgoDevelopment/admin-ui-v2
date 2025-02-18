@@ -131,11 +131,64 @@
 }
 
 .chat-content {
-  flex: 1;
+  position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   height: calc(100% - 60px);
+ 
+}
+.dragged-file-preview {
+  img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+  }
+}
+
+.chat-content {
+  transition: all 0.3s;
+  // border: 2px dashed transparent;
+}
+
+.chat-content.dragging {
+  border-color: #1890ff;
+  background-color: rgba(24, 144, 255, 0.1);
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 60vh;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.pdf-preview {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+}
+
+.pdf-icon {
+  font-size: 48px;
+  color: #ff4d4f;
+}
+
+.preview-actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 400px;
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px;
+  object-fit: contain;
 }
 
 .chat-messages {

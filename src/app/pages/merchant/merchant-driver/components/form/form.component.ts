@@ -37,7 +37,7 @@ export class FormComponent implements OnInit {
     private currenciesApi: CurrenciesService,
     private companyTypeApi: CompanyTypesService,
     private translate: TranslateService) {
-    this.form = this.fb.group({
+    this.form = new FormGroup({
       id: new FormControl(null),
       companyType: new FormControl(null, Validators.required),
       companyName: new FormControl(null, Validators.required),
@@ -61,7 +61,7 @@ export class FormComponent implements OnInit {
       responsbilePersonPhoneNumber: new FormControl(null),
       kzPaidWayCommission: new FormControl('5'),
       debtLimit: new FormControl(null),
-      password: new FormControl(null),
+      password: new FormControl(null, [Validators.minLength(8), Validators.maxLength(16)]),
       isCompleted: new FormControl(true)
     });
   }
