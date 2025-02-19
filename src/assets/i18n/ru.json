@@ -527,6 +527,7 @@
   "unassign_kz_paid_way": "QAJ выключен",
   "companyType": "Тип компании",
   "amountService": "Сумма выполненных услуг",
+  "size": "Размер",
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",
@@ -554,6 +555,7 @@
     "TODAY": "Сегодня",
     "YESTERDAY": "Вчера",
     "EDITED": "изменено",
+    "sendFile": "Отправить файл",
     "SIZE": {
       "BYTES": "Б",
       "KB": "КБ",
