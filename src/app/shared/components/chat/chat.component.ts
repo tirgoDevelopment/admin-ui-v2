@@ -28,6 +28,8 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { FilePreviewPipe } from '../../pipes/file-preview.pipe';
 import { NgxDocViewerComponent, NgxDocViewerModule } from 'ngx-doc-viewer';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-chat',
@@ -37,7 +39,7 @@ import { NgxDocViewerComponent, NgxDocViewerModule } from 'ngx-doc-viewer';
   imports: [
     NgStyle, NgClass, CommonModule,
     DatePipe, FileFetchPipe, FileFormatPipe, NgxDocViewerModule,
-    NzIconModule, NzSpinModule, NzInputModule, NzImageModule, NzSpaceModule, NzPopconfirmModule, NzModalModule,
+    NzIconModule, NzSpinModule, NzInputModule, NzImageModule, NzSpaceModule, NzPopconfirmModule, NzModalModule, NzButtonModule,
     TranslateModule,
     FormsModule,
     ReactiveFormsModule,
@@ -56,8 +58,8 @@ export class ChatComponent implements OnInit {
   chatSize = { width: 400, height: 500 };
   observer: MutationObserver | null = null;
   isDragging = false;
-  droppedFile: File | null = null;
   isFileDragging = false;
+  droppedFile: File | null = null;
   droppedFileUrl: string | null = null;
 
   private dragOffset = { x: 0, y: 0 };
@@ -100,44 +102,57 @@ export class ChatComponent implements OnInit {
     pageSize: 10,
   }
 
-
+  dragCounter = 0;
   constructor(
     private serviceApi: ServicesService,
     private translate: TranslateService,
     private socketService: SocketService,
     private pushService: PushService,
     private el: ElementRef,
-    private cdr: ChangeDetectorRef
+    private toastr: NotificationService
   ) {
     const currentLang = localStorage.getItem('lang') || 'us';
     this.translate.use(currentLang.toLowerCase());
   }
   onFileDrop(event: DragEvent) {
     event.preventDefault();
+    this.isFileDragging = false;
+    this.dragCounter = 0;
+  
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
       const file = files[0];
-      this.droppedFile = file;
-      // this.errorMessage = '';
-      if (file.type.startsWith("image/")) {
+      if (file.type.startsWith("image/") || file.type === "application/pdf") {
+        this.droppedFile = file;
         this.droppedFileUrl = URL.createObjectURL(file);
-      } else if (file.type === "application/pdf") {
-        this.droppedFileUrl = URL.createObjectURL(file);
+        this.showPreviewModal();
       } else {
-        this.droppedFileUrl = null;
-        // this.errorMessage = "Faqat rasm yoki PDF fayllarni yuklashingiz mumkin!";
+        this.showErrorMessage("Можно загружать только изображения или PDF-файлы!");
       }
-  
-      this.showPreviewModal();
     }
   }
+  showErrorMessage(message: string) {
+    this.toastr.error(message)
+  }
+  
 
   onFileDragOver(event: DragEvent) {
     event.preventDefault();
-    this.isFileDragging = true;
+    event.stopPropagation();
+  
+    this.dragCounter++;
+    if (!this.isFileDragging) {
+      this.isFileDragging = true;
+    }
   }
-  onFileDragLeave() {
-    this.isFileDragging = false;
+
+  onFileDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  
+    if (!event.relatedTarget || !(event.relatedTarget as HTMLElement).closest('.chat-content')) {
+      this.isFileDragging = false;
+    }
   }
   showPreviewModal() {
     this.isPreviewModalOpen = true;
@@ -359,6 +374,7 @@ export class ChatComponent implements OnInit {
       },
       complete: () => {
         this.loading = false;
+        this.closePreviewModal();
       },
     });
   }

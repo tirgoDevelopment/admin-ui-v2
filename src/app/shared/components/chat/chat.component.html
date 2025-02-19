@@ -65,12 +65,13 @@
     </div>
 
     <!-- Chat Messages -->
-    <div class="chat-content" *ngIf="!showChatList && !loading" (drop)="onFileDrop($event)"
-      (dragover)="onFileDragOver($event)">
+    <div class="chat-content" *ngIf="!showChatList && !loading" (drop)="onFileDrop($event)" [class.dragover]="isFileDragging"
+      (dragover)="onFileDragOver($event)"
+      (dragleave)="onFileDragLeave($event)">
       <!-- Messages Container -->
       <div class="chat-messages" #scrollContainer (scroll)="onScrollMessages($event)">
         <!-- Loading More Spinner -->
-        <div *ngIf="loadingMore" class="loading-more" style="display: flex; justify-content: center;">
+        <div *ngIf="loadingMore" class="loading-more flex justify-center">
           <nz-spin nzSimple></nz-spin>
         </div>
 
@@ -164,19 +165,27 @@
           </div>
         </ng-template>
       </div>
-      <nz-modal [(nzVisible)]="isPreviewModalOpen" (nzOnCancel)="closePreviewModal()"
-        [nzTitle]="'chat.send_file' | translate">
+
+      <!-- Dragged File Preview Modal -->
+      <nz-modal [(nzVisible)]="isPreviewModalOpen" (nzOnCancel)="closePreviewModal()" [nzFooter]="null"
+        [nzTitle]="'chat.sendFile' | translate">
         <ng-container *nzModalContent>
           <div class="dragged-file-preview">
             <img nz-image *ngIf="droppedFileUrl && droppedFile?.type.startsWith('image/')" [nzSrc]="droppedFileUrl"
               alt="Preview" class="preview-image" />
-            <div *ngIf="droppedFile && droppedFile.type === 'application/pdf'" class="pdf-preview">
+            <div  *ngIf="droppedFile && droppedFile.type === 'application/pdf'" class="pdf-preview justify-center">
               <i nz-icon nzType="file-pdf" nzTheme="outline" class="pdf-icon"></i>
             </div>
             <div class="text-center p-1">
-              <h4>{{ droppedFile?.name }}</h4>
-              <p>{{ (droppedFile?.size / 1024).toFixed(2) }} KB</p>
+              <h4> <b>{{'named' | translate}}:</b>  {{ droppedFile?.name }}</h4>
+              <p> <b>{{'size' | translate}}:</b>  {{ (droppedFile?.size / 1024).toFixed(2) }} KB</p>
             </div>
+          </div>
+          <div class="button-wrapper mb-0">
+            <button nz-button class="secondary-button" (click)="closePreviewModal()">{{'cancel' | translate}}</button>
+            <button nz-button class="success-button" (click)="fileUpload(droppedFile)">
+              {{ 'send' | translate }}
+            </button>
           </div>
         </ng-container>
       </nz-modal>

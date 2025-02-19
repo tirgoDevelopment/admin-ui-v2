@@ -753,7 +753,9 @@ input[type=number]::-webkit-outer-spin-button {
 .my-2 {
   margin: 10px 0;
 }
-
+.mb-0 {
+  margin-bottom: 0 !important;
+}
 .mb-2 {
   margin-bottom: 20px;
 }
@@ -778,7 +780,9 @@ input[type=number]::-webkit-outer-spin-button {
 .justify-between {
   justify-content: space-between;
 }
-
+.justify-center {
+  justify-content: center;
+}
 .justify-end {
   justify-content: end;
 }
