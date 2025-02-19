@@ -122,15 +122,18 @@ export class ChatComponent implements OnInit {
     const files = event.dataTransfer?.files;
     if (files && files.length > 0) {
       const file = files[0];
-      if (file.type.startsWith("image/") || file.type === "application/pdf") {
+      const allowedFormats = ["image/jpeg", "image/png", "application/pdf"];
+  
+      if (allowedFormats.includes(file.type)) {
         this.droppedFile = file;
         this.droppedFileUrl = URL.createObjectURL(file);
         this.showPreviewModal();
       } else {
-        this.showErrorMessage("Можно загружать только изображения или PDF-файлы!");
+        this.showErrorMessage("Файл должен быть только в формате JPEG, PNG или PDF.");
       }
     }
   }
+  
   showErrorMessage(message: string) {
     this.toastr.error(message)
   }
