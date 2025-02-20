@@ -100,26 +100,26 @@
       (nzQueryParams)="onQueryParamsChange($event)">
       <thead>
         <tr>
-          <th nzWidth="70px" nzResizable> No </th>
-          <th nzWidth="150px" nzResizable nzLeft>{{ "services.serviceId" | translate }}</th>
-          <th nzWidth="200px" nzResizable class="ellipsis" nzLeft>{{ "services.serviceName" | translate }}</th>
-          <th nzWidth="120px" nzResizable>{{ "total" | translate }} (TIR)</th>
-          <th nzWidth="200px" nzResizable class="ellipsis">{{ 'merchant_driver' | translate }}</th>
-          <th nzWidth="150px" nzResizable>{{ "services.driverId" | translate }}</th>
-          <th nzWidth="180px" nzResizable>{{ "state_number_truck" | translate }}</th>
-          <th nzWidth="180px" nzResizable>{{ "date_creation" | translate }}</th>
-          <th *ngIf="tabType == 1" nzWidth="180px" nzResizable>{{ "date_debit" | translate }}</th>
-          <th nzWidth="180px" nzResizable>{{ "services.processingTime" | translate }}</th>
-          <th nzWidth="180px" nzResizable>{{ "services.processingTimeEnd" | translate }}</th>
-          <th nzWidth="200px" nzResizable nzRight>{{ "status" | translate }}</th>
-          <th nzWidth="50px" nzResizable nzRight *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
+          <th nzWidth="70px"> No </th>
+          <th nzWidth="150px" [nzLeft]="!ms.isMobile">{{ "services.serviceId" | translate }}</th>
+          <th nzWidth="200px" class="ellipsis" [nzLeft]="!ms.isMobile">{{ "services.serviceName" | translate }}</th>
+          <th nzWidth="120px">{{ "total" | translate }} (TIR)</th>
+          <th nzWidth="200px" class="ellipsis">{{ 'merchant_driver' | translate }}</th>
+          <th nzWidth="150px">{{ "services.driverId" | translate }}</th>
+          <th nzWidth="180px">{{ "state_number_truck" | translate }}</th>
+          <th nzWidth="180px">{{ "date_creation" | translate }}</th>
+          <th *ngIf="tabType == 1" nzWidth="180px">{{ "date_debit" | translate }}</th>
+          <th nzWidth="180px">{{ "services.processingTime" | translate }}</th>
+          <th nzWidth="180px">{{ "services.processingTimeEnd" | translate }}</th>
+          <th nzWidth="200px" [nzRight]="!ms.isMobile">{{ "status" | translate }}</th>
+          <th nzWidth="50px" [nzRight]="!ms.isMobile" *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let item of data; let i = index" (click)="showChatForService(item.chat.id)">
           <td>{{ item.rowIndex }}</td>
-          <td nzLeft>{{ item.id}} / {{ item.service.code}}</td>
-          <td nzLeft class="ellipsis">
+          <td [nzLeft]="!ms.isMobile">{{ item.id}} / {{ item.service.code}}</td>
+          <td [nzLeft]="!ms.isMobile" class="ellipsis">
             <div nz-tooltip [nzTooltipTitle]="item.service.name">{{ item.service.name }}
             </div>
           </td>
@@ -150,7 +150,7 @@
           <td>{{ item.statusesHistory | createdAt : 3 | date : "dd.MM.yyyy HH:mm" }}</td>
           <td>{{ item.statusesHistory | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</td>
 
-          <td nzRight (click)="$event.stopPropagation()" (click)="changeStatus(item.status, item)"
+          <td [nzRight]="!ms.isMobile" (click)="$event.stopPropagation()" (click)="changeStatus(item.status, item)"
             (contextmenu)="showComments(item)">
             <span class="status" [ngStyle]="{
                 background: item.status.color,
@@ -159,7 +159,7 @@
             </span>
 
           </td>
-          <td class="action-col" nzRight (click)="$event.stopPropagation()"
+          <td class="action-col" [nzRight]="!ms.isMobile" (click)="$event.stopPropagation()"
             *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])">
             <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
               <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer"></i>

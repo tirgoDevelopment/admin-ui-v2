@@ -37,6 +37,7 @@ import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 import { ReasonComponent } from './components/reason/reason.component';
 import { TmsService } from '../merchant/merchant-driver/services/tms.service';
 import { NzResizableModule, NzResizableService } from 'ng-zorro-antd/resizable';
+import { MobileDetectionService } from 'src/app/shared/services/mobile-detect.service';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -113,7 +114,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private tmsService: TmsService,
     private router: Router,
-    public perService: PermissionService
+    public perService: PermissionService,
+    public ms: MobileDetectionService
   ) {
   }
   ngOnInit(): void {
@@ -129,6 +131,8 @@ export class ServicesComponent implements OnInit, OnDestroy {
         })
       )),
     );
+    console.log(this.ms.isMobile);
+    
   }
 
   find(ev: string) {
