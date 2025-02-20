@@ -21,6 +21,7 @@ import { PermissionService } from 'src/app/shared/services/permission.service';
 import { FileFetchPipe } from 'src/app/shared/pipes/file-fetch.pipe';
 import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
+import { AssignSubscriptionComponent } from '../assign-subscription/assign-subscription.component';
 
 @Component({
   selector: 'app-driver-form',
@@ -337,5 +338,22 @@ export class DriverFormComponent implements OnInit {
   onCancel(): void {
     this.drawerRef.close({ success: false });
     this.form.reset();
+  }
+
+  onApplySubscribe() {
+    const drawerRef = this.drawer.create({
+      nzTitle: this.translate.instant('apply_subscribe'),
+      nzContent: AssignSubscriptionComponent,
+      nzPlacement: 'right',
+      nzWidth: 450,
+      nzContentParams: {
+        driverId: this.data.id
+      }
+    })
+    drawerRef.afterClose.subscribe((res: any) => {
+        if(res) {
+          this.drawerRef.close({success: true})
+        }
+    })  
   }
 }

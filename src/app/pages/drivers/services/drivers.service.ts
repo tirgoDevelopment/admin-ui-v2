@@ -51,10 +51,16 @@ export class DriversService {
   topupDriverBalance(data:any) {
     return this.http.post<Response<DriverModel>>(env.apiUrl + `/drivers/${data.driverId}/balances`, data)
   }
+
+  assignSubscriptionDriver(data) {
+    return this.http.post(env.apiUrl + `/drivers/${data.driverId}/subscription`, data)
+  }
   findDrivers(searchTerm: string, searchAs: string) {
     const filter = generateQueryFilter({ [searchAs]: searchTerm });
     return this.getAll({}, filter).pipe(
       catchError(() => of({ data: { content: [] } }))
     );
   }
+
+
 }

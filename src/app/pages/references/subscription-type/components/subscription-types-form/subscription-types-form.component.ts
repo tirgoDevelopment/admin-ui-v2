@@ -31,28 +31,19 @@ export class SubscriptionTypesFormComponent implements OnInit {
     duration: new FormControl('', Validators.required),
     name: new FormControl('', Validators.required),
     price: new FormControl('', Validators.required),
-    currencyId: new FormControl('', Validators.required),
   });
 
   constructor(
     private toastr: NotificationService,
     private drawerRef: NzDrawerRef,
-    private currenciesService: CurrenciesService,
     private subscriptionTypesService: SubscriptionTypesService,
     private translate: TranslateService) { }
 
   ngOnInit(): void {
     this.patchForm();
-    this.getCurrencies();
   }
 
-  getCurrencies() {
-    this.currenciesService.getAll().subscribe((res: Response<CurrencyModel[]>) => {
-      if (res && res.success) {
-        this.currencies = res.data;
-      }
-    })
-  }
+  
   patchForm() {
     if (this.data) {
       this.form.patchValue({
@@ -60,7 +51,6 @@ export class SubscriptionTypesFormComponent implements OnInit {
         name: this.data.name,
         duration: this.data.duration,
         price: this.data.price,
-        currencyId: this.data.currency.id
       });
     }
 

@@ -1,0 +1,21 @@
+<form [formGroup]="form">
+
+    <nz-input-group class="input-group">
+        <nz-form-label nzRequired>{{ 'type_subscription' | translate }}</nz-form-label>
+        <nz-select formControlName="subscriptionId" class="w-full" nzPlaceHolder="{{ 'type_subscription' | translate }}"
+            [nzAllowClear]="false">
+            <nz-option *ngFor="let o of subscriptions" [nzLabel]="o.name" [nzValue]="o.id">
+            </nz-option>
+        </nz-select>
+    </nz-input-group>
+    <div *ngIf="driver?.tms">
+        <label nz-checkbox formControlName="isByDriverBalance" class="m-0">{{'pay_driver' |
+            translate}}</label>
+    </div>
+    <div class="button-wrapper">
+        <button [nzLoading]="loading" nz-button class="success-button" (click)="onSave()"
+            [disabled]=" loading || !form.valid">
+            {{ 'save' | translate }}
+        </button>
+    </div>
+</form>
