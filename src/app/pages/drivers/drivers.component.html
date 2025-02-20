@@ -99,9 +99,10 @@
         <th nzColumnKey="id" [nzSortFn]="true">ID</th>
         <th>{{ 'full_name' | translate }}</th>
         <th>{{ 'phone' | translate }}</th>
+        <th>{{'driver_merchant' | translate}}</th>
         <th>{{ 'state_number' | translate }}</th>
         <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
-        <th>{{ 'status' | translate }}</th>
+        <th>{{ 'subscription' | translate }}</th>
         <th nzWidth="50px"></th>
       </tr>
     </thead>
@@ -116,7 +117,9 @@
             phoneFormat}}</span>
           <span *ngIf="!item.phoneNumbers[0]?.code">{{ 'no_data' | translate}}</span>
         </td>
+        <td> {{ item.tms?.companyName ? item.tms?.companyName : ('no_data' | translate) }} </td>
         <td>
+          <span *ngIf="item.driverTransports && !item.driverTransports.length">{{'no_data' | translate}}</span>
           <div *ngFor="let tr of item.driverTransports; let i = index">
             {{tr.transportNumber}}
           </div>
@@ -124,8 +127,8 @@
         <td> {{ item.createdAt | date : 'dd.MM.yyyy' }} </td>
 
         <td>
-          <span *ngIf="item?.isBusy" class="delete-icon">{{'busy' | translate}}</span>
-          <span *ngIf="!item?.isBusy" class="edit-icon">{{'not_busy' | translate}}</span>
+          <span *ngIf="!item?.isSubscribed">{{'no' | translate}}</span>
+          <span *ngIf="item?.isSubscribed">{{item.subscribedAt | date : 'dd.MM.yyyy'}} - {{item.subscribedTill | date : 'dd.MM.yyyy'}}</span>
         </td>
 
         <td class="action-col" (click)="$event.stopPropagation()"

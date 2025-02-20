@@ -92,7 +92,7 @@ export class DriversComponent implements OnInit {
       ),
       nzContent: DriverFormComponent,
       nzPlacement: 'right',
-      nzWidth: '400px',
+      nzWidth: '450px',
       nzContentParams: {
         id: id,
         mode: action
@@ -102,6 +102,9 @@ export class DriversComponent implements OnInit {
       if (res && res?.success && res?.mode !== 'add') {
         this.getAll();
         drawerRef.componentInstance?.form.reset();
+      }
+      if (res && res?.success && res?.mode !== 'view') {
+        this.getAll();
       }
       if (res && res.success && res?.mode === 'add' && (this.perService.hasPermission(Permission.DriverAddTransport))) {
         this.confirmModal = this.modal.confirm({

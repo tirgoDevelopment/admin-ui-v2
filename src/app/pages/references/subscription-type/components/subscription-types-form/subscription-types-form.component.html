@@ -17,20 +17,10 @@
   </nz-input-group>
 
   <nz-input-group class="input-group">
-    <nz-form-label nzRequired>{{'price' | translate}}</nz-form-label>
-    <input formControlName="price" type="number" nz-input placeholder="{{'price' | translate}}" />
+    <nz-form-label nzRequired>{{'price' | translate}} (TIR)</nz-form-label>
+    <input formControlName="price" type="number" nz-input placeholder="{{'price' | translate}} (TIR)" />
     <div *ngIf="form.get('price').touched && form.get('price').hasError('required')" class="error-message">
       {{ 'price_required' | translate }}
-    </div>
-  </nz-input-group>
-
-  <nz-input-group class="input-group">
-    <nz-form-label nzRequired>{{'currency' | translate}}</nz-form-label>
-    <nz-select nzPlaceHolder="{{'currency' | translate}}" formControlName="currencyId" style="width: 100% !important;">
-      <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of currencies"></nz-option>
-    </nz-select>
-    <div *ngIf="form.get('currencyId').touched && form.get('currencyId').hasError('required')" class="error-message">
-      {{ 'currency_required' | translate }}
     </div>
   </nz-input-group>
 
