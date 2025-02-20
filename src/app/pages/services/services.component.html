@@ -2,7 +2,7 @@
   <div class="container-page">
     <div class="header-page">
       <h2>{{ "services.title" | translate }}</h2>
-      <div class="button-group">
+      <div class="button-group" [ngClass]="ms.isMobile ? 'my-2' : ''">
         <button nz-button class="success-button" (click)="kazjulToken()"
           *ngIf="perService.hasPermission(Per.ServicesPage)">
           {{ "kzPaidWay" | translate }}
@@ -182,10 +182,14 @@
             </nz-dropdown-menu>
           </td>
         </tr>
+        <tr *ngIf="ms.isMobile">
+          <td colspan="2" class="p-0"> <b>{{'amountService' | translate}} :</b> </td>
+          <td colspan="10">{{completedServicesTotalTirAmount | priceFormat}} TIR</td>
+        </tr>
       </tbody>
-      <tfoot nzSummary style="position: absolute; top:-55px" *ngIf="data && data.length">
+      <tfoot nzSummary style="position: absolute; top:-55px" *ngIf="data && data.length && !ms.isMobile">
         <tr>
-          <td class="p-0"> <b>{{'amountService' | translate}} :</b> </td>
+          <td colspan="2" class="p-0"> <b>{{'amountService' | translate}} :</b> </td>
           <td colspan="7">{{completedServicesTotalTirAmount | priceFormat}} TIR</td>
         </tr>
       </tfoot>
