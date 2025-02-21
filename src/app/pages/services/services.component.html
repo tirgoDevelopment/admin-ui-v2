@@ -112,19 +112,21 @@
           <th nzWidth="180px">{{ "services.processingTime" | translate }}</th>
           <th nzWidth="180px">{{ "services.processingTimeEnd" | translate }}</th>
           <th nzWidth="200px" [nzRight]="!ms.isMobile">{{ "status" | translate }}</th>
-          <th nzWidth="50px" [nzRight]="!ms.isMobile" *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
+          <th nzWidth="50px" [nzRight]="!ms.isMobile"
+            *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let item of data; let i = index" (click)="showChatForService(item.chat.id)">
-          <td>{{ item.rowIndex }}</td>
-          <td [nzLeft]="!ms.isMobile">{{ item.id}} / {{ item.service.code}}</td>
-          <td [nzLeft]="!ms.isMobile" class="ellipsis">
+          <td nzWidth="70px">{{ item.rowIndex }}</td>
+          <td nzWidth="150px" [nzLeft]="!ms.isMobile">{{ item.id}} / {{ item.service.code}}</td>
+          <td nzWidth="200px" [nzLeft]="!ms.isMobile" class="ellipsis">
             <div nz-tooltip [nzTooltipTitle]="item.service.name">{{ item.service.name }}
             </div>
           </td>
-          <td> {{item.tirAmount ? item.tirAmount : 0}}</td>
-          <td class="ellipsis" (click)="$event.stopPropagation()" (click)="showTms(item.driver?.tms?.id)">
+          <td nzWidth="120px"> {{item.tirAmount ? item.tirAmount : 0}}</td>
+          <td nzWidth="200px" class="ellipsis" (click)="$event.stopPropagation()"
+            (click)="showTms(item.driver?.tms?.id)">
             <div nz-tooltip [nzTooltipTitle]="item.driver.tms?.companyType + ' ' +
             item.driver.tms?.companyName" [ngClass]="perService.hasPermission(Per.TmsDetail) ? 'link' : ''"
               *ngIf="item.driver.tms">
@@ -132,10 +134,10 @@
               item.driver.tms?.companyName}}</div>
             <div *ngIf="!item.driver.tms">{{'no' | translate}}</div>
           </td>
-          <td (click)="$event.stopPropagation()" (click)="showDriver(item.driver.id)">
+          <td nzWidth="150px" (click)="$event.stopPropagation()" (click)="showDriver(item.driver.id)">
             <div [ngClass]="perService.hasPermission(Per.DriverDetail) ? 'link' : ''">{{ item.driver.id }}</div>
           </td>
-          <td class="ellipsis">
+          <td nzWidth="180px" class="ellipsis">
             <ng-container *ngIf="item.driver.driverTransports?.length; else noTransports">
               <div *ngFor="let truck of item.driver.driverTransports">
                 {{ truck.transportNumber }}
@@ -145,13 +147,14 @@
               {{ "no_data" | translate }}
             </ng-template>
           </td>
-          <td>{{ item.createdAt | date : "dd.MM.yyyy HH:mm" }}</td>
-          <td *ngIf="tabType == 1">{{ item.kzPaidWayTransactionIssuedDate | date : "dd.MM.yyyy HH:mm" : '+0' }}</td>
-          <td>{{ item.statusesHistory | createdAt : 3 | date : "dd.MM.yyyy HH:mm" }}</td>
-          <td>{{ item.statusesHistory | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</td>
+          <td nzWidth="180px">{{ item.createdAt | date : "dd.MM.yyyy HH:mm" }}</td>
+          <td nzWidth="180px" *ngIf="tabType == 1">{{ item.kzPaidWayTransactionIssuedDate | date : "dd.MM.yyyy HH:mm" :
+            '+0' }}</td>
+          <td nzWidth="180px">{{ item.statusesHistory | createdAt : 3 | date : "dd.MM.yyyy HH:mm" }}</td>
+          <td nzWidth="180px">{{ item.statusesHistory | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</td>
 
-          <td [nzRight]="!ms.isMobile" (click)="$event.stopPropagation()" (click)="changeStatus(item.status, item)"
-            (contextmenu)="showComments(item)">
+          <td nzWidth="200px" [nzRight]="!ms.isMobile" (click)="$event.stopPropagation()"
+            (click)="changeStatus(item.status, item)" (contextmenu)="showComments(item)">
             <span class="status" [ngStyle]="{
                 background: item.status.color,
               }">
@@ -159,7 +162,7 @@
             </span>
 
           </td>
-          <td class="action-col" [nzRight]="!ms.isMobile" (click)="$event.stopPropagation()"
+          <td nzWidth="50px"  [nzRight]="!ms.isMobile" (click)="$event.stopPropagation()"
             *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])">
             <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
               <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer"></i>
@@ -184,13 +187,13 @@
         </tr>
         <tr *ngIf="ms.isMobile">
           <td colspan="2" class="p-0"> <b>{{'amountService' | translate}} :</b> </td>
-          <td colspan="10">{{completedServicesTotalTirAmount | priceFormat}} TIR</td>
+          <td colspan="11">{{completedServicesTotalTirAmount | priceFormat}} TIR</td>
         </tr>
       </tbody>
       <tfoot nzSummary style="position: absolute; top:-55px" *ngIf="data && data.length && !ms.isMobile">
         <tr>
           <td colspan="2" class="p-0"> <b>{{'amountService' | translate}} :</b> </td>
-          <td colspan="7">{{completedServicesTotalTirAmount | priceFormat}} TIR</td>
+          <td colspan="11">{{completedServicesTotalTirAmount | priceFormat}} TIR</td>
         </tr>
       </tfoot>
     </nz-table>
