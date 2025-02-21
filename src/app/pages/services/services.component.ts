@@ -4,7 +4,7 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { PageParams } from '../orders/models/page-params.interface';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import {
   trigger,
   style,
@@ -14,7 +14,7 @@ import {
 } from '@angular/animations';
 import { ServicesService } from './services/services.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { NzDrawerModule, NzDrawerService } from 'ng-zorro-antd/drawer';
 import { ServiceFormComponent } from './components/service-form/service-form.component';
 import { catchError, Observable, tap, throwError, Subscription, finalize, BehaviorSubject, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { SocketService } from 'src/app/shared/services/socket.service';
@@ -22,7 +22,7 @@ import { ServicePricingComponent } from './components/service-pricing/service-pr
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { jwtDecode } from 'jwt-decode';
-import { NzButtonType } from 'ng-zorro-antd/button';
+import { NzButtonModule, NzButtonType } from 'ng-zorro-antd/button';
 import { Router } from '@angular/router';
 import { DriverFormComponent } from '../drivers/components/driver-form/driver-form.component';
 import { DetailComponent } from '../merchant/merchant-driver/components/detail/detail.component';
@@ -38,6 +38,14 @@ import { ReasonComponent } from './components/reason/reason.component';
 import { TmsService } from '../merchant/merchant-driver/services/tms.service';
 import { NzResizableModule, NzResizableService } from 'ng-zorro-antd/resizable';
 import { MobileDetectionService } from 'src/app/shared/services/mobile-detect.service';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -66,7 +74,11 @@ export enum SseEventNames {
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, ChatComponent, CreatedAtPipe, PriceFormatPipe, NzResizableModule],
+  imports: [
+    CommonModules, TranslateModule, IconsProviderModule, 
+    ChatComponent, CreatedAtPipe, PriceFormatPipe, 
+    NzTabsModule, NzTableModule, NzResultModule, NzSelectModule, NzInputModule, NzDatePickerModule, NzToolTipModule,NzDropDownModule,NzEmptyModule, NzDrawerModule, NzButtonModule,
+  ],
   providers: [NzModalService, NzResizableService],
   animations: [
     trigger('showHideFilter', [
