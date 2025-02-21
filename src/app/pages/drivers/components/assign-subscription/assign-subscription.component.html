@@ -8,10 +8,10 @@
             </nz-option>
         </nz-select>
     </nz-input-group>
-    <div *ngIf="driver?.tms">
+    <!-- <div *ngIf="driver?.tms">
         <label nz-checkbox formControlName="isByDriverBalance" class="m-0">{{'pay_driver' |
             translate}}</label>
-    </div>
+    </div> -->
     <div class="button-wrapper">
         <button [nzLoading]="loading" nz-button class="success-button" (click)="onSave()"
             [disabled]=" loading || !form.valid">

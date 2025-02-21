@@ -73,19 +73,19 @@
       </ul>
     </nz-dropdown-menu>
 
-    <!-- <div>
-      <label nz-checkbox formControlName="isKzPaidWay">{{'paid_way' | translate}}</label>
-    </div> -->
     <div>
-      <label nz-checkbox formControlName="isOwnOrder" class="m-0" style="margin: 0 !important;">{{'take_orders' |
+      <label nz-checkbox formControlName="isOwnTirgoBalance">{{'pay_driver' | translate}}</label>
+    </div>
+    <div>
+      <label nz-checkbox formControlName="isOwnOrder" class="m-0">{{'take_orders' |
         translate}}</label>
     </div>
     <div>
-      <label nz-checkbox formControlName="isOwnBalance" class="m-0" style="margin: 0 !important;">{{'total_balance' |
+      <label nz-checkbox formControlName="isOwnBalance" class="m-0">{{'total_balance' |
         translate}}</label>
     </div>
     <div>
-      <label nz-checkbox formControlName="isOwnService" class="m-0" style="margin: 0 !important;">{{'apply_service' |
+      <label nz-checkbox formControlName="isOwnService" class="m-0">{{'apply_service' |
         translate}}</label>
     </div>
 
@@ -219,9 +219,9 @@
         </ul>
       </nz-dropdown-menu>
 
-      <!-- <div>
-        <label nz-checkbox formControlName="isKzPaidWay">{{'paid_way' | translate}}</label>
-      </div> -->
+      <div>
+        <label nz-checkbox formControlName="isOwnTirgoBalance">{{'pay_driver' | translate}}</label>
+      </div>
       <div>
         <label nz-checkbox formControlName="isOwnOrder" class="m-0" style="margin: 0 !important;">{{'take_orders' |
           translate}}</label>
@@ -460,6 +460,13 @@
             </div>
           </div>
         </div>
+        <div class="info-row">
+          <div class="info-column">
+            <div class="info-label">{{ 'pay_driver' | translate }}</div>
+            <p class="info-value">{{ data?.isOwnTirgoBalance ? ('on' | translate) : ('off' | translate) }}</p>
+          </div>
+        </div>
+       
         <div *ngIf="data?.isVerified">
           <p style="font-weight: 700; font-size: 15px; ">{{ 'passport' | translate }}</p>
           <nz-space [nzSize]="12" class="photo">

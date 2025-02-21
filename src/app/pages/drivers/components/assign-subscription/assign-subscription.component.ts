@@ -66,7 +66,6 @@ export class AssignSubscriptionComponent  implements OnInit{
     this.form = new FormGroup({
       driverId: new FormControl(this.driverId, [Validators.required]),
       subscriptionId: new FormControl(null, [Validators.required]),
-      isByDriverBalance: new FormControl(false, [Validators.required])
     })
   }
 }

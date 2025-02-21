@@ -90,6 +90,7 @@ export class DriverFormComponent implements OnInit {
       isOwnService: new FormControl(false),
       isOwnOrder: new FormControl(false),
       isKzPaidWay: new FormControl(false),
+      isOwnTirgoBalance: new FormControl(false),
     });
     this.selectCountry(this.countries[0]);
     if (this.mode == 'view' || this.mode == 'edit') {
@@ -143,6 +144,7 @@ export class DriverFormComponent implements OnInit {
     formData.append('isOwnService', this.form.get('isOwnService')?.value);
     formData.append('isOwnOrder', this.form.get('isOwnOrder')?.value);
     formData.append('isKzPaidWay', this.form.get('isKzPaidWay')?.value);
+    formData.append('isOwnTirgoBalance', this.form.get('isOwnTirgoBalance')?.value);
     
     let phoneNumbers: any[] = [];
     if (this.selectedCountry.code === '+998' || this.selectedCountry.code === '+992' || this.selectedCountry.code === '+996') {
