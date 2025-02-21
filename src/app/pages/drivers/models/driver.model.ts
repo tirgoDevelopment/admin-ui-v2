@@ -39,6 +39,7 @@ export interface DriverModel extends BaseModel {
     isOwnService?:boolean;
     isOwnOrder?:boolean;
     isKzPaidWay?:boolean;
+    isOwnTirgoBalance: boolean;
     serviceBalance?:number;
     tirgoBalance?:number;
     gsmCardNumber: string;

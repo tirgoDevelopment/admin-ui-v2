@@ -131,8 +131,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
         })
       )),
     );
-    console.log(this.ms.isMobile);
-    
   }
 
   find(ev: string) {
