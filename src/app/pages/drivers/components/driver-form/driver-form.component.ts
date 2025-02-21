@@ -7,7 +7,6 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { Response } from 'src/app/shared/models/reponse';
 import { NzModalModule, NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
-import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { NgxMaskDirective } from 'ngx-mask';
 import { removeDuplicateKeys } from 'src/app/shared/pipes/remove-dublicates-formData';
 import { DriverModel } from '../../models/driver.model';

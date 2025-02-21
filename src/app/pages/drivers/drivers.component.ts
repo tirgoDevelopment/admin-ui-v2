@@ -21,6 +21,7 @@ import { Permission } from 'src/app/shared/enum/per.enum';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
 import { TmsService } from '../merchant/merchant-driver/services/tms.service';
+import { MobileDetectionService } from 'src/app/shared/services/mobile-detect.service';
 
 @Component({
   selector: 'app-drivers',
@@ -61,7 +62,8 @@ export class DriversComponent implements OnInit {
     private drawer: NzDrawerService,
     private translate: TranslateService,
     public perService: PermissionService,
-    private tmsService: TmsService
+    private tmsService: TmsService,
+    public ms: MobileDetectionService
   ) { }
 
   ngOnInit(): void {
