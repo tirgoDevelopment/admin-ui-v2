@@ -12,6 +12,7 @@ export const appRoutes: Route[] = [
     canActivate: [AuthGuard],
     children: [
       { path: 'dashboard', loadChildren: () => import('./pages/dashboard/dashboard.routes').then(m => m.default), canActivate: [AuthGuard] },
+      { path: 'analitics', loadChildren: () => import('./pages/analytics/analytics.routes').then(m => m.default), canActivate: [AuthGuard] },
       { path: 'admins', loadChildren: () => import('./pages/admins/admins.routes').then(m => m.default), canActivate: [AuthGuard] },
       { path: 'drivers', loadChildren: () => import('./pages/drivers/drivers.routes').then(m => m.default), canActivate: [AuthGuard] },
       { path: 'clients', loadChildren: () => import('./pages/clients/clients.routes').then(m => m.default), canActivate: [AuthGuard] },

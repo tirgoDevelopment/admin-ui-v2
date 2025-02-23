@@ -1,0 +1,14 @@
+<div class="header-page mb-2">
+    <h2>{{ 'analitics' | translate }}</h2>
+</div>
+
+
+<div>
+   <div class="mb-2">
+    <nz-select [(ngModel)]="filter.type" style="width: 150px;" (ngModelChange)="changeType($event)">
+        <nz-option nzValue="tir" nzLabel="В TIR"></nz-option>
+        <nz-option nzValue="percent" nzLabel="В процентах"></nz-option>
+    </nz-select>
+   </div>
+    <div echarts [options]="chartOptions" class="chart-container"></div>
+</div>

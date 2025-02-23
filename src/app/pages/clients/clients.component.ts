@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
-import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { NzDrawerModule, NzDrawerService } from 'ng-zorro-antd/drawer';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ClientModel } from './models/client.model';
 import { ClientsService } from './services/clients.service';
@@ -9,23 +9,30 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { catchError, tap, of } from 'rxjs';
 import { ClientsFormComponent } from './components/clients-form/clients-form.component';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
-import { NgxMaskDirective } from 'ngx-mask';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
-import { PipeModule } from 'src/app/shared/pipes/pipes.module';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import { SendPushComponent } from '../drivers/components/send-push/send-push.component';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
+import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzButtonModule } from 'ng-zorro-antd/button';
 
 @Component({
   selector: 'app-clients',
   templateUrl: './clients.component.html',
   styleUrls: ['./clients.component.scss'],
   standalone: true,
-  imports: [ CommonModules, NzModules, TranslateModule, IconsProviderModule, PhoneFormatPipe],
+  imports: [
+     CommonModules, TranslateModule, IconsProviderModule, PhoneFormatPipe,
+      NzInputModule, NzDatePickerModule, NzTableModule, NzDropDownModule, NzEmptyModule, NzResultModule, NzDrawerModule, NzButtonModule
+    ],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
