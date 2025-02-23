@@ -20,6 +20,11 @@
         <span>{{ "control_panel" | translate }}</span>
       </li> -->
       <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
+        [nzTooltipTitle]="isCollapsed ? ('analitics' | translate) : ''" routerLink="/analitics">
+        <span nz-icon nzType="bar-chart"></span>
+        <span>{{ "analitics" | translate }}</span>
+      </li>
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
         *ngIf="permissionService.hasPermission(Permission.AdminsPage)"
         [nzTooltipTitle]="isCollapsed ? ('administrators' | translate) : ''" routerLink="/admins">
         <span nz-icon nzType="user"></span>

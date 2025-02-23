@@ -20,11 +20,12 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NgIf } from '@angular/common';
+import { IconsProviderModule } from '../../modules/icons-provider.module';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [TranslateModule, NzToolTipModule, NzButtonModule, NzLayoutModule, NzIconModule, NzMenuModule, NzDropDownModule, NzAvatarModule, NzBadgeModule, RouterLink, ChatComponent, RouterModule, NgIf],
+  imports: [IconsProviderModule,TranslateModule, NzToolTipModule, NzButtonModule, NzLayoutModule, NzIconModule, NzMenuModule, NzDropDownModule, NzAvatarModule, NzBadgeModule, RouterLink, ChatComponent, RouterModule, NgIf],
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
 })

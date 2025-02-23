@@ -137,6 +137,11 @@ body {
   border-color: $success-color !important;
 }
 
+
+.ant-radio-button-wrapper:hover {
+  color: var(--menu-item-bgcolor-hover) !important;
+}
+
 button:hover {
   opacity: .9;
 }

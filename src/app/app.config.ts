@@ -19,6 +19,7 @@ import { provideEnvironmentNgxMask } from "ngx-mask";
 import ru from '@angular/common/locales/ru'; 
 import { registerLocaleData } from "@angular/common";
 import { GeoDbProModule } from "wft-geodb-angular-client";
+import { NgxEchartsModule } from "ngx-echarts";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
@@ -45,6 +46,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(appRoutes),
     importProvidersFrom(
       HttpClientModule,
+      NgxEchartsModule.forRoot({
+        echarts: () => import('echarts'),
+      }),
       TranslateModule.forRoot({
         loader: {
           provide: TranslateLoader,
