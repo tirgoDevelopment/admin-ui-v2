@@ -4,11 +4,36 @@
 
 
 <div>
-   <div class="mb-2">
-    <nz-select [(ngModel)]="filter.type" style="width: 150px;" (ngModelChange)="changeType($event)">
-        <nz-option nzValue="tir" nzLabel="В TIR"></nz-option>
-        <nz-option nzValue="percent" nzLabel="В процентах"></nz-option>
-    </nz-select>
-   </div>
-    <div echarts [options]="chartOptions" class="chart-container"></div>
+    <div class="mb-2">
+        <nz-select [(ngModel)]="filter.type" style="width: 150px;">
+            <nz-option nzValue="chart" nzLabel="В диаграмме"></nz-option>
+            <nz-option nzValue="table" nzLabel="В таблице"></nz-option>
+        </nz-select>
+    </div>
+    <div class="chart-container" *ngIf="filter.type === 'chart'">
+        <div echarts [options]="amountChartOptions" class="chart"></div>
+    </div>
+    <div *ngIf="filter.type === 'table'">
+        <nz-table #basicTable [nzBordered]="true" [nzData]="data" [nzLoading]="loading" [nzNoResult]="empty">
+            <thead>
+                <tr>
+                    <th nzWidth="250px">Наименование</th>
+                    <th nzWidth="150px">Кол-во</th>
+                    <th nzWidth="150px">Сумма (TIR)</th>
+                    <th nzWidth="120px">Процент</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data; let i = index">
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.count | number }}</td>
+                    <td>{{ item.amount }} </td>
+                    <td>{{ item.percentage }}%</td>
+                </tr>
+            </tbody>
+        </nz-table>
+        <ng-template #empty>
+            <nz-empty></nz-empty>
+        </ng-template>
+    </div>
 </div>

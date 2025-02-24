@@ -150,8 +150,8 @@
           <td nzWidth="180px">{{ item.createdAt | date : "dd.MM.yyyy HH:mm" }}</td>
           <td nzWidth="180px" *ngIf="tabType == 1">{{ item.kzPaidWayTransactionIssuedDate | date : "dd.MM.yyyy HH:mm" :
             '+0' }}</td>
-          <td nzWidth="180px">{{ item.statusesHistory | createdAt : 3 | date : "dd.MM.yyyy HH:mm" }}</td>
-          <td nzWidth="180px">{{ item.statusesHistory | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</td>
+          <td nzWidth="180px">{{ item.histories | createdAt : 3 | date : "dd.MM.yyyy HH:mm" }}</td>
+          <td nzWidth="180px">{{ item.histories | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</td>
 
           <td nzWidth="200px" [nzRight]="!ms.isMobile" (click)="$event.stopPropagation()"
             (click)="changeStatus(item.status, item)" (contextmenu)="showComments(item)">
