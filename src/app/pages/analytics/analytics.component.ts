@@ -69,7 +69,7 @@ export class AnalyticsComponent implements OnInit {
   totalCount: number = 0;
   currentData: any[] = [];
   chartOptions
-
+  totalCountTable = 0;
   constructor(
     private translate: TranslateService,
     private analiticsService: AnalyticsService
@@ -89,8 +89,6 @@ export class AnalyticsComponent implements OnInit {
             percentage: this.getPercentageByName(item.name) || "0",
             count: item.count
           }));
-          console.log(res.data.services);
-          
         this.totalValue = amountData.reduce((sum, item) => sum + Number(item.value), 0);
         this.totalCount = amountData.length;
         this.currentData = amountData;
@@ -109,7 +107,7 @@ export class AnalyticsComponent implements OnInit {
               data: amountData.map(item => item.name),
               formatter: name => {
                 const item = amountData.find(i => i.name === name);
-                return item ? `${name}  ${item.percentage}%` : name;
+                return item ? `${name}  ${item.percentage}% (${item.count} кол-во)` : name;
               },
             },
             series: [
@@ -123,12 +121,11 @@ export class AnalyticsComponent implements OnInit {
       }
     });
   }
-  
-  
   getPercentage() {
     this.analiticsService.completedServicesPercentages().subscribe((res: any) => {
       if (res) {
         this.percentageData = res.data.services;
+        this.totalCountTable = res.data.totalCount;
         this.getAmount();
       }
     });
@@ -137,7 +134,6 @@ export class AnalyticsComponent implements OnInit {
     const service = this.percentageData?.find(item => item.name === serviceName);
     return service ? service.percentage : "0";
   }
-
   formatNumber(value: number): string {
     return new Intl.NumberFormat('ru-RU').format(value);
   }

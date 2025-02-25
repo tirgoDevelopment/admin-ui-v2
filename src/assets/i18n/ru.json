@@ -232,6 +232,7 @@
   "edit_agent": "Редактировать",
   "date_time": "Date time",
   "amount": "Сумма",
+  "percent": "Процент",
   "transactionType": "Тип транзакции",
   "currency": "Валюта",
   "active": "Активный",

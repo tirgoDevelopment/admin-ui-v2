@@ -61,7 +61,7 @@ export class FormComponent implements OnInit {
       responsbilePersonPhoneNumber: new FormControl(null),
       kzPaidWayCommission: new FormControl('5'),
       debtLimit: new FormControl(null),
-      password: new FormControl(null, [Validators.minLength(8), Validators.maxLength(16)]),
+      password: new FormControl(null),
       isCompleted: new FormControl(true)
     });
   }
@@ -70,6 +70,7 @@ export class FormComponent implements OnInit {
     this.getCompanyType();
     this.getCurrency();
     if (this.mode === 'edit') {
+      
       this.loadBankAccounts(this.data.bankAccounts);
       this.patchValue();
     }
@@ -78,6 +79,9 @@ export class FormComponent implements OnInit {
     this.currenciesApi.getAll().subscribe((res: any) => {
       if (res && res.success) {
         this.currencies = res.data;
+        if (this.bankAccounts.length === 0) {
+          this.addBankAccount();
+        }
       }
     })
   }
@@ -106,7 +110,7 @@ export class FormComponent implements OnInit {
   updatePasswordValidation() {
     const passwordControl = this.form.get('password');
     if (!this.data && !this.data.id) {
-      passwordControl.setValidators(Validators.required);
+      passwordControl.setValidators([Validators.required, Validators.minLength(8), Validators.maxLength(16)]);
     } else {
       passwordControl.clearValidators();
     }
@@ -138,8 +142,8 @@ export class FormComponent implements OnInit {
     accounts.forEach(account => {
       this.bankAccounts.push(
         this.fb.group({
-          account: [account.account, Validators.required],
-          currency: [account.currency.id, Validators.required],
+          account: [account.account],
+          currency: [account.currency.id],
           id: [account.id],
           active: [account.active]
         })
@@ -150,8 +154,8 @@ export class FormComponent implements OnInit {
     if (this.bankAccounts.length < 2) {
       this.bankAccounts.push(
         this.fb.group({
-          account: ['', Validators.required],
-          currency: [this.currencies[0].id, Validators.required]
+          account: [''],
+          currency: [this.currencies[0].id]
         })
       );
     }

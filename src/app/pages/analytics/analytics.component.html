@@ -4,26 +4,33 @@
 
 
 <div>
-    <div class="mb-2">
+    <!-- <div class="mb-2">
         <nz-select [(ngModel)]="filter.type" style="width: 150px;">
             <nz-option nzValue="chart" nzLabel="В диаграмме"></nz-option>
             <nz-option nzValue="table" nzLabel="В таблице"></nz-option>
         </nz-select>
-    </div>
-    <div class="chart-container" *ngIf="filter.type === 'chart'">
+    </div> -->
+    <div class="chart-container">
         <div echarts [options]="amountChartOptions" class="chart"></div>
     </div>
-    <div *ngIf="filter.type === 'table'">
-        <nz-table #basicTable [nzBordered]="true" [nzData]="data" [nzLoading]="loading" [nzNoResult]="empty">
+    <div>
+        <nz-table #basicTable [nzBordered]="true" [nzData]="data" [nzLoading]="loading" [nzNoResult]="empty"
+            [nzShowPagination]="false">
             <thead>
                 <tr>
-                    <th nzWidth="250px">Наименование</th>
-                    <th nzWidth="150px">Кол-во</th>
-                    <th nzWidth="150px">Сумма (TIR)</th>
-                    <th nzWidth="120px">Процент</th>
+                    <th nzWidth="250px">{{'services.serviceName' | translate}}</th>
+                    <th nzWidth="150px">{{'count' | translate}}</th>
+                    <th nzWidth="150px">{{'amount' | translate}} (TIR)</th>
+                    <th nzWidth="120px">{{'percent' | translate}}</th>
                 </tr>
             </thead>
             <tbody>
+                <tr>
+                    <td> <b>{{'total_order' | translate}}</b> </td>
+                    <td> <b>{{ totalCountTable | number }}</b> </td>
+                    <td> <b>{{ totalValue | number }} </b> </td>
+                    <td> <b> 100% </b> </td>
+                </tr>
                 <tr *ngFor="let item of data; let i = index">
                     <td>{{ item.name }}</td>
                     <td>{{ item.count | number }}</td>
@@ -31,6 +38,7 @@
                     <td>{{ item.percentage }}%</td>
                 </tr>
             </tbody>
+
         </nz-table>
         <ng-template #empty>
             <nz-empty></nz-empty>
