@@ -30,12 +30,8 @@ export class AnalyticsComponent implements OnInit {
     },
     legend: {
       orient: 'vertical',
-      right: 0,
-      top: 'middle',
-      formatter: name => {
-        const item = this.currentData.find(i => i.name === name);
-        return item ? `${name}  ${item.percentage}%` : name;
-      },
+      right: '5%',
+      top: 'center',
       textStyle: {
         fontSize: 14,
       },
@@ -43,13 +39,9 @@ export class AnalyticsComponent implements OnInit {
     series: [
       {
         type: 'pie',
-        radius: ['60%', '80%'],
         minAngle: 5,
-        itemStyle: {
-          borderRadius: 8,
-          borderColor: '#fff',
-          borderWidth: 2,
-        },
+        radius: ['50%', '70%'],
+        center: ['30%', '50%'],
         label: {
           show: true,
           position: 'center',
@@ -60,6 +52,24 @@ export class AnalyticsComponent implements OnInit {
           },
         },
         data: [],
+      },
+    ],
+    media: [
+      {
+        query: { maxWidth: 768 },
+        option: {
+          legend: {
+            orient: 'horizontal',
+            top: '5%',
+            left: 'center',
+          },
+          series: [
+            {
+              center: ['50%', '60%'],
+              radius: ['40%', '60%'],
+            },
+          ],
+        },
       },
     ],
   };
@@ -94,11 +104,11 @@ export class AnalyticsComponent implements OnInit {
         this.currentData = amountData;
         this.data = amountData.map((item, index) => ({
           name: item.name,
-          amount:this.formatNumber(item.value),
+          amount: this.formatNumber(item.value),
           percentage: item.percentage,
-          count: Number(item.count) 
+          count: Number(item.count)
         }));
-        
+
         if (amountData.length > 0) {
           this.amountChartOptions = {
             ...this.chartOptionsBase,
@@ -137,6 +147,5 @@ export class AnalyticsComponent implements OnInit {
   formatNumber(value: number): string {
     return new Intl.NumberFormat('ru-RU').format(value);
   }
-
 
 }
