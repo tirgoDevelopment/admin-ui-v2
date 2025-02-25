@@ -126,13 +126,13 @@
           </td>
           <td nzWidth="120px"> {{item.tirAmount ? item.tirAmount : 0}}</td>
           <td nzWidth="200px" class="ellipsis" (click)="$event.stopPropagation()"
-            (click)="showTms(item.driver?.tms?.id)">
+            (click)="showTms(item?.tms?.id)">
             <div nz-tooltip [nzTooltipTitle]="item.driver.tms?.companyType + ' ' +
-            item.driver.tms?.companyName" [ngClass]="perService.hasPermission(Per.TmsDetail) ? 'link' : ''"
-              *ngIf="item.driver.tms">
-              {{item.driver.tms?.companyType + ' ' +
-              item.driver.tms?.companyName}}</div>
-            <div *ngIf="!item.driver.tms">{{'no' | translate}}</div>
+            item.tms?.companyName" [ngClass]="perService.hasPermission(Per.TmsDetail) ? 'link' : ''"
+              *ngIf="item.tms">
+              {{item.tms?.companyType + ' ' +
+              item.tms?.companyName}}</div>
+            <div *ngIf="!item.tms">{{'no' | translate}}</div>
           </td>
           <td nzWidth="150px" (click)="$event.stopPropagation()" (click)="showDriver(item.driver.id)">
             <div [ngClass]="perService.hasPermission(Per.DriverDetail) ? 'link' : ''">{{ item.driver.id }}</div>

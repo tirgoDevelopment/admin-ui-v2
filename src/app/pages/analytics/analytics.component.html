@@ -2,11 +2,9 @@
     <h2>{{ 'analitics' | translate }}</h2>
 </div>
 
-<!-- Chap tomonda joylashgan chart -->
 <div class="chart-container">
     <div echarts [options]="amountChartOptions" class="chart" [ngStyle]="{width: '100%', height: '100%'}"></div>
 </div>
-<!-- O'ng tomonda jadval -->
 <div class="table-container">
     <nz-table #basicTable [nzBordered]="true" [nzData]="data" [nzLoading]="loading" [nzNoResult]="empty"
         [nzShowPagination]="false">

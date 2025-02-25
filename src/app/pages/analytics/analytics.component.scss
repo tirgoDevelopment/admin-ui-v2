@@ -14,3 +14,11 @@
     width: 100%;
     height: 100%;
 }
+
+
+.echarts-legend-item {
+    white-space: normal !important; /* Majburan pastga tushiradi */
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+    max-width: 120px; /* Maksimal kenglik */
+}
