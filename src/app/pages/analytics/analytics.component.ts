@@ -33,15 +33,22 @@ export class AnalyticsComponent implements OnInit {
       right: '5%',
       top: 'center',
       textStyle: {
-        fontSize: 14,
+          fontSize: 14,
+          lineHeight: 18,
       },
-    },
+      formatter: (name) => {
+          const maxLength = 15;
+          return name.length > maxLength
+              ? name.substring(0, maxLength) + '\n' + name.substring(maxLength)
+              : name;
+      },
+  },
     series: [
       {
         type: 'pie',
         minAngle: 5,
         radius: ['50%', '70%'],
-        center: ['30%', '50%'],
+        center: ['20%', '50%'],
         label: {
           show: true,
           position: 'center',
@@ -62,6 +69,10 @@ export class AnalyticsComponent implements OnInit {
             orient: 'horizontal',
             top: '5%',
             left: 'center',
+            textStyle: {
+              fontSize: 12,
+              lineHeight: 18,
+            },
           },
           series: [
             {
