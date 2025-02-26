@@ -147,7 +147,7 @@ export class AddTransportComponent implements OnInit {
     this.form.patchValue({
       id: this.data.id,
       driverId: this.driverId ? this.driverId : null,
-      brand: this.data.brand,
+      transportBrandId: this.data.brand ? this.data.brand.id : null,
       capacity: this.data.capacity,
       transportKindId: this.data?.transportKind ? this.data.transportKind.id : null,
       transportTypeId: this.data?.transportType ? this.data.transportType.id : null,
@@ -182,6 +182,8 @@ export class AddTransportComponent implements OnInit {
     this.form.value.capacity = this.form.value.capacity.toString();
     this.form.value.driverId = this.driverId ? this.driverId : null;
     this.loading = true;
+    console.log(this.form.value);
+    
     const submitObservable = this.data
       ? this.driversService.updateTransport(this.form.value)
       : this.driversService.createTransport(this.form.value);

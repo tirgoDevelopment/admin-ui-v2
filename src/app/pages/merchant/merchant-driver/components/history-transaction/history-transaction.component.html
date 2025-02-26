@@ -20,9 +20,17 @@
 <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
   <div>
     <nz-input-group class="input-group">
-      <nz-select [(ngModel)]="filter['balanceType']" nzPlaceHolder="{{ 'transactionType' | translate }}" style="width: 200px">
+      <nz-select [(ngModel)]="filter['balanceType']" nzPlaceHolder="{{ 'balansType' | translate }}" style="width: 200px">
         <nz-option [nzValue]="'tirgo'" [nzLabel]="'tirBalance' | translate"></nz-option>
         <nz-option [nzValue]="'tirgo_service'" [nzLabel]="'serviceBalance' | translate"></nz-option>
+      </nz-select>
+    </nz-input-group>
+  </div>
+  <div>
+    <nz-input-group class="input-group">
+      <nz-select [(ngModel)]="filter['transactionType']" nzPlaceHolder="{{ 'transactionType' | translate }}" style="width: 200px">
+        <nz-option [nzValue]="'income'" [nzLabel]="'income' | translate"></nz-option>
+        <nz-option [nzValue]="'expense'" [nzLabel]="'expense' | translate"></nz-option>
       </nz-select>
     </nz-input-group>
   </div>

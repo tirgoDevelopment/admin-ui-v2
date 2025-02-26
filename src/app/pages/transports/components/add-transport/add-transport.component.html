@@ -147,6 +147,10 @@
   </nz-input-group>
 
   <nz-input-group class="input-group">
+    <label nz-checkbox formControlName="isMain">{{ 'isMainTransport' | translate }}</label>
+  </nz-input-group>
+
+  <nz-input-group class="input-group">
     <label nz-checkbox formControlName="isAdr">{{ 'isAdr' | translate }}</label>
   </nz-input-group>
 
@@ -222,9 +226,9 @@
   </div>
 
   <div class="button-wrapper">
-    <button nz-button class="danger-button" (click)="remove()">
+    <!-- <button nz-button class="danger-button" (click)="remove()" *ngIf="data?.id">
       {{ 'remove' | translate }}
-    </button>
+    </button> -->
     <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
       [disabled]="form.invalid || loading">
       {{ 'save' | translate }}

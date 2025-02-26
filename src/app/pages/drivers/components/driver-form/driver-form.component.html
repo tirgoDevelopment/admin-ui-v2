@@ -297,7 +297,17 @@
   </nz-tab>
   <nz-tab nzTitle="{{ 'transport' | translate }}" *ngIf="data.driverTransports && data.driverTransports.length > 0">
     <button nz-button nzBlock="true" style="margin: 5px 0;" *ngFor="let item of data.driverTransports"
-      (click)="editTransport(item)">{{item.brand}}</button>
+      (click)="editTransport(item)"> <ng-container *ngIf="item?.isMain; else withoutRibbon">
+        <nz-ribbon nzText="Основной" nzColor="blue">
+          {{ item?.brand?.name }}
+        </nz-ribbon>
+      </ng-container>
+
+      <ng-template #withoutRibbon>
+        {{ item?.brand?.name }}
+      </ng-template></button>
+
+
 
     <div style="margin: 10px 0;" *ngIf="perService.hasPermission(Permission.DriverAddTransport)">
       <button (click)="addTransport()" nz-button class="ant-btn success-button" nzBlock> <i nz-icon nzType="plus"
@@ -400,19 +410,20 @@
           <div class="info-column" *ngIf="!data?.isSubscribed">
             <div class="info-label">{{ 'subscription' | translate }}</div>
             <div class="info-value">
-              <span ngClass="{{data.isSubscribed ? 'edit-icon' : 'delete-icon'}}">{{data.isSubscribed ? ('yes' | translate) : ('no' | translate)}}</span> 
+              <span ngClass="{{data.isSubscribed ? 'edit-icon' : 'delete-icon'}}">{{data.isSubscribed ? ('yes' |
+                translate) : ('no' | translate)}}</span>
             </div>
           </div>
           <div class="info-column" *ngIf="data?.isSubscribed">
             <div class="info-label">{{ 'subscribe_from' | translate }}</div>
             <div class="info-value">
-              <span>{{data.subscribedAt | date : 'dd.MM.yyyy'}}</span> 
+              <span>{{data.subscribedAt | date : 'dd.MM.yyyy'}}</span>
             </div>
           </div>
           <div class="info-column" *ngIf="data?.isSubscribed">
             <div class="info-label">{{ 'subscribe_to' | translate }}</div>
             <div class="info-value">
-              <span>{{data.subscribedTill | date : 'dd.MM.yyyy'}}</span> 
+              <span>{{data.subscribedTill | date : 'dd.MM.yyyy'}}</span>
             </div>
           </div>
         </div>
@@ -466,7 +477,7 @@
             <p class="info-value">{{ data?.isOwnTirgoBalance ? ('on' | translate) : ('off' | translate) }}</p>
           </div>
         </div>
-       
+
         <div *ngIf="data?.isVerified">
           <p style="font-weight: 700; font-size: 15px; ">{{ 'passport' | translate }}</p>
           <nz-space [nzSize]="12" class="photo">
@@ -480,7 +491,8 @@
         </div>
       </div>
       <div class="button-wrapper" *ngIf="!data?.isSubscribed">
-        <button nz-button class="success-button" (click)="onApplySubscribe()">{{'apply_subscribe' | translate}} </button>
+        <button nz-button class="success-button" (click)="onApplySubscribe()">{{'apply_subscribe' | translate}}
+        </button>
       </div>
     </nz-tab>
     <nz-tab nzTitle="{{ 'transport' | translate }}" *ngIf="data?.driverTransports && data?.driverTransports.length > 0">

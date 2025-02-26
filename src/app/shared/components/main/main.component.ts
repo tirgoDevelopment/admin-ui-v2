@@ -75,8 +75,6 @@ export class MainComponent {
     });
     this.getChats();
     this.socketService.listen('newMessage').subscribe((event) => {
-      console.log(event);
-      
       if ((event.senderUserType != 'admin') && ((this.chat && this.chat.id) !== event.chatId)) {
         this.newMessageCount = this.newMessageCount + 1;
         this.cdr.detectChanges();
@@ -84,11 +82,12 @@ export class MainComponent {
       }
     })
     this.socketService.listen('tmsGsmBalanceTopup').subscribe((event) => {
-      console.log(event);
       this.pushService.showPushNotification('Поступил запрос на пополнение ГСМ баланса', 'от компании ' + event.data?.tms.companyType + event.data?.tms.companyName, 'gsm')
     })
     this.socketService.listen('newServiceRequest').subscribe((event) => {
-      this.pushService.showPushNotification('Заявка за новую услугу', '', 'service')
+      if (event.senderUserType != 'admin') {
+        this.pushService.showPushNotification('Заявка за новую услугу', '', 'service')
+      }
     })
 
   }

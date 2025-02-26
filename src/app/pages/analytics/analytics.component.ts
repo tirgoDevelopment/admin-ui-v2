@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AnalyticsService } from './services/analytics.service';
-import { EChartsOption, LegendComponentOption } from 'echarts';
+import { EChartsOption, LegendComponentOption, TooltipComponentOption } from 'echarts';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { FormsModule } from '@angular/forms';
@@ -11,26 +11,36 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
+import { TmsService } from '../merchant/merchant-driver/services/tms.service';
+import { of } from 'rxjs';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 
 @Component({
   selector: 'app-analytics',
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss'],
   standalone: true,
-  imports: [PriceFormatPipe, NgxEchartsModule, CommonModule, TranslateModule, NzSelectModule, FormsModule,
-    NzTableModule, NzEmptyModule, NzRadioModule, NzDatePickerModule,],
+  imports: [PriceFormatPipe, NgxEchartsModule, CommonModule, TranslateModule, NzSelectModule, FormsModule, IconsProviderModule,
+    NzTableModule, NzEmptyModule, NzRadioModule, NzDatePickerModule, NzInputModule, NzButtonModule],
 })
 export class AnalyticsComponent implements OnInit {
   percentageData = [];
   data: any[] = [];
   loading = false;
-  filter = { type: 'chart', fromDate: '', toDate: '' };
-  amountChartOptions: EChartsOption = {};
-  countChartOptions: EChartsOption = {};
-  totalValue: number = 0;
+  filter = this.initializeFilter();
+  amountChartOptions = {} as EChartsOption;
+  countChartOptions = {} as EChartsOption;
+    totalValue: number = 0;
   totalCount: number = 0;
-
-  constructor(private analiticsService: AnalyticsService) {}
+  tms$
+  constructor(
+    private analiticsService: AnalyticsService,
+    private tmsService: TmsService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.getPercentage();
@@ -91,6 +101,13 @@ export class AnalyticsComponent implements OnInit {
   }
 
   private updateChartOptions(amountData: any[]): void {
+    if (!amountData || amountData.length === 0) {
+      this.amountChartOptions = this.getBaseChartOptions();
+      this.countChartOptions = this.getBaseChartOptions();
+      this.cdr.detectChanges();
+      return;
+    }
+  
     const legendNames = amountData.map(item => item.name);
     const legendOptions: LegendComponentOption = {
       orient: 'horizontal',
@@ -103,22 +120,22 @@ export class AnalyticsComponent implements OnInit {
         return item ? `${name} ${item.percentage}% (${item.count} кол-во)` : name;
       },
     };
-
+  
     const baseOptions = this.getBaseChartOptions();
     const baseSeriesOptions = baseOptions.series[0];
-
+  
     this.amountChartOptions = {
       ...baseOptions,
       legend: legendOptions,
       tooltip: {
         trigger: 'item',
-        formatter: params => `${params.name}: <b>${this.formatNumber(params.value)} TIR</b>`,
-      },
+        formatter: (params: any) => `${params.name}: <b>${this.formatNumber(params.value)} TIR</b>`,
+      } as TooltipComponentOption,
       series: [
         {
           ...baseSeriesOptions,
           name: 'Amount',
-          center: ['25%', '55%'],
+          center: ['50%', '50%'],
           label: {
             ...baseSeriesOptions.label,
             formatter: `{a|${this.formatNumber(this.totalValue)} TIR}`
@@ -127,19 +144,19 @@ export class AnalyticsComponent implements OnInit {
         },
       ],
     };
-
+  
     this.countChartOptions = {
       ...baseOptions,
-      legend: undefined,
+      legend: legendOptions,
       tooltip: {
         trigger: 'item',
         formatter: params => `${params.name}: <b>${this.formatNumber(params.value)} кол-во</b>`,
-      },
+      } as TooltipComponentOption,
       series: [
         {
           ...baseSeriesOptions,
           name: 'Count',
-          center: ['55%', '55%'],
+          center: ['50%', '50%'],
           label: {
             ...baseSeriesOptions.label,
             formatter: `{a|${this.formatNumber(this.totalCount)} кол-во}`
@@ -148,20 +165,25 @@ export class AnalyticsComponent implements OnInit {
         },
       ],
     };
+  
+    this.cdr.detectChanges();
   }
+  
+  
   getAmount(): void {
-    this.analiticsService.completedServicesAmounts().subscribe((res: any) => {
+    this.analiticsService.completedServicesAmounts(generateQueryFilter(this.filter)).subscribe((res: any) => {
       if (!res) return;
       const amountData = this.mapAmountData(res.data.services);
       this.calculateTotals(amountData);
       this.data = this.prepareTableData(amountData);
       if (amountData.length === 0) return;
-
-      this.updateChartOptions(amountData);
+  
+      this.updateChartOptions([...amountData]);
+      this.cdr.detectChanges();
     });
   }
   getPercentage(): void {
-    this.analiticsService.completedServicesPercentages().subscribe((res: any) => {
+    this.analiticsService.completedServicesPercentages(generateQueryFilter(this.filter)).subscribe((res: any) => {
       if (res) {
         this.percentageData = res.data.services;
         this.getAmount();
@@ -175,7 +197,30 @@ export class AnalyticsComponent implements OnInit {
   formatNumber(value: number): string {
     return new Intl.NumberFormat('ru-RU').format(value);
   }
-  onDateChange(e) {
-
+  
+  findTms(searchTerm) {
+    if (searchTerm) {
+      this.tmsService.findTms(searchTerm, 'companyName').subscribe((response: any) => {
+        this.tms$ = of(response.data.content);
+      });
+    }
+  }
+  filterApply() {
+    this.filter['filterBy'] = this.filter['tmsesIds'].length > 0 ? 'user' : 'all';
+    
+    this.amountChartOptions = this.getBaseChartOptions();
+    this.countChartOptions = this.getBaseChartOptions();
+  
+    setTimeout(() => {
+      this.getPercentage();
+      this.cdr.detectChanges();
+    });
+  }
+  resetFilter() {
+    this.filter = this.initializeFilter();
+    this.getPercentage();
+  }
+  private initializeFilter(): Record<any, any> {
+    return { type: 'chart', fromDate: '', toDate: '', tmsesIds: [], filterBy: 'all' };
   }
 }

@@ -2,14 +2,47 @@
     <h2>{{ 'analitics' | translate }}</h2>
 </div>
 
-<div>
-    <nz-range-picker [(ngModel)]="filter.fromDate" (ngModelChange)="onDateChange($event)"></nz-range-picker>
+<div class="flex gap align-center">
+    <div>
+        <nz-input-group class="input-group">
+            <nz-date-picker style="width: 210px !important;" [(ngModel)]="filter['fromDate']" type="date" nz-input
+                [nzAllowClear]="false" nzPlaceHolder="{{ 'fromDate' | translate }}" class="custom-date-picker">
+            </nz-date-picker>
+        </nz-input-group>
+    </div>
+    <div>
+        <nz-input-group class="input-group">
+            <nz-date-picker style="width: 210px !important;" [(ngModel)]="filter['toDate']" type="date" nz-input
+                [nzAllowClear]="false" nzPlaceHolder="{{ 'toDate' | translate }}" class="custom-date-picker">
+            </nz-date-picker>
+        </nz-input-group>
+    </div>
+    <div>
+        <nz-input-group class="input-group w-full">
+            <nz-select style="width: 100%; min-width: 210px;" nzPlaceHolder="{{ 'driver_merchant' | translate }}"
+                nzShowSearch nzServerSearch (nzOnSearch)="findTms($event)" [nzShowArrow]="true" [nzAllowClear]="true"
+                nzMode="multiple" [(ngModel)]="filter['tmsesIds']">
+                <nz-option [nzLabel]="item.companyType + ' ' + item.companyName" [nzValue]="item.id"
+                    *ngFor="let item of tms$ | async"></nz-option>
+            </nz-select>
+        </nz-input-group>
+    </div>
+    <button nz-button nzType="primary" class="search-button" (click)="filterApply()">
+        <span nz-icon nzType="search" nzTheme="outline"></span>
+      </button>
+      <button nz-button class="reset-button" (click)="resetFilter()">
+        <span nz-icon nzType="reload" nzTheme="outline"></span>
+      </button>
 </div>
 
+
 <div class="charts-container">
-    <div echarts [options]="amountChartOptions"  class="chart"></div>
+    <div echarts [options]="amountChartOptions" class="chart"></div>
+</div>
+<div class="charts-container">
     <div echarts [options]="countChartOptions" class="chart"></div>
 </div>
+
 <div class="table-container">
     <nz-table #basicTable [nzBordered]="true" [nzData]="data" [nzLoading]="loading" [nzNoResult]="empty"
         [nzShowPagination]="false">

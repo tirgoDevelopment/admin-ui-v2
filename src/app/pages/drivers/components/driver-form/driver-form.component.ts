@@ -317,14 +317,15 @@ export class DriverFormComponent implements OnInit {
       }
     });
   }
-  editTransport(item: TransportModel) {
+
+  editTransport(item) {
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant('edit_transport'),
       nzContent: AddTransportComponent,
       nzPlacement: 'right',
       nzContentParams: {
         driverId: this.data.id,
-        data: item,
+        data: item.id,
         mode: 'edit'
       }
     });
