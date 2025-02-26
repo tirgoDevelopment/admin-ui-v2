@@ -363,7 +363,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   changeStatus(currentStatus: any, item: any): void {
     if (this.perService.hasPermission(this.Per.ServiceStatusChange)) {
       let restrictedCodes = [];
-      this.currentUser.userId == 1 ? restrictedCodes = [6, 7] : restrictedCodes = [5, 6, 7];
+      this.currentUser.sub == 7 ? restrictedCodes = [6, 7] : restrictedCodes = [5, 6, 7];
       if (this.isRestrictedStatus(currentStatus.code, restrictedCodes)) {
         this.showRestrictedStatusError(currentStatus.code);
         return;
@@ -430,8 +430,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
   getCancelButtonConfig(selectedService: any): { text: string; onCancel: () => void } {
     const currentUser: any = jwtDecode(localStorage.getItem('accessToken') || '');
-
-    if (currentUser.userId == 1) {
+    if (currentUser.sub == 7) {
       return {
         text: this.translate.instant('services.cancelService'),
         onCancel: () => this.cancelService(selectedService),
