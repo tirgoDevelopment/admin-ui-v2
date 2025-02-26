@@ -70,6 +70,9 @@ export class FormComponent implements OnInit {
     this.currenciesApi.getAll().subscribe((res: any) => {
       if (res && res.success) {
         this.currencies = res.data;
+        if (this.bankAccounts.length === 0) {
+          this.addBankAccount();
+        }
       }
     })
   }
