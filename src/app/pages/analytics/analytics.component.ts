@@ -59,7 +59,7 @@ export class AnalyticsComponent implements OnInit {
           type: 'pie',
           minAngle: 5,
           radius: ['50%', '70%'],
-          center: ['20%', '50%'],
+          center: ['50%', '50%'],
           label: {
             show: true,
             position: 'center',
