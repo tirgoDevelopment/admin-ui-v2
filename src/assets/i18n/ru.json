@@ -533,6 +533,8 @@
   "amountService": "Сумма выполненных услуг",
   "size": "Размер",
   "analitics": "Аналитика",
+  "fromDate": "Дата от",
+  "toDate": "Дата до",
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",
