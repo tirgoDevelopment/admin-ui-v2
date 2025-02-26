@@ -2,7 +2,7 @@ import { BaseModel } from "src/app/shared/models/base-model";
 
 
 export interface TransportModel extends BaseModel {
-    brand: string;
+    brand: any;
     weight?: number;
     volume?: number;
     loading_side?: string;

@@ -14,10 +14,10 @@ import { Response } from "src/app/shared/models/reponse";
     completedServicesCounts() {
         return this.http.get(env.adminUrl + '/analitics/completed-services/count')
     }
-    completedServicesAmounts() {
-        return this.http.get(env.adminUrl + '/analitics/completed-services/amounts')
+    completedServicesAmounts(query) {
+        return this.http.get(env.adminUrl + `/analitics/completed-services/amounts${query}`)
     }
-    completedServicesPercentages() {
-        return this.http.get(env.adminUrl + '/analitics/completed-services/percentages')
+    completedServicesPercentages(query) {
+        return this.http.get(env.adminUrl + `/analitics/completed-services/percentages${query}`)
     }
 }

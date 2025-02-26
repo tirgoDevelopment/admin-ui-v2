@@ -7,7 +7,7 @@
     </nz-breadcrumb>
 
     <div class="info">
-        <div> <b> {{ "services.serviceId" | translate }}:</b>  {{serviceId}} / {{data.service.code}}</div>
+        <div> <b> {{ "services.serviceId" | translate }}:</b>  {{serviceId}} / {{data?.service?.code}}</div>
         <div> <b>{{ "driver" | translate }}:</b>  {{data?.driver.firstName}} {{data?.driver.lastName.slice(0,1)}}. ({{ data?.driver.id }}) </div>
         <div><b>{{ "driver_merchant" | translate }}:</b> {{data?.tms ? data?.tms?.companyType + ' ' + data?.tms?.companyName : ('no' | translate)}}</div>
     </div>
