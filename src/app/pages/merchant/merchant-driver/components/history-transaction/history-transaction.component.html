@@ -34,7 +34,7 @@
       </nz-select>
     </nz-input-group>
   </div>
-  <div>
+  <!-- <div>
     <nz-input-group class="input-group">
       <nz-date-picker [(ngModel)]="filter['createdAtFrom']" type="date" nz-input [nzAllowClear]="false"
         nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
@@ -47,7 +47,7 @@
         nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
       </nz-date-picker>
     </nz-input-group>
-  </div>
+  </div> -->
 
   <button nz-button nzType="primary" class="search-button" (click)="filterApply()">
     <span nz-icon nzType="search" nzTheme="outline"></span>
@@ -85,10 +85,12 @@
     <tr>
       <th>No</th>
       <th nzColumnKey="id" [nzSortFn]="true">ID</th>
-      <th>{{ 'full_name' | translate }}</th>
+      <th>{{ 'services.operator' | translate }}</th>
       <th> {{ 'sum' | translate }} (TIR)</th>
+      <th> {{ 'balanceStatus' | translate }} (TIR)</th>
       <th>{{ 'date' | translate }}</th>
-      <th>{{ 'type' | translate }}</th>
+      <th>{{ 'balansType' | translate }}</th>
+      <th>{{ 'transactionType' | translate }}</th>
       <th nzEllipsis>{{'description' | translate}} </th>
     </tr>
   </thead>
@@ -99,8 +101,10 @@
       <td> {{ item.id }} </td>
       <td> {{ item.createdBy?.admin?.username }}</td>
       <td> {{ item?.tirAmount | priceFormat }} </td>
+      <td> {{ item?.lastBalance | priceFormat }} </td>
       <td> {{ item.createdAt | date:'dd.MM.yyyy HH:mm'}} </td>
       <td> {{item.balanceType == 'tirgo' ? ('tirBalance' | translate) : ('serviceBalance' | translate)}}</td>
+      <td [ngClass]="item.transactionType == 'income' ? 'edit-icon' : 'delete-icon' "> {{item.transactionType | translate }}</td>
       <td nzEllipsis [nzTooltipTitle]="item.description" nzTooltipPlacement="top" nz-button nz-tooltip>
         {{item.description}}</td>
     </tr>

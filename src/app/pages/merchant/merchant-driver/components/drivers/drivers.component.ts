@@ -72,7 +72,7 @@ export class DriversComponent implements OnInit {
   getMerchant() {
     this.tmsService.getById(this.merchantId).subscribe((res: any) => {
       if (res && res.success) {
-        this.merchantName = res.data.companyName + ' ' + res.data.companyType;
+        this.merchantName = res.data.companyType + ' ' + res.data.companyName ;
       }
     });
   }

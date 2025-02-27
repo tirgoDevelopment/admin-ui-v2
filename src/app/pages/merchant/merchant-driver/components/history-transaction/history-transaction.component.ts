@@ -61,8 +61,6 @@ export class HistoryTransactionComponent {
   getAll(): void {
     this.loader = true;
     const queryString = generateQueryFilter(this.filter);
-    console.log(queryString);
-    
     this.tmsService.balanceTransactions(this.merchantId, this.pageParams, queryString).pipe(
       tap((res: any) => {
         this.data = res?.success ? res.data.content : [];
