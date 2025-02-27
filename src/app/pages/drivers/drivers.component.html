@@ -80,15 +80,7 @@
         </nz-date-picker>
       </nz-input-group>
     </div>
-    <div>
-      <nz-input-group class="input-group w-full">
-        <nz-select style="width: 100%; min-width: 150px;" nzPlaceHolder="{{ 'kzPaidWay' | translate }}"
-          [nzShowArrow]="true" [nzAllowClear]="true" [(ngModel)]="filter['isKzPaidWay']">
-          <nz-option nzLabel="{{'on' | translate}}" [nzValue]="true"></nz-option>
-          <nz-option nzLabel="{{'off' | translate}}" [nzValue]="false"></nz-option>
-        </nz-select>
-      </nz-input-group>
-    </div>
+   
     <div>
       <nz-input-group class="input-group">
         <nz-date-picker [(ngModel)]="filter['lastLoginFrom']" type="date" nz-input [nzAllowClear]="false"

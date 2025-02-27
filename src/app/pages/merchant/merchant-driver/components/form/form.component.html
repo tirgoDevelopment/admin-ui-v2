@@ -39,6 +39,11 @@
       mask="+999 99 999 99 99" required />
   </nz-input-group>
   <nz-input-group class="input-group">
+    <nz-form-label>{{ 'responce_phone' | translate }}</nz-form-label>
+    <input formControlName="responsbilePersonPhoneNumber" type="text" nz-input
+      placeholder="{{ 'responce_phone' | translate }}" mask="+999 99 999 99 99" />
+  </nz-input-group>
+  <nz-input-group class="input-group">
     <nz-form-label>{{ 'fact_address' | translate }}</nz-form-label>
     <input formControlName="factAddress" type="text" nz-input placeholder="{{ 'fact_address' | translate }}" />
   </nz-input-group>
@@ -57,8 +62,7 @@
       <nz-select formControlName="currency">
         <nz-option *ngFor="let item of currencies" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
       </nz-select>
-      <input formControlName="account" nz-input placeholder="{{ 'bank_account' | translate }}"
-        style="margin: 5px 0;" />
+      <input formControlName="account" nz-input placeholder="{{ 'bank_account' | translate }}" style="margin: 5px 0;" />
       <i (click)="removeBankAccount(i)" nz-icon nzType="close-circle"
         style="color: red; cursor: pointer; margin-left: 5px;" nzTheme="outline"
         *ngIf="bankAccounts.controls.length > 1"></i>
@@ -94,7 +98,7 @@
   <nz-input-group class="input-group" *ngIf="mode == 'add'">
     <nz-form-label nzRequired>{{ 'password' | translate }}</nz-form-label>
     <input formControlName="password" type="text" nz-input placeholder="{{ 'password' | translate }}" />
-    <span class="error-message" *ngIf="form.get('password')?.invalid && form.get('password')?.touched" >
+    <span class="error-message" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
       Пароль должен содержать не менее 8 символов и букв
     </span>
   </nz-input-group>

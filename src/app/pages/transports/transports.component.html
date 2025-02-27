@@ -3,14 +3,12 @@
     <div class="header-page">
       <h2>{{ 'transports' | translate }}</h2>
       <div class="button-group">
-        <button nz-button class="success-button" (click)="transportManagment()">
-          <!-- <span nz-icon nzType="plus" nzTheme="outline"></span> -->
-          {{ 'transportManagment' | translate }}
-        </button>
-
         <button nz-button class="secondary-button" (click)="toggleFilter()">
           <span nz-icon nzType="filter" nzTheme="fill"></span>
           {{ 'filter' | translate }}
+        </button>
+        <button nz-button class="success-button" (click)="transportManagment()">
+          {{ 'transportManagment' | translate }}
         </button>
         <button nz-button class="success-button" (click)="add()">
           <span nz-icon nzType="plus" nzTheme="outline"></span>
@@ -34,6 +32,15 @@
       <nz-input-group class="input-group">
         <input [(ngModel)]="filter['transportNumber']" type="text" nz-input
           placeholder="{{ 'state_number' | translate }}" trimSpaces />
+      </nz-input-group>
+    </div>
+    <div>
+      <nz-input-group class="input-group w-full">
+        <nz-select style="width: 100%; min-width: 150px;" nzPlaceHolder="{{ 'kzPaidWay' | translate }}"
+          [nzShowArrow]="true" [nzAllowClear]="true" [(ngModel)]="filter['isKzPaidWay']">
+          <nz-option nzLabel="{{'on' | translate}}" [nzValue]="true"></nz-option>
+          <nz-option nzLabel="{{'off' | translate}}" [nzValue]="false"></nz-option>
+        </nz-select>
       </nz-input-group>
     </div>
 
