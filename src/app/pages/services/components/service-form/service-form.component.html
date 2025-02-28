@@ -13,19 +13,109 @@
         <nz-form-label nzRequired>{{ 'drivers' | translate }}</nz-form-label>
         <nz-select style="width: 100%;" nzShowSearch nzServerSearch nzPlaceHolder="{{ 'drivers' | translate }}"
             [nzShowArrow]="false" formControlName="driverId" (nzOnSearch)="findDriver($event)">
-            <nz-option *ngFor="let o of (drivers$ | async)?.data?.content"
-                [nzLabel]="o | label: form.get('searchAs')?.value" [nzValue]="o.id">
+            <nz-option *ngFor="let o of drivers" [nzLabel]="o | label: form.get('searchAs')?.value" [nzValue]="o.id">
             </nz-option>
         </nz-select>
     </nz-input-group>
 
     <nz-input-group class="input-group w-full">
         <nz-form-label nzRequired>{{ 'services.title' | translate }}</nz-form-label>
-        <nz-select style="width: 100%;" nzPlaceHolder="{{ 'services.title' | translate }}"
-            formControlName="servicesIds" nzMode="multiple">
+        <nz-select style="width: 100%;" nzPlaceHolder="{{ 'services.title' | translate }}" formControlName="servicesIds"
+            nzMode="multiple">
             <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of services"></nz-option>
         </nz-select>
     </nz-input-group>
+
+
+    <div class="detail-header" *ngIf="selectedDriver">
+        <div>
+            <div class="user-name">{{ selectedDriver?.firstName }} {{ selectedDriver?.lastName }}</div>
+            <div class="user-id">ID: {{ selectedDriver?.id }}</div>
+            <div class="user-id">
+                {{'driver_merchant' | translate}}:
+                <span *ngIf="selectedDriver.tms" (click)="showTms(selectedDriver.tms.id)">{{selectedDriver?.tms?.companyType}} {{selectedDriver?.tms?.companyName}}</span> 
+                <span *ngIf="!selectedDriver.tms">{{'no_data' | translate}}</span> 
+            </div>
+        </div>
+    </div>
+    <div class="order-info" *ngIf="selectedDriver">
+
+        <div class="info-row">
+            <div class="info-column" *ngIf="selectedDriver?.phoneNumbers">
+                <div class="info-label">{{ 'phone' | translate }}</div>
+                <p class="info-value">{{ selectedDriver?.phoneNumbers[0].code + selectedDriver?.phoneNumbers[0].number |
+                    phoneFormat }}</p>
+            </div>
+            <div class="info-column">
+                <div class="info-label">{{ 'state_number_truck' | translate }}</div>
+                <ng-container *ngIf="selectedDriver?.driverTransports?.length; else noData">
+                    <p class="info-value" *ngFor="let transport of selectedDriver?.driverTransports">
+                        {{ transport?.transportNumber }}
+                    </p>
+                </ng-container>
+                <ng-template #noData>
+                    <p class="info-value">{{ 'no_data' | translate }}</p>
+                </ng-template>
+            </div>
+        </div>
+        <div class="info-row">
+            <div class="info-column">
+                <div class="info-label">{{ 'serviceBalance' | translate }}</div>
+                <div class="info-value">
+                    {{selectedDriver?.serviceBalance | priceFormat}} TIR
+                </div>
+            </div>
+            <div class="info-column">
+                <div class="info-label">{{ 'tirBalance' | translate }}</div>
+                <div class="info-value">
+                    {{selectedDriver?.tirgoBalance | priceFormat}} TIR
+                </div>
+            </div>
+        </div>
+        <div class="info-row">
+            <div class="info-column" *ngIf="!selectedDriver?.isSubscribed">
+                <div class="info-label">{{ 'subscription' | translate }}</div>
+                <div class="info-value">
+                    <span
+                        ngClass="{{selectedDriver.isSubscribed ? 'edit-icon' : 'delete-icon'}}">{{selectedDriver.isSubscribed
+                        ? ('yes' |
+                        translate) : ('no' | translate)}}</span>
+                </div>
+            </div>
+            <div class="info-column" *ngIf="selectedDriver?.isSubscribed">
+                <div class="info-label">{{ 'subscribe_from' | translate }}</div>
+                <div class="info-value">
+                    <span>{{selectedDriver.subscribedAt | date : 'dd.MM.yyyy'}}</span>
+                </div>
+            </div>
+            <div class="info-column" *ngIf="selectedDriver?.isSubscribed">
+                <div class="info-label">{{ 'subscribe_to' | translate }}</div>
+                <div class="info-value">
+                    <span>{{selectedDriver.subscribedTill | date : 'dd.MM.yyyy'}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="info-row">
+            <div class="info-column">
+                <div class="info-label">{{ 'total_balance' | translate }}</div>
+                <p class="info-value">{{ selectedDriver?.isOwnBalance ? ('on' | translate) : ('off' | translate) }}</p>
+            </div>
+            <div class="info-column">
+                <div class="info-label">{{ 'apply_service' | translate }}</div>
+                <div class="info-value">
+                    {{ selectedDriver?.isOwnService ? ('on'| translate) : ('off' | translate) }}
+                </div>
+            </div>
+        </div>
+        <div class="info-row" *ngIf="selectedDriver.driverTransports">
+            <div class="info-column">
+                <div class="info-label">{{ 'paid_way' | translate }}</div>
+                <p class="info-value" *ngFor="let i of selectedDriver.driverTransports">
+                    {{ i.transportNumber }}: {{i.isKzPaidWay ? ('on' | translate) : ('off' | translate)}}
+                </p>
+            </div>
+        </div>
+    </div>
 
     <div class="button-wrapper">
         <button nz-button class="danger-button" (click)="onCancel()">

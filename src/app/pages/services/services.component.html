@@ -3,6 +3,10 @@
     <div class="header-page">
       <h2>{{ "services.title" | translate }}</h2>
       <div class="button-group" [ngClass]="ms.isMobile ? 'my-2' : ''">
+        <button nz-button class="secondary-button" (click)="toggleFilter()">
+          <span nz-icon nzType="filter" nzTheme="fill"></span>
+          {{ "filter" | translate }}
+        </button>
         <button nz-button class="success-button" (click)="kazjulToken()"
           *ngIf="perService.hasPermission(Per.ServicesPage)">
           {{ "kzPaidWay" | translate }}
@@ -12,10 +16,7 @@
           <span nz-icon nzType="file-excel" nzTheme="fill"></span>
           {{ "excel" | translate }}
         </button>
-        <button nz-button class="secondary-button" (click)="toggleFilter()">
-          <span nz-icon nzType="filter" nzTheme="fill"></span>
-          {{ "filter" | translate }}
-        </button>
+
         <button nz-button class="success-button" (click)="addService()"
           *ngIf="perService.hasPermission(Per.ServiceCreate)">
           <span nz-icon nzType="plus"></span>
@@ -125,11 +126,9 @@
             </div>
           </td>
           <td nzWidth="120px"> {{item.tirAmount ? item.tirAmount : 0}}</td>
-          <td nzWidth="200px" class="ellipsis" (click)="$event.stopPropagation()"
-            (click)="showTms(item?.tms?.id)">
+          <td nzWidth="200px" class="ellipsis" (click)="$event.stopPropagation()" (click)="showTms(item?.tms?.id)">
             <div nz-tooltip [nzTooltipTitle]="item.driver.tms?.companyType + ' ' +
-            item.tms?.companyName" [ngClass]="perService.hasPermission(Per.TmsDetail) ? 'link' : ''"
-              *ngIf="item.tms">
+            item.tms?.companyName" [ngClass]="perService.hasPermission(Per.TmsDetail) ? 'link' : ''" *ngIf="item.tms">
               {{item.tms?.companyType + ' ' +
               item.tms?.companyName}}</div>
             <div *ngIf="!item.tms">{{'no' | translate}}</div>
@@ -162,7 +161,7 @@
             </span>
 
           </td>
-          <td nzWidth="50px"  [nzRight]="!ms.isMobile" (click)="$event.stopPropagation()"
+          <td nzWidth="50px" [nzRight]="!ms.isMobile" (click)="$event.stopPropagation()"
             *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])">
             <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
               <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer"></i>
