@@ -484,7 +484,7 @@
           </nz-space>
         </div>
       </div>
-      <div class="button-wrapper" *ngIf="!data?.isSubscribed">
+      <div class="button-wrapper" *ngIf="!data?.isSubscribed && perService.hasPermission(Permission.DriverAddSubscribe)">
         <button nz-button class="success-button" (click)="onApplySubscribe()">{{'apply_subscribe' | translate}}
         </button>
       </div>
@@ -492,7 +492,7 @@
     <nz-tab nzTitle="{{ 'transport' | translate }}" *ngIf="data?.driverTransports && data?.driverTransports.length > 0">
       <div>
         <nz-collapse>
-          <nz-collapse-panel *ngFor="let transport of data?.driverTransports" [nzHeader]="transport.brand">
+          <nz-collapse-panel *ngFor="let transport of data?.driverTransports" [nzHeader]="transport.brand.name">
             <div class="order-info" style="margin: 0; padding: 0;border: none;" *ngIf="transport">
               <div class="info-row">
                 <div class="info-column" style="width: 100%;">

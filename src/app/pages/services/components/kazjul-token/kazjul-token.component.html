@@ -12,7 +12,7 @@
   </div>
   <nz-input-group class="input-group">
     <nz-form-label>{{ 'kzt_rate' | translate }}</nz-form-label>
-    <input nz-input type="text" formControlName="kzCurrencyRate" mask="separator.2">
+    <input nz-input type="text" formControlName="kzCurrencyRate" mask="separator.2" (keypress)="blockComma($event)">
   </nz-input-group>
   <nz-input-group class="input-group">
     <nz-form-label>{{ 'token' | translate }}</nz-form-label>

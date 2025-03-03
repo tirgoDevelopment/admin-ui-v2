@@ -38,6 +38,17 @@
             </div>
         </div>
     </div>
+    
+
+    <div class="button-wrapper">
+        <button nz-button class="danger-button" (click)="onCancel()">
+            {{ 'cancel' | translate }}
+        </button>
+        <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
+            [disabled]="form.invalid || loading">
+            {{ 'save' | translate }}
+        </button>
+    </div>
     <div class="order-info" *ngIf="selectedDriver">
 
         <div class="info-row">
@@ -115,15 +126,5 @@
                 </p>
             </div>
         </div>
-    </div>
-
-    <div class="button-wrapper">
-        <button nz-button class="danger-button" (click)="onCancel()">
-            {{ 'cancel' | translate }}
-        </button>
-        <button [nzLoading]="loading" nz-button class="success-button" (click)="onSubmit()"
-            [disabled]="form.invalid || loading">
-            {{ 'save' | translate }}
-        </button>
     </div>
 </form>

@@ -1,75 +1,81 @@
-<div class="header-page mb-2">
-    <h2>{{ 'analitics' | translate }}</h2>
-</div>
-
-<div class="flex gap align-center">
-    <div>
-        <nz-input-group class="input-group">
-            <nz-date-picker style="width: 210px !important;" [(ngModel)]="filter['fromDate']" type="date" nz-input
-                [nzAllowClear]="false" nzPlaceHolder="{{ 'fromDate' | translate }}" class="custom-date-picker">
-            </nz-date-picker>
-        </nz-input-group>
+<div *ngIf="perService.hasPermission(Per.AnaliticsPage)">
+    <div class="header-page mb-2">
+        <h2>{{ 'analitics' | translate }}</h2>
     </div>
-    <div>
-        <nz-input-group class="input-group">
-            <nz-date-picker style="width: 210px !important;" [(ngModel)]="filter['toDate']" type="date" nz-input
-                [nzAllowClear]="false" nzPlaceHolder="{{ 'toDate' | translate }}" class="custom-date-picker">
-            </nz-date-picker>
-        </nz-input-group>
+
+    <div class="flex gap align-center">
+        <div>
+            <nz-input-group class="input-group">
+                <nz-date-picker style="width: 210px !important;" [(ngModel)]="filter['fromDate']" type="date" nz-input
+                    [nzAllowClear]="false" nzPlaceHolder="{{ 'fromDate' | translate }}" class="custom-date-picker">
+                </nz-date-picker>
+            </nz-input-group>
+        </div>
+        <div>
+            <nz-input-group class="input-group">
+                <nz-date-picker style="width: 210px !important;" [(ngModel)]="filter['toDate']" type="date" nz-input
+                    [nzAllowClear]="false" nzPlaceHolder="{{ 'toDate' | translate }}" class="custom-date-picker">
+                </nz-date-picker>
+            </nz-input-group>
+        </div>
+        <div>
+            <nz-input-group class="input-group w-full">
+                <nz-select style="width: 100%; min-width: 210px;" nzPlaceHolder="{{ 'driver_merchant' | translate }}"
+                    nzShowSearch nzServerSearch (nzOnSearch)="findTms($event)" [nzShowArrow]="true"
+                    [nzAllowClear]="true" nzMode="multiple" [(ngModel)]="filter['tmsesIds']">
+                    <nz-option [nzLabel]="item.companyType + ' ' + item.companyName" [nzValue]="item.id"
+                        *ngFor="let item of tms$ | async"></nz-option>
+                </nz-select>
+            </nz-input-group>
+        </div>
+        <button nz-button nzType="primary" class="search-button" (click)="filterApply()">
+            <span nz-icon nzType="search" nzTheme="outline"></span>
+        </button>
+        <button nz-button class="reset-button" (click)="resetFilter()">
+            <span nz-icon nzType="reload" nzTheme="outline"></span>
+        </button>
     </div>
-    <div>
-        <nz-input-group class="input-group w-full">
-            <nz-select style="width: 100%; min-width: 210px;" nzPlaceHolder="{{ 'driver_merchant' | translate }}"
-                nzShowSearch nzServerSearch (nzOnSearch)="findTms($event)" [nzShowArrow]="true" [nzAllowClear]="true"
-                nzMode="multiple" [(ngModel)]="filter['tmsesIds']">
-                <nz-option [nzLabel]="item.companyType + ' ' + item.companyName" [nzValue]="item.id"
-                    *ngFor="let item of tms$ | async"></nz-option>
-            </nz-select>
-        </nz-input-group>
+
+    <div class="charts-container">
+        <div echarts [options]="amountChartOptions" class="chart"></div>
     </div>
-    <button nz-button nzType="primary" class="search-button" (click)="filterApply()">
-        <span nz-icon nzType="search" nzTheme="outline"></span>
-      </button>
-      <button nz-button class="reset-button" (click)="resetFilter()">
-        <span nz-icon nzType="reload" nzTheme="outline"></span>
-      </button>
+    <div class="charts-container">
+        <div echarts [options]="countChartOptions" class="chart"></div>
+    </div>
+
+    <div class="table-container">
+        <nz-table #basicTable [nzBordered]="true" [nzData]="data" [nzLoading]="loading" [nzNoResult]="empty"
+            [nzShowPagination]="false">
+            <thead>
+                <tr>
+                    <th nzWidth="250px">{{ 'services.serviceName' | translate }}</th>
+                    <th nzWidth="150px">{{ 'count' | translate }}</th>
+                    <th nzWidth="150px">{{ 'amount' | translate }} (TIR)</th>
+                    <th nzWidth="120px">{{ 'percent' | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>{{ 'total_order' | translate }}</b></td>
+                    <td><b>{{ totalCount }}</b></td>
+                    <td><b>{{ totalValue | priceFormat: 0 }}</b></td>
+                    <td><b>100%</b></td>
+                </tr>
+                <tr *ngFor="let item of data; let i = index">
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.count }}</td>
+                    <td>{{ item.amount }}</td>
+                    <td>{{ item.percentage }}%</td>
+                </tr>
+            </tbody>
+        </nz-table>
+        <ng-template #empty>
+            <nz-empty></nz-empty>
+        </ng-template>
+    </div>
 </div>
 
-
-<div class="charts-container">
-    <div echarts [options]="amountChartOptions" class="chart"></div>
-</div>
-<div class="charts-container">
-    <div echarts [options]="countChartOptions" class="chart"></div>
-</div>
-
-<div class="table-container">
-    <nz-table #basicTable [nzBordered]="true" [nzData]="data" [nzLoading]="loading" [nzNoResult]="empty"
-        [nzShowPagination]="false">
-        <thead>
-            <tr>
-                <th nzWidth="250px">{{ 'services.serviceName' | translate }}</th>
-                <th nzWidth="150px">{{ 'count' | translate }}</th>
-                <th nzWidth="150px">{{ 'amount' | translate }} (TIR)</th>
-                <th nzWidth="120px">{{ 'percent' | translate }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><b>{{ 'total_order' | translate }}</b></td>
-                <td><b>{{ totalCount }}</b></td>
-                <td><b>{{ totalValue | priceFormat: 0 }}</b></td>
-                <td><b>100%</b></td>
-            </tr>
-            <tr *ngFor="let item of data; let i = index">
-                <td>{{ item.name }}</td>
-                <td>{{ item.count }}</td>
-                <td>{{ item.amount }}</td>
-                <td>{{ item.percentage }}%</td>
-            </tr>
-        </tbody>
-    </nz-table>
-    <ng-template #empty>
-        <nz-empty></nz-empty>
-    </ng-template>
+<div *ngIf="!perService.hasPermission(Per.AnaliticsPage)" class="no-access-container">
+    <nz-result nzStatus="error" nzTitle="403" nzSubTitle="{{'accessDeniedPage' | translate}}">
+    </nz-result>
 </div>

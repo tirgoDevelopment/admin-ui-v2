@@ -7,13 +7,14 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-kazjul-token',
   templateUrl: './kazjul-token.component.html',
   styleUrls: ['./kazjul-token.component.scss'],
   standalone: true,
-  imports: [NzModules, CommonModules, TranslateModule, PriceFormatPipe],
+  imports: [NzModules, CommonModules, TranslateModule, PriceFormatPipe, NgxMaskDirective],
 })
 export class KazjulTokenComponent {
   form: FormGroup;
@@ -74,5 +75,10 @@ export class KazjulTokenComponent {
     }, err => {
       this.loading = false;
     })
+  }
+  blockComma(event: KeyboardEvent) {
+    if (event.key === ',') {
+      event.preventDefault();
+    }
   }
 }
