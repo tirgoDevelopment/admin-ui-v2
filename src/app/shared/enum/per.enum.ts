@@ -17,6 +17,7 @@ export enum Permission {
   DriverBlock = "driverBlock",
   DriverAddTransport = "driverAddTransport",
   DriverPush = "driverPush",
+  DriverAddSubscribe = "driverAddSubscribe",
 
   ClientsPage = 'clientsPage',
   ClientCreate = 'clientCreate',
@@ -72,4 +73,5 @@ export enum Permission {
   CargoTypeGroupsPage = 'cargoTypeGroupsPage',
   CargoTypesPage = 'cargoTypesPage',
 
+  AnaliticsPage = 'analiticsPage',
 }

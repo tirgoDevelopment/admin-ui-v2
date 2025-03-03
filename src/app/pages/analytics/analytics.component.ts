@@ -17,29 +17,34 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
+import { Permission } from 'src/app/shared/enum/per.enum';
+import { PermissionService } from 'src/app/shared/services/permission.service';
+import { NzResultModule } from 'ng-zorro-antd/result';
 
 @Component({
   selector: 'app-analytics',
   templateUrl: './analytics.component.html',
   styleUrls: ['./analytics.component.scss'],
   standalone: true,
-  imports: [PriceFormatPipe, NgxEchartsModule, CommonModule, TranslateModule, NzSelectModule, FormsModule, IconsProviderModule,
+  imports: [PriceFormatPipe, NgxEchartsModule, CommonModule, TranslateModule, NzSelectModule, FormsModule, IconsProviderModule, NzResultModule,
     NzTableModule, NzEmptyModule, NzRadioModule, NzDatePickerModule, NzInputModule, NzButtonModule],
 })
 export class AnalyticsComponent implements OnInit {
+  Per = Permission;
   percentageData = [];
   data: any[] = [];
   loading = false;
   filter = this.initializeFilter();
   amountChartOptions = {} as EChartsOption;
   countChartOptions = {} as EChartsOption;
-    totalValue: number = 0;
+  totalValue: number = 0;
   totalCount: number = 0;
   tms$
   constructor(
     private analiticsService: AnalyticsService,
     private tmsService: TmsService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public perService: PermissionService
   ) { }
 
   ngOnInit(): void {
@@ -107,7 +112,7 @@ export class AnalyticsComponent implements OnInit {
       this.cdr.detectChanges();
       return;
     }
-  
+
     const legendNames = amountData.map(item => item.name);
     const legendOptions: LegendComponentOption = {
       orient: 'horizontal',
@@ -120,10 +125,10 @@ export class AnalyticsComponent implements OnInit {
         return item ? `${name} ${item.percentage}% (${item.count} кол-во)` : name;
       },
     };
-  
+
     const baseOptions = this.getBaseChartOptions();
     const baseSeriesOptions = baseOptions.series[0];
-  
+
     this.amountChartOptions = {
       ...baseOptions,
       legend: legendOptions,
@@ -144,7 +149,7 @@ export class AnalyticsComponent implements OnInit {
         },
       ],
     };
-  
+
     this.countChartOptions = {
       ...baseOptions,
       legend: legendOptions,
@@ -165,11 +170,11 @@ export class AnalyticsComponent implements OnInit {
         },
       ],
     };
-  
+
     this.cdr.detectChanges();
   }
-  
-  
+
+
   getAmount(): void {
     this.analiticsService.completedServicesAmounts(generateQueryFilter(this.filter)).subscribe((res: any) => {
       if (!res) return;
@@ -177,7 +182,7 @@ export class AnalyticsComponent implements OnInit {
       this.calculateTotals(amountData);
       this.data = this.prepareTableData(amountData);
       if (amountData.length === 0) return;
-  
+
       this.updateChartOptions([...amountData]);
       this.cdr.detectChanges();
     });
@@ -197,7 +202,7 @@ export class AnalyticsComponent implements OnInit {
   formatNumber(value: number): string {
     return new Intl.NumberFormat('ru-RU').format(value);
   }
-  
+
   findTms(searchTerm) {
     if (searchTerm) {
       this.tmsService.findTms(searchTerm, 'companyName').subscribe((response: any) => {
@@ -207,10 +212,10 @@ export class AnalyticsComponent implements OnInit {
   }
   filterApply() {
     this.filter['filterBy'] = this.filter['tmsesIds'].length > 0 ? 'user' : 'all';
-    
+
     this.amountChartOptions = this.getBaseChartOptions();
     this.countChartOptions = this.getBaseChartOptions();
-  
+
     setTimeout(() => {
       this.getPercentage();
       this.cdr.detectChanges();

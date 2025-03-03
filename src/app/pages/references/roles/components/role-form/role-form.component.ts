@@ -22,7 +22,7 @@ export class RoleFormComponent implements OnInit {
   permissionKeys = [
     "sendPush", "chat", "trackingPage",
     "adminsPage", "adminCreate", "adminUpdate", "adminDelete",
-    "driversPage", "driverTopUpBalance", "driverCreate", "driverUpdate", "driverDelete", 
+    "driversPage", "driverTopUpBalance", "driverCreate", "driverUpdate", "driverDelete", "driverAddSubscribe",
     "driverDetail", "driverBlock", "driverAddTransport", "driverPush",
     "clientsPage", "clientCreate", "clientUpdate", "clientDetail", "clientDelete", 
     "clientPush", "servicesPage", "serviceCreate", "serviceDetail", "serviceStatusChange", 
@@ -31,10 +31,10 @@ export class RoleFormComponent implements OnInit {
     "orderCancel", "orderAssignDriver", "orderSendOfferToDriver", "orderChangeStatus", 
     "tmsesPage", "tmsDetail", "tmsUpdate", "tmsDriversList", "tmsTransactionsHistory", 
     "tmsTopupBalance", "tmsBlock", "tmsRequstsList", "merchantsPage", "dashboardPage", 
-    "archivePage", "driverServicesPage", "rolesPage", "loadingMethodsPage", 
+    "archivePage", "rolesPage", "loadingMethodsPage", 
     "subscriptionTypesPage", "currenciesPage", "transportTypesPage", "transportKindsPage", 
     "cargoStatusPage", "cargoPackagesPage", "serviceStatusPage", "cargoTypeGroupsPage", 
-    "cargoTypesPage"
+    "cargoTypesPage", "analiticsPage"
   ];
 
   constructor(

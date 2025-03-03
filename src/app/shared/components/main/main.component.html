@@ -20,6 +20,7 @@
         <span>{{ "control_panel" | translate }}</span>
       </li> -->
       <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
+        *ngIf="permissionService.hasPermission(Permission.AnaliticsPage)"
         [nzTooltipTitle]="isCollapsed ? ('analitics' | translate) : ''" routerLink="/analitics">
         <span nz-icon nzType="bar-chart"></span>
         <span>{{ "analitics" | translate }}</span>
@@ -60,7 +61,7 @@
       </li>
 
       <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
-        *ngIf="permissionService.hasPermission(Permission.DriverServicesPage)"
+        *ngIf="permissionService.hasPermission(Permission.ServicesPage)"
         [nzTooltipTitle]="isCollapsed ? ('services.title' | translate) : ''" routerLink="/services">
         <nz-badge [nzCount]="serviceReqCount" class="w-full">
           <span nz-icon nzType="file-text"></span>

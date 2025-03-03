@@ -106,7 +106,8 @@
           <th nzWidth="200px" class="ellipsis" [nzLeft]="!ms.isMobile">{{ "services.serviceName" | translate }}</th>
           <th nzWidth="120px">{{ "total" | translate }} (TIR)</th>
           <th nzWidth="200px" class="ellipsis">{{ 'merchant_driver' | translate }}</th>
-          <th nzWidth="150px">{{ "services.driverId" | translate }}</th>
+          <th nzWidth="150px">{{ "driver" | translate }}</th>
+          <th nzWidth="100px">{{ "subscription" | translate }}</th>
           <th nzWidth="180px">{{ "state_number_truck" | translate }}</th>
           <th nzWidth="180px">{{ "date_creation" | translate }}</th>
           <th *ngIf="tabType == 1" nzWidth="180px">{{ "date_debit" | translate }}</th>
@@ -134,8 +135,9 @@
             <div *ngIf="!item.tms">{{'no' | translate}}</div>
           </td>
           <td nzWidth="150px" (click)="$event.stopPropagation()" (click)="showDriver(item.driver.id)">
-            <div [ngClass]="perService.hasPermission(Per.DriverDetail) ? 'link' : ''">{{ item.driver.id }}</div>
+            <div [ngClass]="perService.hasPermission(Per.DriverDetail) ? 'link' : ''">{{ item.driver.id }}  {{ item.driver.firstName }} {{ item.driver.lastName.slice(0) }}</div>
           </td>
+          <td nzWidth="100px">{{item.isSubscribed ? ('yes' | translate) : ('no' | translate) }}</td>
           <td nzWidth="180px" class="ellipsis">
             <ng-container *ngIf="item.driver.driverTransports?.length; else noTransports">
               <div *ngFor="let truck of item.driver.driverTransports">

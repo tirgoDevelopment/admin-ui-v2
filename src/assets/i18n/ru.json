@@ -543,7 +543,7 @@
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",
-    "serviceName": "Наименование сервиса",
+    "serviceName": "Наименование услуги",
     "driverId": "Водитель ID",
     "processingTime": "Время начала обработки",
     "processingTimeEnd": "Время завершения обработки",
@@ -602,6 +602,7 @@
     "driverAddTransport": "Добавление транспорта водителю",
     "driverTopUpBalance": "Пополнения счета водителем",
     "driverPush": "Отправка уведомлений водителю",
+    "driverAddSubscribe": "Добавление подписки водителю",
     "clientsPage": "Управление клиентами",
     "clientCreate": "Создание клиента",
     "clientUpdate": "Редактирование клиента",
@@ -649,6 +650,7 @@
     "cargoTypesPage": "Типы грузов",
     "subscriptionTypesPage": "Типы подписок",
     "currenciesPage": "Управление валютами",
-    "archivePage": "Архив"
+    "archivePage": "Архив",
+    "analiticsPage": "Страница аналитика"
   }
 }

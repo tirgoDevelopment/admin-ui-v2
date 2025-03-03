@@ -444,15 +444,27 @@ export class ServicesComponent implements OnInit, OnDestroy {
   getCancelButtonConfig(selectedService: any): { text: string; onCancel: () => void } {
     const currentUser: any = jwtDecode(localStorage.getItem('accessToken') || '');
 
-    if (currentUser.userId == 1) {
+    if ((selectedService.status.code == 5 || selectedService.status.code == 6 || selectedService.status.code == 7 )&& currentUser.userId == 1) {
       return {
         text: this.translate.instant('services.cancelService'),
         onCancel: () => this.cancelService(selectedService),
       };
-    } else {
+    } 
+    else if((selectedService.status.code != 5 || selectedService.status.code != 6 || selectedService.status.code != 7 )) {
       return {
-        text: this.translate.instant('cancel'),
-        onCancel: () => { },
+        text: this.translate.instant('services.cancelService'),
+        onCancel: () => { 
+          this.cancelService(selectedService);
+          
+        },
+      };
+    }
+    else {
+      return {
+        text: this.translate.instant('services.cancel'),
+        onCancel: () => {
+          this.modal.closeAll();
+         },
       };
     }
   }
