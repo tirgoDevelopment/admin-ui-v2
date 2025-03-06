@@ -23,7 +23,7 @@
     <tbody>
       <tr *ngFor="let item of data; let i = index" (click)="update(item)">
         <td nzLeft>{{ item.name }}</td>
-        <td class="action-col">
+        <td class="action-col" (click)="$event.stopPropagation()">
           <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
             <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
           </a>
