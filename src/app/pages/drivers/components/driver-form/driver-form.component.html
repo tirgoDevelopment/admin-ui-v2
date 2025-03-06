@@ -492,7 +492,7 @@
     <nz-tab nzTitle="{{ 'transport' | translate }}" *ngIf="data?.driverTransports && data?.driverTransports.length > 0">
       <div>
         <nz-collapse>
-          <nz-collapse-panel *ngFor="let transport of data?.driverTransports" [nzHeader]="transport.brand.name">
+          <nz-collapse-panel *ngFor="let transport of data?.driverTransports" [nzHeader]="transport?.brand?.name">
             <div class="order-info" style="margin: 0; padding: 0;border: none;" *ngIf="transport">
               <div class="info-row">
                 <div class="info-column" style="width: 100%;">
@@ -610,11 +610,8 @@
           </nz-collapse-panel>
         </nz-collapse>
       </div>
-
-
     </nz-tab>
   </nz-tabset>
-
 </div>
 
 <div *ngIf="loadingPage" class="loader-container">

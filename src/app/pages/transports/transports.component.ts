@@ -62,7 +62,11 @@ export class TransportsComponent implements OnInit {
 
   getAll() {
     this.loader = true;
-    this.transportsService.getAll(generateQueryFilter(this.filter)).pipe(
+    this.pageParams = {
+      ...this.pageParams,
+      ...this.filter
+    }
+    this.transportsService.getAll(generateQueryFilter(this.pageParams)).pipe(
       tap((res: any) => {
         this.data = res?.success ? res.data.content : [];
         this.pageParams.totalPagesCount = res?.data?.totalPagesCount * this.pageParams.pageSize;
@@ -162,7 +166,7 @@ export class TransportsComponent implements OnInit {
     this.getAll();
   }
   private initializeFilter(): Record<string, string> {
-    return { firstName: '', clientId: '', phoneNumber: '', createdAtTo: '', createdAtFrom: '', lastLoginFrom: '', lastLoginTo: '' };
+    return { transportBrandId: '', transportNumber: '', isKzPaidWay: '' };
   }
   onQueryParamsChange(params: NzTableQueryParams): void {
     const { pageIndex, pageSize, sort } = params;
