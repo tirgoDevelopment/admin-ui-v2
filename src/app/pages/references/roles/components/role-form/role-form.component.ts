@@ -34,7 +34,7 @@ export class RoleFormComponent implements OnInit {
     "archivePage", "rolesPage", "loadingMethodsPage", 
     "subscriptionTypesPage", "currenciesPage", "transportTypesPage", "transportKindsPage", 
     "cargoStatusPage", "cargoPackagesPage", "serviceStatusPage", "cargoTypeGroupsPage", 
-    "cargoTypesPage", "analiticsPage"
+    "cargoTypesPage", "analiticsPage","transportsPage", "transportAdd", "transportManagment"
   ];
 
   constructor(

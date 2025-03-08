@@ -73,5 +73,9 @@ export enum Permission {
   CargoTypeGroupsPage = 'cargoTypeGroupsPage',
   CargoTypesPage = 'cargoTypesPage',
 
+  TransportsPage = 'transportsPage',
+  TransportAdd = 'transportAdd',
+  TransportManagment = 'transportManagment',
+  
   AnaliticsPage = 'analiticsPage',
 }
