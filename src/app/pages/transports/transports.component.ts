@@ -16,6 +16,9 @@ import { AddTransportComponent } from './components/add-transport/add-transport.
 import { catchError, of, tap } from 'rxjs';
 import { TransportManageComponent } from './components/transport-manage/transport-manage.component';
 import { Router } from '@angular/router';
+import { DriversService } from '../drivers/services/drivers.service';
+import { TmsService } from '../merchant/merchant-driver/services/tms.service';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 @Component({
   selector: 'app-transports',
@@ -39,6 +42,8 @@ export class TransportsComponent implements OnInit {
   data: any[] = [];
   loader: boolean = false;
   isFilterVisible: boolean = false;
+  drivers: any[] = [];
+  tmses: any[] = [];
   filter: Record<string, string> = this.initializeFilter();
   pageParams = {
     pageIndex: 1,
@@ -48,13 +53,16 @@ export class TransportsComponent implements OnInit {
     sortType: '',
   };
   constructor(
+    public perService: PermissionService,
     private toastr: NotificationService,
     private transportsService: TransportsService,
     private brandsService: TransportBrandService,
     private drawer: NzDrawerService,
     private translate: TranslateService,
     private modal: NzModalService,
-    private route: Router
+    private route: Router,
+    private driverService: DriversService,
+    private tmsService: TmsService
   ) { }
   ngOnInit(): void {
     this.getTransportBrands();
@@ -91,7 +99,7 @@ export class TransportsComponent implements OnInit {
       }
     });
     drawerRef.afterClose.subscribe((res: any) => {
-      if(res && res.success){
+      if (res && res.success) {
         this.getAll()
       }
     });
@@ -108,7 +116,7 @@ export class TransportsComponent implements OnInit {
       }
     });
     drawerRef.afterClose.subscribe((res: any) => {
-      if(res && res.success){
+      if (res && res.success) {
         this.getAll()
       }
     });
@@ -120,7 +128,7 @@ export class TransportsComponent implements OnInit {
       nzPlacement: 'right',
     })
     drawerRef.afterClose.subscribe((res: any) => {
-      if(res && res.success) {
+      if (res && res.success) {
         this.getAll();
       }
     })
@@ -166,7 +174,7 @@ export class TransportsComponent implements OnInit {
     this.getAll();
   }
   private initializeFilter(): Record<string, string> {
-    return { transportBrandId: '', transportNumber: '', isKzPaidWay: '' };
+    return { transportBrandId: '', transportNumber: '', isKzPaidWay: '', driverId: '', tmsId:'' };
   }
   onQueryParamsChange(params: NzTableQueryParams): void {
     const { pageIndex, pageSize, sort } = params;
@@ -178,5 +186,23 @@ export class TransportsComponent implements OnInit {
     this.pageParams.sortType = currentSort?.value === 'ascend' ? 'asc' : currentSort?.value === 'descend' ? 'desc' : '';
 
     this.getAll();
+  }
+  findDriver(ev: string) {
+    if (ev) {
+      this.driverService.findDrivers(ev, 'driverId').subscribe((res: any) => {
+        if (res) {
+          this.drivers = res.data.content;
+        }
+      })
+    }
+  }
+  findTms(ev: string) {
+    if (ev) {
+      this.tmsService.findTms(ev, 'tmsId').subscribe((res: any) => {
+        if (res) {
+          this.tmses = res.data.content;
+        }
+      })
+    }
   }
 }

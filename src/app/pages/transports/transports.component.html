@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="perService.hasPermission(Permission.TransportsPage)">
   <div class="container-page">
     <div class="header-page">
       <h2>{{ 'transports' | translate }}</h2>
@@ -7,10 +7,12 @@
           <span nz-icon nzType="filter" nzTheme="fill"></span>
           {{ 'filter' | translate }}
         </button>
-        <button nz-button class="success-button" (click)="transportManagment()">
+        <button nz-button class="success-button" (click)="transportManagment()"
+          *ngIf="perService.hasPermission(Permission.TransportManagment)">
           {{ 'transportManagment' | translate }}
         </button>
-        <button nz-button class="success-button" (click)="add()">
+        <button nz-button class="success-button" (click)="add()"
+          *ngIf="perService.hasPermission(Permission.TransportAdd)">
           <span nz-icon nzType="plus" nzTheme="outline"></span>
           {{ 'add' | translate }}
         </button>
@@ -21,7 +23,27 @@
   <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
     <div>
       <nz-input-group class="input-group w-full">
-        <nz-select style="width: 250px" [(ngModel)]="filter['transportBrandId']" nzAllowClear nzPlaceHolder="{{'modelTransport' | translate}}" nzShowSearch>
+        <nz-select style="width: 200px;" nzShowSearch nzServerSearch
+          nzPlaceHolder="{{ 'services.driverId' | translate }}" [nzAllowClear]="true" [nzShowArrow]="false"
+          [(ngModel)]="filter['driverId']" (nzOnSearch)="findDriver($event)">
+          <nz-option *ngFor="let o of drivers" [nzLabel]="o.firstName + ' ' + o.lastName" [nzValue]="o.id">
+          </nz-option>
+        </nz-select>
+      </nz-input-group>
+    </div>
+    <div>
+      <nz-input-group class="input-group w-full">
+        <nz-select style="width: 200px;" nzShowSearch nzServerSearch nzPlaceHolder="{{ 'driver_merchant' | translate }}"
+          [nzAllowClear]="true" [nzShowArrow]="false" [(ngModel)]="filter['tmsId']" (nzOnSearch)="findTms($event)">
+          <nz-option *ngFor="let o of tmses" [nzLabel]="o.companyType + ' ' + o.companyName" [nzValue]="o.id">
+          </nz-option>
+        </nz-select>
+      </nz-input-group>
+    </div>
+    <div>
+      <nz-input-group class="input-group w-full">
+        <nz-select style="width: 250px" [(ngModel)]="filter['transportBrandId']" nzAllowClear
+          nzPlaceHolder="{{'modelTransport' | translate}}" nzShowSearch>
           <nz-option-group [nzLabel]="group.name" *ngFor="let group of brandGroups">
             <nz-option *ngFor="let brand of group.brands" [nzValue]="brand.id" [nzLabel]="brand.name"></nz-option>
           </nz-option-group>
@@ -61,7 +83,9 @@
         <th>ID</th>
         <th>{{ 'driver' | translate }}</th>
         <th>{{ 'state_number' | translate }}</th>
+        <th nzWidth="200px"> {{'driver_merchant' | translate }} </th>
         <th>{{ 'register_date' | translate }}</th>
+        <th>{{ 'kzPaidWay' | translate }}</th>
         <th nzWidth="50px"></th>
       </tr>
     </thead>
@@ -69,9 +93,13 @@
     <tbody>
       <tr *ngFor="let item of data; let i = index">
         <td> {{ item.id }} </td>
-        <td> {{item.driver ? (item.driver?.id + '. ' + item.driver?.firstName + ' ' + item.driver?.lastName) : ('no_data' | translate) }} </td>
+        <td> {{item.driver ? (item.driver?.id + '. ' + item.driver?.firstName + ' ' + item.driver?.lastName) :
+          ('no_data' | translate) }} </td>
         <td>{{item.transportNumber}}</td>
+        <td nzWidth="200px" [nz-tooltip]="item.tms ? item.tms?.companyType + ' ' + item.tms?.companyName : ''">
+          {{item.tms ? (item.tms?.companyType + ' ' + item.tms?.companyName) : ('no_data' | translate) }}</td>
         <td>{{item.createdAt | date:'dd.MM.yyyy'}}</td>
+        <td>{{item.isKzPaidWay ? ('on' | translate) : ('off' | translate) }}</td>
         <td class="action-col" (click)="$event.stopPropagation()">
           <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
             <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
@@ -107,7 +135,7 @@
   </ng-template>
 </div>
 
-<!-- <div *ngIf="!perService.hasPermission(Permission.DriversPage)" class="no-access-container">
+<div  class="no-access-container" *ngIf="!perService.hasPermission(Permission.TransportsPage)">
     <nz-result nzStatus="error" nzTitle="403" nzSubTitle="{{'accessDeniedPage' | translate}}">
     </nz-result>
-  </div> -->
+  </div>

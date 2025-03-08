@@ -540,6 +540,8 @@
   "toDate": "Дата до",
   "isMainTransport": "Основной транспорт",
   "balanceStatus": "Состояние баланса",
+  "date_completed_from": "Дата выполнено от",
+  "date_completed_to": "Дата выполнено до",
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",
@@ -651,6 +653,9 @@
     "subscriptionTypesPage": "Типы подписок",
     "currenciesPage": "Управление валютами",
     "archivePage": "Архив",
-    "analiticsPage": "Страница аналитика"
+    "analiticsPage": "Страница аналитика",
+    "transportsPage": "Страница транспортом",
+    "transportAdd": "Добавление транспорта",
+    "transportManagment": "Управление транспортом"
   }
 }
