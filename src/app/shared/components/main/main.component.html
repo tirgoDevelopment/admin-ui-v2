@@ -44,7 +44,7 @@
       </li>
 
       <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
-        *ngIf="permissionService.hasPermission(Permission.DriverServicesPage)"
+        *ngIf="permissionService.hasPermission(Permission.ServicesPage)"
         [nzTooltipTitle]="isCollapsed ? ('services.title' | translate) : ''" routerLink="/services">
         <nz-badge [nzCount]="serviceReqCount" class="w-full">
           <span nz-icon nzType="file-text"></span>
