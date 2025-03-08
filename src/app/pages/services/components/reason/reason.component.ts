@@ -48,6 +48,7 @@ export class ReasonComponent implements OnInit {
       if (res && res.success) {
         this.toastr.success(this.translate.instant('successfullyCanceled'));
         this.modalRef.close('submitted');
+        this.modal.closeAll();
       }
     }, err => {
       this.loading = false;

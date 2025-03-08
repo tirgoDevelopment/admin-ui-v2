@@ -21,26 +21,38 @@
 <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
     <div>
         <nz-input-group class="input-group">
-            <input [(ngModel)]="filter['transactionType'] " type="text" nz-input
-                placeholder="{{ 'transactionType' | translate }}" />
+          <input [(ngModel)]="filter['driverId'] " type="text" nz-input placeholder="ID" />
         </nz-input-group>
-    </div>
-    <div>
+      </div>
+  
+      <div>
         <nz-input-group class="input-group">
-            <nz-date-picker [(ngModel)]="filter['fromDate']" type="date" nz-input [nzAllowClear]="false"
-                nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
-            </nz-date-picker>
+          <input [(ngModel)]="filter['firstName']" type="text" nz-input placeholder="{{ 'name' | translate }}" />
         </nz-input-group>
-    </div>
-    <div>
+      </div>
+      <div>
         <nz-input-group class="input-group">
-            <nz-date-picker [(ngModel)]="filter['toDate']" type="date" nz-input [nzAllowClear]="false"
-                nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
-            </nz-date-picker>
+          <input [(ngModel)]="filter['transportNumber']" type="text" nz-input
+            placeholder="{{ 'state_number' | translate }}" />
         </nz-input-group>
-    </div>
+      </div>
+      <div>
+        <nz-input-group class="input-group">
+          <input [(ngModel)]="filter['phoneNumber']" type="text" nz-input placeholder="{{ 'phone' | translate }}" />
+        </nz-input-group>
+      </div>
+      <div>
+        <nz-input-group class="input-group w-full">
+          <nz-select style="width: 100%; min-width: 150px;" nzPlaceHolder="{{ 'kzPaidWay' | translate }}"
+            [nzShowArrow]="true" [nzAllowClear]="true" [(ngModel)]="filter['isKzPaidWay']">
+            <nz-option nzLabel="{{'on' | translate}}" [nzValue]="true"></nz-option>
+            <nz-option nzLabel="{{'off' | translate}}" [nzValue]="false"></nz-option>
+          </nz-select>
+        </nz-input-group>
+      </div>
+  
 
-    <button nz-button nzType="primary" class="search-button" (click)="getAll()">
+    <button nz-button nzType="primary" class="search-button" (click)="filterApply()">
         <span nz-icon nzType="search" nzTheme="outline"></span>
     </button>
     <button nz-button class="reset-button" (click)="resetFilter()">
@@ -49,36 +61,43 @@
 
 </div>
 
-<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzScroll]="{ x: 'max-content' }"
-    [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount"
-    [nzShowSizeChanger]="true" [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
+<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false"
+    [nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount"
+    [nzShowSizeChanger]="true" [nzShowPagination]="true" [nzScroll]="data.length > 0 ? { y: '60vh' } : { y: '' }"
+    (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
         <tr>
-            <th>No</th>
+            <th nzWidth="80px">No</th>
             <th nzColumnKey="id" [nzSortFn]="true">ID</th>
             <th>{{ 'full_name' | translate }}</th>
             <th>{{ 'phone' | translate }}</th>
+            <th>{{'state_number' | translate}}</th>
             <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
             <th>{{ 'status' | translate }}</th>
-            <th nzRight></th>
+            <th nzWidth="50px"></th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let item of data; let i = index">
+        <tr *ngFor="let item of data; let i = index"  (click)="handleDrawer('view',item.id)" style="cursor: pointer;">
             <td> {{ i+1 }} </td>
             <td> {{ item.id }} </td>
-            <td> {{ item.firstName }} {{ item.lastName }} </td>
+            <td> {{ item.firstName.toUpperCase() }} {{ item.lastName.toUpperCase() }} </td>
             <td>
                 <span *ngIf="item.phoneNumbers[0]?.code">{{ item.phoneNumbers[0]?.code + item.phoneNumbers[0]?.number |
                     phoneFormat}}</span>
                 <span *ngIf="!item.phoneNumbers[0]?.code">{{ 'no_data' | translate}}</span>
+            </td>
+            <td>
+                <div *ngFor="let tr of item.driverTransports; let i = index">
+                    {{tr.transportNumber}}
+                </div>
             </td>
             <td> {{ item.createdAt | date : 'dd.MM.yyyy' }} </td>
             <td>
                 <span *ngIf="item?.isBusy" class="delete-icon">{{'busy' | translate}}</span>
                 <span *ngIf="!item?.isBusy" class="edit-icon">{{'not_busy' | translate}}</span>
             </td>
-            <td nzRight class="action-col">
+            <td class="action-col" (click)="$event.stopPropagation()">
                 <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
                     <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
                 </a>
@@ -96,11 +115,8 @@
                                 <span>{{ 'edit' | translate }}</span>
                             </div>
                         </li>
-                        <li nz-menu-item
-                        nz-popconfirm
-                        nzPopconfirmTitle="{{'are_you_sure' | translate }}"
-                        nzPopconfirmPlacement="top"
-                        (nzOnConfirm)="unassignDriver(item.id)">
+                        <li nz-menu-item nz-popconfirm nzPopconfirmTitle="{{'are_you_sure' | translate }}"
+                            nzPopconfirmPlacement="top" (nzOnConfirm)="unassignDriver(item.id)">
                             <div class="dropdown-menu">
                                 <span nz-icon nzType="close-circle" nzTheme="outline" class="delete-icon"></span>
                                 <span>{{ 'unassign_driver' | translate }}</span>

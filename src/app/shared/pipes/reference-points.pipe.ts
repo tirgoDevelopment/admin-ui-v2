@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'referencePoints',
-  pure: true 
+  pure: true,
+  standalone: true
 })
 export class ReferencePointsPipe implements PipeTransform {
   transform(data: any): [number, number][] {

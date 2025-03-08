@@ -4,22 +4,23 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { ServicesService } from '../../services/services.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ThemeService } from 'src/app/shared/services/theme.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NotificationService } from 'src/app/shared/services/notification.service';
-import { PipeModule } from 'src/app/shared/pipes/pipes.module';
+import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 
 @Component({
   selector: 'app-kazjul-token',
   templateUrl: './kazjul-token.component.html',
   styleUrls: ['./kazjul-token.component.scss'],
   standalone: true,
-  imports: [NzModules, CommonModules, TranslateModule, PipeModule],
+  imports: [NzModules, CommonModules, TranslateModule, PriceFormatPipe],
 })
 export class KazjulTokenComponent {
   form: FormGroup;
   loading = false;
+  loadingPage = false;
   kazJulBalance = 0;
+  last_update: Date;
   constructor(
     private serviceApi: ServicesService,
     private drawerRef: NzDrawerRef,
@@ -39,12 +40,13 @@ export class KazjulTokenComponent {
 
   }
   getData() {
-    this.loading = true;
+    this.loadingPage = true;
     this.serviceApi.kzPaidWayAccount().subscribe((res: any) => {
       if (res && res.success)
         this.form.patchValue(res.data);
-        this.kazJulBalance = res.data.balance
-        this.loading = false;
+        this.kazJulBalance = res.data.balance;
+        this.last_update = res.data.transactionsLastUpdatedate;
+        this.loadingPage = false;
     })
   }
   onSubmit() {
@@ -54,6 +56,17 @@ export class KazjulTokenComponent {
         this.drawerRef.close();
         this.toastr.success(this.translate.instant('successfullUpdated'), '');
       }
+    })
+  }
+  onRequst() {
+    this.loading = true;
+    this.serviceApi.requestKazJul({}).subscribe((res:any) => {
+      if (res) {
+        this.loading = false;
+        this.toastr.success(this.translate.instant('successfullUpdated'), '');
+      }
+    }, err => {
+      this.loading = false;
     })
   }
 }

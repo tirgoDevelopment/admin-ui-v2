@@ -10,6 +10,8 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { CargoTypesService } from 'src/app/shared/services/references/cargo-type.service';
 import { CargoTypesFormComponent } from "./components/cargo-types-form/cargo-types-form.component";
 import { CommonModules } from 'src/app/shared/modules/common.module';
+import { PermissionService } from 'src/app/shared/services/permission.service';
+import { Permission } from 'src/app/shared/enum/per.enum';
 
 @Component({
   selector: 'app-cargo-types',
@@ -20,7 +22,7 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
   providers: [NzModalService]
 })
 export class CargoTypesComponent implements OnInit {
-
+  Per = Permission;
   confirmModal?: NzModalRef;
   data: any[];
   loader: boolean = false;
@@ -38,7 +40,8 @@ export class CargoTypesComponent implements OnInit {
     private modal: NzModalService,
     private cargoTypesService: CargoTypesService,
     private drawer: NzDrawerService,
-    private translate: TranslateService) { }
+    private translate: TranslateService,
+    public perService: PermissionService) { }
 
   ngOnInit(): void {
     this.getAll();

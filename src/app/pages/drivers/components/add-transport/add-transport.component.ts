@@ -23,12 +23,13 @@ import { DriversService } from '../../services/drivers.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { TransportModel } from 'src/app/pages/references/transport-types/models/transport.model';
 import { Response } from 'src/app/shared/models/reponse';
+import { FileFetchPipe } from 'src/app/shared/pipes/file-fetch.pipe';
 @Component({
   selector: 'app-add-transport',
   templateUrl: './add-transport.component.html',
   styleUrls: ['./add-transport.component.scss'],
   standalone: true,
-  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PipeModule, NgxMaskDirective]
+  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PipeModule, NgxMaskDirective, FileFetchPipe]
 
 })
 export class AddTransportComponent implements OnInit {
@@ -134,7 +135,6 @@ export class AddTransportComponent implements OnInit {
       },
 
       error: (error: any) => {
-        console.error('Error fetching currencies and cargo types:', error);
       }
     });
   }
@@ -144,8 +144,8 @@ export class AddTransportComponent implements OnInit {
       driverId: this.driverId,
       brand: this.data.brand,
       capacity: this.data.capacity,
-      transportKindId: this.data?.transportKind.id,
-      transportTypeId: this.data?.transportType.id,
+      transportKindId: this.data?.transportKind ? this.data.transportKind.id : null,
+      transportTypeId: this.data?.transportType ? this.data.transportType.id : null,
       cargoLoadMethodIds: this.data.cargoLoadMethods.map((method: any) => method.id), 
       transportNumber: this.data.transportNumber,
       refrigeratorFromCount: this.data.refrigeratorFrom,

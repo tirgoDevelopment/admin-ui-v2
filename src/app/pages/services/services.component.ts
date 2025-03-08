@@ -30,12 +30,13 @@ import { DriverFormComponent } from '../drivers/components/driver-form/driver-fo
 import { DetailComponent } from '../merchant/merchant-driver/components/detail/detail.component';
 import { ChatComponent } from 'src/app/shared/components/chat/chat.component';
 import { ServiceDetailComponent } from './components/detail/detail.component';
-import { PushService } from 'src/app/shared/services/push.service';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { KazjulTokenComponent } from './components/kazjul-token/kazjul-token.component';
-import { NzResizableModule, NzResizeEvent } from 'ng-zorro-antd/resizable';
-import { NzTableModule } from 'ng-zorro-antd/table';
+import { ServiceCommentsComponent } from './components/comments/comments.component';
+import { CreatedAtPipe } from 'src/app/shared/pipes/createdAt.pipe';
+import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
+import { ReasonComponent } from './components/reason/reason.component';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -64,7 +65,7 @@ export enum SseEventNames {
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule, ChatComponent],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, ChatComponent, CreatedAtPipe, PriceFormatPipe],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -78,13 +79,17 @@ export class ServicesComponent implements OnInit, OnDestroy {
   Per = Permission;
   showChat: boolean = false;
   selectedServiceId: string | null = null;
-
+  filteredServiceId: string | null = null;
+  tabType = 0
   public data: any[] = [];
   public loader = false;
   public isFilterVisible = false;
-  public filter: Record<string, string> = this.initializeFilter();
+  public filter: Record<any, any> = this.initializeFilter();
   statuses: any[] = [];
   services: any[] = [];
+  uniqueServices: any[] = [];
+  uniqueServices0: any[] = [];
+  uniqueServices1: any[] = [];
   pageParams: PageParams = {
     pageIndex: 1,
     pageSize: 10,
@@ -96,7 +101,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
   currentUser: any;
   searchTms$ = new BehaviorSubject<string>('');
   tms$: Observable<any>;
-  cols
   private sseSubscription: Subscription | null = null;
   constructor(
     private servicesService: ServicesService,
@@ -189,7 +193,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-
   private handleError(): Observable<never> {
     this.data = [];
     return throwError(new Error('Error fetching orders'));
@@ -206,6 +209,16 @@ export class ServicesComponent implements OnInit, OnDestroy {
     if (this.perService.hasPermission(this.Per.ServiceLog)) {
       this.router.navigate(['/services', id, 'log']);
     }
+  }
+  showComments(serviceId) {
+    event.preventDefault();
+    const drawerRef: any = this.drawer.create({
+      nzTitle: this.translate.instant('comments'),
+      nzContent: ServiceCommentsComponent,
+      nzPlacement: 'right',
+      nzWidth: '500px',
+      nzContentParams:  {serviceId} ,
+    });
   }
   addService() {
     if (this.perService.hasPermission(this.Per.ServiceCreate)) {
@@ -239,8 +252,27 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
   getRefServices() {
     this.servicesService.getServiceList().subscribe((res: any) => {
-      this.services = res.data;
+      if (res.data && Array.isArray(res.data)) {
+        this.services = res.data;
+        this.filterServices();
+      }
     });
+  }
+  onServiceSelect(filteredServiceId): void {
+    this.filter['servicesIds'] = [];
+    if (!filteredServiceId) {
+      this.filter['servicesIds'] = [];
+      return;
+    }
+    const selectedService = this.services.find(service => service.id === filteredServiceId);
+
+    if (selectedService) {
+      const duplicateIds = this.services
+        .filter(service => service.name === selectedService.name)
+        .map(service => service.id);
+
+      this.filter['servicesIds'] = Array.from(new Set([...this.filter['servicesIds'], ...duplicateIds]));
+    }
   }
   private getNextStatus(currentCode: number): { status: string, apiPath: string } | null {
     switch (currentCode) {
@@ -296,31 +328,42 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.isFilterVisible = !this.isFilterVisible;
   }
   public resetFilter(): void {
+    this.filteredServiceId = null;
     this.filter = this.initializeFilter();
+    if (this.tabType) {
+      this.filter['excludedServicesIds'] = [null];
+      this.filter['servicesIds'] = [15, 16];
+    }
+    else {
+      this.filter['excludedServicesIds'] = [15, 16];
+      this.filter['servicesIds'] = [''];
+    }
     this.getAll();
   }
-  private initializeFilter(): Record<string, string> {
+  private initializeFilter(): Record<any, any> {
     return {
-      serviceId: '',
+      servicesIds: [] as number[],
       driverId: '',
       transportNumber: '',
       merchantId: '',
       statusCode: '',
       createdAtFrom: '',
       createdAtTo: '',
-    };
+      excludedServicesIds: [16, 15]
+    }
   }
   calculateSum(amountDetails: any[]): number {
     if (!Array.isArray(amountDetails)) return 0;
-    return amountDetails.reduce(
-      (sum, detail) => sum + parseFloat(detail.amount || 0),
+    const sum = amountDetails.reduce(
+      (sum, detail) => sum + detail.amount || 0,
       0
     );
+    return sum;
   }
   changeStatus(currentStatus: any, item: any): void {
     if (this.perService.hasPermission(this.Per.ServiceStatusChange)) {
       let restrictedCodes = [];
-      this.currentUser.userId == 1 ? restrictedCodes = [6, 7] : restrictedCodes = [5, 6, 7];
+      this.currentUser.sub == 7 ? restrictedCodes = [6, 7] : restrictedCodes = [5, 6, 7];
       if (this.isRestrictedStatus(currentStatus.code, restrictedCodes)) {
         this.showRestrictedStatusError(currentStatus.code);
         return;
@@ -387,8 +430,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
   getCancelButtonConfig(selectedService: any): { text: string; onCancel: () => void } {
     const currentUser: any = jwtDecode(localStorage.getItem('accessToken') || '');
-
-    if (currentUser.userId == 1) {
+    if (currentUser.sub == 7) {
       return {
         text: this.translate.instant('services.cancelService'),
         onCancel: () => this.cancelService(selectedService),
@@ -401,22 +443,33 @@ export class ServicesComponent implements OnInit, OnDestroy {
     }
   }
   cancelService(selectedService: any): void {
-    this.modal.confirm({
-      nzTitle: this.translate.instant('are_you_sure'),
-      nzOkText: this.translate.instant('confirm'),
-      nzCancelText: this.translate.instant('cancel'),
-      nzKeyboard: true,
-      nzOnOk: () => {
-        this.servicesService
-          .patchServiceStatus({ id: selectedService.id, status: 'cancel' }, '/{id}/cancel')
-          .subscribe((res: any) => {
-            if (res && res.success) {
-              this.getAll();
-              this.toastr.success(this.translate.instant('successfullyCanceled'), '');
-            }
-          });
-      },
+    const modal = this.modal.create({
+      nzComponentParams: { service: selectedService },
+      nzTitle: this.translate.instant('services.cancelService'),
+      nzContent: ReasonComponent,
+      nzMaskClosable: false,
+      nzFooter: null,
     });
+
+    modal.afterClose.subscribe((result) => {
+      this.getAll();
+    })
+    // this.modal.confirm({
+    //   nzTitle: this.translate.instant('are_you_sure'),
+    //   nzOkText: this.translate.instant('confirm'),
+    //   nzCancelText: this.translate.instant('cancel'),
+    //   nzKeyboard: true,
+    //   nzOnOk: () => {
+    //     this.servicesService
+    //       .patchServiceStatus({ id: selectedService.id, status: 'cancel' }, '/{id}/cancel')
+    //       .subscribe((res: any) => {
+    //         if (res && res.success) {
+    //           this.getAll();
+    //           this.toastr.success(this.translate.instant('successfullyCanceled'), '');
+    //         }
+    //       });
+    //   },
+    // });
   }
   showDriver(id) {
     if (this.perService.hasPermission(this.Per.DriverDetail)) {
@@ -449,7 +502,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
 
   }
   showChatForService(id) {
-    if (this.perService.hasPermission(this.Per.ServiceCreate)) {
+    if (this.perService.hasPermission(this.Per.ServiceChat) && this.tabType == 0) {
       this.selectedServiceId = id;
       this.showChat = true;
     }
@@ -460,12 +513,13 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
   kazjulToken() {
     const drawerRef: any = this.drawer.create({
-      nzTitle: this.translate.instant('Казжул'),
+      nzTitle: this.translate.instant('kzPaidWay'),
       nzContent: KazjulTokenComponent,
       nzWidth: '400px',
     });
   }
   getExcel() {
+    this.filter['excludedServicesIds'] = []
     const params = {
       pageIndex: this.pageParams.pageIndex,
       pageSize: this.pageParams.pageSize,
@@ -490,7 +544,29 @@ export class ServicesComponent implements OnInit, OnDestroy {
     this.pageParams.pageIndex = 1;
     this.getAll();
   }
-  onResize({ width }: NzResizeEvent, col: string): void {
-    this.cols = this.cols.map(e => (e.title === col ? { ...e, width: `${width}px` } : e));
+  onTabChange(selectedIndex: number): void {
+    this.filteredServiceId = null;
+    this.pageParams.pageIndex = 1;
+    this.tabType = selectedIndex;
+    this.filterServices();
+    if (this.tabType) {
+      this.filter['excludedServicesIds'] = [null];
+      this.filter['servicesIds'] = [15, 16];
+    }
+    else {
+      this.filter['excludedServicesIds'] = [15, 16];
+      this.filter['servicesIds'] = [''];
+    }
+    this.getAll();
+  }
+  filterServices() {
+    this.uniqueServices = Array.from(new Set(this.services.map((service: any) => service.name)))
+      .map((name: any) => this.services.find((service: any) => service.name === name));
+    if (this.tabType === 0) {
+      this.uniqueServices0 = this.uniqueServices.filter((service: any) => service.id !== 15 && service.id !== 16);
+    }
+    else if (this.tabType === 1) {
+      this.uniqueServices1 = this.uniqueServices.filter((service: any) => service.id === 15 || service.id === 16);
+    }
   }
 }

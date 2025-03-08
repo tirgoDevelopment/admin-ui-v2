@@ -1,4 +1,5 @@
-<div class="container-page">
+<div *ngIf="perService.hasPermission(Per.CurrenciesPage)">
+  <div class="container-page">
     <div class="header-page">
       <h2>{{ 'currency' | translate }}</h2>
       <div class="button-group">
@@ -52,3 +53,8 @@
   </nz-table>
   
   <app-currencies-form *ngIf="showForm"></app-currencies-form>
+</div>
+<div *ngIf="!perService.hasPermission(Per.CurrenciesPage)" class="no-access-container">
+  <nz-result nzStatus="error" nzTitle="403" nzSubTitle="{{'accessDeniedPage' | translate}}">
+  </nz-result>
+</div>

@@ -10,6 +10,7 @@ import { CargoPackagesFormComponent } from './components/cargo-packages-form/car
 import { CargoPackagesService } from 'src/app/shared/services/references/cargo-packages.service';
 import { CargoPackagesModel } from './models/cargo-packages.model';
 import { catchError, of, tap } from 'rxjs';
+import { PermissionService } from 'src/app/shared/services/permission.service';
 
 
 @Component({
@@ -38,6 +39,7 @@ export class CargoPackagesComponent implements OnInit {
   constructor(
     private toastr: NotificationService,
     private modal: NzModalService,
+    public perService: PermissionService,
     private cargoPackagesService: CargoPackagesService,
     private drawer: NzDrawerService,
     private translate: TranslateService) { }

@@ -78,9 +78,6 @@ export class ServiceFormComponent implements OnInit {
       this.data?.uzsAmount !== formValue.uzsAmount ||
       this.data?.kztAmount !== formValue.kztAmount ||
       this.data?.tirAmount !== formValue.tirAmount;
-    console.log(isDifferent);
-    console.log(formValue);
-    console.log(this.data);
     
     const submitObservable = isDifferent
       ? this.serviceApi.changePriceStatus(formValue)

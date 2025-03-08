@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { DriverFormComponent } from './components/driver-form/driver-form.component';
 import { DriverModel } from './models/driver.model';
@@ -10,24 +10,23 @@ import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { DriversService } from './services/drivers.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { NgxMaskDirective } from 'ngx-mask';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
-import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { AddTransportComponent } from './components/add-transport/add-transport.component';
 import { SendPushComponent } from './components/send-push/send-push.component';
 import { AssignTmcComponent } from './components/assign-tmc/assign-tmc.component';
 import { TopupBalanceDriverComponent } from './components/topup-balance-driver/topup-balance-driver.component';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { PermissionService } from 'src/app/shared/services/permission.service';
+import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
 
 @Component({
   selector: 'app-drivers',
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PhoneFormatPipe],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -37,9 +36,9 @@ import { PermissionService } from 'src/app/shared/services/permission.service';
     ])
   ]
 })
+
 export class DriversComponent implements OnInit {
   Permission = Permission;
-
   confirmModal?: NzModalRef;
   data: DriverModel[] = [];
   loader: boolean = false;
@@ -53,7 +52,6 @@ export class DriversComponent implements OnInit {
     sortType: '',
   };
 
-
   constructor(
     private toastr: NotificationService,
     private modal: NzModalService,
@@ -64,7 +62,7 @@ export class DriversComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-   }
+  }
 
   getAll(): void {
     this.loader = true;
@@ -72,7 +70,7 @@ export class DriversComponent implements OnInit {
     this.driversService.getAll(this.pageParams, queryString).pipe(
       tap((res: any) => {
         this.data = res?.success ? res.data.content : [];
-        this.pageParams.totalPagesCount = res.data.pageSize * res?.data?.totalPagesCount;
+        this.pageParams.totalPagesCount = res?.data?.totalPagesCount * this.pageParams.pageSize;
       }),
       catchError(() => {
         this.data = [];
@@ -147,7 +145,6 @@ export class DriversComponent implements OnInit {
       });
     }
   }
-
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
@@ -160,6 +157,7 @@ export class DriversComponent implements OnInit {
     this.getAll();
   }
 
+ 
   private initializeFilter(): Record<string, string> {
     return { firstName: '', clientId: '', phoneNumber: '', createdAtTo: '', createdAtFrom: '', lastLoginFrom: '', lastLoginTo: '' };
   }

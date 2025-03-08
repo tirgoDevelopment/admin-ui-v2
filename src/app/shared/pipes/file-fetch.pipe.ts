@@ -5,7 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { env } from 'src/environmens/environment';
 
 @Pipe({
-  name: 'fileFetch'
+  name: 'fileFetch',
+  standalone: true
 })
 export class FileFetchPipe implements PipeTransform {
   private loading = new BehaviorSubject<boolean>(false);

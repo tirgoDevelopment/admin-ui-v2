@@ -10,6 +10,7 @@ import { CurrencyModel } from 'src/app/pages/references/currencies/models/curren
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { MerchantDriverService } from '../../services/merchant-driver.service';
 import { DriverMerchantModel } from '../../models/driver-merchant.model';
+import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 
 @Component({
   selector: 'app-form',
@@ -29,12 +30,13 @@ export class FormComponent implements OnInit {
   constructor(
     private MerchantApi: MerchantDriverService,
     private fb: FormBuilder,
+    private drawerRef: NzDrawerRef,
     private toastr: NotificationService,
     private currenciesApi: CurrenciesService,
     private translate: TranslateService) {
     this.form = this.fb.group({
       id: new FormControl(''),
-      companyType: new FormControl(''),
+      companyType: new FormControl(null),
       companyName: new FormControl(''),
       responsiblePersonLastName: new FormControl(''),
       responsiblePersonFistName: new FormControl(''),
@@ -70,33 +72,37 @@ export class FormComponent implements OnInit {
     this.currenciesApi.getAll().subscribe((res: any) => {
       if (res && res.success) {
         this.currencies = res.data;
+        if (this.bankAccounts.length === 0) {
+          this.addBankAccount();
+        }
       }
     })
   }
   patchValue() {
+
     this.form.patchValue({
       ...this.data,
       bankAccounts: this.data.bankAccounts.map(account => ({
         account: account.account,
-        currency: account.currency.id, 
+        currency: account.currency.id,
         id: account.id,
       }))
     });
+    console.log(this.form.value);
   }
   submit() {
-    if (this.form.valid) {
-      this.loading = true;
-      this.form.value.bankAccounts = this.setId(this.form.value.bankAccounts);
-      this.MerchantApi.update(this.form.value).subscribe((res:any) => {
-        if (res && res.success) {
-          this.loading = false;
-          this.MerchantApi.emitCloseEvent({success: true});
-          this.toastr.success(this.translate.instant('successfullUpdated'),'');
-        }
-      },  err => {
+    this.loading = true;
+    this.form.value.bankAccounts = this.setId(this.form.value.bankAccounts);
+    this.MerchantApi.update(this.form.value).subscribe((res: any) => {
+      if (res && res.success) {
         this.loading = false;
-      })
-    }
+        this.drawerRef.close({ success: true });
+        this.MerchantApi.emitCloseEvent({ success: true });
+        this.toastr.success(this.translate.instant('successfullUpdated'), '');
+      }
+    }, err => {
+      this.loading = false;
+    })
   }
   get bankAccounts(): FormArray {
     return this.form.get('bankAccounts') as FormArray;
@@ -108,7 +114,7 @@ export class FormComponent implements OnInit {
           account: [account.account, Validators.required],
           currency: [account.currency.id, Validators.required],
           id: [account.id],
-          active: [account.active] 
+          active: [account.active]
         })
       );
     });

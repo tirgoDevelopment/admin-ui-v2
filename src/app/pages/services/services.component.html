@@ -5,7 +5,7 @@
       <div class="button-group">
         <button nz-button class="success-button" (click)="kazjulToken()"
           *ngIf="perService.hasPermission(Per.ServicesPage)">
-          {{ "Казжул" | translate }}
+          {{ "kzPaidWay" | translate }}
         </button>
         <button nz-button class="success-button" (click)="getExcel()"
           *ngIf="perService.hasPermission(Per.ServicesPage)">
@@ -23,23 +23,21 @@
         </button>
       </div>
     </div>
-
     <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
       <div>
-        <nz-select nzAllowClear="true" [(ngModel)]="filter['serviceId']"
-          nzPlaceHolder="{{ 'services.serviceId' | translate }}">
-          <nz-option [nzValue]="item.id" [nzLabel]="item.name" *ngFor="let item of services">
+        <nz-select style="width: 250px" nzAllowClear="true" [(ngModel)]="filteredServiceId"
+          (ngModelChange)="onServiceSelect($event)" nzPlaceHolder="{{ 'services.title' | translate }}">
+          <nz-option [nzValue]="item.id" [nzLabel]="item.name"
+            *ngFor="let item of (tabType ? uniqueServices1 : uniqueServices0)">
           </nz-option>
         </nz-select>
       </div>
-
       <div>
         <nz-input-group class="input-group">
           <input [(ngModel)]="filter['driverId']" type="text" nz-input
             placeholder="{{ 'services.driverId' | translate }}" />
         </nz-input-group>
       </div>
-
       <div>
         <nz-input-group class="input-group">
           <input [(ngModel)]="filter['transportNumber']" type="text" nz-input
@@ -56,15 +54,14 @@
           </nz-select>
         </nz-input-group>
       </div>
-
       <div>
-        <nz-select nzAllowClear="true" [(ngModel)]="filter['statusCode']" nzPlaceHolder="{{ 'status' | translate }}">
-          <nz-option [nzValue]="status.id" [nzLabel]="status.name.toLowerCase() | translate"
+        <nz-select nzAllowClear="true" style="width:150px" [(ngModel)]="filter['statusCode']"
+          nzPlaceHolder="{{ 'status' | translate }}">
+          <nz-option [nzValue]="status.code" [nzLabel]="status.name.toLowerCase() | translate"
             *ngFor="let status of statuses">
           </nz-option>
         </nz-select>
       </div>
-
       <div>
         <nz-input-group class="input-group">
           <nz-date-picker style="min-width: 150px;" [(ngModel)]="filter['createdAtFrom']" type="date" nz-input
@@ -72,7 +69,6 @@
           </nz-date-picker>
         </nz-input-group>
       </div>
-
       <div>
         <nz-input-group class="input-group">
           <nz-date-picker style="min-width: 150px;" [(ngModel)]="filter['createdAtTo']" type="date" nz-input
@@ -80,7 +76,6 @@
           </nz-date-picker>
         </nz-input-group>
       </div>
-
       <div>
         <nz-input-group class="input-group">
           <nz-date-picker style="min-width: 170px;" [(ngModel)]="filter['completedAtFrom']" type="date" nz-input
@@ -95,8 +90,6 @@
           </nz-date-picker>
         </nz-input-group>
       </div>
-
-
       <button nz-button nzType="primary" class="search-button" (click)="fiterApply()">
         <span nz-icon nzType="search" nzTheme="outline"></span>
       </button>
@@ -104,37 +97,45 @@
         <span nz-icon nzType="reload" nzTheme="outline"></span>
       </button>
     </div>
-
+    <nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
+      <nz-tab nzTitle="{{'services.title' | translate}}"></nz-tab>
+      <nz-tab nzTitle="{{'kzPaidWay' | translate}}"></nz-tab>
+    </nz-tabset>
     <nz-table #fixedTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty"
       [nzScroll]="{ x: '100vw', y: '60vh' }" [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize"
       [nzTotal]="totalItemsCount" [nzPaginationPosition]="'both'" [nzShowSizeChanger]="true" [nzShowPagination]="true"
       (nzQueryParams)="onQueryParamsChange($event)">
       <thead>
         <tr>
-          <th>No</th>
+          <th nzWidth="70px">No</th>
           <th nzLeft>{{ "services.serviceId" | translate }}</th>
-          <th class="ellipsis" nzLeft>{{ "services.serviceName" | translate }}</th>
-          <th>{{'merchant_driver' | translate}}</th>
+          <th class="ellipsis" nzLeft>{{
+            "services.serviceName" | translate }}</th>
+          <th class="ellipsis">{{'merchant_driver' | translate}}</th>
           <th>{{ "services.driverId" | translate }}</th>
           <th>{{ "state_number_truck" | translate }}</th>
           <th>{{ "date_creation" | translate }}</th>
+          <th *ngIf="tabType == 1">{{ "date_debit" | translate }}</th>
           <th>{{ "services.processingTime" | translate }}</th>
           <th>{{ "services.processingTimeEnd" | translate }}</th>
           <th>{{ "total" | translate }} (TIR)</th>
-          <th nzRight>{{ "status" | translate }} </th>
-          <th nzRight *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
+          <th nzWidth="200px" nzRight>{{ "status" | translate }} </th>
+          <th nzWidth="50px" nzRight *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
         </tr>
       </thead>
 
       <tbody>
         <tr *ngFor="let item of data; let i = index" (click)="showChatForService(item.id)">
-          <td>{{ i + 1 }}</td>
+          <td>{{ item.rowIndex }}</td>
           <td nzLeft>{{ item.id}} / {{ item.services[0].code}}</td>
           <td nzLeft class="ellipsis">
-            <div *ngFor="let service of item.services">{{ service.name }}</div>
+            <div *ngFor="let service of item.services" nz-tooltip [nzTooltipTitle]="service.name">{{ service.name }}
+            </div>
           </td>
-          <td (click)="$event.stopPropagation()" (click)="showTms(item.driver?.driverMerchant?.id)">
-            <div [ngClass]="perService.hasPermission(Per.TmsDetail) ? 'link' : ''" *ngIf="item.driver.driverMerchant">
+          <td class="ellipsis" (click)="$event.stopPropagation()" (click)="showTms(item.driver?.driverMerchant?.id)">
+            <div nz-tooltip [nzTooltipTitle]="item.driver.driverMerchant?.companyType + ' ' +
+            item.driver.driverMerchant?.companyName" [ngClass]="perService.hasPermission(Per.TmsDetail) ? 'link' : ''"
+              *ngIf="item.driver.driverMerchant">
               {{item.driver.driverMerchant?.companyType + ' ' +
               item.driver.driverMerchant?.companyName}}</div>
             <div *ngIf="!item.driver.driverMerchant">{{'no' | translate}}</div>
@@ -152,7 +153,8 @@
               {{ "no_data" | translate }}
             </ng-template>
           </td>
-          <td>{{ item.createdAt | date : "dd.MM.yyyy" }}</td>
+          <td>{{ item.createdAt | date : "dd.MM.yyyy HH:mm" }}</td>
+          <td *ngIf="tabType == 1">{{ item.kzPaidWayTransactionIssuedDate | date : "dd.MM.yyyy HH:mm" : '+0' }}</td>
           <td>{{ item.statusesHistory | createdAt : 3 | date : "dd.MM.yyyy HH:mm" }}</td>
           <td>{{ item.statusesHistory | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</td>
           <td>
@@ -163,13 +165,14 @@
               {{ 'no_data' | translate }}
             </div>
           </td>
-          <td nzRight (click)="$event.stopPropagation()" (click)="changeStatus(item.status, item)">
+          <td nzRight (click)="$event.stopPropagation()" (click)="changeStatus(item.status, item)"
+            (contextmenu)="showComments(item)">
             <span class="status" [ngStyle]="{
-                color: item.status.color,
-                borderColor: item.status.color
+                background: item.status.color,
               }">
               {{ item.status.name.toLowerCase() | translate }}
             </span>
+
           </td>
           <td class="action-col" nzRight (click)="$event.stopPropagation()"
             *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])">
@@ -184,7 +187,6 @@
                     <span>{{ "detail" | translate }}</span>
                   </div>
                 </li>
-
                 <li nz-menu-item (click)="showLog(item.id)" *ngIf="perService.hasPermission(Per.ServiceLog)">
                   <div class="dropdown-menu">
                     <span nz-icon nzType="history" nzTheme="outline"></span>
@@ -197,12 +199,11 @@
         </tr>
       </tbody>
     </nz-table>
+
+    <ng-template #empty>
+      <nz-empty></nz-empty>
+    </ng-template>
   </div>
-
-  <ng-template #empty>
-    <nz-empty></nz-empty>
-  </ng-template>
-
   <app-chat *ngIf="showChat" [outputServiceId]="selectedServiceId" (closeChatEvent)="onChatClose()"></app-chat>
 </div>
 

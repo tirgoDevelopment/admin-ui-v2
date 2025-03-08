@@ -1,24 +1,30 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { FormsModule } from '@angular/forms';
-import { NzModules } from '../../modules/nz-modules.module';
-import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterModule } from '@angular/router';
 import { AuthService } from 'src/app/pages/auth/services/auth.service';
 import { ThemeService } from '../../services/theme.service';
 import { ChatComponent } from '../chat/chat.component';
-import { CommonModules } from '../../modules/common.module';
 import { SocketService } from '../../services/socket.service';
 import { ServicesService } from 'src/app/pages/services/services/services.service';
 import { jwtDecode } from 'jwt-decode';
 import { PushService } from '../../services/push.service';
 import { PermissionService } from '../../services/permission.service';
 import { Permission } from '../../enum/per.enum';
+import { generateQueryFilter } from '../../pipes/queryFIlter';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzBadgeModule } from 'ng-zorro-antd/badge';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [FormsModule, TranslateModule, NzModules, NgIf, RouterLink, RouterOutlet, ChatComponent, CommonModules],
+  imports: [TranslateModule, NzToolTipModule, NzButtonModule, NzLayoutModule, NzIconModule, NzMenuModule, NzDropDownModule, NzAvatarModule, NzBadgeModule, RouterLink, ChatComponent, RouterModule, NgIf],
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
 })
@@ -51,7 +57,6 @@ export class MainComponent {
   }
   ngOnInit(): void {
     this.currentUser = jwtDecode(localStorage.getItem('accessToken'));
-
     const lang = localStorage.getItem('lang') || 'uz';
     this.changeLanguage(lang.toLocaleLowerCase(), `../assets/images/flags/${lang}.svg`);
     this.themeService.initTheme();
@@ -127,7 +132,7 @@ export class MainComponent {
     }
   }
   getChats() {
-    this.serviceApi.getDriverServices({}).subscribe({
+    this.serviceApi.getDriverServices(generateQueryFilter({ servicesIds: [], excludedServicesIds: [15,16] })).subscribe({
       next: (res: any) => {
         if (res && res.data)
           this.newMessageCount = res.data.content.reduce((total, item) => total + (item.unreadMessagesCount || 0), 0);

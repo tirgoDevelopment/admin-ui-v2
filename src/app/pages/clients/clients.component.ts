@@ -18,13 +18,14 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { SendPushComponent } from '../drivers/components/send-push/send-push.component';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
+import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
 
 @Component({
   selector: 'app-clients',
   templateUrl: './clients.component.html',
   styleUrls: ['./clients.component.scss'],
   standalone: true,
-  imports: [ CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule],
+  imports: [ CommonModules, NzModules, TranslateModule, IconsProviderModule, PhoneFormatPipe],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [

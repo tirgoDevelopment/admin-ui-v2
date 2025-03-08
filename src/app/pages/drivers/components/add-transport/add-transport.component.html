@@ -1,8 +1,8 @@
 <form [formGroup]="form">
 
   <nz-input-group class="input-group">
-    <nz-form-label nzRequired>{{ 'named' | translate }}</nz-form-label>
-    <input formControlName="brand" type="text" nz-input placeholder="{{ 'named' | translate }}" required />
+    <nz-form-label nzRequired>{{ 'brand' | translate }}</nz-form-label>
+    <input formControlName="brand" type="text" nz-input placeholder="{{ 'brand' | translate }}" required />
     <div *ngIf="form.get('brand').touched && form.get('brand').hasError('required')" class="error-message">
       {{ 'is_empty' | translate }}
     </div>
@@ -31,13 +31,13 @@
   </nz-input-group>
 
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'volume_m' | translate }}</nz-form-label>
+    <nz-form-label nzRequired>{{ 'volume_m' | translate }}</nz-form-label>
     <input formControlName="capacity" type="text" nz-input placeholder="{{ 'volume_m' | translate }}"
       mask="separator" />
   </nz-input-group>
 
   <nz-input-group class="input-group" *ngIf="isAutotransport">
-    <nz-form-label>{{ 'number_of_transporter' | translate }}</nz-form-label>
+    <nz-form-label nzRequired>{{ 'number_of_transporter' | translate }}</nz-form-label>
     <input formControlName="refrigeratorCount" type="text" nz-input
       placeholder="{{ 'number_of_transporter' | translate }}" mask="separator" />
   </nz-input-group>

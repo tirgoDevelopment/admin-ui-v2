@@ -1,0 +1,34 @@
+<div class="comment-container">
+  <!-- Comment List -->
+  <nz-list *ngIf="data.length" [nzDataSource]="data" [nzRenderItem]="item" [nzItemLayout]="'horizontal'">
+    <ng-template #item let-item>
+      <nz-comment [nzAuthor]="item.author" [nzDatetime]="item.displayTime">
+        <nz-avatar nz-comment-avatar nzIcon="user" [nzSrc]="item.avatar"></nz-avatar>
+        <nz-comment-content>
+          <p>{{ item.content }}</p>
+        </nz-comment-content>
+      </nz-comment>
+      <hr>
+    </ng-template>
+  </nz-list>
+
+  <!-- Input for Adding Comment -->
+  <div class="comment-input">
+    <nz-comment>
+      <nz-comment-content>
+        <nz-form-item>
+          <textarea [(ngModel)]="inputValue" nz-input rows="4" placeholder="{{ 'writeComment' | translate }}"></textarea>
+        </nz-form-item>
+        <div class="button-wrapper m-0">
+          <button 
+            nz-button 
+            class="success-button" 
+            [nzLoading]="loading" 
+            [disabled]="!inputValue" >
+            {{ 'send' | translate }}
+          </button>
+        </div>
+      </nz-comment-content>
+    </nz-comment>
+  </div>
+</div>

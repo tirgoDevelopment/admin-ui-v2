@@ -26,14 +26,14 @@ export class DriversService {
   update(id,data: FormData) {
     return this.http.put<Response<DriverModel[]>>(env.apiUrl + `/users/drivers/${id}`, data)
   }
-  delete(id: number | string) { 
-    return this.http.delete(env.apiUrl + `/users/drivers?id=${id}`)
+  delete(id) { 
+    return this.http.delete(env.apiUrl + `/users/drivers/${id}`)
   }
   block(id: number | string) {
-    return this.http.patch<Response<DriverModel>>(env.apiUrl + `/users/drivers/block-driver?id=${id}`, {})
+    return this.http.patch<Response<DriverModel>>(env.apiUrl + `/users/drivers/${id}/block`, {})
   }
   unblock(id: number | string) {
-    return this.http.patch<Response<DriverModel>>(env.apiUrl + `/users/drivers/unblock-driver?id=${id}`, {})
+    return this.http.patch<Response<DriverModel>>(env.apiUrl + `/users/drivers/${id}/unblock`, {})
   }
   getTransport(driverId:number|string,transportId:number|string): Observable<Response<TransportModel[]>> {
     return this.http.get<Response<TransportModel[]>>(env.apiUrl + `/users/drivers/${driverId}/transports/${transportId}`)

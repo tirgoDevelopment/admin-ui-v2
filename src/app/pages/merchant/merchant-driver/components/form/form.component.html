@@ -1,8 +1,25 @@
 <form [formGroup]="form">
   <nz-input-group class="input-group">
     <nz-form-label nzRequired>{{ 'company_name' | translate }}</nz-form-label>
-    <input formControlName="companyName" type="text" nz-input placeholder="{{ 'company_name' | translate }}" required />
-  </nz-input-group>
+    <div class="flex input-select" style="gap: 0 !important">
+      <nz-select formControlName="companyType" style="background-color: #fff !important; width: 100px;">
+        <nz-option nzLabel="ООО" nzValue="ООО"></nz-option>
+        <nz-option nzLabel="ИП" nzValue="ИП"></nz-option>
+        <nz-option nzLabel="АО" nzValue="АО"></nz-option>
+        <nz-option nzLabel="ОАО" nzValue="ОАО"></nz-option>
+        <nz-option nzLabel="ЗАО" nzValue="ЗАО"></nz-option>
+        <nz-option nzLabel="АК" nzValue="АК"></nz-option>
+        <nz-option nzLabel="ПК" nzValue="ПК"></nz-option>
+        <nz-option nzLabel="НКО" nzValue="НКО"></nz-option>
+        <nz-option nzLabel="ПК" nzValue="ПК"></nz-option>
+        <nz-option nzLabel="ГП" nzValue="ГП"></nz-option>
+        <nz-option nzLabel="МП" nzValue="МП"></nz-option>
+        <nz-option nzLabel="УП" nzValue="УП"></nz-option>
+        <nz-option nzLabel="ГУП" nzValue="ГУП"></nz-option>
+        <nz-option nzLabel="Другой" nzValue=""></nz-option>
+      </nz-select>
+      <input formControlName="companyName" type="text" nz-input placeholder="{{'company_name' | translate}}" />
+    </div>  </nz-input-group>
   <nz-input-group class="input-group">
     <nz-form-label nzRequired>{{ 'director_first_name' | translate }}</nz-form-label>
     <input formControlName="supervisorFirstName" type="text" nz-input
@@ -96,7 +113,7 @@
     <input formControlName="debtLimit" type="number" nz-input placeholder="{{ 'debtLimit' | translate }}" />
   </nz-input-group>
   <div class="button-wrapper">
-    <button nz-button class="success-button" [nzLoading]="loading" [disabled]="form.invalid" (click)="submit()">{{
+    <button nz-button class="success-button" [nzLoading]="loading"  (click)="submit()">{{
       'save' | translate }}</button>
   </div>
 </form>

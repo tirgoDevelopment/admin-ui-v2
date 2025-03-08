@@ -27,48 +27,35 @@
   <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
     <div>
       <nz-input-group class="input-group">
-        <input [(ngModel)]="filter['driverId'] " type="text" nz-input placeholder="ID" />
+        <input [(ngModel)]="filter['driverId']" type="text" nz-input placeholder="ID" />
       </nz-input-group>
     </div>
-
     <div>
       <nz-input-group class="input-group">
-        <input [(ngModel)]="filter['firstName']" type="text" nz-input placeholder="{{ 'name' | translate }}" />
+        <input [(ngModel)]="filter['firstName']" type="text" nz-input 
+          placeholder="{{ 'first_name' | translate }}" />
       </nz-input-group>
     </div>
-
     <div>
       <nz-input-group class="input-group">
-        <input [(ngModel)]="filter['phoneNumber']" type="text" nz-input placeholder="{{ 'phone' | translate }}" />
+        <input [(ngModel)]="filter['transportNumber']" type="text" nz-input
+          placeholder="{{ 'state_number' | translate }}" trimSpaces />
+      </nz-input-group>
+    </div>
+    <div>
+      <nz-input-group class="input-group">
+        <input [(ngModel)]="filter['phoneNumber']" trimSpaces type="text" nz-input placeholder="{{ 'phone' | translate }}" />
       </nz-input-group>
     </div>
     <div>
       <nz-input-group class="input-group w-full">
-        <nz-select style="width: 100%; min-width: 150px;"  
-          nzPlaceHolder="{{ 'kzPaidWay' | translate }}" [nzShowArrow]="true"  [nzAllowClear]="true" [(ngModel)]="filter['isKzPaidWay']">
+        <nz-select style="width: 100%; min-width: 150px;" nzPlaceHolder="{{ 'kzPaidWay' | translate }}"
+          [nzShowArrow]="true" [nzAllowClear]="true" [(ngModel)]="filter['isKzPaidWay']">
           <nz-option nzLabel="{{'on' | translate}}" [nzValue]="true"></nz-option>
           <nz-option nzLabel="{{'off' | translate}}" [nzValue]="false"></nz-option>
         </nz-select>
       </nz-input-group>
     </div>
-
-    <div>
-      <nz-input-group class="input-group">
-        <nz-date-picker [(ngModel)]="filter['createdAtFrom']" type="date" nz-input [nzAllowClear]="false"
-          nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
-        </nz-date-picker>
-      </nz-input-group>
-    </div>
-
-    <div>
-      <nz-input-group class="input-group">
-        <nz-date-picker [(ngModel)]="filter['createdAtTo']" type="date" nz-input [nzAllowClear]="false"
-          nzPlaceHolder="{{ 'end_date_reg' | translate }}" class="custom-date-picker">
-        </nz-date-picker>
-      </nz-input-group>
-    </div>
-
-
     <div>
       <nz-input-group class="input-group">
         <nz-date-picker [(ngModel)]="filter['lastLoginFrom']" type="date" nz-input [nzAllowClear]="false"
@@ -95,30 +82,36 @@
   </div>
 
   <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false"
-    [nzPaginationPosition]="'both'" [nzScroll]="data.length > 0 ? { y: '60vh' } : { y: '' }"
+    [nzPaginationPosition]="'both'" [nzScroll]="data.length > 0 ? { y: '60vh', x: '100%' } : { y: '' }"
     [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount" [nzShowSizeChanger]="true"
     [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
     <thead>
       <tr>
-        <th>No</th>
+        <th nzWidth="70px">No</th>
         <th nzColumnKey="id" [nzSortFn]="true">ID</th>
         <th>{{ 'full_name' | translate }}</th>
         <th>{{ 'phone' | translate }}</th>
+        <th>{{ 'state_number' | translate }}</th>
         <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
         <th>{{ 'status' | translate }}</th>
-        <th></th>
+        <th nzWidth="50px"></th>
       </tr>
     </thead>
 
     <tbody>
       <tr *ngFor="let item of data; let i = index" (click)="handleDrawer('view',item.id)">
-        <td> {{ i+1 }} </td>
+        <td>{{ item.rowIndex }}</td>
         <td> {{ item.id }} </td>
-        <td> {{ item.firstName }} {{ item.lastName }} </td>
+        <td> {{ item.firstName.toUpperCase() }} {{ item.lastName.toUpperCase() }} </td>
         <td>
           <span *ngIf="item.phoneNumbers[0]?.code">{{ item.phoneNumbers[0]?.code + item.phoneNumbers[0]?.number |
             phoneFormat}}</span>
           <span *ngIf="!item.phoneNumbers[0]?.code">{{ 'no_data' | translate}}</span>
+        </td>
+        <td>
+          <div *ngFor="let tr of item.driverTransports; let i = index">
+            {{tr.transportNumber}}
+          </div>
         </td>
         <td> {{ item.createdAt | date : 'dd.MM.yyyy' }} </td>
 

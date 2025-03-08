@@ -20,13 +20,14 @@ import { FormComponent } from './components/form/form.component';
 import { TopupBalanceTmsComponent } from './components/topup-balance-tms/topup-balance-tms.component';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
+import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 
 @Component({
   selector: 'app-merchant-driver',
   templateUrl: './merchant-driver.component.html',
   styleUrls: ['./merchant-driver.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule, RouterModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PriceFormatPipe, RouterModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -59,13 +60,13 @@ export class MerchantDriverComponent implements OnInit {
     private drawer: NzDrawerService,
     private translate: TranslateService,
     public perService: PermissionService
-    ) { }
+  ) { }
   ngOnInit(): void {
     this.getVerified();
     this.getUnverified();
   }
   requests(): void {
-    if(this.perService.hasPermission(this.Per.TmsRequstsList)) {
+    if (this.perService.hasPermission(this.Per.TmsRequstsList)) {
       this.confirmModal = this.modal.create({
         nzTitle: this.translate.instant('requests'),
         nzContent: RequestsComponent,
@@ -76,8 +77,8 @@ export class MerchantDriverComponent implements OnInit {
           this.getVerified();
         }
       });
-    } 
-   
+    }
+
   }
   getVerified(): void {
     this.loader = true;
@@ -126,7 +127,7 @@ export class MerchantDriverComponent implements OnInit {
     });
   }
   showDetail(id) {
-    if(this.perService.hasPermission(this.Per.DriverDetail) && id) {
+    if (this.perService.hasPermission(this.Per.DriverDetail) && id) {
       const drawerRef: any = this.drawer.create({
         nzTitle: this.translate.instant('information'),
         nzContent: DetailComponent,
@@ -140,17 +141,17 @@ export class MerchantDriverComponent implements OnInit {
     }
   }
   showHistoryTransaction(item: DriverMerchantModel) {
-    if(!this.perService.hasPermission(this.Per.TmsTransactionsHistory)) return
+    if (!this.perService.hasPermission(this.Per.TmsTransactionsHistory)) return
     this.router.navigate([`/merchant-driver/transactions/${item.id}/${item.companyType + ' ' + item.companyName}`]);
   }
   showDrivers(id) {
-    if(this.perService.hasPermission(this.Per.TmsDriversList) && id) {
+    if (this.perService.hasPermission(this.Per.TmsDriversList) && id) {
       this.router.navigate([`/merchant-driver/drivers/${id}`]);
     }
-    
+
   }
   topupBalance(id) {
-    if(this.perService.hasPermission(this.Per.TmsTopupBalance)) {
+    if (this.perService.hasPermission(this.Per.TmsTopupBalance)) {
       let drawerRef = this.drawer.create({
         nzTitle: this.translate.instant('top_up_balance'),
         nzContent: TopupBalanceTmsComponent,
@@ -167,18 +168,36 @@ export class MerchantDriverComponent implements OnInit {
   }
   onQueryParamsChange(params: NzTableQueryParams): void {
     const { pageIndex, pageSize, sort } = params;
-    this.pageParams.pageIndex = pageIndex ;
+    this.pageParams.pageIndex = pageIndex;
     this.pageParams.pageSize = pageSize;
-  
+
     const currentSort = sort.find(item => item.value !== null);
     this.pageParams.sortBy = currentSort?.key || null;
     this.pageParams.sortType = currentSort?.value === 'ascend' ? 'asc' : currentSort?.value === 'descend' ? 'desc' : '';
-  
+
     this.getVerified();
   }
   resetFilter(): void {
     this.filter = this.initializeFilter();
     this.getVerified();
+  }
+  deleted(id) {
+    this.confirmModal = this.modal.confirm({
+      nzTitle: this.translate.instant('are_you_sure'),
+      nzContent: this.translate.instant('delete_sure'),
+      nzOkText: this.translate.instant('remove'),
+      nzCancelText: this.translate.instant('cancel'),
+      nzOkDanger: true,
+      nzOnOk: () => {
+        this.merchantApi.delete(id).subscribe((res: any) => {
+          if(res) {
+            this.toastr.success(this.translate.instant('successfullDeleted'), '');
+            this.getUnverified();
+            this.getVerified();
+          }
+        })
+      }
+    });
   }
   onBlock(item: DriverMerchantModel) {
     if (item.blocked) {
@@ -210,7 +229,7 @@ export class MerchantDriverComponent implements OnInit {
       }
     });
   }
-  filterApply() { 
+  filterApply() {
     this.pageParams.pageIndex = 1;
     this.getVerified();
   }

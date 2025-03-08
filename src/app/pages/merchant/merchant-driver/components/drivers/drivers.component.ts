@@ -17,13 +17,14 @@ import { DriverFormComponent } from 'src/app/pages/drivers/components/driver-for
 import { AddTransportComponent } from 'src/app/pages/drivers/components/add-transport/add-transport.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { AddDriverComponent } from '../add-driver/add-driver.component';
+import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
 
 @Component({
   selector: 'app-drivers',
   templateUrl: './drivers.component.html',
   styleUrls: ['./drivers.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule, RouterModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PhoneFormatPipe, RouterModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -74,10 +75,11 @@ export class DriversComponent implements OnInit {
   getAll() {
     this.loader = true;
     if (this.merchantId) {
-      this.driverApi.getAll(this.pageParams, generateQueryFilter({merchantId:this.merchantId})).subscribe((res: any) => {
+      this.filter['merchantId'] = this.merchantId;
+      this.driverApi.getAll(this.pageParams, generateQueryFilter(this.filter)).subscribe((res: any) => {
         if (res && res.success) {
           this.data = res.data.content;
-          this.pageParams.totalPagesCount = res.data.totalPagesCount;
+          this.pageParams.totalPagesCount = res.data.totalPagesCount * res.data.pageSize;
           this.loader = false;
         }else {
           this.loader = false;
@@ -88,16 +90,7 @@ export class DriversComponent implements OnInit {
     }
   }
   private initializeFilter(): Record<string, string> {
-    return { merchantId: this.merchantId };
-  }
-  onPageIndexChange(pageIndex: number): void {
-    this.pageParams.pageIndex = pageIndex;
-    this.getAll();
-  }
-  onPageSizeChange(pageSize: number): void {
-    this.pageParams.pageSize = pageSize;
-    // this.pageParams.pageIndex = 0;
-    this.getAll();
+    return { };
   }
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
@@ -107,13 +100,14 @@ export class DriversComponent implements OnInit {
     this.getAll();
   }
   onQueryParamsChange(params: NzTableQueryParams): void {
-    let { sort } = params;
-    let currentSort = sort.find((item) => item.value !== null);
-    let sortField = (currentSort && currentSort.key) || null;
-    let sortOrder = (currentSort && currentSort.value) || null;
-    sortOrder === 'ascend' ? (sortOrder = 'asc') : sortOrder === 'descend' ? (sortOrder = 'desc') : sortOrder = '';
-    this.pageParams.sortBy = sortField;
-    this.pageParams.sortType = sortOrder;
+    const { pageIndex, pageSize, sort } = params;
+    this.pageParams.pageIndex = pageIndex ;
+    this.pageParams.pageSize = pageSize;
+  
+    const currentSort = sort.find(item => item.value !== null);
+    this.pageParams.sortBy = currentSort?.key || null;
+    this.pageParams.sortType = currentSort?.value === 'ascend' ? 'asc' : currentSort?.value === 'descend' ? 'desc' : '';
+  
     this.getAll();
   }
   handleDrawer(action: 'add' | 'edit' | 'view', id?:number|string): void {
@@ -124,7 +118,6 @@ export class DriversComponent implements OnInit {
             'information'
       ),
       nzContent: DriverFormComponent,
-      nzMaskClosable: false,
       nzPlacement: 'right',
       nzWidth: '400px',
       nzContentParams: {
@@ -180,10 +173,19 @@ export class DriversComponent implements OnInit {
     });
   }
   unassignDriver(id:number|string){
-    this.merchantApi.unassignDriver(id).subscribe((res:any) => {
+    let data = {
+      tmsId: this.merchantId,
+      driverId: id
+    }
+    this.merchantApi.unassignDriver(data).subscribe((res:any) => {
       if(res && res.success){
+        this.toastr.success(this.translate.instant('successfullUpdated'),'');
         this.getAll();
       }
     });
+  }
+  filterApply() { 
+    this.pageParams.pageIndex = 1;
+    this.getAll();
   }
 }

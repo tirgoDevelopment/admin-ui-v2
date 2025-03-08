@@ -4,7 +4,6 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzWaveModule } from 'ng-zorro-antd/core/wave';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
@@ -40,7 +39,6 @@ import { NzResultModule } from 'ng-zorro-antd/result';
     imports: [
         NzDropDownModule,
         NzAvatarModule,
-        NzLayoutModule,
         NzSelectModule,
         NzButtonModule,
         NzIconModule,
@@ -78,7 +76,6 @@ import { NzResultModule } from 'ng-zorro-antd/result';
     exports: [
         NzDropDownModule,
         NzAvatarModule,
-        NzLayoutModule,
         NzSelectModule,
         NzButtonModule,
         NzIconModule,
@@ -114,5 +111,3 @@ import { NzResultModule } from 'ng-zorro-antd/result';
     ],
 })
 export class NzModules {} 
-
-//7857

@@ -8,20 +8,22 @@ import {
   ViewChild,
   Input,
 } from '@angular/core';
-import { CommonModules } from '../../modules/common.module';
-import { IconsProviderModule } from '../../modules/icons-provider.module';
-import { FormControl, FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NzImageModule } from 'ng-zorro-antd/image';
 import { NzSpaceModule } from 'ng-zorro-antd/space';
-import { NzModules } from '../../modules/nz-modules.module';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { ServicesService } from 'src/app/pages/services/services/services.service';
-import { debounceTime, distinctUntilChanged, map, Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { generateQueryFilter } from '../../pipes/queryFIlter';
 import { SocketService } from '../../services/socket.service';
-import { PipeModule } from '../../pipes/pipes.module';
 import { PushService } from '../../services/push.service';
+import { CommonModule, DatePipe, NgClass, NgStyle } from '@angular/common';
+import { FileFetchPipe } from '../../pipes/file-fetch.pipe';
+import { FileFormatPipe } from '../../pipes/fileType.pipe';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzInputModule } from 'ng-zorro-antd/input';
 
 @Component({
   selector: 'app-chat',
@@ -29,15 +31,12 @@ import { PushService } from '../../services/push.service';
   styleUrls: ['./chat.component.scss'],
   standalone: true,
   imports: [
-    CommonModules,
+    NgStyle, NgClass, CommonModule,
+    DatePipe, FileFetchPipe, FileFormatPipe,
+    NzIconModule, NzSpinModule, NzInputModule, NzImageModule, NzSpaceModule, NzPopconfirmModule,
     TranslateModule,
-    IconsProviderModule,
     FormsModule,
-    NzImageModule,
-    NzSpaceModule,
-    NzModules,
-    NzPopconfirmModule,
-    PipeModule
+    ReactiveFormsModule
   ],
 })
 export class ChatComponent implements OnInit {
@@ -84,6 +83,8 @@ export class ChatComponent implements OnInit {
     totalPagesCount: 1,
     sortBy: '',
     sortType: '',
+    servicesIds: [],
+    excludedServicesIds: [15, 16],
     serviceId: this.serviceId,
   };
   private messagesParams = {
@@ -116,7 +117,7 @@ export class ChatComponent implements OnInit {
       });
     this.getChats();
   }
-  
+
   ngOnDestroy() {
     if (this.sseSubscription) {
       this.sseSubscription.unsubscribe();

@@ -14,13 +14,14 @@ import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { MerchantDriverService } from '../../services/merchant-driver.service';
 import { TopupBalanceTmsComponent } from '../topup-balance-tms/topup-balance-tms.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 
 @Component({
   selector: 'app-history-transaction',
   templateUrl: './history-transaction.component.html',
   styleUrls: ['./history-transaction.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PipeModule, RouterModule],
+  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, PriceFormatPipe, RouterModule],
   providers: [NzModalService],
   animations: [
     trigger('showHideFilter', [
@@ -102,15 +103,7 @@ export class HistoryTransactionComponent {
   private initializeFilter(): Record<string, string> {
     return { transactionType: '', fromDate: '', toDate: '' };
   }
-  onPageIndexChange(pageIndex: number): void {
-    this.pageParams.pageIndex = pageIndex;
-    this.getAll();
-  }
-  onPageSizeChange(pageSize: number): void {
-    this.pageParams.pageSize = pageSize;
-    // this.pageParams.pageIndex = 0;
-    this.getAll();
-  }
+
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
@@ -119,13 +112,18 @@ export class HistoryTransactionComponent {
     this.getAll();
   }
   onQueryParamsChange(params: NzTableQueryParams): void {
-    let { sort } = params;
-    let currentSort = sort.find((item) => item.value !== null);
-    let sortField = (currentSort && currentSort.key) || null;
-    let sortOrder = (currentSort && currentSort.value) || null;
-    sortOrder === 'ascend' ? (sortOrder = 'asc') : sortOrder === 'descend' ? (sortOrder = 'desc') : sortOrder = '';
-    this.pageParams.sortBy = sortField;
-    this.pageParams.sortType = sortOrder;
+    const { pageIndex, pageSize, sort } = params;
+    this.pageParams.pageIndex = pageIndex ;
+    this.pageParams.pageSize = pageSize;
+  
+    const currentSort = sort.find(item => item.value !== null);
+    this.pageParams.sortBy = currentSort?.key || null;
+    this.pageParams.sortType = currentSort?.value === 'ascend' ? 'asc' : currentSort?.value === 'descend' ? 'desc' : '';
+  
+    this.getAll();
+  }
+  filterApply() {
+    this.pageParams.pageIndex = 1;
     this.getAll();
   }
 }

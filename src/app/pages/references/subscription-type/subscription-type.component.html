@@ -1,4 +1,5 @@
-<div class="container-page">
+<div *ngIf="perService.hasPermission(Per.SubscriptionTypesPage)">
+  <div class="container-page">
     <div class="header-page">
       <h2>{{ 'subscription_types' | translate }}</h2>
       <div class="button-group">
@@ -9,7 +10,7 @@
       </div>
     </div>
   </div>
-  
+
   <nz-table [nzSize]="'middle'" [nzPaginationPosition]="'bottom'" [nzData]="data" [nzPageSizeOptions]="[10, 20, 30]"
     [nzShowPagination]="true" [nzShowSizeChanger]="true" [nzLoading]="loader" [nzNoResult]="('no_data' | translate)"
     (nzPageIndexChange)="onPageIndexChange($event)" (nzPageSizeChange)="onPageSizeChange($event)">
@@ -51,3 +52,8 @@
     </tbody>
   </nz-table>
   <app-subscription-types-form *ngIf="showForm"></app-subscription-types-form>
+</div>
+<div *ngIf="!perService.hasPermission(Per.SubscriptionTypesPage)" class="no-access-container">
+  <nz-result nzStatus="error" nzTitle="403" nzSubTitle="{{'accessDeniedPage' | translate}}">
+  </nz-result>
+</div>

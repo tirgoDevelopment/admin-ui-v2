@@ -13,13 +13,14 @@ import { Response } from 'src/app/shared/models/reponse';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { PermissionService } from 'src/app/shared/services/permission.service';
+import { LabelPipe } from 'src/app/shared/pipes/label.pipe';
 
 @Component({
   selector: 'app-service-form',
   templateUrl: './service-form.component.html',
   styleUrls: ['./service-form.component.scss'],
   standalone: true,
-  imports: [NzModules, TranslateModule, CommonModules, PipeModule],
+  imports: [NzModules, TranslateModule, CommonModules, PipeModule, LabelPipe],
 })
 export class ServiceFormComponent implements OnInit {
   Per = Permission;
@@ -55,9 +56,14 @@ export class ServiceFormComponent implements OnInit {
     this.searchDriver$.next(filter);
   }
   getServices() {
-    this.serviceApi.getServiceList().subscribe((res: Response<ServiceModel[]>) => {
-      if (res) {
-        this.services = res.data;
+    this.serviceApi.getServiceList().subscribe((res: any) => {
+      if (res.data && Array.isArray(res.data)) {
+        const uniqueServices = Array.from(new Set(res.data.map((service: any) => service.name)))
+          .map((name: any) => res.data.find((service: any) => service.name === name));
+
+        this.services = uniqueServices;
+      } else {
+        this.services = [];
       }
     });
   }

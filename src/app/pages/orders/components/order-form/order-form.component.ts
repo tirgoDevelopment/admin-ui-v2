@@ -36,13 +36,16 @@ import { CargoStatusModel } from 'src/app/pages/references/cargo-status/models/c
 import { ClientsFormComponent } from 'src/app/pages/clients/components/clients-form/clients-form.component';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
+import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
+import { DateFormatPipe } from 'src/app/shared/pipes/dateFormat.pipe';
+import { ReferencePointsPipe } from 'src/app/shared/pipes/reference-points.pipe';
 
 @Component({
   selector: 'app-order-form',
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss'],
   standalone: true,
-  imports: [NzModules, CommonModules, TranslateModule, NgxMaskDirective, PipeModule, AngularYandexMapsModule],
+  imports: [NzModules, CommonModules, TranslateModule, NgxMaskDirective, DateFormatPipe, PriceFormatPipe, ReferencePointsPipe, AngularYandexMapsModule],
   providers: [NzModalService],
 })
 export class OrderFormComponent implements OnInit, OnDestroy {

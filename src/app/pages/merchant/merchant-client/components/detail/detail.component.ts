@@ -9,13 +9,14 @@ import { NotificationService } from 'src/app/shared/services/notification.servic
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { MerchantModel } from '../../models/merchant.model';
 import { MerchantClientService } from '../../services/merchant-client.service';
+import { FileFetchPipe } from 'src/app/shared/pipes/file-fetch.pipe';
 
 @Component({
   selector: 'app-detail',
   templateUrl: './detail.component.html',
   styleUrls: ['./detail.component.scss'],
   standalone: true,
-  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PipeModule],
+  imports: [NzModules, TranslateModule, CommonModules, NzModalModule, PipeModule, FileFetchPipe],
 })
 export class DetailComponent implements OnInit {
   confirmModal?: NzModalRef;

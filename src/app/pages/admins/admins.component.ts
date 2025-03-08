@@ -1,49 +1,39 @@
-import { CUSTOM_ELEMENTS_SCHEMA, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormsModule } from '@angular/forms';
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AdminsService } from './services/admins.service';
 import { AdminModel } from './models/admin.model';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { AdminFormComponent } from './components/admin-form/admin-form.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { ResponseContent } from 'src/app/shared/models/res-content.model';
-import { NotificationService } from 'src/app/shared/services/notification.service';
-import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { PermissionService } from 'src/app/shared/services/permission.service';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzIconModule, NzIconService } from 'ng-zorro-antd/icon';
+import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
+import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { PlusOutline } from '@ant-design/icons-angular/icons';
 
 @Component({
   selector: 'app-admins',
   standalone: true,
-  imports: [CommonModule, NzModules, TranslateModule, FormsModule, IconsProviderModule],
-  providers: [NzModalService],
+  imports: [CommonModule, TranslateModule, FormsModule, NzButtonModule, NzIconModule, NzTableModule, NzResultModule, NzPaginationModule, NzSpinModule, NzToolTipModule, NzSelectModule, NzAlertModule],
+  providers: [NzModalService,NzDrawerService],
   templateUrl: './admins.component.html',
-  styleUrls: ['./admins.component.scss'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  animations: [
-    trigger('showHideFilter', [
-      state('show', style({
-        height: '*',
-        opacity: 1,
-        visibility: 'visible'
-      })),
-      state('hide', style({
-        height: '0',
-        opacity: 0,
-        visibility: 'hidden'
-      })),
-      transition('show <=> hide', animate('300ms ease-in-out'))
-    ])
-  ]
+  styleUrls: ['./admins.component.scss']
 })
 export class AdminsComponent implements OnInit {
   Permission = Permission;
 
   confirmModal?: NzModalRef;
-  data: AdminModel[];
+  data: AdminModel[] = [];
   loader: boolean = false;
   isFilterVisible: boolean = false
   filter = { id: '', loadingLocation: '', deliveryLocation: '', statusId: '' };
@@ -55,15 +45,16 @@ export class AdminsComponent implements OnInit {
     sortBy: 'id',
     sortType: 'desc'
   };
-
+  totalItemsCount = 0;
   constructor(
-    private toastr: NotificationService,
-    private modal: NzModalService,
     private adminsService: AdminsService,
     private drawer: NzDrawerService,
     private translate: TranslateService,
     public permissionService: PermissionService,
-  ) { }
+    private iconService: NzIconService
+  ) {
+    this.iconService.addIcon(PlusOutline)
+  }
 
   ngOnInit(): void {
     this.getAll();
@@ -73,6 +64,8 @@ export class AdminsComponent implements OnInit {
     this.adminsService.getAll(this.pageParams).subscribe((res: ResponseContent<AdminModel[]>) => {
       if (res && res.success) {
         this.data = res.data.content;
+        this.pageParams.totalPagesCount = res.data.totalPagesCount;
+        this.totalItemsCount = this.pageParams.pageSize * this.pageParams.totalPagesCount;
         this.loader = false;
       }
     }, err => {
@@ -109,14 +102,21 @@ export class AdminsComponent implements OnInit {
   toggleFilter(): void {
     this.isFilterVisible = !this.isFilterVisible;
   }
-  onPageIndexChange(pageIndex: number): void {
-    this.pageParams.pageIndex = pageIndex;
-    this.getAll();
-  }
-  onPageSizeChange(pageSize: number): void {
-    this.pageParams.pageSize = pageSize;
-    this.pageParams.pageIndex = 1;
-    this.getAll();
-  }
 
+  public onQueryParamsChange(params: NzTableQueryParams): void {
+    this.pageParams.pageIndex = params.pageIndex;
+    this.pageParams.pageSize = params.pageSize;
+    let { sort } = params;
+    let currentSort = sort.find((item) => item.value !== null);
+    let sortField = (currentSort && currentSort.key) || null;
+    let sortOrder = (currentSort && currentSort.value) || null;
+    sortOrder === 'ascend'
+      ? (sortOrder = 'asc')
+      : sortOrder === 'descend'
+        ? (sortOrder = 'desc')
+        : (sortOrder = '');
+    this.pageParams.sortBy = sortField;
+    this.pageParams.sortType = sortOrder;
+    this.getAll();
+  }
 }

@@ -1,35 +1,51 @@
 <form [formGroup]="form">
 
   <nz-input-group class="input-group">
+    <nz-form-label nzRequired>{{'full_name' | translate}}</nz-form-label>
     <input formControlName="fullName" type="text" nz-input placeholder="{{'full_name' | translate}}" />
   </nz-input-group>
-
   <nz-input-group class="input-group">
+    <nz-form-label nzRequired>{{'login_admin' | translate}}</nz-form-label>
     <input formControlName="username" type="text" nz-input placeholder="{{'login_admin' | translate}}" />
   </nz-input-group>
 
+  <nz-form-label nzRequired *ngIf="!admin">{{'password' | translate}}</nz-form-label>
   <nz-input-group class="input-group" [nzSuffix]="suffixTemplateEye" *ngIf="!admin">
     <input formControlName="password" type="text" nz-input placeholder="{{'password' | translate}}" />
   </nz-input-group>
   <ng-template #suffixTemplateEye>
     <i nz-icon [nzType]="'sync'" style="cursor: pointer;" (click)="generatePassword()"></i>
   </ng-template>
+  <div *ngIf="form.get('password').touched && form.get('password').hasError('required')" class="error-message">
+    {{ 'is_empty' | translate }}
+  </div>
+  <div *ngIf="form.get('password').touched && form.get('password').hasError('minlength')" class="error-message">
+    {{ 'min_length' | translate }}
+  </div>
+  <div *ngIf="form.get('password').touched && form.get('password').hasError('maxlength')" class="error-message">
+    {{ 'max_length' | translate }}
+  </div>
 
   <nz-input-group class="input-group">
-    <input formControlName="phone" type="text" nz-input placeholder="{{ 'phone' | translate }}" mask="+000 00 000 00 00"/>
+  <nz-form-label nzRequired>{{'phone' | translate}}</nz-form-label>
+    <input formControlName="phone" type="text" nz-input placeholder="{{ 'phone' | translate }}"
+      mask="+000 00 000 00 00" />
   </nz-input-group>
 
   <nz-input-group class="input-group">
+  <nz-form-label nzRequired>{{'role' | translate}}</nz-form-label>
     <nz-select nzPlaceHolder="{{'role' | translate}}" formControlName="roleId" style="width: 100% !important;">
       <nz-option [nzValue]="role.id" [nzLabel]="role.name" *ngFor="let role of roles"></nz-option>
     </nz-select>
   </nz-input-group>
-
   <div class="button-wrapper">
-    <button nz-button class="danger-button"  *ngIf="perService.hasPermission(Permission.AdminDelete)" (click)="remove()" [nzLoading]="loading">
+    <button nz-button class="danger-button" *ngIf="perService.hasPermission(Permission.AdminDelete)" (click)="remove()"
+      [nzLoading]="loading">
       {{ 'remove' | translate }}
     </button>
-    <button nz-button class="success-button"  *ngIf="perService.hasPermission(Permission.AdminUpdate) || perService.hasPermission(Permission.AdminCreate)" [disabled]="form.invalid" (click)="onSubmit()" [nzLoading]="loading">
+    <button nz-button class="success-button"
+      *ngIf="perService.hasPermission(Permission.AdminUpdate) || perService.hasPermission(Permission.AdminCreate)"
+      [disabled]="form.invalid" (click)="onSubmit()" [nzLoading]="loading">
       {{ 'save' | translate }}
     </button>
   </div>
