@@ -499,6 +499,8 @@
   "status_subscription": "Статус подписки",
   "kazjulBalance":"Kazjul баланс",
   "kzPaidWay":"Казжол",
+  "date_completed_from": "Дата выполнено от",
+  "date_completed_to": "Дата выполнено до",
   "services": {
     "title": "Услуги",
     "serviceId": "Сервис ID",
