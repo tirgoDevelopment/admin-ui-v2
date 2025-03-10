@@ -54,7 +54,7 @@
       <div>
         <nz-input-group class="input-group w-full">
           <nz-select style="width: 100%; min-width: 150px;" nzShowSearch nzServerSearch
-            nzPlaceHolder="{{ 'merchant_driver' | translate }}" [nzShowArrow]="false" [(ngModel)]="filter['merchantId']"
+            nzPlaceHolder="{{ 'merchant_driver' | translate }}" [nzShowArrow]="false" [(ngModel)]="filter['tmsId']"
             (nzOnSearch)="find($event)">
             <nz-option *ngFor="let o of (tms$ | async)?.data?.content" [nzLabel]="o.companyType + ' ' + o.companyName"
               [nzValue]="o.id">
