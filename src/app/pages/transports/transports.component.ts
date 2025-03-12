@@ -41,6 +41,7 @@ export class TransportsComponent implements OnInit {
   confirmModal?: NzModalRef;
   data: any[] = [];
   loader: boolean = false;
+  loading: boolean = false;
   isFilterVisible: boolean = false;
   drivers: any[] = [];
   tmses: any[] = [];
@@ -174,7 +175,7 @@ export class TransportsComponent implements OnInit {
     this.getAll();
   }
   private initializeFilter(): Record<string, string> {
-    return { transportBrandId: '', transportNumber: '', isKzPaidWay: '', driverId: '', tmsId:'' };
+    return { transportBrandId: '', transportNumber: '', isKzPaidWay: '', driverId: '', tmsId: '' };
   }
   onQueryParamsChange(params: NzTableQueryParams): void {
     const { pageIndex, pageSize, sort } = params;
@@ -204,5 +205,31 @@ export class TransportsComponent implements OnInit {
         }
       })
     }
+  }
+
+  exportTransports() {
+    this.loading = true;
+    const params = {
+      pageIndex: this.pageParams.pageIndex,
+      pageSize: this.pageParams.pageSize,
+      sortBy: this.pageParams.sortBy,
+      sortType: this.pageParams.sortType,
+      ...this.filter,
+    };
+    let query = generateQueryFilter(params)
+
+    this.transportsService.export(query).subscribe((res: any) => {
+      if (res) {
+        this.loading = false;
+        const url = window.URL.createObjectURL(res);
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        a.style.display = 'none';
+        a.href = url;
+        a.download = 'transports.xlsx';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    })
   }
 }

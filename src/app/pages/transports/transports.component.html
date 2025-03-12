@@ -7,6 +7,10 @@
           <span nz-icon nzType="filter" nzTheme="fill"></span>
           {{ 'filter' | translate }}
         </button>
+        <button nz-button class="success-button" (click)="exportTransports()" [disabled]="loading" [nzLoading]="loading">
+          <span nz-icon nzType="file-excel" nzTheme="fill"></span>
+          {{ "excel" | translate }}
+        </button>
         <button nz-button class="success-button" (click)="transportManagment()"
           *ngIf="perService.hasPermission(Permission.TransportManagment)">
           {{ 'transportManagment' | translate }}
@@ -135,7 +139,7 @@
   </ng-template>
 </div>
 
-<div  class="no-access-container" *ngIf="!perService.hasPermission(Permission.TransportsPage)">
-    <nz-result nzStatus="error" nzTitle="403" nzSubTitle="{{'accessDeniedPage' | translate}}">
-    </nz-result>
-  </div>
+<div class="no-access-container" *ngIf="!perService.hasPermission(Permission.TransportsPage)">
+  <nz-result nzStatus="error" nzTitle="403" nzSubTitle="{{'accessDeniedPage' | translate}}">
+  </nz-result>
+</div>
