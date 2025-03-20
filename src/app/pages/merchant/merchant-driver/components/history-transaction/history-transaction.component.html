@@ -20,24 +20,34 @@
 <div class="filter" [@showHideFilter]="isFilterVisible ? 'show' : 'hide'">
   <div>
     <nz-input-group class="input-group">
-      <input [(ngModel)]="filter['transactionType'] " type="text" nz-input
-        placeholder="{{ 'transactionType' | translate }}" />
+      <nz-select [(ngModel)]="filter['balanceType']" nzPlaceHolder="{{ 'balansType' | translate }}" style="width: 200px">
+        <nz-option [nzValue]="'tirgo'" [nzLabel]="'tirBalance' | translate"></nz-option>
+        <nz-option [nzValue]="'tirgo_service'" [nzLabel]="'serviceBalance' | translate"></nz-option>
+      </nz-select>
     </nz-input-group>
   </div>
   <div>
     <nz-input-group class="input-group">
-      <nz-date-picker [(ngModel)]="filter['fromDate']" type="date" nz-input [nzAllowClear]="false"
+      <nz-select [(ngModel)]="filter['transactionType']" nzPlaceHolder="{{ 'transactionType' | translate }}" style="width: 200px">
+        <nz-option [nzValue]="'income'" [nzLabel]="'income' | translate"></nz-option>
+        <nz-option [nzValue]="'expense'" [nzLabel]="'expense' | translate"></nz-option>
+      </nz-select>
+    </nz-input-group>
+  </div>
+  <!-- <div>
+    <nz-input-group class="input-group">
+      <nz-date-picker [(ngModel)]="filter['createdAtFrom']" type="date" nz-input [nzAllowClear]="false"
         nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
       </nz-date-picker>
     </nz-input-group>
   </div>
   <div>
     <nz-input-group class="input-group">
-      <nz-date-picker [(ngModel)]="filter['toDate']" type="date" nz-input [nzAllowClear]="false"
+      <nz-date-picker [(ngModel)]="filter['createdAtTo']" type="date" nz-input [nzAllowClear]="false"
         nzPlaceHolder="{{ 'start_date_reg' | translate }}" class="custom-date-picker">
       </nz-date-picker>
     </nz-input-group>
-  </div>
+  </div> -->
 
   <button nz-button nzType="primary" class="search-button" (click)="filterApply()">
     <span nz-icon nzType="search" nzTheme="outline"></span>
@@ -53,7 +63,7 @@
       <div class="card-title">{{ 'tirBalance' | translate }}</div>
       <div class="card-content">
         <span class="amount">{{tirBalance | priceFormat}}</span>
-        <span class="currency">Tir</span>
+        <span class="currency">TIR</span>
       </div>
     </div>
   </nz-card>
@@ -62,7 +72,7 @@
       <div class="card-title">{{ 'serviceBalance' | translate }}</div>
       <div class="card-content">
         <span class="amount">{{serviceBalance | priceFormat}}</span>
-        <span class="currency">Tir</span>
+        <span class="currency">TIR</span>
       </div>
     </div>
   </nz-card>
@@ -75,10 +85,13 @@
     <tr>
       <th>No</th>
       <th nzColumnKey="id" [nzSortFn]="true">ID</th>
-      <th>{{ 'full_name' | translate }}</th>
-      <th> {{ 'sum' | translate }} (Tir)</th>
+      <th nzWidth="200px">{{'services.serviceName' | translate}}</th>
+      <th> {{ 'sum' | translate }} (TIR)</th>
+      <th> {{ 'sum' | translate }} (TIR)</th>
+      <th nzWidth="200px"> {{ 'balanceStatus' | translate }} (TIR)</th>
       <th>{{ 'date' | translate }}</th>
-      <th>{{ 'type' | translate }}</th>
+      <th>{{ 'balansType' | translate }}</th>
+      <th>{{ 'services.operator' | translate }}</th>
       <th nzEllipsis>{{'description' | translate}} </th>
     </tr>
   </thead>
@@ -87,10 +100,13 @@
     <tr *ngFor="let item of data; let i = index">
       <td> {{ i+1 }} </td>
       <td> {{ item.id }} </td>
-      <td> {{ item.createdBy?.staff?.username }}</td>
-      <td> {{ item?.tirAmount | priceFormat }} </td>
+      <td nzWidth="200px" nzEllipsis [nz-tooltip]="item.service ? item.service.name : ''"> {{item.service ? item.service.name : ''}} </td>
+      <td class="delete-icon"> <span *ngIf="item.transactionType == 'expense'">{{ item?.tirAmount | priceFormat }}</span>  </td>
+      <td class="edit-icon"> <span *ngIf="item.transactionType == 'income'">{{ item?.tirAmount | priceFormat }}</span>  </td>
+      <td nzWidth="200px"> {{ item?.lastBalance | priceFormat }} </td>
       <td> {{ item.createdAt | date:'dd.MM.yyyy HH:mm'}} </td>
       <td> {{item.balanceType == 'tirgo' ? ('tirBalance' | translate) : ('serviceBalance' | translate)}}</td>
+      <td> {{ item.createdBy?.admin?.username }}</td>
       <td nzEllipsis [nzTooltipTitle]="item.description" nzTooltipPlacement="top" nz-button nz-tooltip>
         {{item.description}}</td>
     </tr>

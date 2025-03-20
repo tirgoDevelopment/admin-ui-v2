@@ -7,13 +7,14 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
+import { NgxMaskDirective } from 'ngx-mask';
 
 @Component({
   selector: 'app-kazjul-token',
   templateUrl: './kazjul-token.component.html',
   styleUrls: ['./kazjul-token.component.scss'],
   standalone: true,
-  imports: [NzModules, CommonModules, TranslateModule, PriceFormatPipe],
+  imports: [NzModules, CommonModules, TranslateModule, PriceFormatPipe, NgxMaskDirective],
 })
 export class KazjulTokenComponent {
   form: FormGroup;
@@ -42,11 +43,17 @@ export class KazjulTokenComponent {
   getData() {
     this.loadingPage = true;
     this.serviceApi.kzPaidWayAccount().subscribe((res: any) => {
-      if (res && res.success)
+      if (res && res.data) {
         this.form.patchValue(res.data);
         this.kazJulBalance = res.data.balance;
         this.last_update = res.data.transactionsLastUpdatedate;
         this.loadingPage = false;
+      }
+      else {
+        this.loadingPage = false;
+      }
+    }, err => {
+      this.loadingPage = false;
     })
   }
   onSubmit() {
@@ -60,7 +67,7 @@ export class KazjulTokenComponent {
   }
   onRequst() {
     this.loading = true;
-    this.serviceApi.requestKazJul({}).subscribe((res:any) => {
+    this.serviceApi.requestKazJul({}).subscribe((res: any) => {
       if (res) {
         this.loading = false;
         this.toastr.success(this.translate.instant('successfullUpdated'), '');
@@ -68,5 +75,10 @@ export class KazjulTokenComponent {
     }, err => {
       this.loading = false;
     })
+  }
+  blockComma(event: KeyboardEvent) {
+    if (event.key === ',') {
+      event.preventDefault();
+    }
   }
 }

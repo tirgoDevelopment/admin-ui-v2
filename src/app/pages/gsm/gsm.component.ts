@@ -7,7 +7,6 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
-import { MerchantDriverService } from '../merchant/merchant-driver/services/merchant-driver.service';
 import { DriverFormComponent } from '../drivers/components/driver-form/driver-form.component';
 import { DetailComponent } from '../merchant/merchant-driver/components/detail/detail.component';
 import { PageParams } from '../orders/models/page-params.interface';
@@ -23,6 +22,7 @@ import { PushService } from 'src/app/shared/services/push.service';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
+import { TmsService } from '../merchant/merchant-driver/services/tms.service';
 
 @Component({
   selector: 'app-gsm',
@@ -63,7 +63,7 @@ export class GSMComponent implements OnInit {
     private gsmService: GSMService,
     private drawer: NzDrawerService,
     private translate: TranslateService,
-    private merchantApi: MerchantDriverService,
+    private tmsService: TmsService,
     private socketService: SocketService,
     private pushService: PushService,
     public perService: PermissionService
@@ -73,24 +73,30 @@ export class GSMComponent implements OnInit {
     this.tms$ = this.searchTms$.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap((searchTerm: string) => this.merchantApi.getVerified({}, searchTerm).pipe(
-        catchError((err) => {
+      switchMap((searchTerm: string) => {
+        if (searchTerm == '' || searchTerm == null) {
           return of({ data: { content: [] } });
-        })
-      )),
+        } else {
+          return this.tmsService.getVerified(searchTerm).pipe(
+            catchError((err) => {
+              return of({ data: { content: [] } });
+            })
+          );
+        }
+      })
     );
     this.handleEvent();
   }
   handleEvent() {
-    this.sseSubscription = this.socketService.getSSEEvents().subscribe((event) => {
-      if (event.event === 'tmsGsmBalanceTopup') {
-        this.getAll();
-      }
-    });
+    this.socketService.listen('tmsGsmBalanceTopup').subscribe((event) => {
+      this.getAll();
+    })
   }
   find(ev: string) {
-    let filter = generateQueryFilter({ companyName: ev });
-    this.searchTms$.next(filter);
+    if (ev !== '' && ev !== null) {
+      let filter = generateQueryFilter({ companyName: ev });
+      this.searchTms$.next(filter);
+    }
   }
   getAll(): void {
     this.data = [];
@@ -106,7 +112,7 @@ export class GSMComponent implements OnInit {
           this.data = res.data?.content || [];
           this.pageParams.totalPagesCount = res.data.totalPagesCount;
           this.totalItemsCount = this.pageParams.pageSize * this.pageParams.totalPagesCount;
-      }
+        }
         this.loader = false;
       },
       () => {

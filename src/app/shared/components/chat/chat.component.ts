@@ -7,6 +7,7 @@ import {
   Output,
   ViewChild,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -24,6 +25,11 @@ import { FileFormatPipe } from '../../pipes/fileType.pipe';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { FilePreviewPipe } from '../../pipes/file-preview.pipe';
+import { NgxDocViewerComponent, NgxDocViewerModule } from 'ngx-doc-viewer';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-chat',
@@ -32,11 +38,11 @@ import { NzInputModule } from 'ng-zorro-antd/input';
   standalone: true,
   imports: [
     NgStyle, NgClass, CommonModule,
-    DatePipe, FileFetchPipe, FileFormatPipe,
-    NzIconModule, NzSpinModule, NzInputModule, NzImageModule, NzSpaceModule, NzPopconfirmModule,
+    DatePipe, FileFetchPipe, FileFormatPipe, NgxDocViewerModule,
+    NzIconModule, NzSpinModule, NzInputModule, NzImageModule, NzSpaceModule, NzPopconfirmModule, NzModalModule, NzButtonModule,
     TranslateModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
 })
 export class ChatComponent implements OnInit {
@@ -47,12 +53,15 @@ export class ChatComponent implements OnInit {
   @Output() closeChatEvent = new EventEmitter<void>();
   @Output() newMessageCountChange = new EventEmitter<number>();
   @Input() outputServiceId: string;
+  isPreviewModalOpen = false;
+  chatIconPosition = { x: 50, y: 50 };
+  chatSize = { width: 400, height: 500 };
+  observer: MutationObserver | null = null;
+  isDragging = false;
+  isFileDragging = false;
+  droppedFile: File | null = null;
+  droppedFileUrl: string | null = null;
 
-  chatIconPosition = {
-    x: window.innerWidth - 400,
-    y: window.innerHeight - window.innerHeight * 0.9,
-  };
-  private isDragging = false;
   private dragOffset = { x: 0, y: 0 };
   private dragSpeedFactor = 1;
   messages: any[] = [];
@@ -84,6 +93,7 @@ export class ChatComponent implements OnInit {
     sortBy: '',
     sortType: '',
     servicesIds: [],
+    chatId: null,
     excludedServicesIds: [15, 16],
     serviceId: this.serviceId,
   };
@@ -91,17 +101,94 @@ export class ChatComponent implements OnInit {
     pageIndex: 1,
     pageSize: 10,
   }
+
+  dragCounter = 0;
   constructor(
     private serviceApi: ServicesService,
     private translate: TranslateService,
     private socketService: SocketService,
-    private pushService: PushService
+    private pushService: PushService,
+    private el: ElementRef,
+    private toastr: NotificationService
   ) {
     const currentLang = localStorage.getItem('lang') || 'us';
     this.translate.use(currentLang.toLowerCase());
   }
+  onFileDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isFileDragging = false;
+    this.dragCounter = 0;
+  
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      const allowedFormats = ["image/jpeg", "image/png", "application/pdf"];
+  
+      if (allowedFormats.includes(file.type)) {
+        this.droppedFile = file;
+        this.droppedFileUrl = URL.createObjectURL(file);
+        this.showPreviewModal();
+      } else {
+        this.showErrorMessage("Файл должен быть только в формате JPEG, PNG или PDF.");
+      }
+    }
+  }
+  
+  showErrorMessage(message: string) {
+    this.toastr.error(message)
+  }
+  
+
+  onFileDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  
+    this.dragCounter++;
+    if (!this.isFileDragging) {
+      this.isFileDragging = true;
+    }
+  }
+
+  onFileDragLeave(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  
+    if (!event.relatedTarget || !(event.relatedTarget as HTMLElement).closest('.chat-content')) {
+      this.isFileDragging = false;
+    }
+  }
+  showPreviewModal() {
+    this.isPreviewModalOpen = true;
+  }
+
+  closePreviewModal() {
+    this.isPreviewModalOpen = false;
+    if (this.droppedFileUrl) {
+      URL.revokeObjectURL(this.droppedFileUrl);
+      this.droppedFileUrl = null;
+    }
+  }
+  ngAfterViewInit() {
+    const chatCard = this.el.nativeElement.querySelector('.chat-card') as HTMLElement;
+    const savedSize = localStorage.getItem('chatSize');
+    if (savedSize) {
+      this.chatSize = JSON.parse(savedSize);
+      chatCard.style.width = `${this.chatSize.width}px`;
+      chatCard.style.height = `${this.chatSize.height}px`;
+    }
+    this.observer = new MutationObserver(() => {
+      this.chatSize.width = chatCard.clientWidth;
+      this.chatSize.height = chatCard.clientHeight;
+      localStorage.setItem('chatSize', JSON.stringify(this.chatSize));
+    });
+    this.observer.observe(chatCard, { attributes: true, attributeFilter: ['style'] });
+  }
 
   ngOnInit() {
+    const savedPosition = localStorage.getItem('chatPosition');
+    if (savedPosition) {
+      this.chatIconPosition = JSON.parse(savedPosition);
+    }
     if (this.outputServiceId) {
       this.showChatList = false;
       this.loading = true;
@@ -112,7 +199,7 @@ export class ChatComponent implements OnInit {
     this.searchControl.valueChanges
       .pipe(debounceTime(300), distinctUntilChanged())
       .subscribe((searchTerm) => {
-        this.pageParams.serviceId = searchTerm;
+        this.pageParams.chatId = Number(searchTerm);
         this.getChats();
       });
     this.getChats();
@@ -122,14 +209,14 @@ export class ChatComponent implements OnInit {
     if (this.sseSubscription) {
       this.sseSubscription.unsubscribe();
     }
-    this.socketService.disconnectSSE();
+    this.socketService.disconnect();
   }
   getChats() {
     this.loading = true;
     this.pageParams.pageIndex = 1;
     this.noMoreChats = false;
     let query = generateQueryFilter(this.pageParams);
-    this.serviceApi.getDriverServices(query).subscribe({
+    this.serviceApi.getChatRooms(query).subscribe({
       next: (res: any) => {
         this.chats = res.data.content;
         this.pageParams.totalPagesCount = res.data.totalPagesCount || 1;
@@ -192,7 +279,7 @@ export class ChatComponent implements OnInit {
   sendMessage() {
     if (this.newMessage.trim() && this.selectedChat) {
       const message: any = {
-        senderUserType: "staff",
+        senderUserType: "admin",
         createdAt: new Date(),
         message: this.newMessage,
         messageType: 'text',
@@ -246,26 +333,6 @@ export class ChatComponent implements OnInit {
     this.editingMessage = null;
     this.newMessage = '';
   }
-  deleteMessage(messageToDelete: any) {
-    this.selectedChat.messages = this.selectedChat.messages.filter(
-      (message) => message.id !== messageToDelete.id
-    );
-    this.selectedChat.messages = this.selectedChat.messages.map((message) => {
-      if (message.replyTo?.id === messageToDelete.id) {
-        const { replyTo, ...messageWithoutReply } = message;
-        return messageWithoutReply;
-      }
-      return message;
-    });
-    this.messages = this.selectedChat.messages;
-  }
-  deleteSelectedMessages() {
-    const count = this.selectedMessages.size;
-    this.selectedChat.messages = this.selectedChat.messages.filter(
-      (message) => !this.selectedMessages.has(message.id)
-    );
-    this.exitSelectionMode();
-  }
   toggleMessageSelection(message: any) {
     if (this.isSelectionMode) {
       if (this.selectedMessages.has(message.id)) {
@@ -310,6 +377,7 @@ export class ChatComponent implements OnInit {
       },
       complete: () => {
         this.loading = false;
+        this.closePreviewModal();
       },
     });
   }
@@ -318,7 +386,7 @@ export class ChatComponent implements OnInit {
     reader.onload = (e: any) => {
       const message: any = {
         text: '',
-        senderUserType: 'staff',
+        senderUserType: 'admin',
         createdAt: new Date(),
         file: {
           name: file.name,
@@ -338,7 +406,7 @@ export class ChatComponent implements OnInit {
     reader.onload = (e: any) => {
       const message: any = {
         text: '',
-        senderUserType: 'staff',
+        senderUserType: 'admin',
         createdAt: new Date(),
         file: {
           name: file.name,
@@ -352,8 +420,6 @@ export class ChatComponent implements OnInit {
     };
     reader.readAsDataURL(file);
   }
-
-
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
@@ -402,28 +468,6 @@ export class ChatComponent implements OnInit {
     this.dragOffset.x = event.clientX - this.chatIconPosition.x;
     this.dragOffset.y = event.clientY - this.chatIconPosition.y;
   }
-  @HostListener('document:mousemove', ['$event'])
-  onMouseMove(event: MouseEvent) {
-    if (this.isDragging) {
-      const deltaX =
-        (event.clientX - this.dragOffset.x - this.chatIconPosition.x) *
-        this.dragSpeedFactor;
-      const deltaY =
-        (event.clientY - this.dragOffset.y - this.chatIconPosition.y) *
-        this.dragSpeedFactor;
-
-      this.chatIconPosition.x += deltaX;
-      this.chatIconPosition.y += deltaY;
-    }
-  }
-  @HostListener('document:mouseup')
-  onMouseUp() {
-    this.isDragging = false;
-  }
-  @HostListener('window:keydown.escape')
-  onEscapePress() {
-    this.closeChat();
-  }
   formatMessageDate(date: Date): string {
     const today = new Date();
     const messageDate = new Date(date);
@@ -468,7 +512,6 @@ export class ChatComponent implements OnInit {
       date1.getDate() === date2.getDate()
     );
   }
-
   onChatListScroll(event: any) {
     const element = event.target;
     const scrollPosition = Math.ceil(element.scrollTop + element.clientHeight);
@@ -506,7 +549,6 @@ export class ChatComponent implements OnInit {
       }
     });
   }
-
   loadMoreMessages() {
     if (this.loadingMore) return;
     this.loadingMore = true;
@@ -564,5 +606,27 @@ export class ChatComponent implements OnInit {
   }
   getDateKeys(): string[] {
     return Object.keys(this.groupedMessages);
+  }
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent) {
+    if (this.isDragging) {
+      const deltaX =
+        (event.clientX - this.dragOffset.x - this.chatIconPosition.x) *
+        this.dragSpeedFactor;
+      const deltaY =
+        (event.clientY - this.dragOffset.y - this.chatIconPosition.y) *
+        this.dragSpeedFactor;
+      this.chatIconPosition.x += deltaX;
+      this.chatIconPosition.y += deltaY;
+      localStorage.setItem('chatPosition', JSON.stringify(this.chatIconPosition));
+    }
+  }
+  @HostListener('document:mouseup')
+  onMouseUp() {
+    this.isDragging = false;
+  }
+  @HostListener('window:keydown.escape')
+  onEscapePress() {
+    this.closeChat();
   }
 }

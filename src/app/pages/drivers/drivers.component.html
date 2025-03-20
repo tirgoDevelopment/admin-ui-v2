@@ -2,7 +2,7 @@
   <div class="container-page">
     <div class="header-page">
       <h2>{{ 'drivers' | translate }}</h2>
-      <div class="button-group">
+      <div class="button-group" [ngClass]="ms.isMobile ? 'my-2' : ''">
         <button nz-button class="secondary-button" (click)="toggleFilter()">
           <span nz-icon nzType="filter" nzTheme="fill"></span>
           {{ 'filter' | translate }}
@@ -32,8 +32,7 @@
     </div>
     <div>
       <nz-input-group class="input-group">
-        <input [(ngModel)]="filter['firstName']" type="text" nz-input 
-          placeholder="{{ 'first_name' | translate }}" />
+        <input [(ngModel)]="filter['firstName']" type="text" nz-input placeholder="{{ 'first_name' | translate }}" />
       </nz-input-group>
     </div>
     <div>
@@ -44,18 +43,44 @@
     </div>
     <div>
       <nz-input-group class="input-group">
-        <input [(ngModel)]="filter['phoneNumber']" trimSpaces type="text" nz-input placeholder="{{ 'phone' | translate }}" />
+        <input [(ngModel)]="filter['phoneNumber']" trimSpaces type="text" nz-input
+          placeholder="{{ 'phone' | translate }}" />
       </nz-input-group>
     </div>
     <div>
       <nz-input-group class="input-group w-full">
-        <nz-select style="width: 100%; min-width: 150px;" nzPlaceHolder="{{ 'kzPaidWay' | translate }}"
-          [nzShowArrow]="true" [nzAllowClear]="true" [(ngModel)]="filter['isKzPaidWay']">
-          <nz-option nzLabel="{{'on' | translate}}" [nzValue]="true"></nz-option>
-          <nz-option nzLabel="{{'off' | translate}}" [nzValue]="false"></nz-option>
+        <nz-select style="width: 100%; min-width: 150px;" nzPlaceHolder="{{ 'driver_merchant' | translate }}"
+          nzShowSearch nzServerSearch (nzOnSearch)="findTms($event)" [nzShowArrow]="true" [nzAllowClear]="true"
+          [(ngModel)]="filter['tmsId']">
+          <nz-option [nzLabel]="item.companyType + ' ' + item.companyName" [nzValue]="item.id"
+            *ngFor="let item of tms$ | async"></nz-option>
         </nz-select>
       </nz-input-group>
     </div>
+    <div>
+      <nz-input-group class="input-group w-full">
+        <nz-select style="width: 100%; min-width: 150px;" nzPlaceHolder="{{ 'status_subscription' | translate }}"
+          [nzShowArrow]="true" [nzAllowClear]="true" [(ngModel)]="filter['isSubscribed']">
+          <nz-option nzLabel="{{'yes' | translate}}" [nzValue]="true"></nz-option>
+          <nz-option nzLabel="{{'no' | translate}}" [nzValue]="false"></nz-option>
+        </nz-select>
+      </nz-input-group>
+    </div>
+    <div>
+      <nz-input-group class="input-group">
+        <nz-date-picker style="width: 210px !important;" [(ngModel)]="filter['subscribedAt']" type="date" nz-input [nzAllowClear]="false"
+          nzPlaceHolder="{{ 'subscribe_from' | translate }}" class="custom-date-picker">
+        </nz-date-picker>
+      </nz-input-group>
+    </div>
+    <div>
+      <nz-input-group class="input-group">
+        <nz-date-picker style="width: 210px !important;" [(ngModel)]="filter['subscribedTill']" type="date" nz-input [nzAllowClear]="false"
+          nzPlaceHolder="{{ 'subscribe_to' | translate }}" class="custom-date-picker">
+        </nz-date-picker>
+      </nz-input-group>
+    </div>
+   
     <div>
       <nz-input-group class="input-group">
         <nz-date-picker [(ngModel)]="filter['lastLoginFrom']" type="date" nz-input [nzAllowClear]="false"
@@ -88,39 +113,43 @@
     <thead>
       <tr>
         <th nzWidth="70px">No</th>
-        <th nzColumnKey="id" [nzSortFn]="true">ID</th>
-        <th>{{ 'full_name' | translate }}</th>
-        <th>{{ 'phone' | translate }}</th>
-        <th>{{ 'state_number' | translate }}</th>
-        <th nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
-        <th>{{ 'status' | translate }}</th>
+        <th nzWidth="70px" nzColumnKey="id" [nzSortFn]="true">ID</th>
+        <th nzWidth="150px">{{ 'full_name' | translate }}</th>
+        <th nzWidth="150px">{{ 'phone' | translate }}</th>
+        <th nzWidth="200px">{{'driver_merchant' | translate}}</th>
+        <th nzWidth="150px">{{ 'state_number' | translate }}</th>
+        <th nzWidth="170px" nzColumnKey="createdAt" [nzSortFn]="true">{{ 'register_date' | translate }}</th>
+        <th nzWidth="150px">{{ 'subscription' | translate }}</th>
         <th nzWidth="50px"></th>
       </tr>
     </thead>
 
     <tbody>
       <tr *ngFor="let item of data; let i = index" (click)="handleDrawer('view',item.id)">
-        <td>{{ item.rowIndex }}</td>
-        <td> {{ item.id }} </td>
-        <td> {{ item.firstName.toUpperCase() }} {{ item.lastName.toUpperCase() }} </td>
-        <td>
+        <td nzWidth="70px">{{ item.rowIndex }}</td>
+        <td nzWidth="70px"> {{ item.id }} </td>
+        <td nzWidth="150px"> {{ item.firstName.toUpperCase() }} {{ item.lastName.toUpperCase() }} </td>
+        <td nzWidth="150px">
           <span *ngIf="item.phoneNumbers[0]?.code">{{ item.phoneNumbers[0]?.code + item.phoneNumbers[0]?.number |
             phoneFormat}}</span>
           <span *ngIf="!item.phoneNumbers[0]?.code">{{ 'no_data' | translate}}</span>
         </td>
-        <td>
+        <td nzWidth="200px"> {{ item.tms?.companyName ? item.tms?.companyName : ('no_data' | translate) }} </td>
+        <td nzWidth="150px">
+          <span *ngIf="item.driverTransports && !item.driverTransports.length">{{'no_data' | translate}}</span>
           <div *ngFor="let tr of item.driverTransports; let i = index">
             {{tr.transportNumber}}
           </div>
         </td>
-        <td> {{ item.createdAt | date : 'dd.MM.yyyy' }} </td>
+        <td nzWidth="170px"> {{ item.createdAt | date : 'dd.MM.yyyy' }} </td>
 
-        <td>
-          <span *ngIf="item?.isBusy" class="delete-icon">{{'busy' | translate}}</span>
-          <span *ngIf="!item?.isBusy" class="edit-icon">{{'not_busy' | translate}}</span>
+        <td nzWidth="150px">
+          <span *ngIf="!item?.isSubscribed">{{'no' | translate}}</span>
+          <span *ngIf="item?.isSubscribed">{{item.subscribedAt | date : 'dd.MM.yyyy'}} - {{item.subscribedTill | date :
+            'dd.MM.yyyy'}}</span>
         </td>
 
-        <td class="action-col" (click)="$event.stopPropagation()"
+        <td nzWidth="50px" class="action-col" (click)="$event.stopPropagation()"
           *ngIf="perService.hasAnyPermission([Permission.DriverDetail, Permission.DriverUpdate, Permission.DriverAddTransport, Permission.DriverDelete])">
           <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
             <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>
@@ -141,13 +170,13 @@
                   <span>{{ 'edit' | translate }}</span>
                 </div>
               </li>
-              <li nz-menu-item (click)="addTransport(item.id)"
+              <!-- <li nz-menu-item (click)="addTransport(item.id)"
                 *ngIf="perService.hasPermission(Permission.DriverAddTransport)">
                 <div class="dropdown-menu">
                   <span nz-icon nzType="plus" nzTheme="outline"></span>
                   <span>{{ 'add_transport' | translate }}</span>
                 </div>
-              </li>
+              </li> -->
               <li nz-menu-item (click)="remove(item.id)" *ngIf="perService.hasPermission(Permission.DriverDelete)">
                 <div class="dropdown-menu">
                   <span nz-icon nzType="delete" nzTheme="outline" class="delete-icon"></span>
@@ -161,14 +190,7 @@
     </tbody>
   </nz-table>
   <ng-template #empty>
-    <nz-empty #empty nzNotFoundImage="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-      [nzNotFoundContent]="contentTpl">
-      <ng-template #contentTpl>
-        <span>
-          {{ 'no_data' | translate }}
-        </span>
-      </ng-template>
-    </nz-empty>
+    <nz-empty></nz-empty>
   </ng-template>
 </div>
 

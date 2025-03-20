@@ -7,13 +7,13 @@
     </nz-breadcrumb>
 
     <div class="info">
-        <div> <b> {{ "services.serviceId" | translate }}:</b>  {{serviceId}}</div>
+        <div> <b> {{ "services.serviceId" | translate }}:</b>  {{serviceId}} / {{data?.service?.code}}</div>
         <div> <b>{{ "driver" | translate }}:</b>  {{data?.driver.firstName}} {{data?.driver.lastName.slice(0,1)}}. ({{ data?.driver.id }}) </div>
-        <div><b>{{ "driver_merchant" | translate }}:</b> {{data?.driver?.driverMerchant ? data.driver?.driverMerchant?.companyName : ('no' | translate)}}</div>
+        <div><b>{{ "driver_merchant" | translate }}:</b> {{data?.tms ? data?.tms?.companyType + ' ' + data?.tms?.companyName : ('no' | translate)}}</div>
     </div>
 </div>
 
-<nz-table #sortTable [nzData]="data?.statusesHistory" [nzLoading]="loading" [nzShowPagination]="false">
+<nz-table #sortTable [nzData]="data?.histories" [nzLoading]="loading" [nzShowPagination]="false">
     <thead>
         <tr>
             <th>{{ "date" | translate }}</th>
@@ -24,7 +24,7 @@
 
     <tbody>
         <ng-container *ngIf="data">
-            <tr *ngFor="let item of data?.statusesHistory; let i = index">
+            <tr *ngFor="let item of data?.histories; let i = index">
                 <td>{{ item.createdAt | date : "dd.MM.yyyy HH:mm" }}</td>
                 <td>
                     <span class="status" [ngStyle]="{
@@ -35,8 +35,8 @@
                     </span>
                 </td>
                 <td>
-                    <div *ngIf="item.createdBy.staff">{{item?.createdBy?.staff?.fullName}}</div>
-                    <div *ngIf="!item.createdBy.staff">{{ item.createdBy.userType == 'driver' ? ('driver' | translate) : ('driver_merchant' | translate)}}</div>
+                    <div *ngIf="item.createdBy.admin">{{item?.createdBy?.admin?.fullName}}</div>
+                    <div *ngIf="!item.createdBy.admin">{{ item.createdBy.userType == 'driver' ? ('driver' | translate) : ('driver_merchant' | translate)}}</div>
                      </td>
             </tr>
         </ng-container>

@@ -7,13 +7,12 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { Response } from 'src/app/shared/models/reponse';
 import { NzModalModule, NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
-import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { NgxMaskDirective } from 'ngx-mask';
 import { removeDuplicateKeys } from 'src/app/shared/pipes/remove-dublicates-formData';
 import { DriverModel } from '../../models/driver.model';
 import { DriversService } from '../../services/drivers.service';
 import { jwtDecode } from 'jwt-decode';
-import { AddTransportComponent } from '../add-transport/add-transport.component';
+import { AddTransportComponent } from '../../../transports/components/add-transport/add-transport.component';
 import { TransportModel } from 'src/app/pages/references/transport-types/models/transport.model';
 import { Router } from '@angular/router';
 import { Permission } from 'src/app/shared/enum/per.enum';
@@ -21,6 +20,7 @@ import { PermissionService } from 'src/app/shared/services/permission.service';
 import { FileFetchPipe } from 'src/app/shared/pipes/file-fetch.pipe';
 import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
+import { AssignSubscriptionComponent } from '../assign-subscription/assign-subscription.component';
 
 @Component({
   selector: 'app-driver-form',
@@ -89,6 +89,7 @@ export class DriverFormComponent implements OnInit {
       isOwnService: new FormControl(false),
       isOwnOrder: new FormControl(false),
       isKzPaidWay: new FormControl(false),
+      isOwnTirgoBalance: new FormControl(false),
     });
     this.selectCountry(this.countries[0]);
     if (this.mode == 'view' || this.mode == 'edit') {
@@ -142,6 +143,7 @@ export class DriverFormComponent implements OnInit {
     formData.append('isOwnService', this.form.get('isOwnService')?.value);
     formData.append('isOwnOrder', this.form.get('isOwnOrder')?.value);
     formData.append('isKzPaidWay', this.form.get('isKzPaidWay')?.value);
+    formData.append('isOwnTirgoBalance', this.form.get('isOwnTirgoBalance')?.value);
     
     let phoneNumbers: any[] = [];
     if (this.selectedCountry.code === '+998' || this.selectedCountry.code === '+992' || this.selectedCountry.code === '+996') {
@@ -173,7 +175,8 @@ export class DriverFormComponent implements OnInit {
           this.loading = false;
           const messageKey = this.data ? 'successfullUpdated' : 'successfullCreated';
           this.toastr.success(this.translate.instant(messageKey), '');
-          this.drawerRef.close({ success: true, mode: this.data ? 'edit' : 'add', driverId: res.data?.id });
+          // this.drawerRef.close({ success: true, mode: this.data ? 'edit' : 'add', driverId: res.data?.id });
+          this.drawerRef.close({ success: true });
           this.form.reset();
         }
       },
@@ -314,14 +317,15 @@ export class DriverFormComponent implements OnInit {
       }
     });
   }
-  editTransport(item: TransportModel) {
+
+  editTransport(item) {
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant('edit_transport'),
       nzContent: AddTransportComponent,
       nzPlacement: 'right',
       nzContentParams: {
         driverId: this.data.id,
-        data: item,
+        data: item.id,
         mode: 'edit'
       }
     });
@@ -336,5 +340,22 @@ export class DriverFormComponent implements OnInit {
   onCancel(): void {
     this.drawerRef.close({ success: false });
     this.form.reset();
+  }
+
+  onApplySubscribe() {
+    const drawerRef = this.drawer.create({
+      nzTitle: this.translate.instant('apply_subscribe'),
+      nzContent: AssignSubscriptionComponent,
+      nzPlacement: 'right',
+      nzWidth: 450,
+      nzContentParams: {
+        driverId: this.data.id
+      }
+    })
+    drawerRef.afterClose.subscribe((res: any) => {
+        if(res) {
+          this.drawerRef.close({success: true})
+        }
+    })  
   }
 }

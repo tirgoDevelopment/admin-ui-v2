@@ -19,11 +19,13 @@ import { CurrenciesService } from 'src/app/shared/services/references/currencies
 import { LoadingMethodService } from 'src/app/shared/services/references/loading-method.service';
 import { TransportKindsService } from 'src/app/shared/services/references/transport-kinds.service';
 import { TransportTypesService } from 'src/app/shared/services/references/transport-type.service';
-import { DriversService } from '../../services/drivers.service';
+import { DriversService } from '../../../drivers/services/drivers.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { TransportModel } from 'src/app/pages/references/transport-types/models/transport.model';
 import { Response } from 'src/app/shared/models/reponse';
 import { FileFetchPipe } from 'src/app/shared/pipes/file-fetch.pipe';
+import { TransportBrandService } from 'src/app/pages/references/transport-brand/services/transport-brand.service';
+import { TransportsService } from 'src/app/pages/transports/services/transports.service';
 @Component({
   selector: 'app-add-transport',
   templateUrl: './add-transport.component.html',
@@ -68,14 +70,13 @@ export class AddTransportComponent implements OnInit {
   fileRemovedTransportationLicense: boolean = false;
   previewUrlTransportationLicense: string | ArrayBuffer | null = null;
   selectedFileTransportationLicense: File | null = null;
-
+  brandGroups: any;
 
   constructor(
     private driversService: DriversService,
-    private currencyService: CurrenciesService,
-    private cargoTypesService: CargoTypesService,
+    private transportService: TransportsService,
     private transportTypesService: TransportTypesService,
-    private packageService: CargoPackagesService,
+    private brandsService: TransportBrandService,
     private loadingMethodService: LoadingMethodService,
     private transportKindsService: TransportKindsService,
     private toastr: NotificationService,
@@ -88,7 +89,7 @@ export class AddTransportComponent implements OnInit {
     this.form = new FormGroup({
       id: new FormControl(''),
       driverId: new FormControl(''),
-      brand: new FormControl('', [Validators.required]),
+      transportBrandId: new FormControl('', [Validators.required]),
       capacity: new FormControl('', [Validators.required]),
       transportNumber: new FormControl('', [Validators.required]),
       transportKindId: new FormControl(),
@@ -103,23 +104,27 @@ export class AddTransportComponent implements OnInit {
       isAdr: new FormControl(false),
       isHighCube: new FormControl(false),
       volume: new FormControl(''),
-      isMain: new FormControl(false)
+      isMain: new FormControl(false),
+      isKzPaidWay: new FormControl(false)
     })
   }
 
   ngOnInit(): void {
+    this.getTransportBrands();
     this.getTypes();
     if (this.mode == 'edit') {
       this.edit = true;
-      // this.getTransport();
-      this.patchForm();
+      this.getTransport();
     }else {
       this.transportKindIdsChange();
     }
   }
   getTransport() {
-    this.driversService.getTransport(this.driverId,this.data.id).subscribe((res:Response<TransportModel[]>) => {
-      
+    this.transportService.getById(this.data).subscribe((res:any) => {
+      if(res) {
+        this.data = res.data;
+        this.patchForm();
+      }
     })
   }
   getTypes() {
@@ -141,8 +146,8 @@ export class AddTransportComponent implements OnInit {
   patchForm() {
     this.form.patchValue({
       id: this.data.id,
-      driverId: this.driverId,
-      brand: this.data.brand,
+      driverId: this.driverId ? this.driverId : null,
+      transportBrandId: this.data.brand ? this.data.brand.id : null,
       capacity: this.data.capacity,
       transportKindId: this.data?.transportKind ? this.data.transportKind.id : null,
       transportTypeId: this.data?.transportType ? this.data.transportType.id : null,
@@ -158,8 +163,16 @@ export class AddTransportComponent implements OnInit {
       isHook: this.data.isHook,
       isAdr: this.data.isAdr,
       heightCubature: this.data.heightCubature,
-      isMain: this.data.isMain
+      isMain: this.data.isMain,
+      isKzPaidWay: this.data.isKzPaidWay
     });
+  }
+  getTransportBrands() {
+    this.brandsService.getBrandGroups().subscribe((res: any) => {
+      if (res && res.success) {
+        this.brandGroups = res.data;
+      }
+    })
   }
   onCancel() {
     this.drawerRef.close({ success: false });
@@ -167,8 +180,10 @@ export class AddTransportComponent implements OnInit {
   onSubmit() {
     this.form.value.transportNumber = this.form.value.transportNumber.toUpperCase().substring(0, 8);
     this.form.value.capacity = this.form.value.capacity.toString();
-    this.form.value.driverId = this.driverId
+    this.form.value.driverId = this.driverId ? this.driverId : null;
     this.loading = true;
+    console.log(this.form.value);
+    
     const submitObservable = this.data
       ? this.driversService.updateTransport(this.form.value)
       : this.driversService.createTransport(this.form.value);

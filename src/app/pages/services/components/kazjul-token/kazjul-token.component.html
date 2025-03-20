@@ -12,14 +12,14 @@
   </div>
   <nz-input-group class="input-group">
     <nz-form-label>{{ 'kzt_rate' | translate }}</nz-form-label>
-    <input nz-input type="text" formControlName="kzCurrencyRate" mask="separator.2">
+    <input nz-input type="text" formControlName="kzCurrencyRate" mask="separator.2" (keypress)="blockComma($event)">
   </nz-input-group>
   <nz-input-group class="input-group">
     <nz-form-label>{{ 'token' | translate }}</nz-form-label>
     <textarea nz-input formControlName="token" rows="8"> </textarea>
   </nz-input-group>
 
-  <span class="delete-icon">{{'last_update' | translate}}: <b>{{last_update | date:'dd.MM.YYYY HH:mm'}}</b> </span> 
+  <span class="delete-icon">{{'last_update' | translate}}: <b>{{last_update ? (last_update | date:'dd.MM.YYYY HH:mm') : ('no_data' | translate) }}</b> </span> 
 
   <div class="button-wrapper">
     <button class="success-button" [nzLoading]="loading" (click)="onRequst()" nz-button>{{'update' | translate}} </button>

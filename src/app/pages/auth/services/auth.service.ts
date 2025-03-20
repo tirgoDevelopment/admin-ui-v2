@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, LOCALE_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, of, switchMap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, of, switchMap, throwError } from 'rxjs';
 import { NgxPermissionsService } from 'ngx-permissions';
 import { env } from 'src/environmens/environment';
 import { jwtDecode } from 'jwt-decode';
@@ -13,6 +13,9 @@ import { jwtDecode } from 'jwt-decode';
 export class AuthService {
   private _accessTokenSubject = new BehaviorSubject<string | null>(null);
   public accessToken$ = this._accessTokenSubject.asObservable();
+  refreshToken: string | null = null;
+  private refreshInProgress = false;
+  private refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
   isAuthenticated = false;
 
@@ -48,14 +51,28 @@ export class AuthService {
     if (this.isAuthenticated) {
       return throwError('User is already logged in.');
     }
-    return this.http.post(`${env.apiUrl}/users/login`, credentials).pipe(
+    return this.http.post(`${env.authUrl}/login`, credentials).pipe(
       switchMap((response: any) => {
-        this.accessToken = response.data.token;
-        const user: any = this.accessToken ? jwtDecode(this.accessToken) : null;
-        const allPermission = user?.role?.permission
-          ? this.checkPermissions(user.role.permission)
-          : [];
-        this.permissionService.loadPermissions(allPermission);
+        this.accessToken = response.data.accessToken;
+        this.refreshToken = response.data.refreshToken;
+        localStorage.setItem('accessToken', this.accessToken);
+        localStorage.setItem('refreshToken', this.refreshToken);
+        return of(response);
+      })
+    );
+  }
+  onRefreshToken() {
+    return this.http.post(`${env.authUrl}/refresh-token`, { refreshToken: localStorage.getItem('refreshToken') }).pipe(
+      switchMap((response: any) => {
+        if (response && response.success) {
+          this.accessToken = response.data.accessToken;
+          this.refreshToken = response.data.refreshToken;
+          localStorage.setItem('accessToken', this.accessToken);
+          localStorage.setItem('refreshToken', this.refreshToken);
+        }
+        else {
+          this.logout();
+        }
         return of(response);
       })
     );
@@ -63,7 +80,9 @@ export class AuthService {
 
   logout(): void {
     this.accessToken = null;
+    this.refreshToken = null;
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
     this.isAuthenticated = false;
     this.router.navigate(['/auth/sign-up']);
   }
@@ -75,4 +94,5 @@ export class AuthService {
   private checkPermissions(permissionObj: any): string[] {
     return Object.keys(permissionObj).filter((key) => permissionObj[key]);
   }
+
 }

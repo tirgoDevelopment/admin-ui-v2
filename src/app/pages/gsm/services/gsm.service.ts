@@ -10,20 +10,20 @@ export class GSMService {
     constructor(private http: HttpClient) { }
 
     postGSMCardNumber(data) {
-        return this.http.post(`${env.apiUrl}/users/drivers/${data.id}/gsm-card-number`, data);
+        return this.http.post(`${env.apiUrl}/drivers/${data.driverId}/gcm/set-card-number`, data);
     }
     deleteGSMCardNumber(data) {
-        return this.http.delete(`${env.apiUrl}/users/drivers/${data.id}/gsm-card-number`);
+        return this.http.delete(`${env.apiUrl}/drivers/${data.driverId}/gcm/remove-card-number`);
     }
     topUpTmsGSMBalance(data) {
-        return this.http.post(`${env.apiUrl}/users/driver-merchants/${data.tmsId}/gsm-balance-income`, data);
+        return this.http.post(`${env.apiUrl}/tmses/${data.tmsId}/gcm-balances`, data);
     }
 
     getTmsGSMTransactios(filter) {
-        return this.http.get(`${env.apiUrl}/users/driver-merchants/gsm-transactions?` + filter);
+        return this.http.get(`${env.apiUrl}/tmses/gcm-transactions${filter}`);
     }
     postGsmBalanceRequest(data) {
-        return this.http.post(`${env.apiUrl}/users/driver-merchants/${data.tmsId}/gsm-balance-request/${data.id}/${data.status}`, {});
+        return this.http.post(`${env.apiUrl}/tmses/${data.tmsId}/gcm-balance-requests/${data.id}/${data.status}`, {});
     }
 
 }

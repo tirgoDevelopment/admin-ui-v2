@@ -11,13 +11,13 @@
       </div>
     </div>
 
-    <nz-table [nzData]="data" [nzLoading]="loader" [nzFrontPagination]="false"
-      [nzPageSize]="pageParams.pageSize" [nzTotal]="totalItemsCount" [nzPaginationPosition]="'both'"
-      [nzShowSizeChanger]="true" [nzShowPagination]="true" (nzQueryParams)="onQueryParamsChange($event)">
+    <nz-table [nzData]="data" [nzLoading]="loader" [nzFrontPagination]="false" [nzPageSize]="pageParams.pageSize"
+      [nzTotal]="totalItemsCount" [nzPaginationPosition]="'both'" [nzShowSizeChanger]="true" [nzShowPagination]="true"
+      (nzQueryParams)="onQueryParamsChange($event)">
       <thead>
         <tr>
           <th nzWidth="80px"> No </th>
-          <th nzWidth="80px"> ID</th>
+          <th nzWidth="80px"> ID </th>
           <th>{{'full_name' | translate}}</th>
           <th> {{'login_admin' | translate}} </th>
           <th>{{'role' | translate}}</th>

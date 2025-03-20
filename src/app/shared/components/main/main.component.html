@@ -20,6 +20,12 @@
         <span>{{ "control_panel" | translate }}</span>
       </li> -->
       <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
+        *ngIf="permissionService.hasPermission(Permission.AnaliticsPage)"
+        [nzTooltipTitle]="isCollapsed ? ('analitics' | translate) : ''" routerLink="/analitics">
+        <span nz-icon nzType="bar-chart"></span>
+        <span>{{ "analitics" | translate }}</span>
+      </li>
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
         *ngIf="permissionService.hasPermission(Permission.AdminsPage)"
         [nzTooltipTitle]="isCollapsed ? ('administrators' | translate) : ''" routerLink="/admins">
         <span nz-icon nzType="user"></span>
@@ -35,6 +41,17 @@
             alt="" width="15px" height="15px" />
         </span>
         <span>{{ "drivers" | translate }}</span>
+      </li>
+      <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
+        *ngIf="permissionService.hasPermission(Permission.TransportsPage)"
+        [nzTooltipTitle]="isCollapsed ? ('transports' | translate) : ''" routerLink="/transports">
+        <span class="sidebar-icon" nz-icon>
+          <img *ngIf="themeService.colorTheme == 'light-mode'" src="../../../../assets/images/sidebar/tracking.svg"
+            alt="" width="15px" height="15px" />
+          <img *ngIf="themeService.colorTheme == 'dark-mode'" src="../../../../assets/images/sidebar/tracking-w.svg"
+            alt="" width="15px" height="15px" />
+        </span>
+        <span>{{ "transports" | translate }}</span>
       </li>
       <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
         *ngIf="permissionService.hasPermission(Permission.ClientsPage)"
@@ -60,22 +77,23 @@
       <li nzMatchRouter nz-menu-item nz-tooltip nzTooltipPlacement="right"
         *ngIf="permissionService.hasPermission(Permission.OrdersPage)"
         [nzTooltipTitle]="isCollapsed ? ('orders' | translate) : ''" routerLink="/orders">
-        <span class="sidebar-icon" nz-icon>
+        <span nz-icon nzType="code-sandbox"></span>
+        <!-- <span class="sidebar-icon" nz-icon>
           <img *ngIf="themeService.colorTheme == 'light-mode'" src="../../../../assets/images/sidebar/tracking.svg"
             alt="" width="15px" height="15px" />
           <img *ngIf="themeService.colorTheme == 'dark-mode'" src="../../../../assets/images/sidebar/tracking-w.svg"
             alt="" width="15px" height="15px" />
-        </span>
+        </span> -->
         <span>{{ "orders" | translate }}</span>
       </li>
 
       <li nz-submenu nzTitle="{{ 'merchant' | translate }}" nzIcon="team"
         *ngIf="permissionService.hasAnyPermission([Permission.MerchantsPage, Permission.TmsesPage])">
         <ul>
-          <li nz-menu-item nzMatchRouter routerLink="/merchant-client"
+          <!-- <li nz-menu-item nzMatchRouter routerLink="/merchant-client"
             *ngIf="permissionService.hasPermission(Permission.MerchantsPage)">
             <a>{{ "merchant_client" | translate }}</a>
-          </li>
+          </li> -->
           <li nz-menu-item nzMatchRouter routerLink="/merchant-driver"
             *ngIf="permissionService.hasPermission(Permission.TmsesPage)">
             <a>{{ "merchant_driver" | translate }}</a>
@@ -151,9 +169,17 @@
             <a>{{ "orderStatus" | translate }}</a>
           </li>
 
+          <li nz-menu-item nzMatchRouter routerLink="/references/transport-brand">
+            <a>{{ "brandTransport" | translate }}</a>
+          </li>
+
           <li nz-menu-item nzMatchRouter routerLink="/references/cargo-packages"
             *ngIf="permissionService.hasPermission(Permission.CargoPackagesPage)">
             <a>{{ "package" | translate }}</a>
+          </li>
+
+          <li nz-menu-item nzMatchRouter routerLink="/references/company-types">
+            <a>{{ "companyType" | translate }}</a>
           </li>
         </ul>
       </li>
@@ -210,7 +236,9 @@
           </button>
 
           <div nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
-            <nz-avatar [nzSize]="38" [nzText]="currentUser && currentUser.username ? currentUser.username.slice(0, 1).toUpperCase() : ''" style="
+            <nz-avatar [nzSize]="38"
+              [nzText]="currentUser && currentUser.username ? currentUser.username.slice(0, 1).toUpperCase() : ''"
+              style="
                 margin-bottom: 3px;
                 color: #f56a00;
                 background-color: #fde3cf;
@@ -218,8 +246,8 @@
                 font-size: 16px;
                 font-weight: bold;
               "></nz-avatar>
-              <span class="main-username">{{ currentUser.username }}</span>
-              <i class="down-icon" nz-icon nzType="down"></i>
+            <span class="main-username">{{ currentUser.username }}</span>
+            <i class="down-icon" nz-icon nzType="down"></i>
           </div>
 
           <nz-dropdown-menu #menu="nzDropdownMenu">

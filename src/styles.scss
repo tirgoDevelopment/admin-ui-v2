@@ -75,8 +75,32 @@ body {
         }
       }
     }
+    tfoot {
+      tr {
+        td {
+          background-color: var(--bgColor) !important;
+          color: var(--textColor) !important;
+        }
+      }
+    }
   }
 }
+
+.resize-trigger {
+  width: 1px !important;
+  height: 30px !important;
+  margin: 12px 5px !important;
+  background: #e8e8e8 !important;
+}
+.nz-resizable-preview {
+  border-width: 0 !important;
+  border-right-width: 1px !important;
+}
+.pointer-events-none {
+  pointer-events: none !important;
+}
+
+
 
 .ant-layout-header {
   z-index: 999 !important;
@@ -111,6 +135,11 @@ body {
   background-color: $success-color !important;
   color: #fff !important;
   border-color: $success-color !important;
+}
+
+
+.ant-radio-button-wrapper:hover {
+  color: var(--menu-item-bgcolor-hover) !important;
 }
 
 button:hover {
@@ -438,6 +467,7 @@ input:-webkit-autofill:focus {
 
 .button-group {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
@@ -729,7 +759,9 @@ input[type=number]::-webkit-outer-spin-button {
 .my-2 {
   margin: 10px 0;
 }
-
+.mb-0 {
+  margin-bottom: 0 !important;
+}
 .mb-2 {
   margin-bottom: 20px;
 }
@@ -737,7 +769,12 @@ input[type=number]::-webkit-outer-spin-button {
 .my-4 {
   margin-top: 20px;
 }
-
+.p-0 {
+  padding: 0 !important;
+}
+.p-1 {
+  padding: 10px;
+}
 .gap {
   gap: 10px;
 }
@@ -749,7 +786,9 @@ input[type=number]::-webkit-outer-spin-button {
 .justify-between {
   justify-content: space-between;
 }
-
+.justify-center {
+  justify-content: center;
+}
 .justify-end {
   justify-content: end;
 }
@@ -761,7 +800,9 @@ input[type=number]::-webkit-outer-spin-button {
 .align-baseline {
   align-items: baseline;
 }
-
+.text-center {
+  text-align: center;
+}
 .w-full {
   width: 100%;
 }

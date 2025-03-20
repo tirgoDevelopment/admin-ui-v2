@@ -2,7 +2,11 @@
   <div class="container-page">
     <div class="header-page">
       <h2>{{ "services.title" | translate }}</h2>
-      <div class="button-group">
+      <div class="button-group" [ngClass]="ms.isMobile ? 'my-2' : ''">
+        <button nz-button class="secondary-button" (click)="toggleFilter()">
+          <span nz-icon nzType="filter" nzTheme="fill"></span>
+          {{ "filter" | translate }}
+        </button>
         <button nz-button class="success-button" (click)="kazjulToken()"
           *ngIf="perService.hasPermission(Per.ServicesPage)">
           {{ "kzPaidWay" | translate }}
@@ -12,10 +16,7 @@
           <span nz-icon nzType="file-excel" nzTheme="fill"></span>
           {{ "excel" | translate }}
         </button>
-        <button nz-button class="secondary-button" (click)="toggleFilter()">
-          <span nz-icon nzType="filter" nzTheme="fill"></span>
-          {{ "filter" | translate }}
-        </button>
+
         <button nz-button class="success-button" (click)="addService()"
           *ngIf="perService.hasPermission(Per.ServiceCreate)">
           <span nz-icon nzType="plus"></span>
@@ -34,6 +35,12 @@
       </div>
       <div>
         <nz-input-group class="input-group">
+          <input [(ngModel)]="filter['id']" type="text" nz-input placeholder="{{ 'services.serviceId' | translate }}" />
+        </nz-input-group>
+      </div>
+
+      <div>
+        <nz-input-group class="input-group">
           <input [(ngModel)]="filter['driverId']" type="text" nz-input
             placeholder="{{ 'services.driverId' | translate }}" />
         </nz-input-group>
@@ -47,9 +54,10 @@
       <div>
         <nz-input-group class="input-group w-full">
           <nz-select style="width: 100%; min-width: 150px;" nzShowSearch nzServerSearch
-            nzPlaceHolder="{{ 'merchant_driver' | translate }}" [nzShowArrow]="false" [(ngModel)]="filter['merchantId']"
+            nzPlaceHolder="{{ 'merchant_driver' | translate }}" [nzShowArrow]="false" [(ngModel)]="filter['tmsId']"
             (nzOnSearch)="find($event)">
-            <nz-option *ngFor="let o of (tms$ | async)?.data?.content" [nzLabel]="o.companyName" [nzValue]="o.id">
+            <nz-option *ngFor="let o of (tms$ | async)?.data?.content" [nzLabel]="o.companyType + ' ' + o.companyName"
+              [nzValue]="o.id">
             </nz-option>
           </nz-select>
         </nz-input-group>
@@ -90,6 +98,7 @@
           </nz-date-picker>
         </nz-input-group>
       </div>
+
       <button nz-button nzType="primary" class="search-button" (click)="fiterApply()">
         <span nz-icon nzType="search" nzTheme="outline"></span>
       </button>
@@ -107,43 +116,44 @@
       (nzQueryParams)="onQueryParamsChange($event)">
       <thead>
         <tr>
-          <th nzWidth="70px">No</th>
-          <th nzLeft>{{ "services.serviceId" | translate }}</th>
-          <th class="ellipsis" nzLeft>{{
-            "services.serviceName" | translate }}</th>
-          <th class="ellipsis">{{'merchant_driver' | translate}}</th>
-          <th>{{ "services.driverId" | translate }}</th>
-          <th>{{ "state_number_truck" | translate }}</th>
-          <th>{{ "date_creation" | translate }}</th>
-          <th *ngIf="tabType == 1">{{ "date_debit" | translate }}</th>
-          <th>{{ "services.processingTime" | translate }}</th>
-          <th>{{ "services.processingTimeEnd" | translate }}</th>
-          <th>{{ "total" | translate }} (TIR)</th>
-          <th nzWidth="200px" nzRight>{{ "status" | translate }} </th>
-          <th nzWidth="50px" nzRight *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
+          <th nzWidth="70px"> No </th>
+          <th nzWidth="150px" [nzLeft]="!ms.isMobile">{{ "services.serviceId" | translate }}</th>
+          <th nzWidth="200px" class="ellipsis" [nzLeft]="!ms.isMobile">{{ "services.serviceName" | translate }}</th>
+          <th nzWidth="120px">{{ "total" | translate }} (TIR)</th>
+          <th nzWidth="200px" class="ellipsis">{{ 'merchant_driver' | translate }}</th>
+          <th nzWidth="150px">{{ "driver" | translate }}</th>
+          <th nzWidth="100px">{{ "subscription" | translate }}</th>
+          <th nzWidth="180px">{{ "state_number_truck" | translate }}</th>
+          <th nzWidth="180px">{{ "date_creation" | translate }}</th>
+          <th *ngIf="tabType == 1" nzWidth="180px">{{ "date_debit" | translate }}</th>
+          <th nzWidth="180px">{{ "services.processingTime" | translate }}</th>
+          <th nzWidth="180px">{{ "services.processingTimeEnd" | translate }}</th>
+          <th nzWidth="200px" [nzRight]="!ms.isMobile">{{ "status" | translate }}</th>
+          <th nzWidth="50px" [nzRight]="!ms.isMobile"
+            *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])"></th>
         </tr>
       </thead>
-
       <tbody>
-        <tr *ngFor="let item of data; let i = index" (click)="showChatForService(item.id)">
-          <td>{{ item.rowIndex }}</td>
-          <td nzLeft>{{ item.id}} / {{ item.services[0].code}}</td>
-          <td nzLeft class="ellipsis">
-            <div *ngFor="let service of item.services" nz-tooltip [nzTooltipTitle]="service.name">{{ service.name }}
+        <tr *ngFor="let item of data; let i = index" (click)="showChatForService(item.chat.id)">
+          <td nzWidth="70px">{{ item.rowIndex }}</td>
+          <td nzWidth="150px" [nzLeft]="!ms.isMobile">{{ item.id}} / {{ item.service.code}}</td>
+          <td nzWidth="200px" [nzLeft]="!ms.isMobile" class="ellipsis">
+            <div nz-tooltip [nzTooltipTitle]="item.service.name">{{ item.service.name }}
             </div>
           </td>
-          <td class="ellipsis" (click)="$event.stopPropagation()" (click)="showTms(item.driver?.driverMerchant?.id)">
-            <div nz-tooltip [nzTooltipTitle]="item.driver.driverMerchant?.companyType + ' ' +
-            item.driver.driverMerchant?.companyName" [ngClass]="perService.hasPermission(Per.TmsDetail) ? 'link' : ''"
-              *ngIf="item.driver.driverMerchant">
-              {{item.driver.driverMerchant?.companyType + ' ' +
-              item.driver.driverMerchant?.companyName}}</div>
-            <div *ngIf="!item.driver.driverMerchant">{{'no' | translate}}</div>
+          <td nzWidth="120px"> {{item.tirAmount ? item.tirAmount : 0}}</td>
+          <td nzWidth="200px" class="ellipsis" (click)="$event.stopPropagation()" (click)="showTms(item?.tms?.id)">
+            <div nz-tooltip [nzTooltipTitle]="item.driver.tms?.companyType + ' ' +
+            item.tms?.companyName" [ngClass]="perService.hasPermission(Per.TmsDetail) ? 'link' : ''" *ngIf="item.tms">
+              {{item.tms?.companyType + ' ' +
+              item.tms?.companyName}}</div>
+            <div *ngIf="!item.tms">{{'no' | translate}}</div>
           </td>
-          <td (click)="$event.stopPropagation()" (click)="showDriver(item.driver.id)">
-            <div [ngClass]="perService.hasPermission(Per.DriverDetail) ? 'link' : ''">{{ item.driver.id }}</div>
+          <td nzWidth="150px" (click)="$event.stopPropagation()" (click)="showDriver(item.driver.id)">
+            <div [ngClass]="perService.hasPermission(Per.DriverDetail) ? 'link' : ''">{{ item.driver.id }}  {{ item.driver.firstName }} {{ item.driver.lastName.slice(0) }}</div>
           </td>
-          <td class="ellipsis">
+          <td nzWidth="100px">{{item.isSubscribed ? ('yes' | translate) : ('no' | translate) }}</td>
+          <td nzWidth="180px" class="ellipsis">
             <ng-container *ngIf="item.driver.driverTransports?.length; else noTransports">
               <div *ngFor="let truck of item.driver.driverTransports">
                 {{ truck.transportNumber }}
@@ -153,20 +163,14 @@
               {{ "no_data" | translate }}
             </ng-template>
           </td>
-          <td>{{ item.createdAt | date : "dd.MM.yyyy HH:mm" }}</td>
-          <td *ngIf="tabType == 1">{{ item.kzPaidWayTransactionIssuedDate | date : "dd.MM.yyyy HH:mm" : '+0' }}</td>
-          <td>{{ item.statusesHistory | createdAt : 3 | date : "dd.MM.yyyy HH:mm" }}</td>
-          <td>{{ item.statusesHistory | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</td>
-          <td>
-            <div *ngIf="item.amountDetails && item.amountDetails.length > 0">
-              {{ calculateSum(item.amountDetails) | priceFormat }}
-            </div>
-            <div *ngIf="!item.amountDetails || item.amountDetails.length === 0">
-              {{ 'no_data' | translate }}
-            </div>
-          </td>
-          <td nzRight (click)="$event.stopPropagation()" (click)="changeStatus(item.status, item)"
-            (contextmenu)="showComments(item)">
+          <td nzWidth="180px">{{ item.createdAt | date : "dd.MM.yyyy HH:mm" }}</td>
+          <td nzWidth="180px" *ngIf="tabType == 1">{{ item.kzPaidWayTransactionIssuedDate | date : "dd.MM.yyyy HH:mm" :
+            '+0' }}</td>
+          <td nzWidth="180px">{{ item.histories | createdAt : 3 | date : "dd.MM.yyyy HH:mm" }}</td>
+          <td nzWidth="180px">{{ item.histories | createdAt : 5 | date : "dd.MM.yyyy HH:mm" }}</td>
+
+          <td nzWidth="200px" [nzRight]="!ms.isMobile" (click)="$event.stopPropagation()"
+            (click)="changeStatus(item.status, item)" (contextmenu)="showComments(item)">
             <span class="status" [ngStyle]="{
                 background: item.status.color,
               }">
@@ -174,7 +178,7 @@
             </span>
 
           </td>
-          <td class="action-col" nzRight (click)="$event.stopPropagation()"
+          <td nzWidth="50px" [nzRight]="!ms.isMobile" (click)="$event.stopPropagation()"
             *ngIf="perService.hasAnyPermission([Per.ServiceDetail,Per.ServiceLog ])">
             <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
               <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer"></i>
@@ -197,7 +201,17 @@
             </nz-dropdown-menu>
           </td>
         </tr>
+        <tr *ngIf="ms.isMobile">
+          <td colspan="2" class="p-0"> <b>{{'amountService' | translate}} :</b> </td>
+          <td colspan="11">{{completedServicesTotalTirAmount | priceFormat}} TIR</td>
+        </tr>
       </tbody>
+      <tfoot nzSummary style="position: absolute; top:-55px" *ngIf="data && data.length && !ms.isMobile">
+        <tr>
+          <td colspan="2" class="p-0"> <b>{{'amountService' | translate}} :</b> </td>
+          <td colspan="11">{{completedServicesTotalTirAmount | priceFormat}} TIR</td>
+        </tr>
+      </tfoot>
     </nz-table>
 
     <ng-template #empty>

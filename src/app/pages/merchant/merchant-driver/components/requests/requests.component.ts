@@ -6,8 +6,9 @@ import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { DriverMerchantModel } from '../../models/driver-merchant.model';
-import { MerchantDriverService } from '../../services/merchant-driver.service';
+import { TmsService } from '../../services/tms.service';
 import { DetailComponent } from '../detail/detail.component';
+import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 
 @Component({
   selector: 'app-requests-driver',
@@ -24,7 +25,7 @@ export class RequestsComponent implements OnInit {
 
   constructor(
     private modal: NzModalService,
-    private merchantApi: MerchantDriverService,
+    private tmsService: TmsService,
     private drawer: NzDrawerService,
     private translate: TranslateService) { }
 
@@ -33,7 +34,7 @@ export class RequestsComponent implements OnInit {
   }
   getUnverified() {
     this.loading = true;
-    this.merchantApi.getUnverified().subscribe((res: any) => {
+    this.tmsService.getVerified(generateQueryFilter({ state: 'unverified' })).subscribe((res: any) => {
       if (res && res.success) {
         this.data = res.data.content;
         this.loading = false;

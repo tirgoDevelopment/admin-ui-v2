@@ -12,7 +12,7 @@ export class TransportKindsService {
   constructor(private http: HttpClient) { }
 
   getAll() {
-    return this.http.get<Response<TransportKindModel[]>>(env.references + '/references/transport-kinds/all')
+    return this.http.get<Response<TransportKindModel[]>>(env.references + '/references/transport-kinds')
   }
   create(data: TransportKindModel) {
     return this.http.post<Response<TransportKindModel[]>>(env.references + '/references/transport-kinds', data)
@@ -21,6 +21,6 @@ export class TransportKindsService {
     return this.http.put<Response<TransportKindModel[]>>(env.references + '/references/transport-kinds', data)
   }
   delete(id: number | string) { 
-    return this.http.delete(env.references + `/references/transport-kinds?id=${id}`)
+    return this.http.delete(env.references + `/references/transport-kinds/${id}`)
   }
 }

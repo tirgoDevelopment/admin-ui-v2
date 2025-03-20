@@ -1,0 +1,41 @@
+<nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
+    <nz-tab nzTitle="{{ 'assignTransport' | translate }}"></nz-tab>
+    <nz-tab nzTitle="{{ 'unAssignTransport' | translate }}"></nz-tab>
+</nz-tabset>
+
+<form [formGroup]="form">
+    <nz-input-group class="input-group w-full">
+        <nz-form-label>{{ 'searchAs' | translate }}</nz-form-label>
+        <nz-select style="width: 100%;" nzPlaceHolder="{{ 'searchAs' | translate }}" formControlName="searchAs">
+            <nz-option nzValue="driverId" nzLabel="ID"></nz-option>
+            <nz-option nzValue="phoneNumber" nzLabel="Телефон"></nz-option>
+        </nz-select>
+    </nz-input-group>
+    <nz-input-group class="input-group w-full">
+        <nz-form-label nzRequired>{{ 'driver' | translate }}</nz-form-label>
+        <nz-select style="width: 100%;" nzShowSearch nzServerSearch nzPlaceHolder="{{ 'driver' | translate }}" (ngModelChange)="onDriverChange($event)"
+            [nzShowArrow]="false" formControlName="driverId" (nzOnSearch)="findDriver($event)">
+            <nz-option *ngFor="let o of drivers" [nzLabel]="o | label: form.get('searchAs')?.value"
+                [nzValue]="o.id">
+            </nz-option>
+        </nz-select>
+    </nz-input-group>
+
+    <nz-input-group class="input-group w-full">
+        <nz-form-label>{{ 'state_number_truck' | translate }}</nz-form-label>
+        <nz-select style="width: 100%;" nzShowSearch nzServerSearch nzPlaceHolder="{{ 'state_number_truck' | translate }}"
+            [nzShowArrow]="false" formControlName="transportId" (nzOnSearch)="findTransport($event)">
+            <nz-option *ngFor="let o of (transports$ | async)" [nzLabel]="o.transportNumber" [nzValue]="o.id">
+            </nz-option>
+        </nz-select>
+    </nz-input-group>
+
+    <div class="button-wrapper">
+        <button [nzLoading]="loading" nz-button
+            [ngClass]="{'success-button': type == 'assign' ,'danger-button': type == 'unAssign' }" (click)="onSubmit()"
+            [disabled]="form.invalid || loading">
+            {{ type | translate }}
+        </button>
+    </div>
+
+</form>

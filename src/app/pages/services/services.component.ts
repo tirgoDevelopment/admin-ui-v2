@@ -3,9 +3,8 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
-import { PipeModule } from 'src/app/shared/pipes/pipes.module';
 import { PageParams } from '../orders/models/page-params.interface';
-import { NzTableQueryParams } from 'ng-zorro-antd/table';
+import { NzTableModule, NzTableQueryParams } from 'ng-zorro-antd/table';
 import {
   trigger,
   style,
@@ -15,7 +14,7 @@ import {
 } from '@angular/animations';
 import { ServicesService } from './services/services.service';
 import { NzModalService } from 'ng-zorro-antd/modal';
-import { NzDrawerService } from 'ng-zorro-antd/drawer';
+import { NzDrawerModule, NzDrawerService } from 'ng-zorro-antd/drawer';
 import { ServiceFormComponent } from './components/service-form/service-form.component';
 import { catchError, Observable, tap, throwError, Subscription, finalize, BehaviorSubject, debounceTime, distinctUntilChanged, of, switchMap } from 'rxjs';
 import { SocketService } from 'src/app/shared/services/socket.service';
@@ -23,8 +22,7 @@ import { ServicePricingComponent } from './components/service-pricing/service-pr
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { jwtDecode } from 'jwt-decode';
-import { NzButtonType } from 'ng-zorro-antd/button';
-import { MerchantDriverService } from '../merchant/merchant-driver/services/merchant-driver.service';
+import { NzButtonModule, NzButtonType } from 'ng-zorro-antd/button';
 import { Router } from '@angular/router';
 import { DriverFormComponent } from '../drivers/components/driver-form/driver-form.component';
 import { DetailComponent } from '../merchant/merchant-driver/components/detail/detail.component';
@@ -37,6 +35,17 @@ import { ServiceCommentsComponent } from './components/comments/comments.compone
 import { CreatedAtPipe } from 'src/app/shared/pipes/createdAt.pipe';
 import { PriceFormatPipe } from 'src/app/shared/pipes/priceFormat.pipe';
 import { ReasonComponent } from './components/reason/reason.component';
+import { TmsService } from '../merchant/merchant-driver/services/tms.service';
+import { NzResizableModule, NzResizableService } from 'ng-zorro-antd/resizable';
+import { MobileDetectionService } from 'src/app/shared/services/mobile-detect.service';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzEmptyModule } from 'ng-zorro-antd/empty';
 
 export enum ServicesRequestsStatusesCodes {
   Waiting = 0,
@@ -65,8 +74,12 @@ export enum SseEventNames {
   templateUrl: './services.component.html',
   styleUrls: ['./services.component.scss'],
   standalone: true,
-  imports: [CommonModules, NzModules, TranslateModule, IconsProviderModule, ChatComponent, CreatedAtPipe, PriceFormatPipe],
-  providers: [NzModalService],
+  imports: [
+    CommonModules, TranslateModule, IconsProviderModule, 
+    ChatComponent, CreatedAtPipe, PriceFormatPipe, 
+    NzTabsModule, NzTableModule, NzResultModule, NzSelectModule, NzInputModule, NzDatePickerModule, NzToolTipModule,NzDropDownModule,NzEmptyModule, NzDrawerModule, NzButtonModule,
+  ],
+  providers: [NzModalService, NzResizableService],
   animations: [
     trigger('showHideFilter', [
       state('show', style({ height: '*', opacity: 1, visibility: 'visible' })),
@@ -81,7 +94,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   selectedServiceId: string | null = null;
   filteredServiceId: string | null = null;
   tabType = 0
-  public data: any[] = [];
+  public data: any;
   public loader = false;
   public isFilterVisible = false;
   public filter: Record<any, any> = this.initializeFilter();
@@ -100,6 +113,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
   totalItemsCount
   currentUser: any;
   searchTms$ = new BehaviorSubject<string>('');
+  completedServicesTotalTirAmount = 0;
   tms$: Observable<any>;
   private sseSubscription: Subscription | null = null;
   constructor(
@@ -110,25 +124,20 @@ export class ServicesComponent implements OnInit, OnDestroy {
     private socketService: SocketService,
     private toastr: NotificationService,
     private cdr: ChangeDetectorRef,
-    private merchantApi: MerchantDriverService,
+    private tmsService: TmsService,
     private router: Router,
-    public perService: PermissionService
-  ) { }
+    public perService: PermissionService,
+    public ms: MobileDetectionService
+  ) {
+  }
   ngOnInit(): void {
     this.getStatuses();
     this.getRefServices();
     this.currentUser = jwtDecode(localStorage.getItem('accessToken') || '');
-    this.sseSubscription = this.socketService.getSSEEvents().subscribe((event) => {
-      this.handleSocketEvent(event);
-      if (event.event === 'newServiceRequest') {
-        // this.pushService.showPushNotification('Заявка за новую услугу', '')
-        this.getAll();
-      }
-    });
     this.tms$ = this.searchTms$.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap((searchTerm: string) => this.merchantApi.getVerified({}, searchTerm).pipe(
+      switchMap((searchTerm: string) => this.tmsService.getVerified(searchTerm).pipe(
         catchError((err) => {
           return of({ data: { content: [] } });
         })
@@ -162,9 +171,10 @@ export class ServicesComponent implements OnInit, OnDestroy {
     if (this.sseSubscription) {
       this.sseSubscription.unsubscribe();
     }
-    this.socketService.disconnectSSE();
+    this.socketService.disconnect();
   }
   public getAll(): void {
+    this.completedServicesTotalTirAmount = 0
     this.loader = true;
     const params = {
       pageIndex: this.pageParams.pageIndex,
@@ -173,18 +183,21 @@ export class ServicesComponent implements OnInit, OnDestroy {
       sortType: this.pageParams.sortType,
       ...this.filter,
     };
-    let query = generateQueryFilter(params)
+    let query = generateQueryFilter(params);
     this.servicesService
       .getDriverServices(query)
       .pipe(
         tap((res: any) => {
           if (res && res?.success) {
+            this.loader = false;
+            this.completedServicesTotalTirAmount = res.data.completedServicesTotalTirAmount;
             this.data = res.data.content;
             this.pageParams.totalPagesCount = res.data.totalPagesCount;
             this.totalItemsCount = this.pageParams.pageSize * this.pageParams.totalPagesCount;
           }
           else {
             this.data = [];
+            this.loader = false;
           }
         }),
         catchError(this.handleError.bind(this)),
@@ -210,14 +223,14 @@ export class ServicesComponent implements OnInit, OnDestroy {
       this.router.navigate(['/services', id, 'log']);
     }
   }
-  showComments(serviceId) {
+  showComments(service) {
     event.preventDefault();
     const drawerRef: any = this.drawer.create({
       nzTitle: this.translate.instant('comments'),
       nzContent: ServiceCommentsComponent,
       nzPlacement: 'right',
       nzWidth: '500px',
-      nzContentParams:  {serviceId} ,
+      nzContentParams: { service },
     });
   }
   addService() {
@@ -342,14 +355,14 @@ export class ServicesComponent implements OnInit, OnDestroy {
   }
   private initializeFilter(): Record<any, any> {
     return {
-      servicesIds: [] as number[],
       driverId: '',
       transportNumber: '',
       merchantId: '',
       statusCode: '',
       createdAtFrom: '',
       createdAtTo: '',
-      excludedServicesIds: [16, 15]
+      excludedServicesIds: [16, 15],
+      servicesIds: ['']
     }
   }
   calculateSum(amountDetails: any[]): number {
@@ -435,10 +448,22 @@ export class ServicesComponent implements OnInit, OnDestroy {
         text: this.translate.instant('services.cancelService'),
         onCancel: () => this.cancelService(selectedService),
       };
-    } else {
+    } 
+    else if((selectedService.status.code != 5 || selectedService.status.code != 6 || selectedService.status.code != 7 )) {
       return {
-        text: this.translate.instant('cancel'),
-        onCancel: () => { },
+        text: this.translate.instant('services.cancelService'),
+        onCancel: () => { 
+          this.cancelService(selectedService);
+          
+        },
+      };
+    }
+    else {
+      return {
+        text: this.translate.instant('services.cancel'),
+        onCancel: () => {
+          this.modal.closeAll();
+         },
       };
     }
   }
@@ -569,4 +594,5 @@ export class ServicesComponent implements OnInit, OnDestroy {
       this.uniqueServices1 = this.uniqueServices.filter((service: any) => service.id === 15 || service.id === 16);
     }
   }
+
 }

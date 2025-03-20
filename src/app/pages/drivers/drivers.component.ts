@@ -13,13 +13,15 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
-import { AddTransportComponent } from './components/add-transport/add-transport.component';
+import { AddTransportComponent } from '../transports/components/add-transport/add-transport.component';
 import { SendPushComponent } from './components/send-push/send-push.component';
 import { AssignTmcComponent } from './components/assign-tmc/assign-tmc.component';
 import { TopupBalanceDriverComponent } from './components/topup-balance-driver/topup-balance-driver.component';
 import { Permission } from 'src/app/shared/enum/per.enum';
 import { PermissionService } from 'src/app/shared/services/permission.service';
 import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
+import { TmsService } from '../merchant/merchant-driver/services/tms.service';
+import { MobileDetectionService } from 'src/app/shared/services/mobile-detect.service';
 
 @Component({
   selector: 'app-drivers',
@@ -43,6 +45,7 @@ export class DriversComponent implements OnInit {
   data: DriverModel[] = [];
   loader: boolean = false;
   isFilterVisible: boolean = false;
+  tms$
   filter: Record<string, string> = this.initializeFilter();
   pageParams = {
     pageIndex: 1,
@@ -59,9 +62,12 @@ export class DriversComponent implements OnInit {
     private drawer: NzDrawerService,
     private translate: TranslateService,
     public perService: PermissionService,
+    private tmsService: TmsService,
+    public ms: MobileDetectionService
   ) { }
 
   ngOnInit(): void {
+
   }
 
   getAll(): void {
@@ -88,7 +94,7 @@ export class DriversComponent implements OnInit {
       ),
       nzContent: DriverFormComponent,
       nzPlacement: 'right',
-      nzWidth: '400px',
+      nzWidth: '450px',
       nzContentParams: {
         id: id,
         mode: action
@@ -98,6 +104,9 @@ export class DriversComponent implements OnInit {
       if (res && res?.success && res?.mode !== 'add') {
         this.getAll();
         drawerRef.componentInstance?.form.reset();
+      }
+      if (res && res?.success && res?.mode !== 'view') {
+        this.getAll();
       }
       if (res && res.success && res?.mode === 'add' && (this.perService.hasPermission(Permission.DriverAddTransport))) {
         this.confirmModal = this.modal.confirm({
@@ -126,7 +135,6 @@ export class DriversComponent implements OnInit {
       }
     });
   }
-
   remove(id: number | string): void {
     if (this.perService.hasPermission(Permission.DriverDelete)) {
       this.confirmModal = this.modal.confirm({
@@ -156,12 +164,9 @@ export class DriversComponent implements OnInit {
     this.filter = this.initializeFilter();
     this.getAll();
   }
-
- 
   private initializeFilter(): Record<string, string> {
     return { firstName: '', clientId: '', phoneNumber: '', createdAtTo: '', createdAtFrom: '', lastLoginFrom: '', lastLoginTo: '' };
   }
-
   onQueryParamsChange(params: NzTableQueryParams): void {
     const { pageIndex, pageSize, sort } = params;
     this.pageParams.pageIndex = pageIndex;
@@ -173,7 +178,6 @@ export class DriversComponent implements OnInit {
 
     this.getAll();
   }
-
   sendNotification() {
     this.drawer.create({
       nzTitle: this.translate.instant('send_push'),
@@ -220,6 +224,13 @@ export class DriversComponent implements OnInit {
         if (res && res?.success) {
           this.getAll();
         }
+      });
+    }
+  }
+  findTms(searchTerm) {
+    if (searchTerm) {
+      this.tmsService.findTms(searchTerm, 'companyName').subscribe((response: any) => {
+        this.tms$  = of(response.data.content);
       });
     }
   }

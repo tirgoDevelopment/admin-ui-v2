@@ -6,13 +6,14 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class PriceFormatPipe implements PipeTransform {
 
-  transform(value: number | string): string {
-    if (value == null || value === '') return '';
+  transform(value: number | string, decimalPlaces: number = 2): string {
+    if (value == null || value === '') return (0).toFixed(decimalPlaces);
     const numValue = typeof value === 'string' ? Number(value) : value;
     if (isNaN(numValue)) return value.toString();
-    const truncatedValue = Math.floor(numValue * 100) / 100;
+
+    const truncatedValue = Math.floor(numValue * Math.pow(10, decimalPlaces)) / Math.pow(10, decimalPlaces);
     return truncatedValue
-      .toFixed(2)
+      .toFixed(decimalPlaces)
       .replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   }
 }

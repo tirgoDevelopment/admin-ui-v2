@@ -30,20 +30,12 @@
                     <nz-select style="width: 100%; min-width: 150px;" nzShowSearch nzServerSearch
                         nzPlaceHolder="{{ 'merchant_driver' | translate }}" [nzShowArrow]="false"
                         [(ngModel)]="filter['tmsId']" (nzOnSearch)="find($event)">
-                        <nz-option *ngFor="let o of (tms$ | async)?.data?.content" [nzLabel]="o.companyName"
-                            [nzValue]="o.id">
+                        <nz-option *ngFor="let o of (tms$ | async)?.data?.content"
+                            [nzLabel]="o.companyType + ' ' + o.companyName" [nzValue]="o.id">
                         </nz-option>
                     </nz-select>
                 </nz-input-group>
             </div>
-            <!-- <div>
-                <nz-select nzAllowClear="true" [(ngModel)]="filter['statusId']" nzPlaceHolder="{{ 'status' | translate }}">
-                    <nz-option nzValue="requests" [nzLabel]="'requests' | translate"></nz-option>
-                    <nz-option nzValue="approve" [nzLabel]="'approve' | translate"></nz-option>
-                    <nz-option nzValue="reject" [nzLabel]="'reject' | translate"></nz-option>
-                </nz-select>
-            </div> -->
-
             <div>
                 <nz-input-group class="input-group">
                     <nz-date-picker style="min-width: 150px;" [(ngModel)]="filter['createdAtFrom']" type="date" nz-input
@@ -69,13 +61,13 @@
                 <span nz-icon nzType="reload" nzTheme="outline"></span>
             </button>
         </div>
-
         <nz-tabset (nzSelectedIndexChange)="onTabChange($event)">
             <nz-tab nzTitle="{{ 'requests' | translate }}">
                 <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty"
                     [nzFrontPagination]="false" [nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize"
                     [nzTotal]="totalItemsCount" [nzShowSizeChanger]="true" [nzShowPagination]="true"
-                    (nzQueryParams)="onQueryParamsChange($event)" [nzScroll]="data.length > 0 ? { y: '60vh' } : { y: '' }">
+                    (nzQueryParams)="onQueryParamsChange($event)"
+                    [nzScroll]="data.length > 0 ? { y: '60vh' } : { y: '' }">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -150,7 +142,6 @@
                 </nz-table>
             </nz-tab>
         </nz-tabset>
-
     </div>
 
     <ng-template #empty>

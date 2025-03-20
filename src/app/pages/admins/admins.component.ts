@@ -20,18 +20,18 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { PlusOutline } from '@ant-design/icons-angular/icons';
+import { NzResizableModule, NzResizeEvent } from 'ng-zorro-antd/resizable';
 
 @Component({
   selector: 'app-admins',
   standalone: true,
-  imports: [CommonModule, TranslateModule, FormsModule, NzButtonModule, NzIconModule, NzTableModule, NzResultModule, NzPaginationModule, NzSpinModule, NzToolTipModule, NzSelectModule, NzAlertModule],
+  imports: [CommonModule, TranslateModule, FormsModule, NzButtonModule, NzIconModule, NzTableModule, NzResultModule, NzPaginationModule, NzSpinModule, NzToolTipModule, NzSelectModule, NzAlertModule, NzResizableModule],
   providers: [NzModalService,NzDrawerService],
   templateUrl: './admins.component.html',
   styleUrls: ['./admins.component.scss']
 })
 export class AdminsComponent implements OnInit {
   Permission = Permission;
-
   confirmModal?: NzModalRef;
   data: AdminModel[] = [];
   loader: boolean = false;
@@ -57,8 +57,8 @@ export class AdminsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAll();
   }
+  
   getAll() {
     this.loader = true;
     this.adminsService.getAll(this.pageParams).subscribe((res: ResponseContent<AdminModel[]>) => {

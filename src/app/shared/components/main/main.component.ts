@@ -20,11 +20,12 @@ import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NgIf } from '@angular/common';
+import { IconsProviderModule } from '../../modules/icons-provider.module';
 
 @Component({
   selector: 'app-main',
   standalone: true,
-  imports: [TranslateModule, NzToolTipModule, NzButtonModule, NzLayoutModule, NzIconModule, NzMenuModule, NzDropDownModule, NzAvatarModule, NzBadgeModule, RouterLink, ChatComponent, RouterModule, NgIf],
+  imports: [IconsProviderModule,TranslateModule, NzToolTipModule, NzButtonModule, NzLayoutModule, NzIconModule, NzMenuModule, NzDropDownModule, NzAvatarModule, NzBadgeModule, RouterLink, ChatComponent, RouterModule, NgIf],
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
 })
@@ -44,6 +45,7 @@ export class MainComponent {
   newMessageCount = 0;
   currentUser: any;
   chat
+  messageSubscription
   constructor(
     private socketService: SocketService,
     private cdr: ChangeDetectorRef,
@@ -72,19 +74,21 @@ export class MainComponent {
       }
     });
     this.getChats();
-    this.subscription = this.socketService.getSSEEvents().subscribe((event) => {
-      if ((event.event === 'newMessage' && event.data.userType != 'staff') && ((this.chat && this.chat.id) !== event.data.requestId)) {
+    this.socketService.listen('newMessage').subscribe((event) => {
+      if ((event.senderUserType != 'admin') && ((this.chat && this.chat.id) !== event.chatId)) {
         this.newMessageCount = this.newMessageCount + 1;
         this.cdr.detectChanges();
-        this.pushService.showPushNotification(`Новое сообщение поступило на услугу в id ${event.data.requestId}`, event.data.message.message, 'service');
+        this.pushService.showPushNotification(`Новое сообщение поступило на услугу в ID ${event.chatId}`, '', 'service');
       }
-      if (event.event === 'tmsGsmBalanceTopup') {
-        this.pushService.showPushNotification('Поступил запрос на пополнение ГСМ баланса', 'от компании ' + event.data?.driverMerchant.companyType + event.data?.driverMerchant.companyName, 'gsm')
-      }
-      if (event.event === 'newServiceRequest') {
+    })
+    this.socketService.listen('tmsGsmBalanceTopup').subscribe((event) => {
+      this.pushService.showPushNotification('Поступил запрос на пополнение ГСМ баланса', 'от компании ' + event.data?.tms.companyType + event.data?.tms.companyName, 'gsm')
+    })
+    this.socketService.listen('newServiceRequest').subscribe((event) => {
+      if (event.senderUserType != 'admin') {
         this.pushService.showPushNotification('Заявка за новую услугу', '', 'service')
       }
-    });
+    })
 
   }
 
@@ -132,7 +136,7 @@ export class MainComponent {
     }
   }
   getChats() {
-    this.serviceApi.getDriverServices(generateQueryFilter({ servicesIds: [], excludedServicesIds: [15,16] })).subscribe({
+    this.serviceApi.getChatRooms(generateQueryFilter({ servicesIds: [], excludedServicesIds: [15, 16] })).subscribe({
       next: (res: any) => {
         if (res && res.data)
           this.newMessageCount = res.data.content.reduce((total, item) => total + (item.unreadMessagesCount || 0), 0);

@@ -21,8 +21,11 @@ export interface DriverModel extends BaseModel {
     last_enter?: Date;
     order?: boolean;
     geolocation?: boolean;
+    isSubscribed?:boolean;
     subscribedAt?:string;  
+    subscribedTill?:string;
     subscription?:any;
+    subscriptionName?:string;
     driverLicense?:string;
     passport?:string;
     isBlocked?:boolean;
@@ -36,6 +39,7 @@ export interface DriverModel extends BaseModel {
     isOwnService?:boolean;
     isOwnOrder?:boolean;
     isKzPaidWay?:boolean;
+    isOwnTirgoBalance: boolean;
     serviceBalance?:number;
     tirgoBalance?:number;
     gsmCardNumber: string;
@@ -44,5 +48,6 @@ export interface DriverModel extends BaseModel {
         id: number;
         lastLogin: Date;
     }
-    driverMerchant?:MerchantModel;
+    // driverMerchant?:MerchantModel;
+    tms: MerchantModel
 }

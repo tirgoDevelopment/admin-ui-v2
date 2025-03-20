@@ -2,12 +2,12 @@ import { Component, Input, OnInit } from '@angular/core';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
-import { MerchantDriverService } from '../../services/merchant-driver.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { NgxMaskDirective } from 'ngx-mask';
 import { CurrenciesService } from 'src/app/shared/services/references/currencies.service';
 import { NzDrawerRef, NzDrawerService } from 'ng-zorro-antd/drawer';
+import { TmsService } from '../../services/tms.service';
 
 @Component({
   selector: 'app-topup-balance-tms',
@@ -23,7 +23,7 @@ export class TopupBalanceTmsComponent implements OnInit {
   loading: boolean = false;
   constructor(
     private toastr: NotificationService,
-    private merchantApi: MerchantDriverService,
+    private tmsService: TmsService,
     private currenciesService: CurrenciesService,
     private drawer: NzDrawerRef,
     private translate: TranslateService
@@ -56,7 +56,7 @@ export class TopupBalanceTmsComponent implements OnInit {
     this.form.value.currencyAmount = this.form.value.currencyAmount.toString();
     this.form.value.tirAmount = this.form.value.tirAmount.toString();
     this.loading = true;
-    this.merchantApi.topupBalance(this.form.value).subscribe((res: any) => {
+    this.tmsService.topupBalance(this.form.value).subscribe((res: any) => {
       this.loading = false;
       this.toastr.success(this.translate.instant('successfullCreated'));
       this.drawer.close({success:true});

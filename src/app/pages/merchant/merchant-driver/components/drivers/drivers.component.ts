@@ -1,6 +1,6 @@
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
 import { NgxMaskDirective } from 'ngx-mask';
@@ -8,16 +8,18 @@ import { CommonModules } from 'src/app/shared/modules/common.module';
 import { IconsProviderModule } from 'src/app/shared/modules/icons-provider.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { PipeModule } from 'src/app/shared/pipes/pipes.module';
-import { MerchantDriverService } from '../../services/merchant-driver.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { NzTableQueryParams } from 'ng-zorro-antd/table';
 import { DriversService } from 'src/app/pages/drivers/services/drivers.service';
 import { generateQueryFilter } from 'src/app/shared/pipes/queryFIlter';
 import { DriverFormComponent } from 'src/app/pages/drivers/components/driver-form/driver-form.component';
-import { AddTransportComponent } from 'src/app/pages/drivers/components/add-transport/add-transport.component';
+import { AddTransportComponent } from 'src/app/pages/transports/components/add-transport/add-transport.component';
 import { NzDrawerService } from 'ng-zorro-antd/drawer';
 import { AddDriverComponent } from '../add-driver/add-driver.component';
 import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
+import { TmsService } from '../../services/tms.service';
+import { PermissionService } from 'src/app/shared/services/permission.service';
+import { Permission } from 'src/app/shared/enum/per.enum';
 
 @Component({
   selector: 'app-drivers',
@@ -36,7 +38,7 @@ import { PhoneFormatPipe } from 'src/app/shared/pipes/phone-format.pipe';
 })
 export class DriversComponent implements OnInit {
   confirmModal?: NzModalRef;
-
+  Per = Permission
   data: any[] = [];
   merchantId;
   merchantName: string;
@@ -53,12 +55,14 @@ export class DriversComponent implements OnInit {
   };
   constructor(private toastr: NotificationService,
     private driverApi: DriversService,
-    private merchantApi: MerchantDriverService,
+    private tmsService: TmsService,
     private translate: TranslateService,
     private route: ActivatedRoute,
     private modal: NzModalService,
     private driversService: DriversService,
-    private drawer: NzDrawerService,) {
+    private router: Router,
+    private drawer: NzDrawerService,
+    public perService: PermissionService) {
     this.merchantId = this.route.snapshot.params['id'];
   }
   ngOnInit(): void {
@@ -66,16 +70,16 @@ export class DriversComponent implements OnInit {
     
   }
   getMerchant() {
-    this.merchantApi.getById(this.merchantId).subscribe((res: any) => {
+    this.tmsService.getById(this.merchantId).subscribe((res: any) => {
       if (res && res.success) {
-        this.merchantName = res.data.companyName + ' ' + res.data.companyType;
+        this.merchantName = res.data.companyType + ' ' + res.data.companyName ;
       }
     });
   }
   getAll() {
     this.loader = true;
     if (this.merchantId) {
-      this.filter['merchantId'] = this.merchantId;
+      this.filter['tmsId'] = this.merchantId;
       this.driverApi.getAll(this.pageParams, generateQueryFilter(this.filter)).subscribe((res: any) => {
         if (res && res.success) {
           this.data = res.data.content;
@@ -177,7 +181,7 @@ export class DriversComponent implements OnInit {
       tmsId: this.merchantId,
       driverId: id
     }
-    this.merchantApi.unassignDriver(data).subscribe((res:any) => {
+    this.tmsService.unassignDriver(data).subscribe((res:any) => {
       if(res && res.success){
         this.toastr.success(this.translate.instant('successfullUpdated'),'');
         this.getAll();
@@ -187,5 +191,9 @@ export class DriversComponent implements OnInit {
   filterApply() { 
     this.pageParams.pageIndex = 1;
     this.getAll();
+  }
+  historyTransaction() {
+      if (!this.perService.hasPermission(this.Per.TmsTransactionsHistory)) return
+      this.router.navigate([`/merchant-driver/transactions/${this.merchantId}/${this.merchantName}`]);
   }
 }

@@ -13,24 +13,24 @@ export class ClientsService {
   constructor(private http: HttpClient) { }
 
   getAll(params?: any, filter?: any): Observable<Response<ClientModel[]>> {
-    return this.http.get<Response<ClientModel[]>>(`${env.apiUrl}/users/clients?${filter}`,{params})
+    return this.http.get<Response<ClientModel[]>>(`${env.apiUrl}/clients?${filter}`,{params})
   }
   getById(id: any): Observable<Response<ClientModel>> {
-    return this.http.get<Response<ClientModel>>(env.apiUrl + `/users/clients/` + id)
+    return this.http.get<Response<ClientModel>>(env.apiUrl + `/clients/` + id)
   }
   create(data: FormData) {
-    return this.http.post<Response<ClientModel[]>>(env.apiUrl + '/users/clients', data)
+    return this.http.post<Response<ClientModel[]>>(env.apiUrl + '/clients', data)
   }
   update(data: FormData) {
-    return this.http.put<Response<ClientModel[]>>(env.apiUrl + '/users/clients', data)
+    return this.http.put<Response<ClientModel[]>>(env.apiUrl + '/clients', data)
   }
   delete(id: number | string) {
-    return this.http.delete(env.apiUrl + `/users/clients/${id}`)
+    return this.http.delete(env.apiUrl + `/clients/${id}`)
   }
   block(id: number | string) {
-    return this.http.patch<Response<ClientModel>>(env.apiUrl + `/users/clients/${id}/block`, {})
+    return this.http.patch<Response<ClientModel>>(env.apiUrl + `/clients/${id}/block`, {})
   }
   unblock(id: number | string) {
-    return this.http.patch<Response<ClientModel>>(env.apiUrl + `/users/clients/${id}/unblock`, {})
+    return this.http.patch<Response<ClientModel>>(env.apiUrl + `/clients/${id}/unblock`, {})
   }
 }
