@@ -45,8 +45,9 @@ export class TmsService {
   activate(id: number | string) {
     return this.http.patch<Response<DriverMerchantModel>>(`${env.apiUrl}/tmses/${id}/unblock`, {})
   }
-  balanceTransactions(tmsId: any, params?: any, filter?: any) {
-    return this.http.get<Response<DriverMerchantModel>>(`${env.apiUrl}/tmses/${tmsId}/balances/transactions${filter}`,params)
+  balanceTransactions(tmsId: any, params?: any) {
+    console.log(params)
+    return this.http.get(`${env.apiUrl}/tmses/${tmsId}/balances/transactions${params}`)
   }
   tmsBalance(tmsId: any) {
     return this.http.get<Response<DriverMerchantModel>>(`${env.apiUrl}/tmses/${tmsId}/balances`)

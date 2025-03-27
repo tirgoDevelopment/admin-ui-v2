@@ -4,11 +4,12 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModules } from 'src/app/shared/modules/common.module';
 import { NzModules } from 'src/app/shared/modules/nz-modules.module';
 import { TransportsService } from '../../services/transports.service';
-import { BehaviorSubject, map, of, take } from 'rxjs';
+import { BehaviorSubject, of, take } from 'rxjs';
 import { DriversService } from 'src/app/pages/drivers/services/drivers.service';
 import { NotificationService } from 'src/app/shared/services/notification.service';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { LabelPipe } from 'src/app/shared/pipes/label.pipe';
+import { TmsService } from 'src/app/pages/merchant/merchant-driver/services/tms.service';
 
 @Component({
   selector: 'app-transport-manage',
@@ -20,11 +21,14 @@ import { LabelPipe } from 'src/app/shared/pipes/label.pipe';
 export class TransportManageComponent implements OnInit {
   form
   type: string = 'assign' || 'unAssign';
+  attachTransport: string = 'driver';
   loading = false;
   transports$ = new BehaviorSubject<any[]>([]);
+  tms$
   drivers: any[] = [];
   constructor(
     private transportService: TransportsService,
+    private tmsService: TmsService,
     private driverService: DriversService,
     private toastr: NotificationService,
     private translate: TranslateService,
@@ -35,29 +39,42 @@ export class TransportManageComponent implements OnInit {
       searchAs: new FormControl('driverId'),
       driverId: new FormControl(null),
       transportId: new FormControl(null, Validators.required),
+      tmsId: new FormControl(null)
     })
   }
   onTabChange(index) {
     index == 0 ? this.type = 'assign' : this.type = 'unAssign';
   }
   onSubmit() {
+    if (this.form.invalid || this.loading) return;
+
     this.loading = true;
-    if (this.type == 'assign') {
-      this.transportService.assignToDriver(this.form.value).subscribe(() => {
-        this.drawerRef.close({ success: true });
-        this.toastr.success(this.translate.instant('successfullUpdated'));
-        this.loading = false;
-      }, err => {
-        this.loading = false;
-      });
+    let request$;
+
+    if (this.attachTransport === 'driver') {
+      request$ = this.type === 'assign'
+        ? this.transportService.assignToDriver(this.form.value)
+        : this.transportService.unassignToDriver(this.form.value);
+    }
+    else if (this.attachTransport === 'tms') {
+      request$ = this.type === 'assign'
+        ? this.transportService.assignToTms(this.form.value)
+        : this.transportService.unassignToTms(this.form.value);
+    }
+
+    if (request$) {
+      request$.subscribe(
+        () => {
+          this.drawerRef.close({ success: true });
+          this.toastr.success(this.translate.instant('successfullUpdated'));
+          this.loading = false;
+        },
+        () => {
+          this.loading = false;
+        }
+      );
     } else {
-      this.transportService.unassignToDriver(this.form.value).subscribe(() => {
-        this.drawerRef.close({ success: true });
-        this.toastr.success(this.translate.instant('successfullUpdated'));
-        this.loading = false;
-      }, err => {
-        this.loading = false;
-      });
+      this.loading = false;
     }
   }
   findTransport(searchTerm: string) {
@@ -90,5 +107,13 @@ export class TransportManageComponent implements OnInit {
       this.form.patchValue({ transportId: null });
     }
   }
-
+  findTms(searchTerm) {
+    this.tmsService.findTms(searchTerm, 'companyName').subscribe((response: any) => {
+      if (response && response.success) {
+        this.tms$ = of(response.data.content);
+      } else {
+        this.tms$ = of([]);
+      }
+    });
+  }
 }
