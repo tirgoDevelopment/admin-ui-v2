@@ -170,7 +170,7 @@ export class FormComponent implements OnInit {
       const currencyObject = this.currencies.find(c => c.id === bankAccount.currency);
       return {
         ...bankAccount,
-        currency: currencyObject.id
+        currencyId: currencyObject.id
       };
     });
   }
