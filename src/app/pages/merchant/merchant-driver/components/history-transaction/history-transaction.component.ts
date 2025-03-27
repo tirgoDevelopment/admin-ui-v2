@@ -46,7 +46,7 @@ export class HistoryTransactionComponent {
     sortBy: '',
     sortType: '',
   };
-
+  totalItemsCount
   constructor(
     private drawer: NzDrawerService,
     private tmsService: TmsService,
@@ -60,12 +60,20 @@ export class HistoryTransactionComponent {
   }
   getAll(): void {
     this.loader = true;
-    const queryString = generateQueryFilter(this.filter);
-    this.tmsService.balanceTransactions(this.merchantId, this.pageParams, queryString).pipe(
+    const params = {
+      pageIndex: this.pageParams.pageIndex,
+      pageSize: this.pageParams.pageSize,
+      sortBy: this.pageParams.sortBy,
+      sortType: this.pageParams.sortType,
+      ...this.filter,
+    };
+    const queryString = generateQueryFilter(params);
+    this.tmsService.balanceTransactions(this.merchantId, queryString).pipe(
       tap((res: any) => {
         this.data = res?.success ? res.data.content : [];
-        this.pageParams.totalPagesCount = res.data.pageSize * res?.data?.totalPagesCount;
-      }),
+        this.data = res.data.content;
+        this.pageParams.totalPagesCount = res.data.totalPagesCount;
+  }),
       catchError(() => {
         this.data = [];
         return of(null);
@@ -110,9 +118,9 @@ export class HistoryTransactionComponent {
   }
   onQueryParamsChange(params: NzTableQueryParams): void {
     const { pageIndex, pageSize, sort } = params;
-    this.pageParams.pageIndex = pageIndex ;
+    this.pageParams.pageIndex = pageIndex;
     this.pageParams.pageSize = pageSize;
-  
+
     const currentSort = sort.find(item => item.value !== null);
     this.pageParams.sortBy = currentSort?.key || null;
     this.pageParams.sortType = currentSort?.value === 'ascend' ? 'asc' : currentSort?.value === 'descend' ? 'desc' : '';

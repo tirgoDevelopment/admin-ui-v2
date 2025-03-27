@@ -41,7 +41,6 @@ export const authInterceptor = (
                                 );
                             }
                             if(response.error == "Token verification failed") {
-                                console.log(response);
                                 authService.logout();
                                 return null;
                               } 

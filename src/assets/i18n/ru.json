@@ -529,6 +529,8 @@
   "unAssignTransport": "Открепить транспорт",
   "assign_transport": "Прикрепил траснпорт",
   "unassign_transport": "Открепил транспорт",
+  "assign_transport_to": "Прикрепить транспорт от",
+  "unassign_transport_to": "Открепить транспорт от",
   "assign_kz_paid_way": "QAJ включен",
   "unassign_kz_paid_way": "QAJ выключен",
   "companyType": "Тип компании",

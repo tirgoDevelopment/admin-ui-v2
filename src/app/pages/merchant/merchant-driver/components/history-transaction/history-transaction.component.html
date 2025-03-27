@@ -77,21 +77,21 @@
     </div>
   </nz-card>
 </div>
-<nz-table [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false"
-  [nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount"
-  [nzShowSizeChanger]="true" [nzShowPagination]="true" [nzScroll]="data.length > 0 ? { y: '60vh' } : { y: '' }"
-  (nzQueryParams)="onQueryParamsChange($event)">
+<nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false"
+[nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount"
+[nzShowSizeChanger]="true" [nzShowPagination]="true"
+[nzScroll]="{ x: '100vw', y: '60vh' }" (nzQueryParams)="onQueryParamsChange($event)">
   <thead>
     <tr>
-      <th>No</th>
-      <th nzColumnKey="id" [nzSortFn]="true">ID</th>
+      <th nzWidth="80px">No</th>
+      <th nzWidth="80px" nzColumnKey="id" [nzSortFn]="true">ID</th>
       <th nzWidth="200px">{{'services.serviceName' | translate}}</th>
-      <th> {{ 'sum' | translate }} (TIR)</th>
-      <th> {{ 'sum' | translate }} (TIR)</th>
+      <th nzWidth="150px"> {{ 'sum' | translate }} (TIR)</th>
+      <th nzWidth="150px"> {{ 'sum' | translate }} (TIR)</th>
       <th nzWidth="200px"> {{ 'balanceStatus' | translate }} (TIR)</th>
-      <th>{{ 'date' | translate }}</th>
-      <th>{{ 'balansType' | translate }}</th>
-      <th>{{ 'services.operator' | translate }}</th>
+      <th nzWidth="200px">{{ 'date' | translate }}</th>
+      <th nzWidth="200px">{{ 'balansType' | translate }}</th>
+      <th nzWidth="200px">{{ 'services.operator' | translate }}</th>
       <th nzEllipsis>{{'description' | translate}} </th>
     </tr>
   </thead>
