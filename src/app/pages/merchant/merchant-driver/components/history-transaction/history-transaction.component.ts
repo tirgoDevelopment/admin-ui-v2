@@ -73,7 +73,8 @@ export class HistoryTransactionComponent {
         this.data = res?.success ? res.data.content : [];
         this.data = res.data.content;
         this.pageParams.totalPagesCount = res.data.totalPagesCount;
-  }),
+        this.totalItemsCount = this.pageParams.pageSize * this.pageParams.totalPagesCount;
+      }),
       catchError(() => {
         this.data = [];
         return of(null);

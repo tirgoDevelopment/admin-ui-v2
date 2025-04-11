@@ -78,7 +78,7 @@
   </nz-card>
 </div>
 <nz-table #sortTable [nzData]="data" [nzLoading]="loader" [nzNoResult]="empty" [nzFrontPagination]="false"
-[nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize" [nzTotal]="pageParams.totalPagesCount"
+[nzPaginationPosition]="'both'" [nzPageSize]="pageParams.pageSize" [nzTotal]="totalItemsCount"
 [nzShowSizeChanger]="true" [nzShowPagination]="true"
 [nzScroll]="{ x: '100vw', y: '60vh' }" (nzQueryParams)="onQueryParamsChange($event)">
   <thead>
