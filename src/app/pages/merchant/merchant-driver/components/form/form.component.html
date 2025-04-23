@@ -1,120 +1,410 @@
 <form [formGroup]="form">
   <nz-input-group class="input-group">
-    <nz-form-label nzRequired>{{ 'company_name' | translate }}</nz-form-label>
+    <nz-form-label nzRequired>{{ "company_name" | translate }}</nz-form-label>
     <div class="flex input-select" style="gap: 0 !important">
-      <nz-select formControlName="companyType" style="background-color: #fff !important; width: 100px;">
-        <nz-option nzLabel="{{item.name}}" nzValue="{{item.name}}" *ngFor="let item of companyTypes"></nz-option>
+      <nz-select
+        formControlName="companyType"
+        style="background-color: #fff !important; width: 100px"
+      >
+        <nz-option
+          nzLabel="{{ item.name }}"
+          nzValue="{{ item.name }}"
+          *ngFor="let item of companyTypes"
+        ></nz-option>
       </nz-select>
-      <input formControlName="companyName" type="text" nz-input placeholder="{{'company_name' | translate}}" />
+      <input
+        formControlName="companyName"
+        type="text"
+        nz-input
+        placeholder="{{ 'company_name' | translate }}"
+      />
     </div>
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'director_first_name' | translate }}</nz-form-label>
-    <input formControlName="supervisorFirstName" type="text" nz-input
-      placeholder="{{ 'director_first_name' | translate }}" />
+    <nz-form-label>{{ "director_first_name" | translate }}</nz-form-label>
+    <input
+      formControlName="supervisorFirstName"
+      type="text"
+      nz-input
+      placeholder="{{ 'director_first_name' | translate }}"
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'director_last_name' | translate }}</nz-form-label>
-    <input formControlName="supervisorLastName" type="text" nz-input
-      placeholder="{{ 'director_last_name' | translate }}" />
+    <nz-form-label>{{ "director_last_name" | translate }}</nz-form-label>
+    <input
+      formControlName="supervisorLastName"
+      type="text"
+      nz-input
+      placeholder="{{ 'director_last_name' | translate }}"
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'responce_person_first_name' | translate }}</nz-form-label>
-    <input formControlName="responsiblePersonFistName" type="text" nz-input
-      placeholder="{{ 'responce_person_first_name' | translate }}" />
+    <nz-form-label>{{
+      "responce_person_first_name" | translate
+    }}</nz-form-label>
+    <input
+      formControlName="responsiblePersonFistName"
+      type="text"
+      nz-input
+      placeholder="{{ 'responce_person_first_name' | translate }}"
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'responce_person_last_name' | translate }}</nz-form-label>
-    <input formControlName="responsiblePersonLastName" type="text" nz-input
-      placeholder="{{ 'responce_person_last_name' | translate }}" />
+    <nz-form-label>{{ "responce_person_last_name" | translate }}</nz-form-label>
+    <input
+      formControlName="responsiblePersonLastName"
+      type="text"
+      nz-input
+      placeholder="{{ 'responce_person_last_name' | translate }}"
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label nzRequired>{{ 'email' | translate }}</nz-form-label>
-    <input formControlName="email" type="text" nz-input placeholder="{{ 'email' | translate }}" required />
-    <span class="error-message">Этот Email будет использоваться как ваш логин для входа в систему</span>
+    <nz-form-label nzRequired>{{ "email" | translate }}</nz-form-label>
+    <input
+      formControlName="email"
+      type="text"
+      nz-input
+      placeholder="{{ 'email' | translate }}"
+      required
+    />
+    <span class="error-message"
+      >Этот Email будет использоваться как ваш логин для входа в систему</span
+    >
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label nzRequired>{{ 'phone' | translate }}</nz-form-label>
-    <input formControlName="phoneNumber" type="text" nz-input placeholder="{{ 'phone' | translate }}"
-      mask="+999 99 999 99 99" required />
+    <nz-form-label nzRequired>{{ "phone" | translate }}</nz-form-label>
+    <input
+      formControlName="phoneNumber"
+      type="text"
+      nz-input
+      placeholder="{{ 'phone' | translate }}"
+      mask="+999 99 999 99 99"
+      required
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'responce_phone' | translate }}</nz-form-label>
-    <input formControlName="responsbilePersonPhoneNumber" type="text" nz-input
-      placeholder="{{ 'responce_phone' | translate }}" mask="+999 99 999 99 99" />
+    <nz-form-label>{{ "responce_phone" | translate }}</nz-form-label>
+    <input
+      formControlName="responsbilePersonPhoneNumber"
+      type="text"
+      nz-input
+      placeholder="{{ 'responce_phone' | translate }}"
+      mask="+999 99 999 99 99"
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'fact_address' | translate }}</nz-form-label>
-    <input formControlName="factAddress" type="text" nz-input placeholder="{{ 'fact_address' | translate }}" />
+    <nz-form-label>{{ "fact_address" | translate }}</nz-form-label>
+    <input
+      formControlName="factAddress"
+      type="text"
+      nz-input
+      placeholder="{{ 'fact_address' | translate }}"
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'legal_address' | translate }}</nz-form-label>
-    <input formControlName="legalAddress" type="text" nz-input placeholder="{{ 'legal_address' | translate }}" />
+    <nz-form-label>{{ "legal_address" | translate }}</nz-form-label>
+    <input
+      formControlName="legalAddress"
+      type="text"
+      nz-input
+      placeholder="{{ 'legal_address' | translate }}"
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'bank_name' | translate }}</nz-form-label>
-    <input formControlName="bankName" type="text" nz-input placeholder="{{ 'bank_name' | translate }}" />
+    <nz-form-label>{{ "bank_name" | translate }}</nz-form-label>
+    <input
+      formControlName="bankName"
+      type="text"
+      nz-input
+      placeholder="{{ 'bank_name' | translate }}"
+    />
   </nz-input-group>
   <nz-input-group class="input-group" formArrayName="bankAccounts">
-    <nz-form-label>{{ 'bank_account' | translate }}</nz-form-label>
-    <div *ngFor="let bankAccount of bankAccounts.controls; let i = index" [formGroupName]="i"
-      style="display: flex; align-items: center;">
+    <nz-form-label>{{ "bank_account" | translate }}</nz-form-label>
+    <div
+      *ngFor="let bankAccount of bankAccounts.controls; let i = index"
+      [formGroupName]="i"
+      style="display: flex; align-items: center"
+    >
       <nz-select formControlName="currency">
-        <nz-option *ngFor="let item of currencies" [nzValue]="item.id" [nzLabel]="item.name"></nz-option>
+        <nz-option
+          *ngFor="let item of currencies"
+          [nzValue]="item.id"
+          [nzLabel]="item.name"
+        ></nz-option>
       </nz-select>
-      <input formControlName="account" nz-input placeholder="{{ 'bank_account' | translate }}" style="margin: 5px 0;" />
-      <i (click)="removeBankAccount(i)" nz-icon nzType="close-circle"
-        style="color: red; cursor: pointer; margin-left: 5px;" nzTheme="outline"
-        *ngIf="bankAccounts.controls.length > 1"></i>
-      <i (click)="addBankAccount()" nz-icon nzType="plus" style="color: green; cursor: pointer; margin-left: 5px;"
-        nzTheme="outline" *ngIf="bankAccounts.controls.length === 0 || bankAccounts.controls.length === 1"></i>
+      <input
+        formControlName="account"
+        nz-input
+        placeholder="{{ 'bank_account' | translate }}"
+        style="margin: 5px 0"
+      />
+      <i
+        (click)="removeBankAccount(i)"
+        nz-icon
+        nzType="close-circle"
+        style="color: red; cursor: pointer; margin-left: 5px"
+        nzTheme="outline"
+        *ngIf="bankAccounts.controls.length > 1"
+      ></i>
+      <i
+        (click)="addBankAccount()"
+        nz-icon
+        nzType="plus"
+        style="color: green; cursor: pointer; margin-left: 5px"
+        nzTheme="outline"
+        *ngIf="
+          bankAccounts.controls.length === 0 ||
+          bankAccounts.controls.length === 1
+        "
+      ></i>
     </div>
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'inn' | translate }}</nz-form-label>
-    <input formControlName="inn" type="text" nz-input placeholder="{{ 'inn' | translate }}" />
+    <nz-form-label>{{ "inn" | translate }}</nz-form-label>
+    <input
+      formControlName="inn"
+      type="text"
+      nz-input
+      placeholder="{{ 'inn' | translate }}"
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'oked' | translate }}</nz-form-label>
-    <input formControlName="oked" type="text" nz-input placeholder="{{ 'oked' | translate }}" mask="999999999999" />
+    <nz-form-label>{{ "oked" | translate }}</nz-form-label>
+    <input
+      formControlName="oked"
+      type="text"
+      nz-input
+      placeholder="{{ 'oked' | translate }}"
+      mask="999999999999"
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'mfo' | translate }}</nz-form-label>
-    <input formControlName="mfo" type="text" nz-input placeholder="{{ 'mfo' | translate }}" mask="99999" />
+    <nz-form-label>{{ "mfo" | translate }}</nz-form-label>
+    <input
+      formControlName="mfo"
+      type="text"
+      nz-input
+      placeholder="{{ 'mfo' | translate }}"
+      mask="99999"
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'duns_number' | translate }}</nz-form-label>
-    <input formControlName="dunsNumber" type="number" nz-input placeholder="{{ 'duns_number' | translate }}" />
+    <nz-form-label>{{ "duns_number" | translate }}</nz-form-label>
+    <input
+      formControlName="dunsNumber"
+      type="number"
+      nz-input
+      placeholder="{{ 'duns_number' | translate }}"
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'iban_number' | translate }}</nz-form-label>
-    <input formControlName="ibanNumber" type="number" nz-input placeholder="{{ 'iban_number' | translate }}" />
+    <nz-form-label>{{ "iban_number" | translate }}</nz-form-label>
+    <input
+      formControlName="ibanNumber"
+      type="number"
+      nz-input
+      placeholder="{{ 'iban_number' | translate }}"
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'notes' | translate }}</nz-form-label>
-    <input formControlName="notes" type="text" nz-input placeholder="{{ 'notes' | translate }}" />
+    <nz-form-label>{{ "notes" | translate }}</nz-form-label>
+    <input
+      formControlName="notes"
+      type="text"
+      nz-input
+      placeholder="{{ 'notes' | translate }}"
+    />
   </nz-input-group>
-  <hr class="my-2">
+  <hr class="my-2" />
   <nz-input-group class="input-group" *ngIf="mode == 'add'">
-    <nz-form-label nzRequired>{{ 'password' | translate }}</nz-form-label>
-    <input formControlName="password" type="text" nz-input placeholder="{{ 'password' | translate }}" />
-    <span class="error-message" *ngIf="form.get('password')?.invalid && form.get('password')?.touched">
+    <nz-form-label nzRequired>{{ "password" | translate }}</nz-form-label>
+    <input
+      formControlName="password"
+      type="text"
+      nz-input
+      placeholder="{{ 'password' | translate }}"
+    />
+    <span
+      class="error-message"
+      *ngIf="form.get('password')?.invalid && form.get('password')?.touched"
+    >
       Пароль должен содержать не менее 8 символов и букв
     </span>
   </nz-input-group>
 
+  <div class="flex gap">
+    <div class="file-container">
+      <label class="label">Паспорт руководителя</label>
+      <div class="file-wrapper">
+        <div class="overlay"></div>
+        <div class="icon-container">
+          <div>
+            <input
+              formControlName="passport"
+              id="avatar-file-input1"
+              class="file-input"
+              type="file"
+              [multiple]="false"
+              [accept]="'image/jpeg, image/png'"
+              (change)="selectFile($event, 'passport')"
+            />
+            <label
+              class="camera-button"
+              for="avatar-file-input1"
+              nz-button
+              nzType="default"
+            >
+              <i
+                nz-icon
+                nzType="camera"
+                nzTheme="outline"
+                class="camera-icon"
+              ></i>
+            </label>
+          </div>
+        </div>
+        <img class="file-image" *ngIf="passport" [src]="passport" />
+      </div>
+    </div>
+    <div class="file-container">
+      <label class="label">Регистрация сертификата</label>
+      <div class="file-wrapper">
+        <div class="overlay"></div>
+        <div class="icon-container">
+          <div>
+            <input
+              formControlName="registrationCertificate"
+              id="avatar-file-input2"
+              class="file-input"
+              type="file"
+              [multiple]="false"
+              [accept]="'image/jpeg, image/png'"
+              (change)="selectFile($event, 'registrationCertificate')"
+            />
+            <label
+              class="camera-button"
+              for="avatar-file-input2"
+              nz-button
+              nzType="default"
+            >
+              <i
+                nz-icon
+                nzType="camera"
+                nzTheme="outline"
+                class="camera-icon"
+              ></i>
+            </label>
+          </div>
+        </div>
+        <img
+          class="file-image"
+          *ngIf="registrationCertificate"
+          [src]="registrationCertificate"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="flex gap my-2">
+    <div class="file-container">
+      <label class="label">Логотип</label>
+      <div class="file-wrapper">
+        <div class="overlay"></div>
+        <div class="icon-container">
+          <div>
+            <input
+              formControlName="logo"
+              id="avatar-file-input3"
+              class="file-input"
+              type="file"
+              [multiple]="false"
+              [accept]="'image/jpeg, image/png'"
+              (change)="selectFile($event, 'logo')"
+            />
+            <label
+              class="camera-button"
+              for="avatar-file-input3"
+              nz-button
+              nzType="default"
+            >
+              <i
+                nz-icon
+                nzType="camera"
+                nzTheme="outline"
+                class="camera-icon"
+              ></i>
+            </label>
+          </div>
+        </div>
+        <img class="file-image" *ngIf="logo" [src]="logo" />
+      </div>
+    </div>
+    <div class="file-container">
+      <label class="label">Лицензия для перевозки груза</label>
+      <div class="file-wrapper">
+        <div class="overlay"></div>
+        <div class="icon-container">
+          <div>
+            <input
+              formControlName="transportationCertificate"
+              id="avatar-file-input4"
+              class="file-input"
+              type="file"
+              [multiple]="false"
+              [accept]="'image/jpeg, image/png'"
+              (change)="selectFile($event, 'transportationCertificate')"
+            />
+            <label
+              class="camera-button"
+              for="avatar-file-input4"
+              nz-button
+              nzType="default"
+            >
+              <i
+                nz-icon
+                nzType="camera"
+                nzTheme="outline"
+                class="camera-icon"
+              ></i>
+            </label>
+          </div>
+        </div>
+        <img
+          class="file-image"
+          *ngIf="transportationCertificate"
+          [src]="transportationCertificate"
+        />
+      </div>
+    </div>
+  </div>
+
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'kzPaidWayCommission' | translate }} (%)</nz-form-label>
-    <input formControlName="kzPaidWayCommission" type="number" nz-input
-      placeholder="{{ 'kzPaidWayCommission' | translate }}" />
+    <nz-form-label>{{ "kzPaidWayCommission" | translate }} (%)</nz-form-label>
+    <input
+      formControlName="kzPaidWayCommission"
+      type="number"
+      nz-input
+      placeholder="{{ 'kzPaidWayCommission' | translate }}"
+    />
   </nz-input-group>
   <nz-input-group class="input-group">
-    <nz-form-label>{{ 'debtLimit' | translate }}(TIR)</nz-form-label>
-    <input formControlName="debtLimit" type="number" nz-input placeholder="{{ 'debtLimit' | translate }}" />
+    <nz-form-label>{{ "debtLimit" | translate }}(TIR)</nz-form-label>
+    <input
+      formControlName="debtLimit"
+      type="number"
+      nz-input
+      placeholder="{{ 'debtLimit' | translate }}"
+    />
   </nz-input-group>
   <div class="button-wrapper">
-    <button nz-button class="success-button" [disabled]="loading || !form.valid" [nzLoading]="loading"
-      (click)="submit()">{{
-      'save' | translate }}</button>
+    <button
+      nz-button
+      class="success-button"
+      [disabled]="loading || !form.valid"
+      [nzLoading]="loading"
+      (click)="submit()"
+    >
+      {{ "save" | translate }}
+    </button>
   </div>
 </form>
