@@ -12,13 +12,14 @@ import { TmsService } from '../../services/tms.service';
 import { DriverMerchantModel } from '../../models/driver-merchant.model';
 import { NzDrawerRef } from 'ng-zorro-antd/drawer';
 import { CompanyTypesService } from 'src/app/shared/services/references/company-types.service';
+import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss'],
   standalone: true,
-  imports: [NzModules, CommonModules, TranslateModule, NgxMaskDirective],
+  imports: [NzModules, CommonModules, TranslateModule, NgxMaskDirective] ,
 })
 export class FormComponent implements OnInit {
   confirmModal?: NzModalRef;
@@ -29,6 +30,11 @@ export class FormComponent implements OnInit {
   currencies: CurrencyModel[] = [];
   companyTypes = [];
   
+  logo: string | ArrayBuffer | null = null;
+  registrationCertificate: string | ArrayBuffer | null = null;
+  passport: string | ArrayBuffer | null = null;
+  transportationCertificate: string | ArrayBuffer | null = null;
+  formData: FormData = new FormData();
   constructor(
     private tmsService: TmsService,
     private fb: FormBuilder,
@@ -62,7 +68,11 @@ export class FormComponent implements OnInit {
       kzPaidWayCommission: new FormControl('5'),
       debtLimit: new FormControl(null),
       password: new FormControl(null),
-      isCompleted: new FormControl(true)
+      isCompleted: new FormControl(true),
+      passport: new FormControl(null),
+      transportationCertificate: new FormControl(null),
+      registrationCertificate: new FormControl(null),
+      logo: new FormControl(null)
     });
   }
 
@@ -75,6 +85,7 @@ export class FormComponent implements OnInit {
       this.patchValue();
     }
   }
+  
   getCurrency() {
     this.currenciesApi.getAll().subscribe((res: any) => {
       if (res && res.success) {
@@ -118,24 +129,49 @@ export class FormComponent implements OnInit {
   }
   submit() {
     this.loading = true;
-    this.form.value.bankAccounts = this.setId(this.form.value.bankAccounts);
-    const submitObservable = this.data
-      ? this.tmsService.update(this.form.value)
-      : this.tmsService.post(this.form.value);
-
-    submitObservable.subscribe((res: any) => {
-      if (res && res.success) {
-        this.loading = false;
-        this.drawerRef.close({ success: true });
-        this.tmsService.emitCloseEvent({ success: true });
-        const messageKey = this.data ? 'successfullUpdated' : 'successfullCreated';
-        this.toastr.success(this.translate.instant(messageKey), '');
+  
+    const formValue = { ...this.form.value };
+    formValue.bankAccounts = this.setId(formValue.bankAccounts);
+  
+    // FormData yaratamiz
+  
+    // Obyektni FormData ga o‘tkazamiz
+    for (const key in formValue) {
+      if (formValue.hasOwnProperty(key)) {
+        const value = formValue[key];
+        if (typeof value === 'object' && !(value instanceof File)) {
+          this.formData.append(key, JSON.stringify(value));
+        } else {
+          this.formData.append(key, value);
+        }
       }
-    }, err => {
-      this.loading = false;
-    })
+    }
+  
+    // Fayllarni oldindan `this.formData`ga qo‘shgan edik – ularni ham birlashtiramiz
+    (this.formData as any).forEach((value, key) => {
+      this.formData.set(key, value);
+    });
+  
+    const submitObservable = this.data
+      ? this.tmsService.update( this.form.value.id, this.formData)
+      : this.tmsService.post(this.formData);
+  
+    submitObservable.subscribe(
+      (res: any) => {
+        this.loading = false;
+        if (res && res.success) {
+          this.drawerRef.close({ success: true });
+          this.tmsService.emitCloseEvent({ success: true });
+          const messageKey = this.data ? 'successfullUpdated' : 'successfullCreated';
+          this.toastr.success(this.translate.instant(messageKey), '');
+        }
+      },
+      () => {
+        this.loading = false;
+      }
+    );
   }
-  get bankAccounts(): FormArray {
+    get bankAccounts(): FormArray {
     return this.form.get('bankAccounts') as FormArray;
   }
   loadBankAccounts(accounts: any[]): void {
@@ -174,5 +210,28 @@ export class FormComponent implements OnInit {
       };
     });
   }
-
+  selectFile(event: Event, name: string): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files || input.files.length === 0) return;
+  
+    const file = input.files[0];
+    const maxSizeInMB = 5;
+    const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+  
+    if (file.size > maxSizeInBytes) {
+      this.toastr.error(this.translate.instant('fileSize'));
+      return;
+    }
+  
+    const filename = `${new Date().getTime()}.jpg`;
+    console.log(file, filename);
+    
+    this.formData.set(name, file, filename);
+    const reader = new FileReader();
+    reader.onload = () => {
+      (this as any)[name] = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+  
 }

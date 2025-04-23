@@ -23,11 +23,11 @@ export class TmsService {
   getById(id: any) {
     return this.http.get(env.apiUrl + '/tmses/' + id)
   }
-  post(data: DriverMerchantModel) {
+  post(data: FormData) {
     return this.http.post<Response<DriverMerchantModel>>(`${env.apiUrl}/tmses`, data)
   }
-  update(data: DriverMerchantModel) {
-    return this.http.put<Response<DriverMerchantModel>>(`${env.apiUrl}/tmses/${data.id}`, data)
+  update(id,data: FormData) {
+    return this.http.put<Response<DriverMerchantModel>>(`${env.apiUrl}/tmses/${id}`, data)
   }
   delete(id) {
     return this.http.delete(`${env.apiUrl}/tmses/${id}`)
