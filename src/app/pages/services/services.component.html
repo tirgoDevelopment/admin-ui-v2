@@ -84,7 +84,6 @@
           </nz-date-picker>
         </nz-input-group>
       </div>
-
       <div>
         <nz-input-group class="input-group">
           <nz-date-picker style="min-width: 170px;" [(ngModel)]="filter['completedAtFrom']" type="date" nz-input
@@ -96,6 +95,21 @@
         <nz-input-group class="input-group">
           <nz-date-picker style="min-width: 170px;" [(ngModel)]="filter['completedAtTo']" type="date" nz-input
             [nzAllowClear]="false" nzPlaceHolder="{{ 'date_completed_to' | translate }}" class="custom-date-picker">
+          </nz-date-picker>
+        </nz-input-group>
+      </div>
+
+      <div *ngIf="tabType == 1">
+        <nz-input-group class="input-group">
+          <nz-date-picker style="min-width: 170px;" [(ngModel)]="filter['issuedAtFrom']" type="date" nz-input
+            [nzAllowClear]="false" nzPlaceHolder="{{ 'issuedAtFrom' | translate }}" class="custom-date-picker">
+          </nz-date-picker>
+        </nz-input-group>
+      </div>
+      <div *ngIf="tabType == 1">
+        <nz-input-group class="input-group">
+          <nz-date-picker style="min-width: 170px;" [(ngModel)]="filter['issuedAtTo']" type="date" nz-input
+            [nzAllowClear]="false" nzPlaceHolder="{{ 'issuedAtTo' | translate }}" class="custom-date-picker">
           </nz-date-picker>
         </nz-input-group>
       </div>
@@ -144,7 +158,7 @@
           </td>
           <td nzWidth="120px"> {{item.tirAmount ? item.tirAmount : 0}}</td>
           <td nzWidth="200px" class="ellipsis" (click)="$event.stopPropagation()" (click)="showTms(item?.tms?.id)">
-            <div nz-tooltip [nzTooltipTitle]="item.driver.tms?.companyType + ' ' +
+            <div nz-tooltip [nzTooltipTitle]="item.tms?.companyType + ' ' +
             item.tms?.companyName" [ngClass]="perService.hasPermission(Per.TmsDetail) ? 'link' : ''" *ngIf="item.tms">
               {{item.tms?.companyType + ' ' +
               item.tms?.companyName}}</div>
@@ -155,10 +169,8 @@
           </td>
           <td nzWidth="100px">{{item.isSubscribed ? ('yes' | translate) : ('no' | translate) }}</td>
           <td nzWidth="180px" class="ellipsis">
-            <ng-container *ngIf="item.driver.driverTransports?.length; else noTransports">
-              <div *ngFor="let truck of item.driver.driverTransports">
-                {{ truck.transportNumber }}
-              </div>
+            <ng-container *ngIf="item.transport; else noTransports">
+              {{item.transport.transportNumber}}
             </ng-container>
             <ng-template #noTransports>
               {{ "no_data" | translate }}
@@ -207,12 +219,12 @@
           <td colspan="11">{{completedServicesTotalTirAmount | priceFormat}} TIR</td>
         </tr>
       </tbody>
-      <tfoot nzSummary style="position: absolute; top:-55px" *ngIf="data && data.length && !ms.isMobile">
+      <!-- <tfoot nzSummary style="position: absolute; top:-55px" *ngIf="data && data.length && !ms.isMobile">
         <tr>
           <td colspan="2" class="p-0"> <b>{{'amountService' | translate}} :</b> </td>
           <td colspan="11">{{completedServicesTotalTirAmount | priceFormat}} TIR</td>
         </tr>
-      </tfoot>
+      </tfoot> -->
     </nz-table>
 
     <ng-template #empty>
@@ -222,7 +234,7 @@
   <app-chat *ngIf="showChat" [outputServiceId]="selectedServiceId" (closeChatEvent)="onChatClose()"></app-chat>
 </div>
 
-<div *ngIf="!perService.hasPermission(Per.DriversPage)" class="no-access-container">
+<div *ngIf="!perService.hasPermission(Per.ServicesPage)" class="no-access-container">
   <nz-result nzStatus="error" nzTitle="403" nzSubTitle="{{'accessDeniedPage' | translate}}">
   </nz-result>
 </div>

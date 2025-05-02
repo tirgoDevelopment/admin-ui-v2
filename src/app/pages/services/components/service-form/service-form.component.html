@@ -52,7 +52,7 @@
     <div class="order-info" *ngIf="selectedDriver">
 
         <div class="info-row">
-            <div class="info-column" *ngIf="selectedDriver?.phoneNumbers">
+            <div class="info-column" *ngIf="selectedDriver?.phoneNumbers && selectedDriver?.phoneNumbers.length">
                 <div class="info-label">{{ 'phone' | translate }}</div>
                 <p class="info-value">{{ selectedDriver?.phoneNumbers[0].code + selectedDriver?.phoneNumbers[0].number |
                     phoneFormat }}</p>

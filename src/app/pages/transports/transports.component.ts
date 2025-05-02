@@ -199,7 +199,7 @@ export class TransportsComponent implements OnInit {
   }
   findTms(ev: string) {
     if (ev) {
-      this.tmsService.findTms(ev, 'tmsId').subscribe((res: any) => {
+      this.tmsService.findTms(ev, 'companyName').subscribe((res: any) => {
         if (res) {
           this.tmses = res.data.content;
         }

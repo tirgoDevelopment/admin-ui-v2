@@ -90,10 +90,10 @@
       <li nz-submenu nzTitle="{{ 'merchant' | translate }}" nzIcon="team"
         *ngIf="permissionService.hasAnyPermission([Permission.MerchantsPage, Permission.TmsesPage])">
         <ul>
-          <li nz-menu-item nzMatchRouter routerLink="/merchant-client"
+          <!-- <li nz-menu-item nzMatchRouter routerLink="/merchant-client"
             *ngIf="permissionService.hasPermission(Permission.MerchantsPage)">
             <a>{{ "merchant_client" | translate }}</a>
-          </li>
+          </li> -->
           <li nz-menu-item nzMatchRouter routerLink="/merchant-driver"
             *ngIf="permissionService.hasPermission(Permission.TmsesPage)">
             <a>{{ "merchant_driver" | translate }}</a>

@@ -19,7 +19,6 @@
           <th>No</th>
           <th>ID</th>
           <th>{{ 'named' | translate }}</th>
-          <th>{{ 'codeTNVED' | translate }}</th>
           <th></th>
         </tr>
       </thead>
@@ -28,7 +27,6 @@
           <td>{{ i + 1 }}</td>
           <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
-          <td>{{ item.codeTNVED }}</td>
           <td class="action-col">
             <a nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
               <i nz-icon nzType="ellipsis" nzTheme="outline" style="cursor: pointer;"></i>

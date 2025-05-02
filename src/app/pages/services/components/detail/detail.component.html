@@ -31,10 +31,8 @@
     <div class="detail-item">
       <div class="detail-label">{{ "state_number_truck" | translate }}</div>
       <div class="detail-value">
-        <ng-container *ngIf="item.driver.driverTransports?.length; else noTransports">
-          <div *ngFor="let truck of item.driver.driverTransports">
-            {{ truck.transportNumber }}
-          </div>
+        <ng-container *ngIf="item.transport; else noTransports">
+          {{item.transport.transportNumber}}
         </ng-container>
         <ng-template #noTransports>
           {{ "no_data" | translate }}

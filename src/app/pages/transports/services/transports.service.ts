@@ -34,6 +34,12 @@ import { env } from "src/environmens/environment";
     unassignToDriver(data) {
       return this.http.post(`${env.adminUrl}/drivers/${data.driverId}/transports/${data.transportId}/unassign`, data);
     }
+    assignToTms(data) {
+      return this.http.post(`${env.adminUrl}/drivers/transports/${data.transportId}/tmses/${data.tmsId}/assign`, data);
+    }
+    unassignToTms(data) {
+      return this.http.post(`${env.adminUrl}/drivers/transports/${data.transportId}/tmses/${data.tmsId}/unassign`, data);
+    }
     export(filter) {
       return this.http.get(`${env.adminUrl}/drivers/transports/list/excel` + filter, { responseType: 'blob' });
     }

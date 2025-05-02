@@ -82,7 +82,6 @@ export class AnalyticsComponent implements OnInit {
 
   private mapAmountData(services: any[]): any[] {
     return services
-      .filter(item => Number(item.tirAmount) > 0)
       .map(item => ({
         value: Number(item.tirAmount),
         name: item.name,

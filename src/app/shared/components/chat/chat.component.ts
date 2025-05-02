@@ -26,7 +26,6 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzModalModule } from 'ng-zorro-antd/modal';
-import { FilePreviewPipe } from '../../pipes/file-preview.pipe';
 import { NgxDocViewerComponent, NgxDocViewerModule } from 'ngx-doc-viewer';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NotificationService } from '../../services/notification.service';
